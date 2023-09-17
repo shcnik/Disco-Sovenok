@@ -9060,3 +9060,308 @@ label ds_day2_entrance:
         ine "И пусть даже ты не знаешь, где ты и почему ты именно здесь, но такие минуты тишины и покоя, почти что единения со Вселенной необходимы и тебе."
         ine "Просто жизненно необходимы – особенно сейчас!"
     jump ds_day2_night
+
+label ds_day2_badminton:
+    $ persistent.sprite_time = "night"
+    scene bg ext_playground_night 
+    with dissolve
+
+    play ambience ambience_camp_center_night fadein 3
+
+    window show
+    play sound ds_sfx_psy
+    vol "Тебе хочется уйти подальше ото всех."
+    th "Самым подходящим местом уединения будет спортивная площадка."
+    th "И правда, кому вечером взбредет в голову играть в футбол?"
+    "Ты садишься на лавочку рядом с полем и принимаешься размышлять о произошедшем."
+    play sound ds_sfx_mot
+    per_hea "Вдруг со стороны волейбольной площадки послышались какие-то звуки."
+
+    play sound sfx_lena_plays_tennis_fail
+
+    per_eye "Кто-то отчаянно машет рукой."
+    th "И кому он там семафорит?.."
+    per_eye "Это Лена."
+    per_eye "Она подкидывает воланчик и пытается попасть по нему ракеткой."
+    per_eye "Однако выходиn это у неё паршиво."
+    "Ты некоторое время просто смотришь..."
+    vol "Подойди к ней."
+    window hide
+    menu:
+        "Подойти":
+            window show
+        "Не подходить":
+            window show
+            th "Да нет, не буду ей мешать..."
+            jump ds_day2_after_tour
+    "Обойдя волейбольную площадку, ты заходишь внутрь так, чтобы она меня видела."
+    play sound ds_sfx_psy
+    sug "С учётом её привычки пугаться даже малейшего шороха, не стоит повторять прошлых ошибок."
+    show un normal sport at center   with dissolve
+    me "Привет!"
+    "Она смотрит на тебя и тут же прячет за спину ракетку и воланчик."
+    me "Бадминтон любишь?"
+    un "Ну, не то чтобы…"
+    me "Смотрю, у тебя не очень получается..."
+    play sound ds_sfx_psy
+    emp "Сочувствие тут не поможет, скорее испортит."
+    window hide
+    menu:
+        "Посочувствовать":
+            window show
+            me "Сочувствую..."
+            show un sad sport at center with dspr
+            un "Ладно, я пойду, всё равно не получается..."
+            hide un with dissolve
+            "И она сбегает так быстро, что ты не успеваешь ничего сказать."
+            th "Пойду к себе тогда..."
+            jump ds_day2_night
+        "Посмеяться":
+            window show
+            me "Эх ты, даже по воланчику попасть не можешь!"
+            show un cry sport at center with dspr
+            un "Я...  настолько... неудачливая?"
+            emp "Ты её по-настоящему сильно обидел."
+            $ ds_lp_un -= 1
+            $ ds_karma -= 10
+            hide un with moveoutleft
+            "Она в слезах сбегает."
+            th "Пойду к себе тогда..."
+            jump ds_day2_night
+        "Предложить научить":
+            window show
+    me "Может, тебя научить?"
+    play sound ds_sfx_mot
+    cor "По правде говоря, ты и сам толком не умеешь, но, как и всем детям, в свое время тебе приходилось пару раз играть."
+    me "Давай покажу."
+    show un shy sport at center   with dspr
+    un "Спасибо."
+    un "Хочу попасть в команду по бадминтону, но, видишь, у меня не очень выходит…"
+    un "Я бы сегодня и не пришла, но…"
+    show un smile sport at center   with dspr
+    "Она поднимает глаза на тебя."
+    un "Мне никогда в карты не везло, а сегодня выиграла и подумала, что, может, и с этим получится…"
+    play sound ds_sfx_psy
+    aut "Да уж, после этих слов ты понимаешь, что поражение от Лены – это вдвойне обидно."
+    me "Никогда бы не подумал, что ты увлекаешься спортом."
+    show un shy sport at center   with dspr
+    me "Ой, прости…{w} Давай, сейчас покажу!"
+    cor "Ты берёшь ракетку, подбрасываешь воланчик и…"
+    window hide
+
+    if skillcheck('coordination', lvl_legendary):
+        play sound sfx_tennis_serve_1
+
+        show un surprise sport at center   with dspr
+        cor "Ты бьёшь по воланчику точно как надо."
+        cor "Он приземляется на траву."
+        $ ds_skill_points['coordination'] += 1
+        show un smile sport at center with dspr
+        un "Понятно..."
+        me "Теперь повтори."
+        "Лена берёт у тебя из рук ракетку."
+        "Ты подаёшь ей воланчик, и она делает бросок."
+
+        play sound sfx_tennis_serve_1
+        "У неё тоже получается. И успешно."
+        show un smile sport at center with dspr
+        un "Спасибо!"
+        $ ds_lp_un += 1
+        me "Не за что..."
+        show un normal sport at center with dspr
+        un "Ну, я пойду!"
+        un "Спокойной ночи!"
+        me "Спокойной ночи..."
+        hide un with dissolve
+        "И она уходит."
+        "Недолго думая, ты тоже уходишь к себе."
+        jump ds_day2_night
+    else:
+        play sound sfx_tennis_serve_1
+
+        show un surprise sport at center   with dspr
+        cor "Ты бьёшь с такой силой, что он перелетает ограду и скрывается где-то между деревьями."
+        me "Ой, прости!"
+        cor "Ты даже не ожидал от себя такой силы."
+        $ ds_skill_points['coordination'] += 1
+        show un normal sport at center   with dspr
+        un "Ничего…{w} Правда, это был последний…"
+        window hide
+        menu:
+            "Отправить Лену":
+                window show
+                me "Ну так иди за ним, раз последний!"
+                show un scared sport at center with dspr
+                un "Ладно..."
+                play sound ds_sfx_psy
+                emp "Она очень боится леса, а ты отправляешь её туда одну..."
+                $ ds_lp_un -= 1
+                hide un with dissolve
+                "Она ушла."
+                window hide
+                menu:
+                    "Подождать":
+                        window show
+                        "Ты принимаешься её ждать."
+                        "Проходит пять минут, десять, пятнадцать..."
+                        play sound ds_sfx_mot
+                        svf "Да ушла она уже. К себе ушла. Иди и ты."
+                    "Пойти домой":
+                        window show
+                        th "Зачем мне её ждать ещё?"
+                "И ты уходишь к себе."
+            "Пойти одному":
+                window show
+                me "Последний? Тогда пойду поищу тут!"
+                me "Подожди меня здесь!"
+                show un scared sport at center with dspr
+                un "Ладно..."
+                hide un with dissolve
+                window hide
+                scene bg ext_path_night 
+                with dissolve
+
+                window show
+                "Ты выходишь с площадки и начинаешь осматривать деревья."
+                window hide
+                if skillcheck('perception', lvl_heroic):
+                    play sound ds_sfx_mot
+                    per_eye "Ты осматриваешь каждое дерево в поисках воланчика..."
+                    per_eye "И наконец видишь его! Вот он!"
+                    "Ты берёшь воланчик и возвращаешься на спортплощадку."
+                else:
+                    play sound ds_sfx_mot
+                    per_eye "Ты осматриваешь каждое дерево в поисках воланчика..."
+                    per_eye "Но нигде его нет!"
+                    "Осмотрев каждый куст в округе, ты всё ещё не находишь воланчика."
+                    th "Печально... придётся сказать Лене, что воланчиков больше нет..."
+                    "Ты возвращаешься на спортплощадку."
+                $ ds_skill_points['perception'] += 1
+                scene bg ext_playground_night 
+                with dissolve
+                play sound ds_sfx_mot
+                res "Лены тут нет!"
+                th "Она ушла? Она всё-таки ушла?"
+                per_eye "Да, ты нигде не видишь ни намёка на присутствие Лены."
+                th "Ладно, пойду к себе..."
+            "Пойти с Леной":
+                window show
+                me "Последний? Пойдем тогда поищем его!"
+                un "Нет, не стоит…{w} Там в лесу…"
+                me "Кто, леший?"
+                "Ты смеёшься."
+                un "Может быть…"
+                play sound ds_sfx_psy
+                emp "Ты-то шутишь, а вот она, похоже, нет."
+                play sound ds_sfx_psy
+                sug "Но с тобой она пойдёт."
+                me "Да никого там нет, не бойся, пойдем!"
+                un "Ну, если только с тобой…"
+                $ ds_lp_un += 1
+                window hide
+
+                $ persistent.sprite_time = "night"
+                scene bg ext_path_night 
+                with dissolve
+
+                window show
+                "Вы выходите с площадки, и ты начинаешь осматривать деревья."
+                window hide
+                play sound sfx_owl_far
+                $ renpy.pause(0.5)
+                window show
+                play sound ds_sfx_mot
+                per_hea "Вдруг тишину ночи нарушило уханье совы."
+                window hide
+
+                stop ambience fadeout 2
+
+                scene cg d2_sovenok 
+                with dissolve
+
+                play music music_list["confession_oboe"] fadein 5
+
+                window show
+                play sound ds_sfx_psy
+                emp "Лена, видимо, так испугалась, что схватила тебя сзади, обвив руками."
+                play sound ds_sfx_fys
+                ins "Она настолько крепко прижалась к тебе, что ты смутился."
+                ins "Так близко чувствовать тело девочки, ее тепло."
+                emp "Тебя обуяла нежность."
+                emp "Тебе хочется защищать ее, не давать в обиду никому, пусть это будет даже всего лишь сова или какая другая ночная птица."
+                ins "Осталось лишь одно желание – чтобы она не отпускала…"
+                ins "Впрочем, хорошее имеет свойство заканчиваться…"
+                play sound ds_sfx_int
+                vic "Через некоторое время ты определяешь, откуда исходят звуки, и видишь на ветке рядом с собой маленького совенка, держащего ваш воланчик."
+                me "Это вот его ты боялась?"
+                un "Угу…"
+                window hide
+                menu:
+                    "Успокоить":
+                        window show
+                        me "Посмотри, он совсем не страшный."
+                        "Она выглядывает у тебя из-за спины, все так же продолжая крепко тебя обнимать."
+                        un "Не страшный…"
+                        me "Сейчас, подожди."
+                        window hide
+
+                        stop music fadeout 3
+
+                        $ persistent.sprite_time = "night"
+                        scene bg ext_path_night 
+                        with dissolve
+
+                        play ambience ambience_camp_center_night fadein 3
+
+                        show un shy sport at center   with dissolve
+                        window show
+                        "Ты мягко освобождаешься от её объятий и подходишь к совенку."
+                        th "Совёнок должен испугаться и улететь, выпустив из клюва воланчик."
+                        "Однако он и не собирается двигаться с места."
+                        play sound ds_sfx_mot
+                        svf "Тебе удаётся схватить воланчик и аккуратно отобрать его у совёнка."
+                        me "Смотри, он совсем ручной!{w} Хочешь его погладить?"
+                        un "Может, в другой раз?.."
+                        $ ds_lp_un += 1
+                        $ ds_skill_points['empathy'] += 1
+                    "Посмеяться":
+                        window show
+                        me "Он же такой маленький, как его можно бояться?"
+                        "Она выглядывает у тебя из-за спины, все так же продолжая крепко тебя обнимать."
+                        un "Да, маленький... но страшный..."
+                        me "Сейчас, подожди."
+                        window hide
+
+                        stop music fadeout 3
+
+                        $ persistent.sprite_time = "night"
+                        scene bg ext_path_night 
+                        with dissolve
+
+                        play ambience ambience_camp_center_night fadein 3
+
+                        show un scared sport at center   with dissolve
+                        window show
+                        "Ты мягко освобождаешься от её объятий и подходишь к совенку."
+                        th "Совёнок должен испугаться и улететь, выпустив из клюва воланчик."
+                        "Однако он и не собирается двигаться с места."
+                        play sound ds_sfx_mot
+                        svf "Тебе удаётся схватить воланчик и аккуратно отобрать его у совёнка."
+                        $ ds_lp_un -= 1
+                        $ ds_karma -= 5
+                "Ты протягиваешь Лене воланчик."
+                show un smile sport at center   with dspr
+                un "Спасибо тебе."
+                "Она еле заметно улыбается."
+                show un normal sport at center   with dspr
+                un "Мне пора."
+                me "Успехов тебе в бадминтоне."
+                show un smile sport at center   with dspr
+                "Она вновь улыбается и побежала в сторону лагеря."
+                hide un  with dissolve
+                th "Какая она все же милая."
+
+                stop ambience fadeout 2
+
+                window hide
+    jump ds_day2_night
