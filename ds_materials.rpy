@@ -873,6 +873,13 @@ init:
     image ck serious far = ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_serious.png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_serious.png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_serious.png") )
     image ck smile far = ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_smile.png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_smile.png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_body.png",(0,0), "mods/disco_sovenok/sprite/far/ma/ma_1_smile.png") )
 
+## Сны Семёна
+
+    image dvw normal = "mods/disco_sovenok/normal/dvw/dv_normal.png"
+    image dvw laugh = "mods/disco_sovenok/normal/dvw/dv_laugh.png"
+    image dvw smile  = "mods/disco_sovenok/normal/dvw/dv_smile.png"
+    image dvw rage = "mods/disco_sovenok/normal/dvw/dv_rage.png"
+
 
 # Эффекты
 

@@ -9667,13 +9667,13 @@ label ds_day2_dream:
     $ renpy.pause(1.0)
 
     window show
-    show dv normal winter far at left with dissolve
+    show dvw normal at left with dissolve
     play sound ds_sfx_mot
     per_eye "Вдали ты замечаешь девушку."
     vol "Почему-то тебя тянет к ней..."
     "Ты подходишь ближе."
     "Она поворачивается к тебе."
-    show dv normal winter at left with dissolve
+    show dvw normal at center with dissolve
     "Это Алиса. У неё в руках сумка. Похоже, она куда-то спешит."
     play sound ds_sfx_int
     enc "Стоп. Почему-то её лицо тебе кажется знакомым."
@@ -9689,7 +9689,6 @@ label ds_day2_dream:
         "Поздороваться":
             window show
             me "П-привет..."
-            show dv normal winter at center with dissolve
             dv "Привет..."
             play sound ds_sfx_psy
             emp "Она говорит с плохо скрываемым неудовольствием."
@@ -9703,15 +9702,15 @@ label ds_day2_dream:
                 "Не очень":
                     window show
                     me "Не очень... всё плохо."
-                    show dv smile winter at center with dspr
+                    show dvw smile at center with dspr
                     dv "Не говори так, Семён. Ты должен быть счастлив. Слышишь: должен! И ты будешь... когда-нибудь."
                 "Я скучаю":
                     window show
                     me "Это всё в моей голове. Я скучаю по тебе."
-                    show dv angry winter at center with dspr
+                    show dvw rage at center with dspr
                     dv "Я тоже. Все мы в своих головах! Ты о чём вообще говоришь?!"
                     me "А ты скучала?"
-                    show dv sad winter at center with dspr
+                    show dvw normal at center with dspr
                     dv "Только иногда... Много времени прошло уже. Больше, чем можно представить."
                     "Она смотрит себе под ноги. Избегает зрительного контакта с тобой."
                 "Великолепно":
@@ -9728,9 +9727,9 @@ label ds_day2_dream:
             vol "Но ты {i}не можешь{/i} уйти. Какая-то сила тебя не отпускает от неё."
     window show
     me "Нам {i}нужно{/i} поговорить!"
-    show dv angry winter at center with dspr
+    show dvw rage at center with dspr
     dv "О чём нам разговаривать? Мы всё уже обсудили ранее..."
-    show dv normal winter at center with dspr
+    show dvw normal at center with dspr
     dv "И вообще, мне надо ехать. Уехать отсюда навсегда!"
     dv "Слушай. Мы уже выбрали все темы для разговора."
     dv "Все мыслимые комбинации слов мы использовали. Мы больше не составляем единое целое - больше нет ни «нас», ни наших детей."
@@ -9738,13 +9737,12 @@ label ds_day2_dream:
     play sound ds_sfx_mot
     svf "Не пытайся её поцеловать {i}сейчас{/i}. Ты слишком на нервах из-за услышанного."
     me "Но... разве так должно быть?"
-    show dv shy winter at center with dspr
     dv "Нет, конечно... но..."
     me "Что? Есть что-то хорошее?"
     "Она смотрит вниз."
     dv "Я не знаю, зачем сказала это «но». Нет никаких «но»!"
     me "Это всё?"
-    show dv angry winter at center with dspr
+    show dvw rage at center with dspr
     dv "Да, это всё! Переживёшь ты это, как пережила я, как пережили все остальные!"
     me "Мне кажется, ты не совсем Алиса..."
     dv "Что ты несёшь?!"
@@ -9756,7 +9754,7 @@ label ds_day2_dream:
             me "Ты, кажется, моя бывшая... кто-то там."
             dv "Значит, я теперь просто бывшая?! Ты меня только запутал!"
             dv "И я пропустила автобус! Ладно, подожду следующего..."
-            show dv normal winter at center with dspr
+            show dvw normal at center with dspr
             ine "А мы все тебя предупреждали..."
             th "Все?"
             arb "Да, как бы все."
@@ -9766,9 +9764,8 @@ label ds_day2_dream:
         "Мой траур":
             window show
             me "Я в трауре из-за тебя... а ты ведь даже не умерла."
-            show dv surprise winter at center with dspr
+            show dvw rage at center with dspr
             dv "О боже, Семён! Я не желаю от тебя слышать такого! Траур по живой девушке - где это слыхано?!"
-            show dv angry winter at center with dspr
             dv "С меня довольно! Я не восьмидесятилетняя бабка, чтобы только вздыхать! Мне чуть больше тридцати лет - мне нужно жить!"
             play sound ds_sfx_fys
             pat "Тебе невыносимо больно это слышать. Твоё сердце сжимается от давления."
@@ -9777,10 +9774,11 @@ label ds_day2_dream:
         "Моя жена":
             window show
             me "Ты моя жена!"
-            show dv grin winter at center with dspr
+            show dvw laugh at center with dspr
             dv "Да как бы нет!"
             me "Но мы... были женаты."
             dv "И это не так! Мы просто были в отношениях. Пожили вместе и разбежались!"
+            show dvw normal at center with dspr
             dv "«Ленина 56»... Это было очень давно, миллионы лет назад!"
             dv "{i}Тогда{/i} я тебя любила... больше, чем кто-либо когда-либо кого-либо любил!"
             dv "Но это в прошлом. От этого ничего не осталось. Ни детей - ничего! Мы живём в самом холодном мире... где всем плевать!"
@@ -9790,10 +9788,10 @@ label ds_day2_dream:
         "Зло":
             window show
             me "Ты зло! Абсолютное зло! Убийца!"
-            show dv angry winter at center with dspr
+            show dvw rage at center with dspr
             dv "Да пусть так! Как будто мне очень важно твоё мнение!"
             me "Ты хочешь сказать, что тебе неважно моё мнение?"
-            show dv grin winter at center with dspr
+            show dvw laugh at center with dspr
             dv "Когда я тебя любила - твоё мнение мне было важнее всякого иного."
             dv "Но это в прошлом. Теперь ты для меня никто. Такой же человек, как и все остальные."
             me "Ты доводишь меня до истерик!"
@@ -9819,8 +9817,10 @@ label ds_day2_dream:
         "Поцеловать":
             $ skillcheck('suggestion', lvl_medium)
             window show
+            show dvw normal:
+                xpos 0.5 ypos 0.5
+                linear 0.2 zoom 120
             sug "Трясущимися ногами ты пододвигаешься ближе к ней. Её тело приближается к тебе. Такое тёплое... Закрыв глаза, ты тянешься своим ртом к её губам."
-            show dv normal winter close at center with dspr
             sug "Вот ты соприкасаешься... но она не отвечает."
             per_sme "Ты можешь почувствовать её запах... такой приятный."
             per_tas "Ты можешь почувствовать вкус её губ... сладкий как ничто иное."
@@ -9828,7 +9828,10 @@ label ds_day2_dream:
             sug "Но ты не чувствуешь любви."
             me "Ты... не отвечаешь..."
             "Этот момент кончается. Она отводит своё лицо от тебя."
-            show dv normal winter at center with dspr
+            show dvw normal:
+                xpos 0.5 ypos 0.5
+                zoom 120
+                linear 0.2 zoom 100
             "Она старается на тебя не смотреть."
             sug "Ты должен меня придушить. Нет слов, чтобы описать, как я тебя подвёл..."
             me "Но... почему?"
@@ -9836,15 +9839,15 @@ label ds_day2_dream:
         "Не целовать":
             window show
     me "И это всё?"
-    show dv smile winter at center with dspr
+    show dvw smile at center with dspr
     dv "Нет. Ты должен знать о кое-чём ещё."
     dv "Я беременна..."
     me "От меня?"
-    show dv angry winter at center with dspr
+    show dvw rage at center with dspr
     dv "Нет, конечно! От тебя я аборт сделала! Как ты мог это забыть?!"
     dv "Давай дальше! Спрашивай ещё! Мало же поговорили, надо ещё!"
     me "И что, это всё?"
-    show dv normal winter at center with dspr
+    show dvw normal at center with dspr
     dv "Наверное, да."
     pat "Это надо заканчивать."
     vol "Нет, спрашивай ещё!"
@@ -9857,7 +9860,6 @@ label ds_day2_dream:
             dv "Слушай, мне надо ехать. Я уже пропустила один рейс, не хочу пропустить ещё один."
             aut "Но она просила, чтобы ты её не отпускал. Напомни об этом!"
             me "Но ты же требовала... чтобы я тебя не отпускал..."
-            show dv sad winter at center with dspr
             dv "Это была другая я... Теперь это не та девушка... Я заменила её."
             me "А ты не можешь вернуть {i}ту{/i} себя?"
             dv "Нет... ты убил ту меня!"
@@ -9869,18 +9871,17 @@ label ds_day2_dream:
         "Попрощаться":
             window show
             me "Прощай!"
-    show dv normal winter at center with dspr
     dv "А теперь мне точно пора."
     show pi normal at right with dspr
     play sound ds_sfx_mot
     res "А это кто?"
     dv "Познакомься... Это мой новый мужчина."
     me "Ты нашла мне... замену?"
-    show dv smile winter at center with dspr
+    show dvw smile at center with dspr
     dv "Я нашла себе лучшую версию тебя."
     dv "Он, я уверена, меня не предаст. У нас всё будет хорошо."
     "К остановке подъезжает автобус."
-    hide dv with dissolve
+    hide dvw with dissolve
     hide pi with dissolve
     "Алиса и тот парень заходят в него вместе."
     play sound sfx_bus_honk
