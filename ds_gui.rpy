@@ -471,6 +471,7 @@ screen ds_choose_type():
                 ypos 2.0
                 linear 0.2 ypos 1.0
             action [SetVariable("ds_archetype", 1), Start("ds_start")]
+            activate_sound ds_selection
                 
         imagebutton:
             auto "mods/disco_sovenok/gui/menu/normic_type_%s.png"
@@ -479,6 +480,7 @@ screen ds_choose_type():
                 ypos 0.0
                 linear 0.2 ypos 1.0
             action [SetVariable("ds_archetype", 2), Start("ds_start")]
+            activate_sound ds_selection
             
         imagebutton:
             auto "mods/disco_sovenok/gui/menu/chad_type_%s.png"
@@ -487,6 +489,7 @@ screen ds_choose_type():
                 ypos 2.0
                 linear 0.2 ypos 1.0
             action [SetVariable("ds_archetype", 3), Start("ds_start")]
+            activate_sound ds_selection
             
         imagebutton:
             auto "mods/disco_sovenok/gui/menu/own_type_%s.png"
@@ -495,6 +498,7 @@ screen ds_choose_type():
                 ypos 0.0
                 linear 0.2 ypos 1.0
             action [SetVariable("ds_archetype", 0), Function(ds_init_custom), Show('ds_skills', setup=True, change=True), Show("ds_skill_table"), Hide('ds_choose_type')]
+            activate_sound ds_selection
     
 screen ds_skills(setup, change):
     python:
@@ -585,6 +589,7 @@ screen ds_skill_table():
                             auto "mods/disco_sovenok/gui/skills/skill_%s.png"
                             selected If(ds_chosen_skill == skill)
                             action [ Hide('ds_skill_info'), SetVariable('ds_chosen_skill', skill), Show('ds_skill_info')]
+                            activate_sound ds_btn_click
 
 screen ds_hud():
     modal False
@@ -687,31 +692,37 @@ screen ds_skill_info():
                                         auto "mods/disco_sovenok/gui/skills/terrible_%s.png"
                                         selected If(ds_skill_points[skill] == 1)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 1)), SensitiveIf(SetDict(ds_skill_points, skill, 1))]
+                                        activate_sound ds_selection
                                 showif (ds_skill_points[skill] + ds_available_points >= 2) or (ds_skill_points[skill] == 2):
                                     imagebutton:
                                         auto "mods/disco_sovenok/gui/skills/bad_%s.png"
                                         selected If(ds_skill_points[skill] == 2)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 2)), SensitiveIf(SetDict(ds_skill_points, skill, 2))]
+                                        activate_sound ds_selection
                                 showif (ds_skill_points[skill] + ds_available_points >= 3) or (ds_skill_points[skill] == 3):
                                     imagebutton:
                                         auto "mods/disco_sovenok/gui/skills/medium_%s.png"
                                         selected If(ds_skill_points[skill] == 3)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 3)), SensitiveIf(SetDict(ds_skill_points, skill, 3))]
+                                        activate_sound ds_selection
                                 showif (ds_skill_points[skill] + ds_available_points >= 4) or (ds_skill_points[skill] == 4):
                                     imagebutton:
                                         auto "mods/disco_sovenok/gui/skills/good_%s.png"
                                         selected If(ds_skill_points[skill] == 4)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 4)), SensitiveIf(SetDict(ds_skill_points, skill, 4))]
+                                        activate_sound ds_selection
                                 showif (ds_skill_points[skill] + ds_available_points >= 5) or (ds_skill_points[skill] == 5):
                                     imagebutton:
                                         auto "mods/disco_sovenok/gui/skills/excellent_%s.png"
                                         selected If(ds_skill_points[skill] == 5)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 5)), SensitiveIf(SetDict(ds_skill_points, skill, 5))]
+                                        activate_sound ds_selection
                                 showif (ds_skill_points[skill] + ds_available_points >= 6) or (ds_skill_points[skill] == 6):
                                     imagebutton:
                                         auto "mods/disco_sovenok/gui/skills/genius_%s.png"
                                         selected If(ds_skill_points[skill] == 6)
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 6)), SensitiveIf(SetDict(ds_skill_points, skill, 6))]
+                                        activate_sound ds_selection
                         else:
                             text str(ds_skill_points[skill]):
                                 size 240

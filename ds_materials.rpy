@@ -439,6 +439,9 @@ init:
     $ ds_mi_sign = "mods/disco_sovenok/sound/paper_on_wood.mp3"
     $ ds_pen = "mods/disco_sovenok/sound/pismo-ruchkoj.mp3"
 
+    $ ds_btn_click = "mods/disco_sovenok/sound/click.mp3"
+    $ ds_selection = "mods/disco_sovenok/sound/selection.mp3"
+
 # Спрайты
 
 ## Кубики
@@ -880,6 +883,7 @@ init:
     image dvw smile  = "mods/disco_sovenok/sprite/normal/dvw/dv_smile.png"
     image dvw rage = "mods/disco_sovenok/sprite/normal/dvw/dv_rage.png"
 
+    image piw normal = "mods/disco_sovenok/sprite/normal/piw/qq.png"
 
 # Эффекты
 
