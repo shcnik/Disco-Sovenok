@@ -314,6 +314,7 @@ label ds_day2_morning:
         "Забежать":
             window show
             "Ты распахиваешь дверь домика вожатой и вбежал внутрь так, как будто запрыгивал в последний вагон уходящего поезда."
+            $ ds_semtype += 1
             window hide
 
             scene cg ds_day2_mt_undress1
@@ -621,6 +622,7 @@ label ds_day2_morning:
         "Пойти одному":
             window show
             th "Лучше пойду один, так будет удобнее."
+            $ ds_semtype -= 1
             jump ds_day2_pass_alone_main
 
 label ds_day2_pass_alone_main:
@@ -856,13 +858,12 @@ label ds_day2_pass_alone_music:
                 ins "Ты подходишь к ней и прижимаешься ей к юбке..."
                 play sound ds_sfx_mot
                 res "Но она тебя замечает!"
-                $ ds_skill_points['instinct'] += 1
             else:
                 window show
                 ins "Ты хочешь к ней пристать, но что-то идёт не так."
                 ins "Извини."
                 "Твои неуклюжие движения привлекают внимание девочки."
-                $ ds_skill_points['instinct'] += 1
+            $ ds_skill_points['instinct'] += 1
     window hide
 
     scene cg ds_day2_mi_piano2
@@ -898,22 +899,14 @@ label ds_day2_pass_alone_music:
     $ ds_met['mi'] = 2
     play sound ds_sfx_int
     enc "Тебе её имя почему-то кажется знакомым."
-    window hide
-    menu:
-        "Вспомнить":
-            if skillcheck('encyclopedia', lvl_medium):
-                window show
-                enc "Точно, Мику существует и в твоём мире..."
-                enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
-                enc "А тут вот, вполне реальная девочка."
-                play sound ds_sfx_int
-                rhe "Только ей об этом вообще не стоит говорить."
-            else:
-                window show
-                enc "Нет, показалось. Ты никогда не слышал имени Мику."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_medium, passive=True):
+        enc "Точно, Мику существует и в твоём мире..."
+        enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
+        enc "А тут вот, вполне реальная девочка."
+        play sound ds_sfx_int
+        rhe "Только ей об этом вообще не стоит говорить."
+    else:
+        enc "Нет, показалось. Ты никогда не слышал имени Мику."
 
     mi "Нет, честно-честно! Никто не верит, а меня правда так зовут. Просто у меня мама из Японии. Папа с ней познакомился, когда строил там… Ну, то есть не строил – он у меня инженер…"
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
@@ -1114,18 +1107,10 @@ label ds_day2_pass_alone_clubs:
     "Шурик подходит к тебе и уверенно протянул руку."
     play sound ds_sfx_int
     enc "Его лицо тебе кажется почему-то знакомым."
-    window hide
-    menu:
-        "Развить мысль":
-            if skillcheck('encyclopedia', lvl_easy):
-                window show
-                enc "Точно, он же вылитый Шурик из комедий Гайдая!"
-            else:
-                window show
-                enc "Хотя нет, показалось..."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_easy, passive=True):
+        enc "Точно, он же вылитый Шурик из комедий Гайдая!"
+    else:
+        enc "Хотя нет, показалось..."
     show sh normal_smile pioneer at cright   with dspr
     sh "Добро пожаловать!"
     me "Угу…"
@@ -1552,13 +1537,30 @@ label ds_day2_pass_alone_lunch:
             me "Ты на себя посмотри, честная!"
             "Ты ухмыляешься."
         "Игнорировать":
-            window show
-            play sound ds_sfx_mot
-            com "Ты делаешь вид, будто ничего не происходит и углубляешься в обед."
-            $ ds_skill_points['composure'] += 1
-            $ ds_lp_us -= 1
-            show us dontlike pioneer at center with dspr
-            us "Эй, я тут! Ответь!"
+            if skillcheck('composure', lvl_challenging):
+                window show
+                play sound ds_sfx_mot
+                com "Ты делаешь вид, будто ничего не происходит и углубляешься в обед."
+                $ ds_skill_points['composure'] += 1
+                $ ds_lp_us -= 1
+                show us dontlike pioneer at center with dspr
+                us "Эй, я тут! Ответь!"
+            else:
+                window show
+                play sound ds_sfx_mot
+                com "Ты бы и хотел сделать вид, что её нет, но она тебя слишком уж раздражает."
+                me "Я тебя когда-нибудь удушу!"
+                show us laugh2 pioneer at center   with dspr
+                us "Не догонишь!"
+                "Она показывает тебе язык!"
+                show us grin pioneer at center   with dspr
+                if not ds_caught_us:
+                    us "Один раз уже пытался – не догнал же."
+                me "Хорошо, тогда я тебя где-нибудь подкараулю!"
+                show us surp2 pioneer at center   with dspr
+                us "Так нечестно!"
+                me "Ты на себя посмотри, честная!"
+                "Ты ухмыляешься."
     show us laugh pioneer at center   with dspr
     us "Ладно, подожди, сейчас обед возьму и подойду, вместе поедим."
     hide us  with dissolve
@@ -1668,6 +1670,7 @@ label ds_day2_pass_alone_lunch:
             us "Эй, ты куда?"
             me "Обходной подписывать!"
             "И, не выслушивая её дальше, ты уходишь."
+            $ ds_semtype -= 1
     $ ds_had_lunch = True
     jump ds_day2_pass_alone_main
 
@@ -1845,22 +1848,14 @@ label ds_day2_pass_dv_music:
     mip "Меня Мику зовут."
     play sound ds_sfx_int
     enc "Тебе её имя почему-то кажется знакомым."
-    window hide
-    menu:
-        "Вспомнить":
-            if skillcheck('encyclopedia', lvl_medium):
-                window show
-                enc "Точно, Мику существует и в твоём мире..."
-                enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
-                enc "А тут вот, вполне реальная девочка."
-                play sound ds_sfx_int
-                rhe "Только ей об этом вообще не стоит говорить."
-            else:
-                window show
-                enc "Нет, показалось. Ты никогда не слышал имени Мику."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_medium, passive=True):
+        enc "Точно, Мику существует и в твоём мире..."
+        enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
+        enc "А тут вот, вполне реальная девочка."
+        play sound ds_sfx_int
+        rhe "Только ей об этом вообще не стоит говорить."
+    else:
+        enc "Нет, показалось. Ты никогда не слышал имени Мику."
 
     mi "Нет, честно-честно! Никто не верит, а меня правда так зовут. Просто у меня мама из Японии. Папа с ней познакомился, когда строил там… Ну, то есть не строил – он у меня инженер…"
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
@@ -2114,7 +2109,6 @@ label ds_day2_pass_dv_clubs:
                 show el fingal pioneer at cleft with dspr
                 svf "Но ты забыл про Электроника!"
                 svf "Пока ты занимался Алисой, он продолжал бегать, споткнулся и упал."
-                $ ds_skill_points['savoir_faire'] += 1
             else:
                 window show
                 svf "Однако ты влезаешь неудачно, и кулак Алисы, отскочив от глаза Электроника, прилетает тебе в голову."
@@ -2127,10 +2121,11 @@ label ds_day2_pass_dv_clubs:
                 emp "В выражении лица Алисы читается, что она не такого результата хотела."
                 show dv angry pioneer2 at cright with dspr
                 dv "Зачем ты мешаешься?! Теперь и ты получил! Подумал бы о себе хотя бы!"
-                $ ds_skill_points['savoir_faire'] += 1
+            $ ds_skill_points['savoir_faire'] += 1
             $ ds_lp_dv -= 1
         "Ждать молча":
             "Ты стоишь и ждёшь разрешения конфликта."
+            $ ds_semtype -= 1
             "И оно скоро наступает. {w}Алиса дотягивается до Электроника, и ему прилетает по глазу."
     $ ds_wintessed_el_hit = True
     show dv angry pioneer2 at cright with dspr
@@ -2153,18 +2148,10 @@ label ds_day2_pass_dv_clubs:
     "Шурик подходит к тебе и уверенно протянул руку."
     play sound ds_sfx_int
     enc "Его лицо тебе кажется почему-то знакомым."
-    window hide
-    menu:
-        "Развить мысль":
-            if skillcheck('encyclopedia', lvl_easy):
-                window show
-                enc "Точно, он же вылитый Шурик из комедий Гайдая!"
-            else:
-                window show
-                enc "Хотя нет, показалось..."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_easy, passive=True):
+        enc "Точно, он же вылитый Шурик из комедий Гайдая!"
+    else:
+        enc "Хотя нет, показалось..."
     show sh normal_smile pioneer at cright   with dspr
     sh "Добро пожаловать!"
     me "Угу…"
@@ -2285,7 +2272,7 @@ label ds_day2_pass_dv_medic:
     menu:
         "Пойти самому":
             th "Да чего там бояться, скорее всего меня опять разыграть пытаются!"
-            $ ds_skill_points['authority'] += 1
+            $ ds_semtype += 1
             "Ты входишь."
             window hide
 
@@ -2316,6 +2303,7 @@ label ds_day2_pass_dv_medic:
             me "Тогда, может, это... проводишь меня туда?"
             dv "Чего-чего? Мальчик испугался всего лишь женщины?"
             $ ds_morale -= 1
+            $ ds_semtype -= 1
             show dv normal pioneer2 at center with dspr
             dv "Ладно, так уж и быть, пойду с тобой!"
             scene bg int_aidpost_day 
@@ -2706,10 +2694,12 @@ label ds_day2_pass_dv_lunch:
             "Наконец, спустя какое-то время ты доходишь до выдачи еды."
             show ck normal at center with dissolve
             ck "Вот, бери, пионер. Приятного аппетита!"
+            window hide
             menu:
                 "Попросить обед для Алисы":
-                    pass
+                    window show
                 "Забить на Алису":
+                    window show
                     th "Cама возьмёт!"
                     ck "Cледующий!"
                     hide ck with dissolve
@@ -2789,8 +2779,6 @@ label ds_day2_pass_dv_lunch:
     "Поэтому вы, быстро поев, встали и пошли дальше подписывать обходной."
     $ ds_had_lunch = True
     jump ds_day2_pass_dv_main
-
-# TODO: написать обход за UN
 
 label ds_day2_pass_sl_music:
     play ambience ambience_camp_center_day fadein 3
@@ -2936,9 +2924,26 @@ label ds_day2_pass_sl_music:
     "Ты наклоняешься и видишь девочку, которая, кажется, что-то искала."
     $ ds_met['mi'] = 1
     play sound ds_sfx_fys
-    ins "Она стоит на четвереньках в такой пикантной позе, что ты не сразу начинаешь разговор..."
-    ins "Ты бы и начал к ней приставать, но тут Славя..."
-    me "Простите…"
+    ins "Она стоит на четвереньках в такой пикантной позе..."
+    window hide
+    menu:
+        "Сдержать порывы":
+            window show
+            me "Простите…"
+        "Начать приставать":
+            if skillcheck('instinct', lvl_easy):
+                window show
+                ins "Внизу у тебя встаёт твой ствол..."
+                ins "Ты подходишь к ней и прижимаешься ей к юбке..."
+                sl "Что ты делаешь, Семён?"
+                $ ds_lp_sl -= 1
+                play sound ds_sfx_mot
+                res "Но она тебя замечает!"
+            else:
+                window show
+                ins "Ты бы и начал к ней приставать, но тут Славя..."
+                "Твои неуклюжие движения привлекают внимание девочки."
+            $ ds_skill_points['instinct'] += 1
     window hide
 
     scene cg ds_day2_mi_piano2
@@ -2975,22 +2980,14 @@ label ds_day2_pass_sl_music:
     $ ds_met['mi'] = 2
     play sound ds_sfx_int
     enc "Тебе её имя почему-то кажется знакомым."
-    window hide
-    menu:
-        "Вспомнить":
-            if skillcheck('encyclopedia', lvl_medium):
-                window show
-                enc "Точно, Мику существует и в твоём мире..."
-                enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
-                enc "А тут вот, вполне реальная девочка."
-                play sound ds_sfx_int
-                rhe "Только ей об этом вообще не стоит говорить."
-            else:
-                window show
-                enc "Нет, показалось. Ты никогда не слышал имени Мику."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_medium, passive=True):
+        enc "Точно, Мику существует и в твоём мире..."
+        enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
+        enc "А тут вот, вполне реальная девочка."
+        play sound ds_sfx_int
+        rhe "Только ей об этом вообще не стоит говорить."
+    else:
+        enc "Нет, показалось. Ты никогда не слышал имени Мику."
 
     mi "Нет, честно-честно! Никто не верит, а меня правда так зовут. Просто у меня мама из Японии. Папа с ней познакомился, когда строил там… Ну, то есть не строил – он у меня инженер…"
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
@@ -3143,12 +3140,14 @@ label ds_day2_pass_sl_music:
         "Вмешательство не требовалось":
             window show
             me "Да всё нормально, Славь, тебе не надо было к ней лезть."
+            $ ds_semtype += 1
             show sl smile pioneer at center with dspr
             sl "Ну, как скажешь."
             $ ds_skill_points['authority'] += 1
         "Поблагодарить":
             window show
             me "Спасибо, а то грубит мне она тут..."
+            $ ds_semtype -= 1
             show sl normal pioneer at center with dspr
             sl "Да не за что."
         "Промолчать":
@@ -3316,18 +3315,10 @@ label ds_day2_pass_sl_clubs:
     el "Ну, можешь считать, что уже трое."
     "Шурик подходит к тебе и уверенно протягивает руку."
     enc "Его лицо тебе кажется почему-то знакомым."
-    window hide
-    menu:
-        "Развить мысль":
-            if skillcheck('encyclopedia', lvl_easy):
-                window show
-                enc "Точно, он же вылитый Шурик из комедий Гайдая!"
-            else:
-                window show
-                enc "Хотя нет, показалось..."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_easy, passive=True):
+        enc "Точно, он же вылитый Шурик из комедий Гайдая!"
+    else:
+        enc "Хотя нет, показалось..."
     show sh normal_smile pioneer at cright   with dspr
     sh "Добро пожаловать!"
     me "Угу…"
@@ -4244,8 +4235,25 @@ label ds_day2_pass_un_music:
     window show
     "Ты наклоняешься и видишь девочку, которая, кажется, что-то искала."
     play sound ds_sfx_fys
-    ins "Она стоит на четвереньках в такой пикантной позе... не будь бы Лены, ты бы начал приставать."
-    me "Простите..."
+    ins "Она стоит на четвереньках в такой пикантной позе..."
+    menu:
+        "Сдержать порывы":
+            window show
+            me "Простите…"
+        "Начать приставать":
+            if skillcheck('instinct', lvl_easy):
+                window show
+                ins "Внизу у тебя встаёт твой ствол..."
+                ins "Ты подходишь к ней и прижимаешься ей к юбке..."
+                un "Семён?.."
+                $ ds_lp_un -= 1
+                play sound ds_sfx_mot
+                res "Но она тебя замечает!"
+            else:
+                window show
+                ins "Ты бы и начал к ней приставать, но тут Лена..."
+                "Твои неуклюжие движения привлекают внимание девочки."
+            $ ds_skill_points['instinct'] += 1
     window hide
 
     scene cg ds_day2_mi_piano2
@@ -4285,22 +4293,14 @@ label ds_day2_pass_un_music:
     $ ds_met['mi'] = 2
     play sound ds_sfx_int
     enc "Тебе её имя почему-то кажется знакомым."
-    window hide
-    menu:
-        "Вспомнить":
-            if skillcheck('encyclopedia', lvl_medium):
-                window show
-                enc "Точно, Мику существует и в твоём мире..."
-                enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
-                enc "А тут вот, вполне реальная девочка."
-                play sound ds_sfx_int
-                rhe "Только ей об этом вообще не стоит говорить."
-            else:
-                window show
-                enc "Нет, показалось. Ты никогда не слышал имени Мику."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_medium, passive=True):
+        enc "Точно, Мику существует и в твоём мире..."
+        enc "В качестве так называемого «вокалоида» - компьютерной программы, симулирующей голос певицы."
+        enc "А тут вот, вполне реальная девочка."
+        play sound ds_sfx_int
+        rhe "Только ей об этом вообще не стоит говорить."
+    else:
+        enc "Нет, показалось. Ты никогда не слышал имени Мику."
 
     mi "Нет, честно-честно! Никто не верит, а меня правда так зовут. Просто у меня мама из Японии. Папа с ней познакомился, когда строил там… Ну, то есть не строил – он у меня инженер…"
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
@@ -4461,17 +4461,12 @@ label ds_day2_pass_un_music:
             me "Лен, а почему ты так злишься при каждом упоминании Алисы?"
             show un shy pioneer at center with dspr
             un "Ничего я не злюсь... всё в порядке."
-            window hide
-            if skillcheck('drama', lvl_easy):
-                window show
+            if skillcheck('drama', lvl_challenging, passive=True):
                 play sound ds_sfx_int
                 dra "Нет, она от вас что-то скрывает, мессир."
                 dra "Похоже, тут есть какая-то неприличная тайна. Нам обязательно надо будет выяснить!"
                 dra "Но не сейчас - сейчас вы её вывести на чистую воду не сможете."
-            else:
-                window show
-                play sound ds_sfx_int
-                dra "Но она, кажется, не врёт и точно ничего не скрывает."
+                $ ds_skill_points['drama'] += 1
             play sound ds_sfx_psy
             emp "Она просто не хочет рассказывать сейчас. Попробуй ещё раз позже."
             window hide
@@ -4570,18 +4565,10 @@ label ds_day2_pass_un_clubs:
     "Шурик подходит к тебе и уверенно протянул руку."
     play sound ds_sfx_int
     enc "Его лицо тебе кажется почему-то знакомым."
-    window hide
-    menu:
-        "Развить мысль":
-            if skillcheck('encyclopedia', lvl_easy):
-                window show
-                enc "Точно, он же вылитый Шурик из комедий Гайдая!"
-            else:
-                window show
-                enc "Хотя нет, показалось..."
-            $ ds_skill_points['encyclopedia'] += 1
-        "Не обращать внимания":
-            pass
+    if skillcheck('encyclopedia', lvl_easy):
+        enc "Точно, он же вылитый Шурик из комедий Гайдая!"
+    else:
+        enc "Хотя нет, показалось..."
     show sh normal_smile pioneer at cright   with dspr
     sh "Добро пожаловать!"
     me "Угу…"
@@ -5408,6 +5395,8 @@ label ds_day2_after_pass:
                 $ ds_cyber_member = False
                 $ ds_sport_member = False
                 $ ds_lp_us -= 2
+                show mt normal panama pioneer at center with dspr
+                mt "Хорошо, я скажу об этом главам остальных клубов."
             "Остаться у кибернетиков" if ds_cyber_member:
                 window show
                 me "Я выбираю кбиернетиков."
@@ -5415,14 +5404,53 @@ label ds_day2_after_pass:
                 $ ds_sport_member = False
                 $ ds_lp_mi -= 2
                 $ ds_lp_us -= 2
+                show mt normal panama pioneer at center with dspr
+                mt "Хорошо, я скажу об этом главам остальных клубов."
             "Остаться в спортклубе" if ds_sport_member:
                 window show
                 me "Я выбираю спортклуб."
                 $ ds_music_member = False
                 $ ds_cyber_member = False
                 $ ds_lp_mi -= 2
-        show mt normal panama pioneer at center with dspr
-        mt "Хорошо, я скажу об этом главам остальных клубов."
+                show mt normal panama pioneer at center with dspr
+                mt "Хорошо, я скажу об этом главам остальных клубов."
+            "Настоять на своём":
+                if skillcheck('suggestion', lvl_medium):
+                    window show
+                    sug "Это же ей лучше, если ты сможешь везде ходить. Правилами это не запрещено, так что вперёд. Используй лозунги."
+                    me "Ольга Дмитриевна, вы не переживаете, смогу я везде. Тем более, пионер должен быть хорош во всём!"
+                    show mt smile panama pioneer at center with dspr
+                    mt "Тут ты прав... Ладно, оставайся везде."
+                    mt "Но чтобы везде успевал!"
+                    $ ds_skill_points['suggestion'] += 1
+                else:
+                    window show
+                    sug "Но, вообще она права - ты и правда всюду не поспеешь."
+                    $ ds_skill_points['suggestion'] += 1
+                    window hide
+                    menu:
+                        "Остаться в музклубе" if ds_music_member:
+                            window show
+                            me "Я выбираю музклуб."
+                            $ ds_cyber_member = False
+                            $ ds_sport_member = False
+                            $ ds_lp_us -= 2
+                        "Остаться у кибернетиков" if ds_cyber_member:
+                            window show
+                            me "Я выбираю кбиернетиков."
+                            $ ds_music_member = False
+                            $ ds_sport_member = False
+                            $ ds_lp_mi -= 2
+                            $ ds_lp_us -= 2
+                        "Остаться в спортклубе" if ds_sport_member:
+                            window show
+                            me "Я выбираю спортклуб."
+                            $ ds_music_member = False
+                            $ ds_cyber_member = False
+                            $ ds_lp_mi -= 2
+                    show mt normal panama pioneer at center with dspr
+                    mt "Хорошо, я скажу об этом главам остальных клубов."
+
     show mt normal panama pioneer at center   with dspr
     mt "Ладно, пора уже и на ужин идти."
     th "Ну наконец-то! Я уже проголодался."
@@ -5515,6 +5543,7 @@ label ds_day2_after_pass:
             $ ds_eldv_side_taken = -1
         "Промолчать":
             window show
+            $ ds_semtype -= 1
 
     stop music fadeout 3
 
@@ -8024,7 +8053,7 @@ label ds_day2_house23:
                         me "Ну ладно..."
                         show dv normal swim at center with dspr
                         dv "Cпокойной ночи!"
-                    ds_skill_points['suggestion'] += 1
+                    $ ds_skill_points['suggestion'] += 1
                 "Оставить":
                     window show
                     me "Ну ладно..."
@@ -8067,7 +8096,7 @@ label ds_day2_house23:
                 me "Мне очень хочется прикоснуться к тебе, прижаться..."
                 ins "Ты тянешься к её груди, столь манящей."
                 show dv rage swim at center with dspr
-                play sfx_face_slap
+                play sound sfx_face_slap
                 with hpunch
                 play sound ds_sfx_fys
                 pat "Она больно бьёт тебя по руке."
@@ -8430,12 +8459,11 @@ label ds_day2_beach:
     per_toc "Уже почти доплыв до буйков, ты почувствовал сильный удар по спине."
     play sound ds_sfx_mot
     svf "От этого ты чуть не ушёл под воду."
-    if skillcheck('savoir_faire', lvl_legendary):
+    if skillcheck('savoir_faire', lvl_legendary, passive=True):
         svf "Ты начинаешь захлёбываться, но усилием воли берёшь себя в руки и удерживаешься на воде, схватившись за буек."
     else:
         svf "Ты начинаешь тонуть, но тут кто-то тебя подхватывает за плечи и закидывает на буёк."
         $ ds_dv_rescued = True
-    $ ds_skill_points['savoir_faire'] += 1
     window hide
 
     scene cg d2_water_dan 
@@ -8447,7 +8475,7 @@ label ds_day2_beach:
     $ renpy.pause(1)
 
     window show
-    "Ты оборачиваешься и видишь Алису, плывущую за мной."
+    "Ты оборачиваешься и видишь Алису, плывущую за тобой."
     me "Ты что делаешь?!"
     dv "Как что? Приветствую победителя."
     play sound ds_sfx_fys
@@ -8482,7 +8510,7 @@ label ds_day2_beach:
             me "А прикольно ты приветстуешь победителей!"
             dv "А то!"
             $ ds_lp_dv += 1
-            $ ds_skill_points['composure'] += 1
+            $ ds_semtype += 1
         "Молча уплыть":
             window show
 
@@ -8596,7 +8624,7 @@ label ds_day2_beach:
     window hide
     with fade2
 
-    if skillcheck('reaction_speed', lvl_heroic):
+    if skillcheck('reaction_speed', lvl_heroic, passive=True):
         window show
         res "Она и твою одежду забрала!"
         $ ds_skill_points['reaction_speed'] += 1
@@ -8619,7 +8647,6 @@ label ds_day2_beach:
         stop ambience fadeout 0
 
         th "Стоп!{w} Она же и мою одежду забрала!"
-        $ ds_skill_points['reaction_speed'] += 1
     play music music_list["that_s_our_madhouse"] fadein 1
     window hide
 
@@ -8775,11 +8802,13 @@ label ds_day2_beach:
                         dv "Правда?.."
                         $ ds_lp_dv += 1
                         me "Да, правда..."
-                        stop music fadeout 3
                         show dv smile pioneer2 far at center with dspr
                         dv "Ну вот и отлично! Бывай!"
+                        show dv guilty pioneer2 far at fright with dspr
+                        dv "Но ты всё равно извини..."
                         hide dv with dissolve
                         th "Как же у неё настроение меняется..."
+                        stop music fadeout 3
             else:
                 window show
                 emp "Да, скорее всего в ней проснулась совесть."
@@ -8840,6 +8869,7 @@ label ds_day2_entrance:
             emp "Тем более, что этим ты можешь сделать неудобно тому пионеру..."
             $ ds_karma += 5
             stop ambience fadeout 2
+            $ disable_current_zone_ds_small()
             jump ds_day2_after_tour
 
     stop ambience fadeout 2
@@ -8873,7 +8903,7 @@ label ds_day2_entrance:
     con "Она настолько сливается с природой, что уже становилась не просто человеком, а чем-то вроде древнего божества."
     play sound ds_sfx_int
     enc "Ты вспоминаешь все теологические теории, о которых читал когда-то."
-    enc "Эта ситуация больше всего напоминает пантеизм – растворение Бога в природе, во всем сущем."
+    enc "Эта ситуация больше всего напоминает пантеизм – растворение Бога в природе, во всём сущем."
     play sound ds_sfx_psy
     ine "Вдруг это не какие-то инопланетяне или провал во времени, а божественное провидение закинуло тебя сюда?"
     play sound ds_sfx_int
@@ -9729,11 +9759,11 @@ label ds_day2_dream:
     me "Нам {i}нужно{/i} поговорить!"
     show dvw rage at center with dspr
     dv "О чём нам разговаривать? Мы всё уже обсудили ранее..."
-    show dvw normal at center with dspr
     dv "И вообще, мне надо ехать. Уехать отсюда навсегда!"
+    show dvw normal at center with dspr
     dv "Слушай. Мы уже выбрали все темы для разговора."
     dv "Все мыслимые комбинации слов мы использовали. Мы больше не составляем единое целое - больше нет ни «нас», ни наших детей."
-    dv "Всё прошло, мне нужно уезжать. А ты останешься один - навеки."
+    dv "Всё прошло, и мне нужно уезжать. А ты останешься один - навеки."
     play sound ds_sfx_mot
     svf "Не пытайся её поцеловать {i}сейчас{/i}. Ты слишком на нервах из-за услышанного."
     me "Но... разве так должно быть?"
@@ -9758,7 +9788,7 @@ label ds_day2_dream:
             ine "А мы все тебя предупреждали..."
             th "Все?"
             arb "Да, как бы все."
-            lim "{i}Буквально{/i} все. От глубин подсознания до последнего нейрона неокортекса."
+            lim "{i}Буквально{/i} все. От глубин подсознания до последнего нейрона твоего неокортекса."
             me "Рептильный мозг был прав... не нужно было об этом вспоминать..."
             dv "Я не понимаю, о чём ты..."
         "Мой траур":
@@ -9766,7 +9796,7 @@ label ds_day2_dream:
             me "Я в трауре из-за тебя... а ты ведь даже не умерла."
             show dvw rage at center with dspr
             dv "О боже, Семён! Я не желаю от тебя слышать такого! Траур по живой девушке - где это слыхано?!"
-            dv "С меня довольно! Я не восьмидесятилетняя бабка, чтобы только вздыхать! Мне чуть больше тридцати лет - мне нужно жить!"
+            dv "С меня довольно! Я не восьмидесятилетняя бабка, чтобы только вздыхать! Мне семнадцать лет - мне нужно жить!"
             play sound ds_sfx_fys
             pat "Тебе невыносимо больно это слышать. Твоё сердце сжимается от давления."
             "Ты хватаешься за грудь."
@@ -9779,7 +9809,7 @@ label ds_day2_dream:
             me "Но мы... были женаты."
             dv "И это не так! Мы просто были в отношениях. Пожили вместе и разбежались!"
             show dvw normal at center with dspr
-            dv "«Ленина 56»... Это было очень давно, миллионы лет назад!"
+            dv "«Ленина 49»... Это было очень давно, миллионы лет назад!"
             dv "{i}Тогда{/i} я тебя любила... больше, чем кто-либо когда-либо кого-либо любил!"
             dv "Но это в прошлом. От этого ничего не осталось. Ни детей - ничего! Мы живём в самом холодном мире... где всем плевать!"
             dv "И вообще, мне надо ехать!"
@@ -9818,20 +9848,20 @@ label ds_day2_dream:
             $ skillcheck('suggestion', lvl_medium)
             window show
             show dvw normal:
-                xpos 0.5 ypos 0.5
-                linear 0.2 zoom 120
+                xalign 0.5 yalign 0.5
+                linear 0.5 zoom 120
             sug "Трясущимися ногами ты пододвигаешься ближе к ней. Её тело приближается к тебе. Такое тёплое... Закрыв глаза, ты тянешься своим ртом к её губам."
             sug "Вот ты соприкасаешься... но она не отвечает."
             per_sme "Ты можешь почувствовать её запах... такой приятный."
             per_tas "Ты можешь почувствовать вкус её губ... сладкий как ничто иное."
             per_toc "Ты чувствуешь теплоту, излучаемую ею, её дыхание."
-            sug "Но ты не чувствуешь любви."
+            emp "Но ты не чувствуешь любви."
             me "Ты... не отвечаешь..."
             "Этот момент кончается. Она отводит своё лицо от тебя."
             show dvw normal:
-                xpos 0.5 ypos 0.5
+                xalign 0.5 yalign 0.5
                 zoom 120
-                linear 0.2 zoom 100
+                linear 0.5 zoom 100
             "Она старается на тебя не смотреть."
             sug "Ты должен меня придушить. Нет слов, чтобы описать, как я тебя подвёл..."
             me "Но... почему?"
@@ -9840,7 +9870,7 @@ label ds_day2_dream:
             window show
     me "И это всё?"
     show dvw smile at center with dspr
-    dv "Нет. Ты должен знать о кое-чём ещё."
+    dv "Нет. Ты должен знать кое о чём ещё."
     dv "Я беременна..."
     me "От меня?"
     show dvw rage at center with dspr
@@ -9870,9 +9900,9 @@ label ds_day2_dream:
             dv "И тебе придётся жить с этим!"
         "Попрощаться":
             window show
-            me "Прощай!"
+            me "Прощай..."
     dv "А теперь мне точно пора."
-    show pi normal at right with dspr
+    show pi normal at right with dissolve
     play sound ds_sfx_mot
     res "А это кто?"
     dv "Познакомься... Это мой новый мужчина."
@@ -9887,6 +9917,6 @@ label ds_day2_dream:
     play sound sfx_bus_honk
     scene bg black
     with dissolve2
-    stop music fadein 5
+    stop music fadeout 5
     $ renpy.pause(5.0)
     jump ds_day3_morning

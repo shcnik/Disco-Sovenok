@@ -6,12 +6,14 @@ init:
     $ ds_ran = False
     $ ds_cry = False
     $ ds_beat_sl = False
+    $ ds_ran_from_un = False
     $ ds_beat_dv = False
     $ ds_fake_name = False
     $ ds_accept_el = False
     $ ds_play_football = False
     $ ds_caught_us = False
     $ ds_betray_dv = False
+    $ ds_sl_beach_invite = False
     $ ds_sl_keys = False
     $ ds_dinner_dv = False
     $ ds_sl_distracted = False
@@ -44,19 +46,12 @@ label ds_day1:
     "Ты оглядываешь автобус... "
     play sound ds_sfx_mot
     per_eye "И не видишь двери! И автобус какой-то другой..."
-    window hide
-    menu:
-        "Всмотреться":
-            if skillcheck('encyclopedia', lvl_easy):
-                window show
-                play sound ds_sfx_int
-                enc "Это самый настоящий Икарус!"
-            else:
-                window show
-                play sound ds_sfx_int
-                enc "Такого автобуса ты никогда не видел."
-        "Забить":
-            window show
+    if skillcheck('encyclopedia', lvl_easy, passive=True):
+        play sound ds_sfx_int
+        enc "Это самый настоящий Икарус!"
+    else:
+        play sound ds_sfx_int
+        enc "Такого автобуса ты никогда не видел."
     th "Как?..{w} Что?.. {w} Я всё-таки умер?"
     th "Или меня похитили?"
 
@@ -76,12 +71,12 @@ label ds_day1:
     scene cg ds_day1_bus_exit
     with dissolve
 
-    $ renpy.pause(0.5)
+    $ renpy.pause(0.5, hard=True)
 
     scene bg ext_camp_entrance_day
     with dspr
 
-    $ renpy.pause(0.5)
+    $ renpy.pause(0.5, hard=True)
 
     scene bg ext_bus
     with dspr
@@ -143,6 +138,7 @@ label ds_day1:
         "Бежать":
             window show
             $ ds_ran = True
+            $ ds_semtype -= 1
             stop music fadeout 3
 
             "..."
@@ -185,7 +181,8 @@ label ds_day1:
             per_eye "А уж сами деревья...{w} До леса было довольно далеко, но казалось, что они сомкнули свои стройные ряды и только и ждут приказа, чтобы начать наступление на поля и степи."
             "Ты, отдышавшись, смотришь на автобус, который уже почти скрылся из виду."
             th "Неплохо пробежался..."
-            "Страх с новой силой захлёстывает тебя."
+            play sound ds_sfx_psy
+            vol "Страх с новой силой захлёстывает тебя."
             play sound ds_sfx_int
             lgc "Хотя бы эти ЛЭП...{w} Значит, тут есть люди."
             lgc "Хотя что это {i}значит{/i}?"
@@ -198,7 +195,7 @@ label ds_day1:
             th "Конечно, страшно, но вряд ли в полях и лесах скрываются какие-либо ответы, а это чертово ведро с гайками все же единственное, что хоть как-то связывает меня с реальным миром."
         "Не бежать":
             window show
-            "Я остался около автобуса. {w}И посмотрел вокруг."
+            "Ты остаёшься около автобуса. {w}И смотришь вокруг."
             stop music fadeout 3
 
             "..."
@@ -223,9 +220,8 @@ label ds_day1:
             per_eye "Нет, конечно, летом обычно так и бывает – красиво, зелено и жарко."
             per_eye "Но трава – слишком уж сочная, кусты – не такие, какими должны быть кусты – пышные, сквозь них ничего не видно, как кроны деревьев, ей-богу..."
             per_eye "А уж сами деревья...{w} До леса было довольно далеко, но казалось, что они сомкнули свои стройные ряды и только и ждут приказа, чтобы начать наступление на поля и степи."
-            "Ты, отдышавшись, смотришь на автобус, который уже почти скрылся из виду."
-            th "Неплохо пробежался..."
-            "Страх с новой силой захлёстывает тебя."
+            play sound ds_sfx_psy
+            vol "Страх с новой силой захлёстывает тебя."
             play sound ds_sfx_int
             lgc "Хотя бы эти ЛЭП...{w} Значит, тут есть люди."
             lgc "Хотя что это {i}значит{/i}?"
@@ -234,7 +230,6 @@ label ds_day1:
             "Похоже, ты дошел до той точки невозвращения, когда надо либо уже сходить с ума, либо все-таки попытаться как-то понять, что же с тобой произошло."
             play sound ds_sfx_mot
             com "И пока еще есть возможность, стоит выбрать второй вариант!"
-    "..."
 
     scene bg ext_camp_entrance_day
     with dissolve2
@@ -325,8 +320,10 @@ label ds_day1:
             else:
                 window show
                 $ ds_skill_points['composure'] += 1
+            $ ds_semtype += 1
         "Начать истерить":
             window show
+            $ ds_semtype -= 1
     com "Тебя охватывает уверенность, что это конец."
     th "Но почему?!"
     th "Это несправедливо! Неужели я хуже других?!"
@@ -388,6 +385,7 @@ label ds_day1_approach:
     menu:
         "Пойти":
             window show
+            $ ds_semtype += 1
             "Ты уже почти дошел до ворот, как..."
         "Не идти":
             $ renpy.pause(1)
@@ -441,11 +439,19 @@ label ds_day1_approach:
             "Девочка помахала мне рукой и скрылась за воротами."
             emp "Кажется, ты для нее что-то такое...{w} нормальное."
         "Ответить":
+            if skillcheck('volition', lvl_easy):
+                window show
+                play sound ds_sfx_psy
+                vol "Ответь спокойно. Решительно."
+                me "Да, я новенький."
+            else:
+                window show
+                play sound ds_sfx_psy
+                vol "Тебе тяжело говорить от страха. Запинаясь, ты произносишь..."
+                me "Ну… да…"
             $ ds_skill_points['volition'] += 1
             $ ds_morale += 1
             $ ds_lp_sl += 1
-            window show
-            me "Ну… да…"
             show sl smile2 pioneer at center   with dspr
             slp "Что же, добро пожаловать!"
             "Она широко улыбнулась."
@@ -476,12 +482,16 @@ label ds_day1_approach:
             window show
             menu:
                 "Да, понял":
-                    pass
+                    window show
+                    me "Ну да, я всё понял!"
+                    $ ds_semtype += 1
                 "Нет, не понял":
-                    pass
+                    window show
+                    me "Не-а, я ничего не понял..."
+                    "Но она тебя не слышит."
                 "Промолчать":
-                    pass
-            window show
+                    window show
+                    $ ds_semtype -= 1
             slp "А мне пора."
             hide sl  with dissolve
             "Девочка помахала мне рукой и скрылась за воротами."
@@ -491,6 +501,7 @@ label ds_day1_approach:
             $ ds_karma -= 5
             $ ds_lp_sl -= 1
             window show
+            $ ds_semtype += 1
             com "Ты решительно идёшь в ворота, совершенно не замечая девочки."
             show sl scared pioneer close at center with dspr
             slp "Ты чего?"
@@ -525,7 +536,6 @@ label ds_day1_approach:
                         slp "Что это было?"
                         show sl normal pioneer at left with dspr
                         emp "Однако, она всё-таки собирается тебе сказать то, что хотела."
-
             slp "В общем, тебе к вожатой надо сразу, она все расскажет!"
             slp "Смотри.{w} Сейчас идешь прямо-прямо, доходишь до площади, затем сворачиваешь налево, дальше будут палатки."
             slp "Ну спросишь у кого-нибудь, где домик Ольги Дмитриевны!"
@@ -598,9 +608,13 @@ label ds_day1_approach:
         "Подойти к ней":
             window show
             "Ты уже собираешься было подойти к ней..."
+            $ ds_semtype += 1
         "Побежать":
             window show
             "Ты сбегаешь отсюда в глубь этого места."
+            $ ds_semtype -= 1
+            $ ds_lp_un -= 1
+            $ ds_ran_from_un = True
             jump ds_day1_inside_camp
         "Подождать":
             window show
@@ -634,9 +648,11 @@ label ds_day1_approach:
     $ renpy.pause(0.1, hard=True)
     scene cg ds_day1_grasshopper_f3
 
-    window show
-    if skillcheck('perception', lvl_trivial):
+    if skillcheck('perception', lvl_trivial, passive=True):
+        window show
+        play sound ds_sfx_mot
         per_eye "Это кузнечик."
+    window show
     play sound ds_un_scream
     unp "Ииииии-иии-иииииии!"
     "Она моментально убегает в сторону, где, по идее, Ленин когда-то читал речь о свершившейся рабоче-крестьянской революции."
@@ -774,6 +790,7 @@ label ds_day1_inside_camp:
             $ ds_lp_un += 1
         "Промолчать":
             window show
+            $ ds_semtype -= 1
             show dv normal pioneer2 at center   with dspr
             dvp "Ладно, увидимся!"
             "Она как-то злобно улыбнулась одними глазами и прошла мимо тебя."
@@ -821,6 +838,7 @@ label ds_day1_inside_camp:
             me "Да! А это у вас ритуал встречи такой."
             me "Забавный, надо сказать."
             "И ты начинаешь смеяться."
+            $ ds_semtype += 1
             show dv surprise at center with dspr
             "Пионерка несколько смутилась от такого твоего поведения."
             show dv smile pioneer2 at center with dspr
@@ -834,6 +852,9 @@ label ds_day1_inside_camp:
     "Самое интересное, что даже эта враждебная девочка кажется мне совершенно нормальной"
     hfl "В ней не ощущается какой-либо смертельной опасности."
     hfl "Разве что страх получить по носу..."
+    play sound ds_sfx_psy
+    ine "А ещё её лицо кого-то тебе напоминает..."
+    ine "А впрочем забудь!"
     window hide
 
     scene bg ext_square_day 
@@ -890,6 +911,9 @@ label ds_day1_inside_camp:
             show sl smile swim at center   with dissolve
             "Перед тобой стоит та первая девочка."
             slp "Я же тебе сказала повернуть налево на площади, а ты куда пошел?"
+            "Пионерская форма на ней сменилась на купальник."
+            play sound ds_sfx_fys
+            ins "Какие формы, какая фигура!"
             window hide
             menu:
                 "Извиниться":
@@ -899,6 +923,7 @@ label ds_day1_inside_camp:
                 "Нагрубить":
                     window show
                     me "Куда захотел, туда и пошёл!"
+                    $ ds_semtype += 1
                     show sl sad swim at center with dissolve
                     slp "Ну зачем сразу так грубо?"
                     $ ds_lp_sl -= 1
@@ -906,20 +931,37 @@ label ds_day1_inside_camp:
                     window show
                     me "Да просто решил посмотреть, что в другой стороне..."
                     slp "А... ну ладно. Только лучше бы ты сначала зашёл к вожатой."
+                "Начать домогаться":
+                    if skillcheck('instinct', lvl_easy):
+                        window show
+                        ins "Начинай приставать к ней, такой шанс!"
+                        me "Какая у тебя прекрасная фигура, позволь потрогать..."
+                        show sl angry swim at center with dspr
+                        slp "Нет, не позволю! Что ты себе позволяешь?"
+                        $ ds_lp_sl -= 1
+                    else:
+                        window show
+                        ins "Ты слишком нервничаешь."
+                    show sl normal swim at center with dspr
+                    $ ds_skill_points['instinct'] += 1
+                    $ ds_semtype += 1
                 "Промолчать":
                     window show
-            "Пионерская форма на ней сменилась на купальник."
-            $ ds_skill_points['instinct'] += 1
-            play sound ds_sfx_fys
-            ins "Какие формы, какая фигура!"
+                    $ ds_semtype -= 1
             slp "Ой, я же так и не представилась!{w} Меня Славя зовут!"
             $ ds_met['sl'] = 2
             slp "Вообще, полностью я Славяна Феоктистова, но все меня Славей зовут.{w} И ты тоже зови!"
-            me "А… да…"
-            play sound ds_sfx_mot
-            com "Ты все еще был несколько растерян, так что на более осмысленные ответы меня не хватало."
+            if skillcheck('composure', lvl_up_medium, passive=True):
+                play sound ds_sfx_mot
+                com "Тебе удаётся взять себя в руки и ответить чётко."
+                me "Хорошо, понял тебя."
+            else:
+                play sound ds_sfx_mot
+                com "Ты все еще был несколько растерян, так что на более осмысленные ответы тебя не хватает."
+                me "А… да…"
             sl "А тебя?"
-            "Кажется, ее взгляд пронизывает тебя насквозь."
+            play sound ds_sfx_psy
+            vol "Кажется, ее взгляд пронизывает тебя насквозь."
             window hide
             menu:
                 "Назвать имя":
@@ -965,6 +1007,7 @@ label ds_day1_inside_camp:
                     sl "А, точно... вожатая же говорила, что тебя Семёном звать."
                 "Проигнорировать":
                     window show
+                    $ ds_semtype -= 1
                     th "Пока лучше промолчу, не буду отвечать."
                     "..."
                     sl "Ты чего? Всё нормально?"
@@ -1035,7 +1078,7 @@ label ds_day1_inside_camp:
                     pat "Да не то слово, так познакомились..."
                 "Не спрашивать":
                     window show
-                    "Я решил не расспрашивать до поры до времени Славю о происходящем здесь, о местных обитателях."
+                    th "Не буду расспрашивать до поры до времени Славю о происходящем здесь, о местных обитателях."
                     th "Лучше сначала дойти до этой таинственной Ольги Дмитриевны."
                     th "Она у них главная вроде бы."
             window hide
@@ -1079,9 +1122,14 @@ label ds_day1_inside_camp:
             slp "Ой, я же так и не представилась!{w} Меня Славя зовут!"
             $ ds_met['sl'] = 2
             slp "Вообще, полностью Славяна Феоктистова, но все меня Славей зовут.{w} И ты тоже зови!"
-            me "А… да…"
-            play sound ds_sfx_mot
-            com "Ты все еще был несколько растерян, так что на более осмысленные ответы меня не хватало."
+            if skillcheck('composure', lvl_up_medium, passive=True):
+                play sound ds_sfx_mot
+                com "Тебе удаётся взять себя в руки и ответить чётко."
+                me "Хорошо, понял тебя."
+            else:
+                play sound ds_sfx_mot
+                com "Ты все еще был несколько растерян, так что на более осмысленные ответы тебя не хватает."
+                me "А… да…"
             sl "А тебя?"
             "Кажется, ее взгляд пронизывает тебя насквозь."
             window hide
@@ -1129,6 +1177,7 @@ label ds_day1_inside_camp:
                     sl "А, точно... вожатая же говорила, что тебя Семёном звать."
                 "Проигнорировать":
                     window show
+                    $ ds_semtype -= 1
                     th "Пока лучше промолчу, не буду отвечать."
                     "..."
                     sl "Ты чего? Всё нормально?"
@@ -1262,6 +1311,7 @@ label ds_day1_inside_camp:
                 rhe "Она удивлена тем, что ты ляпнул... и удивлена не в хорошем смысле."
                 mtp "Э... {w}ладно."
                 mtp "Меня Ольга Дмитриевна зовут, я вожатая."
+            $ ds_semtype += 1
         "Ничего не говорить":
             mtp "Пришел-таки!{w} Отлично!{w} Меня Ольга Дмитриевна зовут, я вожатая."
     $ ds_met['mt'] = 2
@@ -1407,7 +1457,7 @@ label ds_day1_inside_camp:
 
     window show
     "Вы направляетесь в сторону площади."
-    "Там на одной из лавочек сидит Лена и читала какую-то книжку.{w} Электроник уверенным шагом подходит к ней."
+    "Там на одной из лавочек сидит Лена и читает какую-то книжку.{w} Электроник уверенным шагом подходит к ней."
     show el normal pioneer at cleft   with dspr
     show un normal pioneer at cright   with dspr
     with dissolve
@@ -1498,7 +1548,7 @@ label ds_day1_inside_camp:
 
             window show
             "Ты решил, что не хочешь еще раз сталкиваться с этой агрессивной девочкой, Алисой, и бросился вслед за Электроником."
-            $ ds_skill_points['half_light'] += 1
+            $ ds_semtype -= 1
             window hide
 
             $ persistent.sprite_time = "day"
@@ -1546,6 +1596,7 @@ label ds_day1_inside_camp:
 
             hide dv  with dissolve
         "Остановить Алису":
+            $ ds_semtype += 1
             if skillcheck('physical_instrument', lvl_up_medium):
                 $ ds_skill_points['physical_instrument'] += 1
                 window show
@@ -1849,8 +1900,10 @@ label ds_day1_inside_camp:
                 hide dv  with dissolve
                 $ ds_skill_points['authority'] += 1
             $ ds_lp_dv += 1
+            $ ds_semtype += 1
         "Не вмешиваться":
             window show
+            $ ds_semtype -= 1
             mt "Немедленно приведи в порядок форму!"
             show dv sad pioneer2 at left   with dspr
             dv "Ладно-ладно…"
@@ -1884,6 +1937,7 @@ label ds_day1_inside_camp:
             me "Это… А может…"
         "Смириться":
             window show
+            $ ds_semtype -= 1
     show mt smile pioneer at center   with dspr
     mt "Да, точно, как раз уже и еда стоит!"
     "Тебе не остаётся ничего другого, кроме как согласиться."
@@ -1941,7 +1995,7 @@ label ds_day1_inside_camp:
             play sound ds_sfx_fys
             hfl "Ты грозно посмотрел на нее и уже было вытянул вперед руку..."
         "Ничего не делать":
-            $ ds_skill_points['composure'] += 1
+            $ ds_semtype += 1
             window show
     us "Нету у меня ее, смотри!"
     play sound ds_sfx_mot
@@ -1968,6 +2022,7 @@ label ds_day1_inside_camp:
             me "Спасибо…"
             sug "Только и смог сказать ты."
             $ ds_lp_us += 1
+            $ ds_semtype -= 1
         "Гордо отказаться":
             window show
             me "Не очень-то мне и надо!"
@@ -1981,6 +2036,7 @@ label ds_day1_inside_camp:
             scene bg int_dining_hall_people_day 
             with dissolve
             "Ты встаёшь и выходишь из столовой."
+            $ ds_semtype += 1
             scene bg int_dining_hall_day 
             with dissolve
             jump ds_day1_think_square
@@ -2020,7 +2076,7 @@ label ds_day1_inside_camp:
     scene bg int_dining_hall_people_day 
     with dissolve
 
-    if skillcheck('composure', lvl_up_medium):
+    if skillcheck('composure', lvl_up_medium, passive=True):
         play sound ds_sfx_mot
         window show
         com "Но тебе удаётся не подать виду."
@@ -2226,6 +2282,7 @@ label ds_day1_inside_camp:
         "Не бежать":
             window show
             th "Да какая разница?"
+            $ ds_semtype += 1
             svf "Да и вряд ли ты её догонишь."
             scene bg ext_dining_hall_away_day
             "Ты выходишь из столовой и идёшь куда-то."
@@ -2472,6 +2529,7 @@ label ds_day1_sl_night:
         "Молча наблюдать" if not ds_beat_dv:
             window show
             th "Лучше просто постою, не буду лезть."
+            $ ds_semtype -= 1
             show dv normal pioneer at center with dspr
             $ renpy.pause(1.0)
             "Алиса продолжает увлечённо пытаться вскрыть замок."
@@ -2499,6 +2557,7 @@ label ds_day1_sl_night:
         "Уйти":
             window show
             "Ты решаешь, что лучше вообще не лезть и обойтись без ужина, и уходишь."
+            $ ds_semtype -= 1
             jump ds_day1_meet_un
 
 label ds_day1_dining_sl:
@@ -2556,6 +2615,7 @@ label ds_day1_dining_sl:
         "Не знаю...":
             window show
             me "Ну, я даже не знаю..."
+            $ ds_semtype -= 1
             "Глупо спрашивать у человека, попавшего в одночасье в другую реальность, понравились ли ему меню в столовой, вожатая и отведенное койкоместо."
             sl "Ничего, скоро привыкнешь!"
             th "По правде говоря, привыкать к подобному совершенно не хочется, но ведь она не знает..."
@@ -2609,6 +2669,10 @@ label ds_day1_dining_sl:
                     $ ds_lp_sl += 1
                 "Промолчать":
                     window show
+                "Чужое мнение":
+                    window show
+                    me "Но другие же не просто так говорят, что им не нравится."
+                    sl "Наверное, ты прав..."
         "Не интересоваться":
             window show
     th "Кажется, этот разговор уводит меня куда-то далеко, совсем не туда, куда я хотел попасть."
@@ -2653,6 +2717,7 @@ label ds_day1_dining_sl:
                     window show
                     me "А... ну да, хорошо... сходим..."
                     $ ds_lp_sl += 1
+                    $ ds_sl_beach_invite = True
                 "Отклонить":
                     window show
                     me "Не... я пока не готов..."
@@ -2772,22 +2837,30 @@ label ds_day1_dining_dv:
     $ renpy.pause(2)
 
     th "Может, попробовать заговорить с Алисой?"
-    play sound ds_sfx_mot
-    play sound_loop sfx_far_steps
-    per_hea "Не в этот раз! Шаги! {w}А вот и Славя!"
-    play sound ds_sfx_fys
-    hfl "Если не хотите поиметь проблем с вожатой - вам бы спрятаться..."
-    window hide
-    menu:
-        "Спрятаться":
-            window show
-            me "Алиса, прячемся!"
-        "Ждать расправы":
-            window show
-            "Ты делаешь вид, будто ничего не происходит."
-            "И вот Славя заходит и видит вас сидящими в столовой."
-            jump ds_day1_caught_dv
-
+    if skillcheck('perception', lvl_medium, passive=True):
+        play sound_loop sfx_far_steps
+        play sound ds_sfx_mot
+        per_hea "Не в этот раз! Шаги! {w}А вот и Славя!"
+        $ ds_skill_points['perception'] += 1
+        play sound ds_sfx_fys
+        hfl "Если не хотите поиметь проблем с вожатой - вам бы спрятаться..."
+        window hide
+        menu:
+            "Спрятаться":
+                window show
+                me "Алиса, прячемся!"
+            "Ждать расправы":
+                window show
+                "Ты делаешь вид, будто ничего не происходит."
+                "И вот Славя заходит и видит вас сидящими в столовой."
+                jump ds_day1_caught_dv
+    else:
+        me "Алиса, а как тебе тут?"
+        dv "В смысле? В лагере что ли?"
+        dv "Да замечательно, только вот вожатая постоянно лезет со своими правилами, да и Славя тоже!"
+        "Ты хотел было ответить, но тут тебе перебивают."
+        sl "Кто тут звал Славю? А вот и я!"
+        jump ds_day1_caught_dv
     scene bg int_dining_hall_night 
     with dissolve
     show dv surprise pioneer at center with dissolve
@@ -2939,6 +3012,7 @@ label ds_day1_caught_dv:
         "Взять вину на себя":
             window show
             me "Это я взломал столовую и утащил за собой Алису."
+            $ ds_semtype += 1
             show sl surprise pioneer at center with dissolve
             show dv surprise pioneer at left with dissolve
             sl "То есть, это ты, а не Алиса, инициатор?!"
@@ -2958,12 +3032,15 @@ label ds_day1_caught_dv:
                 "Не за что":
                     window show
                     me "Да не за что..."
+                    $ ds_semtype -= 1
                 "Покичиться":
                     window show
                     me "Вот видишь, какой я молодец!"
+                    $ ds_semtype += 1
                     show dv angry pioneer at center with dspr
                     dv "А ты не зазнавайся!"
                 "Нужно оплатить натурой":
+                    $ ds_semtype += 1
                     if skillcheck('instinct', lvl_up_medium):
                         window show
                         play sound ds_sfx_fys
@@ -2981,6 +3058,7 @@ label ds_day1_caught_dv:
                         $ ds_skill_points['instinct'] += 1
                 "Помощь в долг":
                     window show
+                    $ ds_semtype += 1
                     me "Ну... ты мне будешь должна за это."
                     show dv grin pioneer at center with dspr
                     dv "Вообще-то у тебя тоже есть должки!"
@@ -3006,6 +3084,7 @@ label ds_day1_caught_dv:
                         "Отступить":
                             window show
                             th "Ладно, фиг с тобой!"
+                            $ ds_semtype -= 1
                 "Промолчать":
                     window show
             show dv smile pioneer at center with dissolve
@@ -3014,6 +3093,7 @@ label ds_day1_caught_dv:
         "Свалить вину на Алису":
             window show
             me "Это всё Алиса! Она вломилась в столовую!"
+            $ ds_semtype -= 1
             dv "Это ты вообще-то взламывал замок!"
             me "Неправда!"
             dv "Да пошли вы все!"
@@ -3046,10 +3126,11 @@ label ds_day1_caught_alone:
             me "Да я просто... {w}слишком уж хотелось есть, а ты шла долго."
             me "Вот я и не выдержал и вломился в столовую."
             $ ds_lp_dv += 1
-            $ ds_skill_points['volition'] += 1
+            $ ds_semtype += 1
         "Сдать Алису":
             window show
             me "Да это всё Алиса! Она взломала столовую."
+            $ ds_semtype -= 1
             $ ds_lp_dv -= 4
             $ ds_betray_dv = True
             me "А я увидел открытую дверь и вошёл."
@@ -3086,7 +3167,7 @@ label ds_day1_meet_un:
     window hide
     menu:
         "Подойти":
-            if skillcheck('volition', lvl_medium):
+            if skillcheck('volition', lvl_medium, modifiers={'ds_ran_from_un': -1}):
                 window show
                 play sound ds_sfx_psy
                 vol "Подойди и поговори с ней."
@@ -3251,6 +3332,7 @@ label ds_day1_meet_un:
             window show
             play sound ds_sfx_psy
             vol "Ты решаешь не подходить к ней, и просто проходишь мимо."
+            $ ds_semtype -= 1
     scene bg ext_square_night with dissolve
 
     stop music fadeout 5
@@ -3307,12 +3389,13 @@ label ds_day1_meet_un:
             mt "Ты же хочешь стать порядочным пионером?"
             "Она акцентировала внимание на слове «порядочным»."
             me "Да… Конечно…"
-            "Я задумался на мгновение."
+            "Ты задумываешься на мгновение."
     window hide
     menu:
         "Нагрубить":
             window show
             $ ds_rude_mt = True
+            $ ds_semtype += 1
             me "Но ты-то не против?"
             show mt surprise pioneer at center   with dspr
             "Она как-то странно на тебя смотрит."
@@ -3489,6 +3572,8 @@ label ds_day1_meet_un:
 
     window show
     th "И даже воспоминания об Алисе не вызвали каких-то особо отрицательных эмоций."
+    play sound ds_sfx_psy
+    ine "Ну, разве что она о чём-то тебе напомнила. О чём-то, что ты ещё не осознал."
     window hide
 
     scene black 

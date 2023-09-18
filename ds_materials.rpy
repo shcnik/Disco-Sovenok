@@ -32,8 +32,6 @@ init python:
 
     # Функция, организующая проверки
     def skillcheck(skill, threshold, passive=False, modifiers={}):
-        if passive:
-            return ds_skill_points[skill] + 6 >= threshold
         dices = [1, 2, 3, 4, 5, 6]
         first_dice = renpy.random.choice(dices)
         second_dice = renpy.random.choice(dices)
@@ -42,23 +40,24 @@ init python:
             if eval(variable):
                 points += bonus
         result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
-        # renpy.show('roll')
-        if result:
-            renpy.play(ds_check_success, channel='sound')
-        else:
-            renpy.play(ds_check_failure, channel='sound')
-        renpy.pause(delay=1.0, hard=True)
-        # renpy.hide('roll')
-        if result:
-            renpy.show('check success')
-        else:
-            renpy.show('check failure')
-        renpy.show("first_dice dice" + str(first_dice))
-        renpy.show("second_dice dice" + str(second_dice))
-        renpy.pause(delay=1.0)
-        renpy.hide('check')
-        renpy.hide('first_dice')
-        renpy.hide('second_dice')
+        if not passive:
+            # renpy.show('roll')
+            if result:
+                renpy.play(ds_check_success, channel='sound')
+            else:
+                renpy.play(ds_check_failure, channel='sound')
+            renpy.pause(delay=1.0, hard=True)
+            # renpy.hide('roll')
+            if result:
+                renpy.show('check success')
+            else:
+                renpy.show('check failure')
+            renpy.show("first_dice dice" + str(first_dice))
+            renpy.show("second_dice dice" + str(second_dice))
+            renpy.pause(delay=1.0)
+            renpy.hide('check')
+            renpy.hide('first_dice')
+            renpy.hide('second_dice')
         return result
 
     def ds_get_maximal_girl():
@@ -215,6 +214,7 @@ init:
     $ ds_morale = 0 # Боевой дух
     $ ds_archetype = 0 # Избранный персонаж
     $ ds_knowing = 0 # Знание
+    $ ds_semtype = 0 # Тип Семёна
 
 # Эффекты
 
@@ -875,10 +875,10 @@ init:
 
 ## Сны Семёна
 
-    image dvw normal = "mods/disco_sovenok/normal/dvw/dv_normal.png"
-    image dvw laugh = "mods/disco_sovenok/normal/dvw/dv_laugh.png"
-    image dvw smile  = "mods/disco_sovenok/normal/dvw/dv_smile.png"
-    image dvw rage = "mods/disco_sovenok/normal/dvw/dv_rage.png"
+    image dvw normal = "mods/disco_sovenok/sprite/normal/dvw/dv_normal.png"
+    image dvw laugh = "mods/disco_sovenok/sprite/normal/dvw/dv_laugh.png"
+    image dvw smile  = "mods/disco_sovenok/sprite/normal/dvw/dv_smile.png"
+    image dvw rage = "mods/disco_sovenok/sprite/normal/dvw/dv_rage.png"
 
 
 # Эффекты
