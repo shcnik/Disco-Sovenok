@@ -285,6 +285,7 @@ init:
 
 ## Иные персонажи
 
+    $ cr = Character (u'Повешенный труп', color="e1dd7d", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ gn = Character (u'Генда', color="7d7f7d", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ ck = Character (u'Повариха', color="1f75fe", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
