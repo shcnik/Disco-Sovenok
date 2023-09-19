@@ -39,6 +39,15 @@ init python:
         for variable, bonus in modifiers:
             if eval(variable):
                 points += bonus
+        if skill in ['volition', 'authority', 'suggestion', 'composure']:
+            if ds_semtype > 4:
+                points += 2
+            elif ds_semtype >= 2:
+                points += 1
+            elif ds_semtype <= -2:
+                points -= 1
+            elif ds_semtype < -4:
+                points -= 2
         result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
         if not passive:
             # renpy.show('roll')

@@ -2862,6 +2862,7 @@ label ds_day2_pass_dv_lunch:
                             "Поддержать":
                                 window show
                                 me "Я ещё плохо тебя знаю... но понимаю, что тебе от чего-то плохо."
+                                show dv rage pioneer2 at center with dspr
                                 dv "Не лезь в это... это не твоё дело!"
                                 emp "Но это значит, что точно что-то есть!"
                                 emp "Обязательно вернись к этому, когда (и если) сблизишься с ней больше."
@@ -5818,7 +5819,7 @@ label ds_day2_after_pass:
                         play sound ds_sfx_psy
                         emp "Видимо, Алисе не понравилась сложившаяся ситуация... но ничего больше ты понять не можешь."
                         $ ds_skill_points['empathy'] += 1
-                        me "Ты чего, Алис?"
+                        me "Ты чего, Алис? Зачем так агрессивно себя вести?"
                         show dv angry pioneer at center with dspr
                         dv "Отстаньте от меня все!"
                         emp "К диалогу с тобой она не расположена."
@@ -6420,7 +6421,7 @@ label ds_day2_cards_alone:
                     play sound ds_sfx_fys
                     hfl "Тебе начинает казаться, что кто-то смотрит за тобой."
                     hfl "Выйди и осмотрись."
-                    scene scene bg ext_house_of_mt_sunset
+                    scene bg ext_house_of_mt_sunset
                     with dissolve
                     "Ты выходишь из домика."
                     hfl "Осмотри каждый куст."
@@ -6436,6 +6437,8 @@ label ds_day2_cards_alone:
                 else:
                     window show
                     play sound ds_sfx_fys
+                    hfl "Скорее всего, достаточно будет просто посмотреть за дверь."
+                    "Ты выглядываешь. Никого нет."
                     hfl "Да всё в порядке! Продолжай изучать!"
                     $ ds_skill_points['half_light'] += 1
                     "Ты приступаешь к изучению содержимого ящика."

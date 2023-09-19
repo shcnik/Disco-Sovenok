@@ -39,6 +39,7 @@ label ds_start:
     
     $ ds_health = ds_skill_points['endurance']
     $ ds_morale = ds_skill_points['volition']
+    $ ds_semtype = 0
 
     $ ds_met['dv'] = 0
     $ ds_met['un'] = 0

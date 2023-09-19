@@ -14,6 +14,7 @@ init python:
         ds_skill_points['endurance'], ds_skill_points['pain_threshold'], ds_skill_points['physical_instrument'], ds_skill_points['instinct'], ds_skill_points['shivers'], ds_skill_points['half_light'] = 3, 3, 3, 3, 3, 3
         ds_skill_points['perception'], ds_skill_points['coordination'], ds_skill_points['reaction_speed'], ds_skill_points['savoir_faire'], ds_skill_points['interfacing'], ds_skill_points['composure'] = 3, 3, 3, 3, 3, 3
         ds_available_points = 8
+        ds_semtype = 0
     
     def ds_abs(x):
         if x < 0:
@@ -304,6 +305,20 @@ init python:
 
         def init_small_map_zones_ds():
             init_small_map_zones_realization_ds(store.small_map_zones_ds, "nothing_here")
+    
+    def ds_get_total_skill(skill):
+        result = ds_skill_points[skill]
+        if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
+            return result
+        if ds_semtype > 4:
+            result += 2
+        elif ds_semtype >= 2:
+            result += 1
+        elif ds_semtype <= -2:
+            result -= 1
+        elif ds_semtype < -4:
+            result -= 2
+        return result
 
 init:
     $ mods["disco_sovenok"] = u"Disco Sovenok"
@@ -577,7 +592,7 @@ screen ds_skill_table():
                         add "mods/disco_sovenok/gui/skills/[skill].png":
                             xalign 0.5
                             yalign 0.0
-                        text str(ds_skill_points[skill]):
+                        text str(ds_get_total_skill(skill)):
                             xalign 1.0
                             yalign 0.0
                             xoffset -10
@@ -642,30 +657,30 @@ screen ds_skill_info():
         }
 
         SKILL_DESCR = {
-            'logic': 'Управляй интеллектуальной стихией. Разложи мир по полочкам.',
-            'encyclopedia': 'Задействуй все свои знания. Удивляй эрудицией.',
-            'rhetoric': 'Совершенствуй искусство убеждения. Наслаждайся ожесточёнными интеллектуальными баталиями.',
-            'drama': 'Переиграй всех. Ври, но не дай обмануть себя.',
-            'conceptualization': 'Стань ценителем творчества. Развей чуткость к искусству.',
-            'visual_calculus': 'Восстанавливай события. Заставь законы природы работать на тебя.',
-            'volition': 'Держи себя в руках. Сохраняй боевой дух.',
-            'inland_empire': 'Интуиция и чутьё. Сны наяву.',
-            'authority': 'Подавляй и властвуй. Заяви о себе.',
-            'empathy': 'Чувствуй других. Задействуй зеркальные нейроны.',
-            'esprit': 'Работай в команде. Будь единым целым с другими.',
-            'suggestion': 'Очаровывай мужчин и женщин. Ты — их кукловод.',
-            'endurance': 'Держи удар. Не дай себя прикончить.',
-            'pain_threshold': 'Разве это боль? Придумайте что-нибудь пожёстче.',
-            'physical_instrument': 'Играй мышцами. Наслаждайся своим здоровьем.',
-            'instinct': 'Не бойся своих желаний. Демонстрируй своё либидо.',
-            'shivers': 'Почувствуй дрожь. Настройся на волну «Совёнка».',
-            'half_light': 'Доверься своему телу. Запугивай людей.',
-            'perception': 'Смотри, слушай, нюхай, вкушай и осязай. Не упусти не единой детали.',
-            'coordination': 'Целься! Огонь!',
-            'reaction_speed': 'Будь быстрым, а не мёртвым.',
-            'savoir_faire': 'Скользи как тень. Поражай великолепием.',
-            'interfacing': 'Управляй механизмами. Вскрывай замки и обчищай карманы.',
-            'composure': 'Выпрями спину. Сохраняй покерфейс.'
+            'logic': 'Управляй интеллектуальной стихией. Разложи мир по полочкам.\n\nОтлично подойдёт аналитикам, чистым рационалистам и, конечно, тем, кто дружит с логикой.',
+            'encyclopedia': 'Задействуй все свои знания. Удивляй эрудицией.\n\nОтлично подойдёт любителям пораскинуть мозгами, историкам, помешанным на интересных фактах',
+            'rhetoric': 'Совершенствуй искусство убеждения. Наслаждайся ожесточёнными интеллектуальными баталиями.\n\nОтлично подойдёт идеологам, умелым собеседникам, диванным экспертам.',
+            'drama': 'Переиграй всех. Ври, но не дай обмануть себя.\n\nОтлично подойдёт тайным агентам, театральным актёрам, психопатам.',
+            'conceptualization': 'Стань ценителем творчества. Развей чуткость к искусству.\n\nОтлично подойдёт творческим натурам, любителям психоделики, критикам.',
+            'visual_calculus': 'Восстанавливай события. Заставь законы природы работать на тебя.\n\nОтлично подойдёт учёным, боевым тактикам, людям с математическим складом ума.',
+            'volition': 'Держи себя в руках. Сохраняй боевой дух.\n\nОтлично подойдёт тем, кто дружит с головой, уравновешенным, тем, кто не склонен к самоубийствам.',
+            'inland_empire': 'Интуиция и чутьё. Сны наяву.\n\nОтлично подойдёт мечтателям, охотникам за паранатуральными явлениями, воображенцам.',
+            'authority': 'Подавляй и властвуй. Заяви о себе.\n\nОтлично подойдёт лидерам, мастерам психологической войны, жаждующим уважения.',
+            'empathy': 'Чувствуй других. Задействуй зеркальные нейроны.\n\nОтлично подойдёт тонким психологам, интервьюверам, людям с широкой душой.',
+            'esprit': 'Работай в команде. Будь единым целым с другими.\n\nОтлично подходит любителям подвижных игр, общественным деятелям, экстравертам.',
+            'suggestion': 'Очаровывай мужчин и женщин. Ты — их кукловод.\n\nОтлично подойдёт дипломатам, обаяшкам, социопатам.',
+            'endurance': 'Держи удар. Не дай себя прикончить.\n\nОтлично подойдёт тем, кто способен держать удар, неусыпным наблюдателям, вечным двигателям.',
+            'pain_threshold': 'Разве это боль? Придумайте что-нибудь пожёстче.\n\nОтлично подойдёт непобедимым бойцам, тем, кто всё никак не сдохнет, мазохистам.',
+            'physical_instrument': 'Играй мышцами. Наслаждайся своим здоровьем.\n\nОтлично подойдёт мощным мужикам, любителям помахать кулаками, спортсменам.',
+            'instinct': 'Не бойся своих желаний. Демонстрируй своё либидо.\n\nОтлично подойдёт любителям секса, помешанным на сексе, пошлякам.',
+            'shivers': 'Почувствуй дрожь. Настройся на волну «Совёнка».\n\nОтлично подойдёт любителям лагерной жизни, народным мудрецам, по-настоящему сверхъестественным натурам.',
+            'half_light': 'Доверься своему телу. Запугивай людей.\n\nОтлично подойдёт нервным, тем, кто сначала нападают, а потом задают вопросы, тем, кто ненавидит сюрпризы.',
+            'perception': 'Смотри, слушай, нюхай, вкушай и осязай. Не упусти не единой детали.\n\nОтлично подойдёт въедливым, чувственным личностям, сборщикам хлама.',
+            'coordination': 'Целься! Огонь!\n\nОтлично подойдёт метателям мячей, снайперам, жонглёрам.',
+            'reaction_speed': 'Будь быстрым, а не мёртвым.\n\nОтлично подойдёт тем, в кого хрен попадёшь, импровизаторам, любителям пинбола.',
+            'savoir_faire': 'Скользи как тень. Поражай великолепием.\n\nОтлично подойдёт акробатам, ворам, невыносимым хвастунам.',
+            'interfacing': 'Управляй механизмами. Вскрывай замки и обчищай карманы.\n\nОтлично подойдёт швецам, жнецам, на дуде игрецам.',
+            'composure': 'Выпрями спину. Сохраняй покерфейс.\n\nОтлично подойдёт картёжникам, военным фетишистам, крутым перцам.'
         }
     fixed:
         add "mods/disco_sovenok/gui/skills/skill_info.png"
@@ -724,13 +739,29 @@ screen ds_skill_info():
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 6)), SensitiveIf(SetDict(ds_skill_points, skill, 6))]
                                         activate_sound ds_selection
                         else:
-                            text str(ds_skill_points[skill]):
-                                size 240
-                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                            grid 2 3:
                                 xalign 1.0
                                 yalign 0.0
                                 xoffset 10
                                 yoffset 10
+                                text "Базовый уровень: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                text str(ds_skill_points[skill]) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                text "Бонус от типа: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
+                                    text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                else:
+                                    if ds_semtype > 4:
+                                        text "+2" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    elif ds_semtype >= 2:
+                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    elif ds_semtype <= -2:
+                                        text "-1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    elif ds_semtype < -4:
+                                        text "-2" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    else:
+                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                text "Всего:" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                text str(ds_get_total_skill(skill)) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     text SKILL_NAMES[skill] xalign 0.5 xoffset 10 yoffset 10 size 48
                     text SKILL_DESCR[skill] yalign 1.0 yoffset 10 xoffset 10 size 24 xfill True
     
