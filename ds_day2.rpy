@@ -6467,6 +6467,7 @@ label ds_day2_cards_alone:
                                 $ ds_skill_points['drama'] += 1
                                 show sl angry pioneer at center with dspr
                                 sl "Семён, между прочим лезть в чужие вещи нехорошо!"
+                                $ ds_lp_sl -= 1
                                 sl "Так, всё, идём обратно!"
                                 "Ты закрываешь ящик и идёшь обратно."
                                 scene bg ext_houses_sunset with dissolve
@@ -6502,7 +6503,7 @@ label ds_day2_cards_alone:
                             "Ты закрываешь ящик и собирался было окликнуть Славю..."
                             play sound ds_sfx_mot
                             res "Но Слави нет!"
-                            $ ds_lp_sl -= 1
+                            $ ds_lp_sl -= 2
                             "Тебе приходится идти одному."
                         "Извиниться":
                             window show
@@ -6705,6 +6706,7 @@ label ds_day2_prepare_tour:
             "Не возражать":
                 window show
                 me "Ну, это самый вероятный исход."
+                $ ds_semtype -= 1
                 show dv normal pioneer at center   with dspr
                 dv "Значит, боишься?"
                 me "Я не боюсь...{w} Просто не привык спорить, когда не уверен."
@@ -6716,6 +6718,7 @@ label ds_day2_prepare_tour:
             "Возразить":
                 window show
                 me "А ты уверена?"
+                $ ds_semtype += 1
                 show dv surprise pioneer at center with dspr
                 play sound ds_sfx_psy
                 aut "Для неё твой вопрос оказался неожиданностью."
@@ -6781,7 +6784,7 @@ label ds_day2_prepare_tour:
                 $ ds_bet_dv = True
                 $ ds_lp_dv += 1
                 $ ds_lp_un -= 1
-                $ ds_skill_points['authority'] += 1
+                $ ds_semtype += 1
                 window show
                 th "Возможно, я еще сто раз пожалею об этом..."
                 me "Ладно, идет!"
@@ -6798,6 +6801,7 @@ label ds_day2_prepare_tour:
             "Не спорить с Алисой":
                 $ ds_lp_dv -= 1
                 $ ds_lp_un += 1
+                $ ds_semtype -= 1
                 window show
                 th "Нет, ни в какие глупые авантюры я пускаться не намерен!"
                 me "Извини уж..."
@@ -7801,6 +7805,7 @@ label ds_day2_dock_eve:
                 "Ты подходишь к подмеченному месту и видишь ту самую заколку!"
                 $ ds_skill_points['perception'] += 1
                 $ ds_mi_hairpin = True
+                $ ds_find_hairpin = False
             else:
                 window show
                 per_eye "Но ты ничего разглядеть не можешь: совсем стемнело."
@@ -7852,7 +7857,7 @@ label ds_day2_music:
     scene bg ds_ext_musclub_night with dissolve
     "Ты подходишь к музклубу."
     per_eye "Но тут никого нет."
-    play sound ds_sfx_psy
+    play sound ds_sfx_int
     lgc "Значит, нужно искать домик..."
     stop ambience fadeout 2
     $ disable_current_zone_ds_small()
@@ -7931,7 +7936,6 @@ label ds_day2_house12:
         play sound ds_sfx_int
         enc "Это же домик Слави!"
         enc "Мику тут точно нет, тут Женя живёт."
-        $ ds_skill_points['encyclopedia'] += 1
         $ disable_current_zone_ds_small()
         jump ds_day2_find_mi_house
     th "Итак, попробуем удачу тут..."
