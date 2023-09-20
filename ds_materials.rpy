@@ -35,19 +35,10 @@ init python:
         dices = [1, 2, 3, 4, 5, 6]
         first_dice = renpy.random.choice(dices)
         second_dice = renpy.random.choice(dices)
-        points = ds_skill_points[skill]
+        points = ds_get_total_skill(skill)
         for variable, bonus in modifiers:
             if eval(variable):
                 points += bonus
-        if skill in ['volition', 'authority', 'suggestion', 'composure']:
-            if ds_semtype > 4:
-                points += 2
-            elif ds_semtype >= 2:
-                points += 1
-            elif ds_semtype <= -2:
-                points -= 1
-            elif ds_semtype < -4:
-                points -= 2
         result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
         if not passive:
             # renpy.show('roll')
@@ -88,6 +79,32 @@ init python:
             res = 'mi'
             max_lp = ds_lp_mi
         return res
+
+    def ds_get_total_skill(skill):
+        result = ds_skill_points[skill]
+        if skill in ['logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus']:
+            if ds_member['library']:
+                result += 1
+        if skill in ['volition', 'inland_empire', 'authority', 'empathy', 'esprit', 'suggestion']:
+            if ds_member['music']:
+                result += 1
+        if skill in ['endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light']:
+            if ds_member['sport']:
+                result += 1
+        if skill in ['perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure']:
+            if ds_member['cyber']:
+                result += 1
+        if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
+            return result
+        if ds_semtype > 4:
+            result += 2
+        elif ds_semtype >= 2:
+            result += 1
+        elif ds_semtype <= -2:
+            result -= 1
+        elif ds_semtype < -4:
+            result -= 2
+        return result
 
     # Класс, реализующий фонарик (для хождения по шахтам)
     class DSFlashlight(renpy.Displayable):
@@ -197,6 +214,15 @@ init:
     $ ds_met['mt'] = 0 # ОД
     $ ds_met['mz'] = 0 # Женя
 
+## Куда записан?
+
+    $ ds_member = {}
+
+    $ ds_member['music'] = False
+    $ ds_member['cyber'] = False
+    $ ds_member['sport'] = False
+    $ ds_member['library'] = False
+ 
 ## Уровни сложности проверок
     $ lvl_trivial = 6
     $ lvl_easy = 8
@@ -340,6 +366,8 @@ init:
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
     image cg ds_day1_bus_exit = "mods/disco_sovenok/cg/camp_entrance_door.jpg"
+
+    image cg ds_day1_hide = "mods/disco_sovenok/cg/d1_hide.jpg"
 
     image cg ds_day1_grasshopper_f1 = "mods/disco_sovenok/cg/d1_grasshopper_1_tttt.jpg"
     image cg ds_day1_grasshopper_f2 = "mods/disco_sovenok/cg/d1_grasshopper_2_tttt.jpg"

@@ -305,20 +305,6 @@ init python:
 
         def init_small_map_zones_ds():
             init_small_map_zones_realization_ds(store.small_map_zones_ds, "nothing_here")
-    
-    def ds_get_total_skill(skill):
-        result = ds_skill_points[skill]
-        if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
-            return result
-        if ds_semtype > 4:
-            result += 2
-        elif ds_semtype >= 2:
-            result += 1
-        elif ds_semtype <= -2:
-            result -= 1
-        elif ds_semtype < -4:
-            result -= 2
-        return result
 
 init:
     $ mods["disco_sovenok"] = u"Disco Sovenok"
@@ -739,7 +725,7 @@ screen ds_skill_info():
                                         action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 6)), SensitiveIf(SetDict(ds_skill_points, skill, 6))]
                                         activate_sound ds_selection
                         else:
-                            grid 2 3:
+                            grid 2 4:
                                 xalign 1.0
                                 yalign 0.0
                                 xoffset 10
@@ -758,6 +744,27 @@ screen ds_skill_info():
                                         text "-1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                     elif ds_semtype < -4:
                                         text "-2" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    else:
+                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                text "Бонус от кружка: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                if skill in ['logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus']:
+                                    if ds_member['library']:
+                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    else:
+                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                if skill in ['volition', 'inland_empire', 'authority', 'empathy', 'esprit', 'suggestion']:
+                                    if ds_member['music']:
+                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    else:
+                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                if skill in ['endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light']:
+                                    if ds_member['sport']:
+                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    else:
+                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                if skill in ['perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure']:
+                                    if ds_member['cyber']:
+                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                     else:
                                         text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                 text "Всего:" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"

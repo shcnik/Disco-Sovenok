@@ -381,16 +381,54 @@ label ds_day1_approach:
     window show
     lgc "В любом случае, околачиваясь здесь, ты ничего не узнаешь."
     lgc "Судя по всему, этот лагерь (если это, конечно, лагерь) - единственное место, где могут быть люди, поэтому тебе следует пойти туда"
-    window hide
-    menu:
-        "Пойти":
-            window show
-            $ ds_semtype += 1
-            "Ты уже почти дошел до ворот, как..."
-        "Не идти":
-            $ renpy.pause(1)
-            window show
-    "Оттуда выглядывает девочка..."
+    if skillcheck('half_light', lvl_medium, passive=True):
+        play sound ds_sfx_fys
+        hfl "Сюда кто-то идёт! Лучше спрячься!"
+        window hide
+        menu:
+            "Пойти":
+                window show
+                $ ds_semtype += 1
+                "Ты уже почти дошел до ворот, как..."
+            "Ждать":
+                $ renpy.pause(1)
+                window show
+            "Спрятаться":
+                window show
+                "Ты прячешься за ближайшей статуей."
+                $ ds_skill_points['half_light'] += 1
+                scene cg ds_day1_hide with dissolve
+                "Из ворот выходит девочка. Она одета в пионерскую форму."
+                slp "И где он спрятался?"
+                window hide
+                menu:
+                    "Вылезти":
+                        window show
+                        scene bg ext_camp_entrance_day 
+                        with dissolve
+                        show sl surprise pioneer at center with dissolve
+                        play music ds_sl_theme
+                        "Ты вылезаешь и здороваешься с ней."
+                        me "Привет..."
+                        jump ds_day1_sl_dialogue
+                    "Ждать дальше":
+                        $ renpy.pause(1.0)
+                        window show
+                        slp "Ну ладно, не приехал, наверное..."
+                        "И девочка уходит."
+                        "Только теперь ты вылезаешь и заходишь вслед за ней в ворота."
+                        jump ds_day1_entered
+    else:
+        window hide
+        menu:
+            "Пойти":
+                window show
+                $ ds_semtype += 1
+                "Ты уже почти дошел до ворот, как..."
+            "Не идти":
+                $ renpy.pause(1)
+                window show
+        "Оттуда выглядывает девочка..."
 
     play music ds_sl_theme
     show sl normal pioneer far at center    with dissolve
@@ -410,6 +448,9 @@ label ds_day1_approach:
     hfl "Бежать куда угодно, но {b}подальше{/b} отсюда!"
     show sl smile pioneer at center   with dissolve
     "Тем временем девочка подходит к тебе и улыбается."
+    jump ds_day1_sl_dialogue
+
+label ds_day1_sl_dialogue:
     play sound ds_sfx_int
     con "Она красива, даже страх не мешает тебе это отметить."
     play sound ds_sfx_fys
@@ -554,7 +595,9 @@ label ds_day1_approach:
 
     "Ты направляешься по указанному девочкой маршруту, ибо других альтернатив все равно не предвидится."
     window hide
+    jump ds_day1_entered
 
+label ds_day1_entered:
     scene bg ext_clubs_day 
     with dissolve
 
@@ -3635,7 +3678,7 @@ label ds_day1_meet_un:
     window show
     play sound ds_sfx_mot
     per_hea "Её слова становятся отчётливее. Ты можешь разобрать, что она говорит."
-    dreamgirl "Семён... Иди сюда."
+    voice "Семён... Иди сюда."
     play sound ds_sfx_psy
     vol "Какая-то неведомая сила {i}заставляет{/i} тебя двигаться в сторону голоса."
     window hide
@@ -3644,11 +3687,11 @@ label ds_day1_meet_un:
     $ renpy.pause(10.0)
     window show
     ine "Пространство вокруг тебя начинает сгущаться, формируя какой-то образ..."
-    dreamgirl "Cемён... Ты помнишь меня?"
-    dreamgirl "Мы с тобой встречались уже..."
+    voice "Cемён... Ты помнишь меня?"
+    voice "Мы с тобой встречались уже..."
     ine "Спасибо, капитан (вернее капитанка) Очевидность!"
     me "Ты кто?"
-    dreamgirl "Твои эмоции... Твои чувства... Твои воспоминания..."
+    voice "Твои эмоции... Твои чувства... Твои воспоминания..."
     lim "Твои воспоминания о прошлом пробуждаются. Они несут в себе много боли. Много печали."
     arb "Ты уверен, что хочешь погрузиться в пучину горя и страданий?"
     arb "Разве не лучше будет пребывать в сладком забвении?"
@@ -3718,7 +3761,8 @@ label ds_day1_meet_un:
     scene black with flash
     lim "Яркий луч света прорывается сквозь тьму."
     lim "Пора вставать и одеваться, Семён."
+    play sound sfx_hell_alarm_clock
     lim "Добро пожаловать в наш дерьмовый мир обратно!"
-    stop music
+    stop music fadeout 3
 
     jump ds_day2_morning

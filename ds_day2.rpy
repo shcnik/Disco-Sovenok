@@ -4,16 +4,13 @@ init:
     $ mods["disco_sovenok"] = u"Disco Sovenok"
 
     $ ds_know_face = False
+    $ ds_sl_workouts = False
     $ ds_passed_places = 0
     $ ds_visited_music = False
     $ ds_visited_clubs = False
     $ ds_visited_sport = False
     $ ds_visited_medic = False
     $ ds_visited_library = False
-    $ ds_cyber_member = False
-    $ ds_music_member = False
-    $ ds_sport_member = False
-    $ ds_library_member = False
     $ ds_find_hairpin = False
     $ ds_read_book = False
     $ ds_had_lunch = False
@@ -309,6 +306,22 @@ label ds_day2_morning:
                 window show
                 ins "Но у тебя нет никакой реакции на фигуру. Стимула недостаточно!"
             $ ds_skill_points['instinct'] += 1
+        "Предложить заниматься вместе":
+            if skillcheck('volition', lvl_up_medium):
+                window show
+                vol "Пригласить её заниматься вместе спортом - что может быть проще?"
+                me "Слушай... а может в следующий раз вместе побежим?"
+                show sl smile sport at center with dspr
+                sl "Давай! Только тебе придётся вставать пораньше!"
+                sl "Завтра я зайду за тобой!"
+                me "Хорошо..."
+                $ ds_lp_sl += 1
+                $ ds_sl_workouts = True
+            else:
+                window show
+                vol "Но ты не решаешься пригласить её заниматься вместе... чего-то боишься."
+                "Ты молчишь."
+            $ ds_skill_points['volition'] += 1
     show sl normal sport at center   with dspr
     sl "Почему на завтраке не был?"
     me "Проспал."
@@ -981,7 +994,7 @@ label ds_day2_pass_alone_music:
             me "Да..."
             $ ds_lp_mi += 1
             $ ds_skill_points['conceptualization'] += 1
-            $ ds_music_member = True
+            $ ds_member['music'] = True
         "Отказаться":
             me "Знаешь, я как-то не планировал особо…"
             show mi normal pioneer at center   with dspr
@@ -1030,7 +1043,7 @@ label ds_day2_pass_alone_music:
 
             window show
             "Окончание ее фразы скрывается за закрытой дверью."
-    if not ds_music_member:
+    if not ds_member['music']:
         play sound ds_sfx_int
         con "С одной стороны, ты был бы не против вечерком посидеть побренчать на гитаре"
         play sound ds_sfx_mot
@@ -1039,7 +1052,7 @@ label ds_day2_pass_alone_music:
     "Ты поворачиваешься, собираясь уходить, и сталкиваешься нос к носу с Алисой."
     "Она недобро смотрит на тебя."
     dv "Зачем пришел?"
-    if ds_music_member:
+    if ds_member['music']:
         window hide
         menu:
             "Чтобы записаться":
@@ -1166,7 +1179,7 @@ label ds_day2_pass_alone_clubs:
             "Ты ставишь свою подпись."
             show el laugh pioneer at cleft with dspr
             el "Приветствуем нового члена клуба кибернетиков!"
-            $ ds_cyber_member = True
+            $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
             "И тут в комнату кто-то входит."
         "Отказаться":
@@ -1187,11 +1200,11 @@ label ds_day2_pass_alone_clubs:
     show sl angry pioneer at center   with dspr
     "Она строго смотрит на будущих светил отечественного роботостроения."
     sl "А то я их знаю – они могут!"
-    if ds_cyber_member:
+    if ds_member['cyber']:
         me "Нет, я просто решил к ним записаться."
         show sl smile pioneer at center with dspr
         if ds_sl_gone:
-            if not (ds_music_member or ds_sport_member):
+            if not (ds_member['music'] or ds_member['sport']):
                 $ ds_lp_sl += 1
             sl "А, отлично. Тогда пойдём?"
         else:
@@ -1474,7 +1487,7 @@ label ds_day2_pass_alone_library:
             "Она записывает сведения в билет, а затем отдаёт тебе."
             mz "Бери!"
             "Ты забираешь бумажку и складываешь в карман штанов."
-            $ ds_library_member = True
+            $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
             mz "Cледующий!"
         "Отказаться":
@@ -1748,7 +1761,7 @@ label ds_day2_pass_alone_sport:
             me "Cпасибо!"
             show us laugh sport
             us "Только не забывай регулярно приходить сюда!"
-            $ ds_sport_member = True
+            $ ds_member['sport'] = True
             $ ds_lp_us += 1
             "Под эти слова ты выходишь из зала."
         "Отказаться":
@@ -1942,7 +1955,7 @@ label ds_day2_pass_dv_music:
             me "Да..."
             $ ds_lp_mi += 1
             $ ds_skill_points['conceptualization'] += 1
-            $ ds_music_member = True
+            $ ds_member['music'] = True
         "Отказаться":
             me "Знаешь, я как-то не планировал особо…"
             show mi normal pioneer at center   with dspr
@@ -2000,7 +2013,7 @@ label ds_day2_pass_dv_music:
 
             window show
             "Окончание ее фразы скрывается за закрытой дверью."
-    if not ds_music_member:
+    if not ds_member['music']:
         play sound ds_sfx_int
         con "С одной стороны, ты был бы не против вечерком посидеть побренчать на гитаре"
         play sound ds_sfx_mot
@@ -2208,7 +2221,7 @@ label ds_day2_pass_dv_clubs:
             per_eye "А вот и ты: 3. ПЁРСУНОВ СЕМЁН"
             play sound ds_pen
             "Ты ставишь свою подпись."
-            $ ds_cyber_member = True
+            $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
         "Отказаться":
             window show
@@ -2555,7 +2568,7 @@ label ds_day2_pass_dv_library:
             "Она записывает сведения в билет, а затем отдаёт тебе."
             mz "Бери!"
             "Ты забираешь бумажку и складываешь в карман штанов."
-            $ ds_library_member = True
+            $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
             mz "Cледующий!"
         "Отказаться":
@@ -2665,7 +2678,7 @@ label ds_day2_pass_dv_sport:
             us "Только не забывай регулярно приходить сюда!"
             show dv laugh pioneer2 at right with dspr
             dv "Я прослежу за этим!"
-            $ ds_sport_member = True
+            $ ds_member['sport'] = True
             $ ds_lp_us += 1
             "Под эти слова вы уходите из зала."
         "Отказаться":
@@ -3151,7 +3164,7 @@ label ds_day2_pass_sl_music:
     th "Уже в период моего «отшельничества» я купил себе гитару и по самоучителям выучил пару аккордов, но потом забросил это дело, как и любое другое, которое требовало больше нескольких часов."
     play sound ds_sfx_int
     con "А тут ты наверняка сможешь подтянуть свои навыки и сыграть что-нибудь прекрасное!"
-    if not (ds_cyber_member or ds_sport_member):
+    if not (ds_member['cyber'] or ds_member['sport']):
         show sl smile pioneer at center with dspr
         sl "Да, давай, тебе как раз было бы неплохо куда-нибудь записаться!"
     window hide
@@ -3177,10 +3190,10 @@ label ds_day2_pass_sl_music:
             me "Да..."
             sl "Молодец!"
             $ ds_lp_mi += 1
-            if not (ds_cyber_member or ds_sport_member):
+            if not (ds_member['cyber'] or ds_member['sport']):
                 $ ds_lp_sl += 1
             $ ds_skill_points['conceptualization'] += 1
-            $ ds_music_member = True
+            $ ds_member['music'] = True
         "Отказаться":
             window show
             me "Знаешь, я как-то не планировал особо…"
@@ -3234,7 +3247,7 @@ label ds_day2_pass_sl_music:
             show sl serious pioneer at center with dspr
             sl "Надо было дослушать, что она говорит."
             me "Нам ещё нужно успеть обходной подписать!"
-    if not ds_music_member:
+    if not ds_member['music']:
         play sound ds_sfx_int
         con "С одной стороны, ты был бы не против вечерком посидеть побренчать на гитаре"
         play sound ds_sfx_mot
@@ -3244,7 +3257,7 @@ label ds_day2_pass_sl_music:
     "Ты поворачиваешься, собираясь уходить, и сталкиваешься нос к носу с Алисой."
     "Она недобро смотрит на тебя."
     dv "Зачем пришел?"
-    if ds_music_member:
+    if ds_member['music']:
         window hide
         menu:
             "Чтобы записаться":
@@ -3486,9 +3499,9 @@ label ds_day2_pass_sl_clubs:
             el "Приветствуем нового члена клуба кибернетиков!"
             show sl smile pioneer at fright with dspr
             sl "Молодец, что записался!"
-            if not (ds_music_member or ds_sport_member):
+            if not (ds_member['music'] or ds_member['sport']):
                 $ ds_lp_sl += 1
-            $ ds_cyber_member = True
+            $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
         "Отказаться":
             me "Да нет, мне бы просто обходной лист подписать."
@@ -3919,7 +3932,7 @@ label ds_day2_pass_sl_library:
             show sl smile pioneer at center with dspr
             sl "Молодец, так тянешься к знаниям... или просто любишь читать!"
             $ ds_lp_sl += 1
-            $ ds_library_member = True
+            $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
             mz "Cледующий!"
         "Отказаться":
@@ -4280,9 +4293,9 @@ label ds_day2_pass_sl_sport:
             sl "Не забудет!"
             show sl smile pioneer at right with dspr
             sl "А ты молодец!"
-            if not (ds_music_member or ds_cyber_member):
+            if not (ds_member['music'] or ds_member['cyber']):
                 $ ds_lp_sl += 1
-            $ ds_sport_member = True
+            $ ds_member['sport'] = True
             $ ds_lp_us += 1
             "Под эти слова вы выходите из зала."
         "Отказаться":
@@ -4498,7 +4511,7 @@ label ds_day2_pass_un_music:
             me "Да..."
             $ ds_lp_mi += 1
             $ ds_skill_points['conceptualization'] += 1
-            $ ds_music_member = True
+            $ ds_member['music'] = True
         "Отказаться":
             me "Знаешь, я как-то не планировал особо…"
             show mi normal pioneer at center   with dspr
@@ -4554,7 +4567,7 @@ label ds_day2_pass_un_music:
             window show
             "Окончание ее фразы скрывается за закрытой дверью."
     show un normal pioneer at center with dissolve
-    if not ds_music_member:
+    if not ds_member['music']:
         play sound ds_sfx_int
         con "С одной стороны, ты был бы не против вечерком посидеть побренчать на гитаре"
         play sound ds_sfx_mot
@@ -4566,7 +4579,7 @@ label ds_day2_pass_un_music:
     play sound ds_sfx_psy
     emp "А Лена недобро смотрит на Алису."
     dv "Зачем пришел?"
-    if ds_music_member:
+    if ds_member['music']:
         window hide
         menu:
             "Чтобы записаться":
@@ -4735,7 +4748,7 @@ label ds_day2_pass_un_clubs:
             show el laugh pioneer at cleft with dspr
             show un smile pioneer at center with dspr
             el "Приветствуем нового члена клуба кибернетиков!"
-            $ ds_cyber_member = True
+            $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
             "И тут в комнату кто-то входит."
         "Отказаться":
@@ -4760,7 +4773,7 @@ label ds_day2_pass_un_clubs:
     show sl angry pioneer at center   with dspr
     "Она строго смотрит на будущих светил отечественного роботостроения."
     sl "А то я их знаю – они могут!"
-    if ds_cyber_member:
+    if ds_member['cyber']:
         me "Нет, я просто решил к ним записаться."
         show sl smile pioneer at center with dspr
         sl "А, отлично. Тогда я пойду!"
@@ -5133,7 +5146,7 @@ label ds_day2_pass_un_library:
             "Она записывает сведения в билет, а затем отдаёт тебе."
             mz "Бери!"
             "Ты забираешь бумажку и складываешь в карман штанов."
-            $ ds_library_member = True
+            $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
             $ ds_lp_un += 1
             show un smile pioneer at center with dspr
@@ -5452,7 +5465,7 @@ label ds_day2_pass_un_sport:
             me "Cпасибо!"
             show us laugh sport
             us "Только не забывай регулярно приходить сюда!"
-            $ ds_sport_member = True
+            $ ds_member['sport'] = True
             $ ds_lp_us += 1
             "Под эти слова ты выходишь из зала."
         "Отказаться":
@@ -5526,23 +5539,23 @@ label ds_day2_after_pass:
     "Почему-то от этого ее вопроса у меня мурашки по коже побежали."
     show mt normal panama pioneer at center   with dspr
     mt "В какой кружок записался?"
-    if ds_music_member and ds_cyber_member and ds_sport_member:
+    if ds_member['music'] and ds_member['cyber'] and ds_member['sport']:
         me "Во все сразу!"
-    elif ds_music_member and ds_cyber_member:
+    elif ds_member['music'] and ds_member['cyber']:
         me "В музыкальный и к кибернетикам."
-    elif ds_cyber_member and ds_sport_member:
+    elif ds_member['cyber'] and ds_member['sport']:
         me "В спортивный и к кибернетикам."
-    elif ds_music_member and ds_sport_member:
+    elif ds_member['music'] and ds_member['sport']:
         me "В музыкальный и в спортивный."
-    elif ds_music_member:
+    elif ds_member['music']:
         me "В музыкальный записался."
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
-    elif ds_sport_member:
+    elif ds_member['sport']:
         me "В спортивный записался."
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
-    elif ds_cyber_member:
+    elif ds_member['cyber']:
         me "Записался к кибернетикам."
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
@@ -5551,34 +5564,34 @@ label ds_day2_after_pass:
         show mt surprise panama pioneer at center   with dspr
         mt "Ну, что же ты так! Завтра обязательно запишись куда-нибудь!"
         th "Конечно, всенепременно!"
-    if (ds_music_member and ds_cyber_member) or (ds_music_member and ds_sport_member) or (ds_cyber_member and ds_sport_member):
+    if (ds_member['music'] and ds_member['cyber']) or (ds_member['music'] and ds_member['sport']) or (ds_member['cyber'] and ds_member['sport']):
         show mt surprise panama pioneer at center with dspr
         mt "Ничего себе... только вот ты не успеешь больше одного кружка посещать."
         mt "Да, тебе лучше будет выбрать один!"
         window hide
         menu:
-            "Остаться в музклубе" if ds_music_member:
+            "Остаться в музклубе" if ds_member['music']:
                 window show
                 me "Я выбираю музклуб."
-                $ ds_cyber_member = False
-                $ ds_sport_member = False
+                $ ds_member['cyber'] = False
+                $ ds_member['sport'] = False
                 $ ds_lp_us -= 2
                 show mt normal panama pioneer at center with dspr
                 mt "Хорошо, я скажу об этом главам остальных клубов."
-            "Остаться у кибернетиков" if ds_cyber_member:
+            "Остаться у кибернетиков" if ds_member['cyber']:
                 window show
                 me "Я выбираю кбиернетиков."
-                $ ds_music_member = False
-                $ ds_sport_member = False
+                $ ds_member['music'] = False
+                $ ds_member['sport'] = False
                 $ ds_lp_mi -= 2
                 $ ds_lp_us -= 2
                 show mt normal panama pioneer at center with dspr
                 mt "Хорошо, я скажу об этом главам остальных клубов."
-            "Остаться в спортклубе" if ds_sport_member:
+            "Остаться в спортклубе" if ds_member['sport']:
                 window show
                 me "Я выбираю спортклуб."
-                $ ds_music_member = False
-                $ ds_cyber_member = False
+                $ ds_member['music'] = False
+                $ ds_member['cyber'] = False
                 $ ds_lp_mi -= 2
                 show mt normal panama pioneer at center with dspr
                 mt "Хорошо, я скажу об этом главам остальных клубов."
@@ -5597,24 +5610,24 @@ label ds_day2_after_pass:
                     $ ds_skill_points['suggestion'] += 1
                     window hide
                     menu:
-                        "Остаться в музклубе" if ds_music_member:
+                        "Остаться в музклубе" if ds_member['music']:
                             window show
                             me "Я выбираю музклуб."
-                            $ ds_cyber_member = False
-                            $ ds_sport_member = False
+                            $ ds_member['cyber'] = False
+                            $ ds_member['sport'] = False
                             $ ds_lp_us -= 2
-                        "Остаться у кибернетиков" if ds_cyber_member:
+                        "Остаться у кибернетиков" if ds_member['cyber']:
                             window show
                             me "Я выбираю кбиернетиков."
-                            $ ds_music_member = False
-                            $ ds_sport_member = False
+                            $ ds_member['music'] = False
+                            $ ds_member['sport'] = False
                             $ ds_lp_mi -= 2
                             $ ds_lp_us -= 2
-                        "Остаться в спортклубе" if ds_sport_member:
+                        "Остаться в спортклубе" if ds_member['sport']:
                             window show
                             me "Я выбираю спортклуб."
-                            $ ds_music_member = False
-                            $ ds_cyber_member = False
+                            $ ds_member['music'] = False
+                            $ ds_member['cyber'] = False
                             $ ds_lp_mi -= 2
                     show mt normal panama pioneer at center with dspr
                     mt "Хорошо, я скажу об этом главам остальных клубов."
@@ -6799,7 +6812,7 @@ label ds_day2_prepare_tour:
                 hide dv  with dissolve
                 th "И зачем я во все это ввязался?"
                 play sound ds_sfx_fys
-                hfl "Она в любом случае найдет, как мне жизнь испортить."
+                hfl "Она в любом случае найдет, как тебе жизнь испортить."
                 hfl "Раз уж решила..."
             "Не спорить с Алисой":
                 $ ds_lp_dv -= 1
@@ -6854,8 +6867,9 @@ label ds_day2_tour:
     el "Так распорядился слепой жребий."
     th "Хороший жребий – со всеми участниками турнира я так или иначе уже успел познакомиться."
     th "А ведь, помимо них, тут еще не один десяток пионеров!"
-    com "Ты начинаешь испытывать необъяснимое чувство тревоги."
-    com "Такое, когда кажется, что за тобой кто-то наблюдает в пустой плотно закрытой комнате без окон."
+    if not skillcheck('half_light', lvl_medium, passive=True:)
+        hfl "Ты начинаешь испытывать необъяснимое чувство тревоги."
+        hfl "Такое, когда кажется, что за тобой кто-то наблюдает в пустой плотно закрытой комнате без окон."
     window hide
     menu:
         "Принять участие в турнире":
@@ -8674,7 +8688,7 @@ label ds_day2_house13:
             window show
             me "А что взамен?"
             mi "Ну, надо подумать..."
-            if not ds_music_member:
+            if not ds_member['music']:
                 mi "О, давай я тебя научу играть на чём-нибудь! Приходи в музклуб завтра!"
                 window hide
                 menu:
@@ -8682,7 +8696,7 @@ label ds_day2_house13:
                         window show
                         me "Хорошо..."
                         mi "Ой, отлично-то как! Нас теперь будет трое!"
-                        $ ds_music_member = True
+                        $ ds_member['music'] = True
                         $ ds_lp_mi += 1
                     "Отклонить":
                         window show
@@ -10315,9 +10329,8 @@ label ds_day2_dream:
         "К остановке подъезжает автобус."
         hide dvw with dissolve
         "Алиса заходит в него."
-    play sound sfx_bus_honk
+    play sound sfx_hell_alarm_clock
     scene bg black
     with dissolve2
     stop music fadeout 5
-    $ renpy.pause(5.0)
     jump ds_day3_morning
