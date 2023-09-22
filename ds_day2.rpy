@@ -2177,7 +2177,7 @@ label ds_day2_pass_dv_clubs:
             "Ты стоишь и ждёшь разрешения конфликта."
             $ ds_semtype -= 1
             "И оно скоро наступает. {w}Алиса дотягивается до Электроника, и ему прилетает по глазу."
-    $ ds_wintessed_el_hit = True
+    $ ds_witnessed_el_hit = True
     show dv angry pioneer2 at cright with dspr
     show el fingal pioneer at cleft with dspr
     stop music fadeout 3
@@ -7900,10 +7900,11 @@ label ds_day2_dock_eve:
 
     window show
     "Ты пошёл на пристань."
-    play sound ds_sfx_int
-    con "Солнце еще не полностью скрылось за горизонтом, и река вдалеке красиво окрашивается во все оттенки красного, желтого и оранжевого."
-    con "Кажется, что вода там горит ярким пламенем, но чем дольше ты стоишь, тем пожар становится меньше и в конце концов совсем потух."
-    $ ds_skill_points['conceptualization'] += 1
+    if skillcheck('conceptualization', lvl_medium, passive=True):
+        play sound ds_sfx_int
+        con "Солнце еще не полностью скрылось за горизонтом, и река вдалеке красиво окрашивается во все оттенки красного, желтого и оранжевого."
+        con "Кажется, что вода там горит ярким пламенем, но чем дольше ты стоишь, тем пожар становится меньше и в конце концов совсем потух."
+        $ ds_skill_points['conceptualization'] += 1
     if not ds_find_hairpin:
         play sound ds_sfx_psy
         vol "Тебе тут больше делать нечего. Иди домой."
