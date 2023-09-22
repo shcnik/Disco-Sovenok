@@ -7492,7 +7492,7 @@ label ds_day2_after_tour:
     $ set_zone_ds_small("medic_house", "ds_day2_medic")
     $ set_zone_ds_small("square","ds_day2_square")
     $ set_zone_ds_small("beach","ds_day2_beach")
-    $ set_zone_ds_small("boathouse","day2_dock_eve")
+    $ set_zone_ds_small("boathouse","ds_day2_dock_eve")
     $ set_zone_ds_small("entrance", "ds_day2_entrance")
     $ set_zone_ds_small("scene","ds_day2_scene")
     $ set_zone_ds_small("sport_area","ds_day2_badminton")
