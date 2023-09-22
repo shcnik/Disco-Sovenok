@@ -49,9 +49,6 @@ label ds_day1:
     if skillcheck('encyclopedia', lvl_easy, passive=True):
         play sound ds_sfx_int
         enc "Это самый настоящий Икарус!"
-    else:
-        play sound ds_sfx_int
-        enc "Такого автобуса ты никогда не видел."
     th "Как?..{w} Что?.. {w} Я всё-таки умер?"
     th "Или меня похитили?"
 

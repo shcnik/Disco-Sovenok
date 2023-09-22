@@ -80,14 +80,27 @@ label ds_day2_morning:
     per_eye "Оглядевшись по сторонам, словно пытаясь понять, не забросило ли тебя опять куда-нибудь в другое место, ты отмечаешь, что домик Ольги Дмитриевны выглядит так же, как и вчера."
     per_eye "Но что-то все же изменилось."
     per_eye "Пионерская форма, висящая на спинке кровати!"
-    "Ты с недоверием покрутил ее в руках, примерил и оделся."
+    "Ты с недоверием покрутил ее в руках..."
+    play sound ds_sfx_mot
+    res "Так, стой, а твою одежду куда девали?"
+    window hide
+    menu:
+        "Надеть":
+            window show
+            "Ты надеваешь новую форму."
+        "Поискать свою одежду":
+            window show
+            "Ты начинаешь искать свою прежнюю одежду..."
+            play sound ds_sfx_mot
+            per_eye "Однако, найти её ты не можешь."
+            th "Придётся надевать эту одежду. Впрочем..."
     th "Все равно это лучше, чем ходить в зимней одежде."
     window hide
     menu:
         "Посмотреть в зеркало":
             window show
             "Ты начал искать зеркало."
-            th "Хотя бы самое маленькое – надо посмотреть на себя, оценить как ты выгляжу."
+            th "Хотя бы самое маленькое – надо посмотреть на себя, оценить как я выгляжу."
 
             "Это не составило большого труда – оно обнаружилось на внутренней стороне дверцы шкафа."
 
@@ -1028,7 +1041,7 @@ label ds_day2_pass_alone_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -1036,7 +1049,7 @@ label ds_day2_pass_alone_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -3229,7 +3242,7 @@ label ds_day2_pass_sl_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -3237,7 +3250,7 @@ label ds_day2_pass_sl_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -4551,7 +4564,7 @@ label ds_day2_pass_un_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -4559,7 +4572,7 @@ label ds_day2_pass_un_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_day 
+            scene bg ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -7558,6 +7571,95 @@ label ds_day2_medic:
             scene bg ext_aidpost_night
             with dissolve
             jump ds_day2_night
+    scene black with dissolve
+    "..."
+    scene bg int_aidpost_night
+    with dissolve
+    show cs shy at center with dissolve
+    cs "Как хорошо... А теперь тебе пора идти."
+    play sound ds_sfx_psy
+    aut "Стоп. Чего это тебе пора?"
+    window hide
+    menu:
+        "Уйти":
+            window show
+            me "Ну ладно, до свидания..."
+            scene bg ext_aidpost_night
+            with dissolve
+            "И ты выходишь и идёшь к себе."
+            jump ds_day2_night
+        "Остаться стоять":
+            window show
+            me "Зачем?"
+    show cs smile at center with dspr
+    cs "У меня тут дела есть. О которых тебе знать рано... пока."
+    window hide
+    menu:
+        "Уйти":
+            window show
+            me "Ну ладно, до свидания..."
+            scene bg ext_aidpost_night
+            with dissolve
+            "И ты выходишь."
+            jump ds_day2_night
+        "Заявить протест":
+            if skillcheck('authority', lvl_legendary):
+                play sound ds_sfx_psy
+                aut "Нет, ты никуда не пойдёшь! Это чёрная неблагодарность!"
+                me "Я вообще-то тут постарался, чтобы вам хорошо было, а вы так?!"
+                show cs normal at center with dspr
+                cs "Я не поняла? Ты меня ослушаться вздумал?!"
+                window hide
+                scene bg ext_aidpost_night
+                with vpunch
+                $ renpy.pause(0.5)
+                window show
+                "Она хватает тебя и буквально выкидывает из медпункта."
+                pat "Тебе больно от удара о землю."
+                $ ds_health -= 1
+                "Поднявшись и отряхнувшись, ты идёшь к себе."
+            else:
+                play sound ds_sfx_psy
+                aut "Она выглядит угрожающе, лучше подчинись."
+                me "Ну ладно, до свидания..."
+                scene bg ext_aidpost_night
+                with dissolve
+                "И ты выходишь."
+            $ ds_skill_points['authority'] += 1
+        "Подловить на словах":
+            if skillcheck('rhetoric', lvl_formidable, passive=True):
+                play sound ds_sfx_int
+                rhe "Она пытается от тебя что-то скрыть. Начни выпытывать!"
+                me "Вы что, что-то от меня скрываете."
+                show cs normal at center with dspr
+                cs "Нет... а вот тебе пора!"
+                 window hide
+                scene bg ext_aidpost_night
+                with vpunch
+                $ renpy.pause(0.5)
+                window show
+                "Она хватает тебя и буквально выкидывает из медпункта."
+                pat "Тебе больно от удара о землю."
+                $ ds_health -= 1
+                "Поднявшись и отряхнувшись, ты идёшь к себе."
+            else:
+                play sound ds_sfx_int
+                rhe "Ты не видишь зацепок, она просто хочет, чтобы ты ушёл."
+                me "Ну ладно, до свидания..."
+                scene bg ext_aidpost_night
+                with dissolve
+                "И ты выходишь."
+            $ ds_skill_points['rhetoric'] += 1
+    if skillcheck('drama', lvl_challenging, passive=True):
+        play sound ds_sfx_int
+        dra "У госпожи Виолы совершенно точно есть скелеты в шкафу, мессир."
+        dra "Ах, как жаль, что вам не удалось сейчас их вытащить."
+        dra "Ну ничего, попробуем ещё раз. Потом! У нас всё получится!"
+        dra "Шоу должно продолжаться!"
+        $ ds_skill_points['drama'] += 1
+    jump ds_day2_night
+    
+
 
 label ds_day2_square:
     scene bg ext_square_night
@@ -8822,7 +8924,7 @@ label ds_day2_beach:
         $ ds_dv_rescued = True
     window hide
 
-    scene cg d2_water_dan 
+    scene cg ds_day2_swim_dv
     show unblink 
     with dissolve
 
@@ -9220,7 +9322,7 @@ label ds_day2_entrance:
     window hide
 
     $ persistent.sprite_time = "night"
-    scene bg ext_clubs_night 
+    scene bg ds_ext_clubs_gate_night 
     with dissolve
 
     window show
@@ -10144,16 +10246,64 @@ label ds_day2_dream:
     dv "Слушай. Мы уже выбрали все темы для разговора."
     dv "Все мыслимые комбинации слов мы использовали. Мы больше не составляем единое целое - больше нет ни «нас», ни наших детей."
     dv "Всё прошло, и мне нужно уезжать. А ты останешься один - навеки."
-    play sound ds_sfx_mot
-    svf "Не пытайся её поцеловать {i}сейчас{/i}. Ты слишком на нервах из-за услышанного."
-    me "Но... разве так должно быть?"
-    dv "Нет, конечно... но..."
-    me "Что? Есть что-то хорошее?"
-    "Она смотрит вниз."
-    dv "Я не знаю, зачем сказала это «но». Нет никаких «но»!"
+    play sound ds_sfx_int
+    rhe "Она серьёзно хочет бросить тебя одного? Не может быть! Обрати её внимание на это!"
+    window hide
+    menu:
+        "Разве так должно быть?":
+            window show
+            me "Но... разве так должно быть?"
+            dv "Нет, конечно... но..."
+            play sound ds_sfx_mot
+            res "Но! Что-то всё-таки есть!"
+            me "Что? Есть что-то хорошее?"
+            "Она смотрит вниз."
+            dv "Я не знаю, зачем сказала это «но». Нет никаких «но»!"
+            res "И тут ничего..."
+            vol "Закономерно - у неё ничего к тебе и не могло остаться."
+            window hide
+            menu:
+                "Ты хочешь бросить меня одного?":
+                    window show
+                    me "Ты... хочешь бросить меня одного?! В АДУ?!"
+                    "Алиса молчит."
+                    rhe "Сейчас... подожди, и она одумается, вновь полюбит тебя."
+                    vol "Ты вообще в здравом уме?"
+                    rhe "Она просто не осознаёт, {i}что{/i} она творит."
+                    dv "Семён..."
+                    emp "На её лице отражается боль."
+                    vol "Вот видишь."
+                    rhe "Как..? Должно же было сработать..."
+                    dv "Как ты не понимаешь? Мы {i}не подходили{/i} друг другу. Я плоха для тебя."
+                    dv "Ты сможешь найти себе кого-то лучше..."
+                    dv "Просто на это нужно время. Много времени."
+                    show dvw rage at center with dspr
+                    dv "Но ради всего - не вдумай меня тянуть за собой! Я это прекратила, и тебе следует!"
+                "Это всё?":
+                    window show
+        "Ты хочешь бросить меня одного?":
+            window show
+            me "Ты... хочешь бросить меня одного?! В АДУ?!"
+            "Алиса молчит."
+            rhe "Сейчас... подожди, и она одумается, вновь полюбит тебя."
+            vol "Ты вообще в здравом уме?"
+            rhe "Она просто не осознаёт, {i}что{/i} она творит."
+            dv "Семён..."
+            emp "На её лице отражается боль."
+            vol "Вот видишь."
+            rhe "Как..? Должно же было сработать..."
+            dv "Как ты не понимаешь? Мы {i}не подходили{/i} друг другу. Я плоха для тебя."
+            dv "Ты сможешь найти себе кого-то лучше..."
+            dv "Просто на это нужно время. Много времени."
+            show dvw rage at center with dspr
+            dv "Но ради всего - не вдумай меня тянуть за собой! Я это прекратила, и тебе следует!"
+        "Это всё?":
+            window show
     me "Это всё?"
     show dvw rage at center with dspr
     dv "Да, это всё! Переживёшь ты это, как пережила я, как пережили все остальные!"
+    play sound ds_sfx_int
+    vic "Её лицо... что-то тут не так. Похоже, она не совсем Алиса..."
     me "Мне кажется, ты не совсем Алиса..."
     dv "Что ты несёшь?!"
     window hide
@@ -10164,13 +10314,6 @@ label ds_day2_dream:
             me "Ты, кажется, моя бывшая... кто-то там."
             dv "Значит, я теперь просто бывшая?! Ты меня только запутал!"
             dv "И я пропустила автобус! Ладно, подожду следующего..."
-            show dvw normal at center with dspr
-            ine "А мы все тебя предупреждали..."
-            th "Все?"
-            arb "Да, все."
-            lim "{i}Буквально{/i} все. От глубин подсознания до последнего нейрона твоего неокортекса."
-            me "Рептильный мозг был прав... не нужно было об этом вспоминать..."
-            dv "Я не понимаю, о чём ты..."
         "Мой траур":
             window show
             me "Я в трауре из-за тебя... а ты ведь даже не умерла."
@@ -10215,6 +10358,12 @@ label ds_day2_dream:
             me "А ты не знаешь, кто ты?"
             dv "Конечно же знаю! А вот ты - нет! Хотя должен бы был!"
     show dvw normal at center with dspr
+    ine "А мы все тебя предупреждали..."
+    th "Все?"
+    arb "Да, все."
+    lim "{i}Буквально{/i} все. От глубин подсознания до последнего нейрона твоего неокортекса."
+    me "Рептильный мозг был прав... не нужно было об этом вспоминать..."
+    dv "Я не понимаю, о чём ты..."
     dv "А впрочем, неважно. Мне надо ехать. Мои друзья ждут меня. Заставлять их ждать нехорошо."
     play sound ds_sfx_psy
     aut "ЧЕГО?! Ей какие-то друзья важнее {i}тебя{/i}?"
@@ -10321,11 +10470,13 @@ label ds_day2_dream:
         show dvw smile at center with dspr
         dv "Я нашла себе лучшую версию тебя."
         dv "Он, я уверена, меня не предаст. У нас всё будет хорошо."
+        dv "А ты... тебе придётся оставаться тут. На холоде. Одному..."
         "К остановке подъезжает автобус."
         hide dvw with dissolve
         hide piw with dissolve
         "Алиса и тот парень заходят в него вместе."
     else:
+        dv "А ты... тебе придётся оставаться тут. На холоде. Одному..."
         "К остановке подъезжает автобус."
         hide dvw with dissolve
         "Алиса заходит в него."
