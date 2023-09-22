@@ -7633,7 +7633,7 @@ label ds_day2_medic:
                 me "Вы что, что-то от меня скрываете."
                 show cs normal at center with dspr
                 cs "Нет... а вот тебе пора!"
-                 window hide
+                window hide
                 scene bg ext_aidpost_night
                 with vpunch
                 $ renpy.pause(0.5)
