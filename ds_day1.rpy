@@ -3242,7 +3242,7 @@ label ds_day1_meet_un:
     window hide
     menu:
         "Подойти":
-            if skillcheck('volition', lvl_medium, modifiers={'ds_ran_from_un': -1}):
+            if skillcheck('volition', lvl_medium, modifiers=[('ds_ran_from_un', -1)]):
                 window show
                 play sound ds_sfx_psy
                 vol "Подойди и поговори с ней."

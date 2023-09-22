@@ -31,7 +31,7 @@ init python:
     }
 
     # Функция, организующая проверки
-    def skillcheck(skill, threshold, passive=False, modifiers={}):
+    def skillcheck(skill, threshold, passive=False, modifiers=[]):
         dices = [1, 2, 3, 4, 5, 6]
         first_dice = renpy.random.choice(dices)
         second_dice = renpy.random.choice(dices)
