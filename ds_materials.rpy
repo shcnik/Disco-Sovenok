@@ -251,6 +251,8 @@ init:
     $ ds_knowing = 0 # Знание
     $ ds_semtype = 0 # Тип Семёна
 
+    $ ds_game_started = False
+
 # Эффекты
 
     transform semi_transparent:

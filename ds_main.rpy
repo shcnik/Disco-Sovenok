@@ -17,7 +17,7 @@ label ds_quit:
 label ds_start:
     scene black with dissolve
 
-    show screen ds_hud
+    show screen ds_call_hud
 
     if ds_archetype == 1:
         $ ds_skill_points['logic'], ds_skill_points['encyclopedia'], ds_skill_points['rhetoric'], ds_skill_points['drama'], ds_skill_points['conceptualization'], ds_skill_points['visual_calculus'] = 3, 4, 1, 3, 4, 3
@@ -37,9 +37,11 @@ label ds_start:
     if ds_archetype == 0:
         pass
     
-    $ ds_health = ds_skill_points['endurance']
-    $ ds_morale = ds_skill_points['volition']
+    $ ds_health = 0
+    $ ds_morale = 0
     $ ds_semtype = 0
+
+    $ ds_game_started = True
 
     $ ds_met['dv'] = 0
     $ ds_met['un'] = 0

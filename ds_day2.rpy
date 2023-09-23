@@ -35,12 +35,13 @@ init:
     $ ds_gave_hairpin_dv = False
     $ ds_gave_hairpin_sl = False
     $ ds_gave_hairpin_un = False
+    $ ds_sl_door_broken = False
     $ ds_dv_rescued = False
     $ ds_dv_steal_got = False
  
 label ds_day2_morning:
-    $ ds_health = ds_skill_points['endurance']
-    $ ds_morale = ds_skill_points['volition']
+    $ ds_health = 0
+    $ ds_morale = 0
 
     $ backdrop = "days"
 
@@ -7981,7 +7982,7 @@ label ds_day2_music:
     lgc "Значит, нужно искать домик..."
     stop ambience fadeout 2
     $ disable_current_zone_ds_small()
-    jump ds_day2_find_mi
+    jump ds_day2_find_mi_house
 
 label ds_day2_house3:
     $ persistent.sprite_time = "night"

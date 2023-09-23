@@ -402,7 +402,7 @@ screen ds_main_menu():
         yanchor 0.5
         xpos 0.1
         ypos 0.25
-        action [Show("ds_choose_type"), Hide("ds_main_menu")]
+        action [SetVariable('ds_game_started', False), Show("ds_choose_type"), Hide("ds_main_menu")]
     imagebutton: # Загрузить
         auto "mods/disco_sovenok/gui/menu/load_%s.png"
         xanchor 0.0
@@ -592,19 +592,136 @@ screen ds_skill_table():
                             action [ Hide('ds_skill_info'), SetVariable('ds_chosen_skill', skill), Show('ds_skill_info')]
                             activate_sound ds_btn_click
 
+screen ds_call_hud():
+    modal False
+    add "mods/disco_sovenok/gui/hud/call_hud.png":
+        xalign 0.0
+        yalign 0.0
+    mousearea:
+        area (0, 0, 21, 33)
+        hovered [Show('ds_hud'), Hide('ds_call_hud')]
+        unhovered [NullAction()]
+
+screen ds_hide_all():
+    modal False
+    imagebutton:
+        xalign 0.0
+        yalign 0.0
+        idle "mods/disco_sovenok/gui/hud/hide_all.png"
+        hover "mods/disco_sovenok/gui/hud/hide_all.png"
+        action [Hide('ds_skill_table'), Hide('ds_skill_info'), Hide('ds_lp_points'), Show('ds_call_hud'), Hide('ds_hide_all')]
+
 screen ds_hud():
     modal False
+    add "mods/disco_sovenok/gui/hud/hud.png" xalign 0.0 yalign 0.0
+    mousearea:
+        area (0, 0, 500, 70)
+        hovered Show('ds_hud')
+        unhovered [Show('ds_call_hud'), Hide('ds_hud')]
     hbox:
         xalign 0.0
         yalign 0.0
         imagebutton:
-            idle "mods/disco_sovenok/gui/hud/call_skills.png"
-            hover "mods/disco_sovenok/gui/hud/call_skills.png"
-            action [Hide("ds_lp_points"), ToggleScreen("ds_skill_table"), Hide("ds_skill_info")]
+            yalign 0.0
+            auto "mods/disco_sovenok/gui/hud/menu_%s.png"
+            action [ NullAction() ]
         imagebutton:
-            idle "mods/disco_sovenok/gui/hud/call_lp.png"
-            hover "mods/disco_sovenok/gui/hud/call_skills.png"
-            action [Hide("ds_skill_table"), Hide("ds_skill_info"), ToggleScreen("ds_lp_points")]
+            yalign 0.0
+            auto "mods/disco_sovenok/gui/hud/skills_%s.png"
+            action [ Show('ds_skill_table'), Show('ds_hide_all'), Hide('ds_hud') ]
+        imagebutton:
+            yalign 0.0
+            auto "mods/disco_sovenok/gui/hud/lp_%s.png"
+            action [ Show('ds_lp_points'), Show('ds_hide_all'), Hide('ds_hud') ]
+        grid 2 4:
+            transpose True
+            yalign 0.0
+            xspacing 10
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                hbox:
+                    text "ЗДОРОВЬЕ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 0.0
+                    text "     "+str(max(ds_get_total_skill('endurance')+ds_health, 0))+"/"+str(max(ds_get_total_skill('endurance'), -ds_health+1)):
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 1.0
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                bar:
+                    left_bar "mods/disco_sovenok/gui/hud/bar_health.png"
+                    right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
+                    bar_resizing False
+                    thumb None
+                    value max(ds_get_total_skill('endurance')+ds_health, 0)
+                    range max(ds_get_total_skill('endurance'), -ds_health+1)
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                hbox:
+                    text "БОЕВОЙ ДУХ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 0.0
+                    text "     "+str(max(ds_get_total_skill('volition')+ds_morale, 0))+"/"+str(max(ds_get_total_skill('volition'), -ds_morale+1)):
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 1.0
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                bar:
+                    left_bar "mods/disco_sovenok/gui/hud/bar_morale.png"
+                    right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
+                    bar_resizing False
+                    thumb None
+                    value max(ds_get_total_skill('volition')+ds_morale, 0)
+                    range max(ds_get_total_skill('volition'), -ds_morale+1)
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                hbox:
+                    text "РЕПУТАЦИЯ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 0.0
+                    text "     "+str(ds_karma):
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 1.0
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                bar:
+                    base_bar "mods/disco_sovenok/gui/hud/bar_karma.png"
+                    thumb "mods/disco_sovenok/gui/hud/bar_thumb.png"
+                    value min(max(ds_karma+50, 0), 100)
+                    range 100
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                hbox:
+                    text "ИНЦЕЛ/ЧЕД":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 0.0
+                    text "     "+str(ds_semtype):
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        size 12
+                        xalign 1.0
+            fixed:
+                xmaximum 120
+                ymaximum 15
+                bar:
+                    base_bar "mods/disco_sovenok/gui/hud/bar_type.png"
+                    thumb "mods/disco_sovenok/gui/hud/bar_thumb.png"
+                    value min(max(ds_semtype+6, 0), 12)
+                    range 12
+                
 
 screen ds_skill_info():
     python:
@@ -684,7 +801,7 @@ screen ds_skill_info():
                         xalign 0.0
                         xoffset 10
                         add "mods/disco_sovenok/gui/skills/[skill]_large.png" xalign 0.0 yalign 0.0 xoffset 5 yoffset 10
-                        if not renpy.get_screen('ds_hud'):
+                        if not ds_game_started:
                             vbox:
                                 xalign 1.0
                                 yalign 0.0
