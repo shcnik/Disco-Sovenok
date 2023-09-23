@@ -640,15 +640,14 @@ screen ds_hud():
             fixed:
                 xmaximum 120
                 ymaximum 15
-                hbox:
-                    text "ЗДОРОВЬЕ":
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 0.0
-                    text "     "+str(max(ds_get_total_skill('endurance')+ds_health, 0))+"/"+str(max(ds_get_total_skill('endurance'), -ds_health+1)):
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 1.0
+                text "ЗДОРОВЬЕ":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 0.0
+                text str(max(ds_get_total_skill('endurance')+ds_health, 1))+"/"+str(max(ds_get_total_skill('endurance'), -ds_health+1)):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 1.0
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -657,20 +656,19 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value max(ds_get_total_skill('endurance')+ds_health, 0)
+                    value max(ds_get_total_skill('endurance')+ds_health, 1)
                     range max(ds_get_total_skill('endurance'), -ds_health+1)
             fixed:
                 xmaximum 120
                 ymaximum 15
-                hbox:
-                    text "БОЕВОЙ ДУХ":
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 0.0
-                    text "     "+str(max(ds_get_total_skill('volition')+ds_morale, 0))+"/"+str(max(ds_get_total_skill('volition'), -ds_morale+1)):
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 1.0
+                text "БОЕВОЙ ДУХ":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 0.0
+                text str(max(ds_get_total_skill('volition')+ds_morale, 1))+"/"+str(max(ds_get_total_skill('volition'), -ds_morale+1)):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 1.0
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -679,20 +677,19 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value max(ds_get_total_skill('volition')+ds_morale, 0)
+                    value max(ds_get_total_skill('volition')+ds_morale, 1)
                     range max(ds_get_total_skill('volition'), -ds_morale+1)
             fixed:
                 xmaximum 120
                 ymaximum 15
-                hbox:
-                    text "РЕПУТАЦИЯ":
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 0.0
-                    text "     "+str(ds_karma):
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 1.0
+                text "РЕПУТАЦИЯ":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 0.0
+                text str(ds_karma):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 1.0
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -704,15 +701,14 @@ screen ds_hud():
             fixed:
                 xmaximum 120
                 ymaximum 15
-                hbox:
-                    text "ИНЦЕЛ/ЧЕД":
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 0.0
-                    text "     "+str(ds_semtype):
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        size 12
-                        xalign 1.0
+                text "ИНЦЕЛ/ЧЕД":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 0.0
+                text str(ds_semtype):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    size 12
+                    xalign 1.0
             fixed:
                 xmaximum 120
                 ymaximum 15
