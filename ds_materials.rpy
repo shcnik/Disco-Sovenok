@@ -94,6 +94,10 @@ init python:
         if skill in ['perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure']:
             if ds_member['cyber']:
                 result += 1
+        if skill == 'endurance':
+            result += ds_health
+        if skill == 'volition':
+            result += ds_morale
         if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
             return result
         if ds_semtype > 4:
@@ -332,6 +336,8 @@ init:
 
 ## BG
 
+    image bg ds_int_bus_forest = "mods/disco_sovenok/bg/int_bus_path.jpg"
+
     image bg ds_int_sporthall_day = "mods/disco_sovenok/bg/int_sporthall_day_7dl.jpg"
     image bg ds_int_sporthall_night = "mods/disco_sovenok/bg/int_sporthall_night_7dl.jpg"
 
@@ -341,6 +347,10 @@ init:
 
     image bg ds_int_dininghall_table2_day = "mods/disco_sovenok/bg/dva_dish_day.jpg"
     image bg ds_int_dininghall_table2_sunset = "mods/disco_sovenok/bg/dva_dish_sunset.jpg"
+
+    image bg ds_int_dininghall_door_day = "mods/disco_sovenok/bg/int_dining_hall_door_day.jpg"
+    image bg ds_int_dininghall_door_sunset = "mods/disco_sovenok/bg/int_dining_hall_door_sunset.jpg"
+    image bg ds_int_dininghall_door_night = "mods/disco_sovenok/bg/int_dining_hall_door_night.jpg"
 
     image bg ds_ext_sl_house_sunset = "mods/disco_sovenok/bg/ext_house_of_sl_sunset.jpg"
     image bg ds_ext_sl_house_night = "mods/disco_sovenok/bg/ext_house_of_sl_night.jpg"
