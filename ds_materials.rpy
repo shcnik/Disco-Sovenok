@@ -60,6 +60,20 @@ init python:
             renpy.hide('second_dice')
         return result
 
+    def ds_damage_health():
+        global ds_health
+        ds_health -= 1
+        renpy.show('health damage', at_list=[show_damage])
+        renpy.pause(1.5)
+        renpy.hide('health')
+    
+    def ds_damage_morale(go_if_zero=''):
+        global ds_morale
+        ds_morale -= 1
+        renpy.show('morale damage', at_list=[show_damage])
+        renpy.pause(1.5)
+        renpy.hide('morale')
+
     def ds_get_maximal_girl():
         res = None
         max_lp = 0
@@ -240,12 +254,17 @@ init:
     $ lvl_unimaginable = 18
     $ lvl_impossible = 20
 
-## Отношение девушек
-    $ ds_lp_dv = 0
-    $ ds_lp_sl = 0
-    $ ds_lp_un = 0
-    $ ds_lp_us = 0
-    $ ds_lp_mi = 0
+## Отношение персонажей
+    $ ds_lp = {}
+
+    $ ds_lp['dv'] = 0
+    $ ds_lp['sl'] = 0
+    $ ds_lp['un'] = 0
+    $ ds_lp['us'] = 0
+    $ ds_lp['mi'] = 0
+    $ ds_lp['el'] = 0
+    $ ds_lp['mt'] = 0
+    $ ds_lp['mz'] = 0
 
 ## Общие параметры
     $ ds_karma = 0 # Репутация - насколько хорошо себя ведёт ГГ
@@ -261,6 +280,25 @@ init:
 
     transform semi_transparent:
         alpha 0.5
+    
+    transform show_damage:
+        alpha 0.5
+        pause 0.1
+        alpha 0.0
+        pause 0.1
+        alpha 0.5
+        pause 0.1
+        alpha 0.0
+        pause 0.1
+        alpha 0.5
+        pause 1.0
+        linear 0.1 alpha 0.0
+
+    transform show_restore:
+        alpha 0.0
+        linear 0.1 alpha 0.5
+        pause 1.0
+        linear 0.1 alpha 0.0
 
 # Персонажи
 
@@ -1061,3 +1099,5 @@ init:
     image roll = SnowBlossom("mods/disco_sovenok/sprite/strip.png", count=100, xspeed=-150, fast=True)
     image check success = Transform(Image("mods/disco_sovenok/bg/success.png"), alpha=0.3)
     image check failure = Transform(Image("mods/disco_sovenok/bg/failure.png"), alpha=0.3)
+    image health damage = "mods/disco_sovenok/bg/health_damage.png"
+    image morale damage = "mods/disco_sovenok/bg/morale_damage.png"

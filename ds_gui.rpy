@@ -886,8 +886,32 @@ screen ds_skill_info():
                     text SKILL_DESCR[skill] yalign 1.0 yoffset 10 xoffset 10 size 24 xfill True
     
 screen ds_lp_points():
+    python:
+        CHARS = ['dv', 'un', 'sl', 'us', 'mi', 'el', 'mt', 'mz']
+
+        CHAR_COLORS = {
+            'dv': "#ffaa00",
+            'un': "#b956ff",
+            'sl': "#ffd200",
+            'us': "#ff3200",
+            'mi': "#00deff",
+            'el': "#ffff00",
+            'mt': "#00ea32",
+            'mz': "#5481db"
+        }
+
+        CHAR_NAMES = {
+            'dv': "АЛИСА",
+            'un': "ЛЕНА",
+            'sl': "СЛАВЯ",
+            'us': "УЛЬЯНА",
+            'mi': "МИКУ",
+            'el': "ЭЛЕКТРОНИК",
+            'mt': "ОЛЬГА",
+            'mz': "ЖЕНЯ"
+        }
     fixed:
-        xmaximum 1815
+        xmaximum 1810
         ymaximum 975
         add "mods/disco_sovenok/gui/lp/lp_base.png"
         yalign 0.0
@@ -897,295 +921,52 @@ screen ds_lp_points():
             linear 0.1 xanchor 1.0 xpos 1.0
         grid 2 4:
             xspacing 30
-            xfill True
-            yfill True
+            yspacing 50
+            xoffset 34
+            yoffset 55
             transpose True
-            hbox:
-                if (ds_met['dv'] > 0):
-                    if ds_lp_dv > 0:
-                        add "mods/disco_sovenok/gui/lp/dv_portrait_pos.png" xoffset 40 yoffset 55
-                    elif ds_lp_dv < 0:
-                        add "mods/disco_sovenok/gui/lp/dv_portrait_neg.png" xoffset 40 yoffset 55
-                    else:
-                        add "mods/disco_sovenok/gui/lp/dv_portrait.png" xoffset 40 yoffset 55
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png" xoffset 40 yoffset 55
+            for char in CHARS:
                 fixed:
-                    xalign 0.5
-                    xoffset 50
-                    if ds_met['dv'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                            yoffset 20
-                    elif ds_met['dv'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffaa00"
-                            yalign 0.5
-                            yoffset 20
-                    else:
-                        text "АЛИСА":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffaa00"
-                            yalign 0.5
-                            yoffset 20
-                fixed:
-                    xoffset -205
-                    yoffset 85
-                    text (("– " if ds_lp_dv < 0 else "0 ")+str(ds_abs(ds_lp_dv) // 10)+" "+str(ds_abs(ds_lp_dv) % 10)):
+                    xmaximum 855
+                    xminimum 855
+                    ymaximum 175
+                    yminimum 175
+                    hbox:
+                        xalign 0.0
+                        if ds_met[char] > 0:
+                            if ds_lp[char] > 0:
+                                add "mods/disco_sovenok/gui/lp/"+char+"_portrait_pos.png" yalign 0.5
+                            elif ds_lp[char] < 0:
+                                add "mods/disco_sovenok/gui/lp/"+char+"_portrait_neg.png" yalign 0.5
+                            else:
+                                add "mods/disco_sovenok/gui/lp/"+char+"_portrait.png" yalign 0.5
+                        else:
+                            add "mods/disco_sovenok/gui/lp/unknown.png" yalign 0.5
+                        if ds_met[char] == 0:
+                            text "ИМЯ НЕИЗВЕСТНО":
+                                size 56
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                yalign 0.5
+                                xoffset 25
+                        elif ds_met[char] == 1:
+                            text "ИМЯ НЕИЗВЕСТНО":
+                                size 56
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color CHAR_COLORS[char]
+                                yalign 0.5
+                                xoffset 25
+                        else:
+                            text CHAR_NAMES[char]:
+                                size 56
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color CHAR_COLORS[char]
+                                yalign 0.5
+                                xoffset 25
+                    text (("– " if ds_lp[char] < 0 else "0 ")+str(ds_abs(ds_lp[char]) // 10)+" "+str(ds_abs(ds_lp[char]) % 10)):
                         size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['un'] > 0):
-                    if ds_lp_un > 0:
-                        add "mods/disco_sovenok/gui/lp/un_portrait_pos.png" xoffset 40 yoffset 35
-                    elif ds_lp_un < 0:
-                        add "mods/disco_sovenok/gui/lp/un_portrait_neg.png" xoffset 40 yoffset 35
-                    else:
-                        add "mods/disco_sovenok/gui/lp/un_portrait.png" xoffset 40 yoffset 35
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png" xoffset 40 yoffset 35
-                fixed:
-                    xalign 0.5
-                    xoffset 50
-                    if ds_met['un'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                    elif ds_met['un'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#b956ff"
-                            yalign 0.5
-                    else:
-                        text "ЛЕНА":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#b956ff"
-                            yalign 0.5
-                fixed:
-                    xoffset -205
-                    yoffset 75
-                    text (("– " if ds_lp_un < 0 else "0 ")+str(ds_abs(ds_lp_un) // 10)+" "+str(ds_abs(ds_lp_un) % 10)):
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['sl'] > 0):
-                    if ds_lp_sl > 0:
-                        add "mods/disco_sovenok/gui/lp/sl_portrait_pos.png" xoffset 35 yoffset 40
-                    elif ds_lp_sl < 0:
-                        add "mods/disco_sovenok/gui/lp/sl_portrait_neg.png" xoffset 35 yoffset 40
-                    else:
-                        add "mods/disco_sovenok/gui/lp/sl_portrait.png" xoffset 35 yoffset 40
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png" xoffset 35 yoffset 40
-                fixed:
-                    xalign 0.5
-                    xoffset 50
-                    if ds_met['sl'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                    elif ds_met['sl'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffd200"
-                            yalign 0.5
-                    else:
-                        text "CЛАВЯ":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffd200"
-                            yalign 0.5
-                fixed:
-                    xoffset -205
-                    yoffset 75
-                    text (("– " if ds_lp_sl < 0 else "0 ")+str(ds_abs(ds_lp_sl) // 10)+" "+str(ds_abs(ds_lp_sl) % 10)):
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['us'] > 0):
-                    if ds_lp_us > 0:
-                        add "mods/disco_sovenok/gui/lp/us_portrait_pos.png" xoffset 37 yoffset 28
-                    elif ds_lp_us < 0:
-                        add "mods/disco_sovenok/gui/lp/us_portrait_neg.png" xoffset 37 yoffset 28
-                    else:
-                        add "mods/disco_sovenok/gui/lp/us_portrait.png" xoffset 37 yoffset 28
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png" xoffset 37 yoffset 28
-                fixed:
-                    xalign 0.5
-                    xoffset 50
-                    if ds_met['us'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                            yoffset -20
-                    elif ds_met['us'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ff3200"
-                            yalign 0.5
-                            yoffset -20
-                    else:
-                        text "УЛЬЯНА":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ff3200"
-                            yalign 0.5
-                            yoffset -20
-                fixed:
-                    xoffset -205
-                    yoffset 65
-                    text (("– " if ds_lp_us < 0 else "0 ")+str(ds_abs(ds_lp_us) // 10)+" "+str(ds_abs(ds_lp_us) % 10)):
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['mi'] > 0) and False:
-                    add "mods/disco_sovenok/gui/lp/mi_portrait.png"
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png"
-                fixed:
-                    xalign 0.5
-                    xoffset 10
-                    if ds_met['mi'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                            yoffset 20
-                    elif ds_met['mi'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#00deff"
-                            yalign 0.5
-                            yoffset 20
-                    else:
-                        text "МИКУ":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#00deff"
-                            yalign 0.5
-                            yoffset 20
-                fixed:
-                    xoffset -225
-                    yoffset 85
-                    text (("– " if ds_lp_mi < 0 else "0 ")+str(ds_abs(ds_lp_mi) // 10)+" "+str(ds_abs(ds_lp_mi) % 10)):
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['el'] > 0) and False:
-                    add "mods/disco_sovenok/gui/lp/el_portrait.png"
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png"
-                fixed:
-                    xalign 0.5
-                    xoffset 10
-                    if ds_met['el'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                    elif ds_met['el'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffff00"
-                            yalign 0.5
-                    else:
-                        text "ЭЛЕКТРОНИК":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#ffff00"
-                            yalign 0.5
-                fixed:
-                    xoffset -225
-                    yoffset 75
-                    text "0 0 0":
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['mt'] > 0) and False:
-                    add "mods/disco_sovenok/gui/lp/mt_portrait.png"
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png"
-                fixed:
-                    xalign 0.5
-                    xoffset 10
-                    if ds_met['mt'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                    elif ds_met['mt'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#00ea32"
-                            yalign 0.5
-                    else:
-                        text "ОЛЬГА":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#00ea32"
-                            yalign 0.5
-                fixed:
-                    xoffset -225
-                    yoffset 75
-                    text "0 0 0":
-                        size 90
-                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                        color "#000000"
-            hbox:
-                if (ds_met['mz'] > 0) and False:
-                    add "mods/disco_sovenok/gui/lp/mz_portrait.png"
-                else:
-                    add "mods/disco_sovenok/gui/lp/unknown.png"
-                fixed:
-                    xalign 0.5
-                    xoffset 10
-                    if ds_met['mz'] == 0:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            yalign 0.5
-                            yoffset -20
-                    elif ds_met['mz'] == 1:
-                        text "ИМЯ НЕИЗВЕСТНО":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#5481db"
-                            yalign 0.5
-                            yoffset -20
-                    else:
-                        text "ЖЕНЯ":
-                            size 56
-                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                            color "#5481db"
-                            yalign 0.5
-                            yoffset -20
-                fixed:
-                    xoffset -225
-                    yoffset 65
-                    text "0 0 0":
-                        size 90
+                        xalign 1.0
+                        yalign 0.5
+                        xoffset -15
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         color "#000000"
 
