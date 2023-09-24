@@ -437,6 +437,8 @@ init:
 
     image cg ds_day2_lineup = "mods/disco_sovenok/cg/d2_all_lineup_ll.jpg"
 
+    image cg ds_day2_dv_hits_el = "mods/disco_sovenok/cg/dv_hits_el.jpg"
+
     image cg ds_day2_swim_dv = "mods/disco_sovenok/cg/d2_water_dan.jpg"
 
     image cg ds_day3_disco_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"

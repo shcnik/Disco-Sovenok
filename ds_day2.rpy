@@ -396,6 +396,7 @@ label ds_day2_morning:
             scene cg ds_day2_mt_undress2
             "Наконец вожатая замечает твоё присутсвие..."
             mt "Семен!"
+            $ ds_lp['mt'] -= 1
             "Ты тут же отворачиваешься."
             mt "Стучаться надо! А теперь выйди!"
             $ ds_karma -= 10
@@ -405,6 +406,7 @@ label ds_day2_morning:
                     me "Ну как же, тут такая красота ведь!"
                     mt "Вон!"
                     $ ds_karma -= 5
+                    $ ds_lp['mt'] -= 1
                     play sound ds_sfx_mot
                     svf "Она начинает искать что-нибудь, чтобы метнуть в тебя, так что беги!"
                     "И ты выбегаешь."
@@ -588,6 +590,13 @@ label ds_day2_morning:
                     com "Держись ровно и не кайся!"
                     me "Мне не за что извиняться, она первая начала!"
                     voices "Да как он смеет? Она же девушка."
+                    $ ds_lp['dv'] -= 1
+                    $ ds_lp['sl'] -= 1
+                    $ ds_lp['us'] -= 1
+                    $ ds_lp['mi'] -= 1
+                    $ ds_lp['mt'] -= 1
+                    $ ds_lp['el'] -= 1
+                    $ ds_lp['mz'] -= 1
                     show mt rage pioneer at fleft with dspr
                     mt "Вот именно, а ты должен был как мужчина повести себя, а именно ограничиться словами порицания!"
                     mt "Словами, а не кулаками!"
@@ -632,6 +641,14 @@ label ds_day2_morning:
                     com "Держись ровно и не кайся!"
                     me "Мне не за что извиняться, она первая начала!"
                     voices "Да как он смеет? Она же девушка."
+                    $ ds_lp['dv'] -= 1
+                    $ ds_lp['un'] -= 1
+                    $ ds_lp['sl'] -= 1
+                    $ ds_lp['us'] -= 1
+                    $ ds_lp['mi'] -= 1
+                    $ ds_lp['mt'] -= 1
+                    $ ds_lp['el'] -= 1
+                    $ ds_lp['mz'] -= 1
                     show mt rage pioneer at fleft with dspr
                     mt "Вот именно, а ты должен был как мужчина повести себя!"
                     mt "Признать свою вину, а не драться!"
@@ -951,6 +968,7 @@ label ds_day2_forged:
     $ renpy.pause(1.0)
     show mt rage panama pioneer at center with dspr
     mt "Ты чего это надумал, обмануть меня?!"
+    $ ds_lp['mt'] -= 1
     mt "Все подписи написаны одним почерком... {w}подозрительно напоминающим почерк Двачевской, кстати..."
     mt "Напротив библиотеки и медпункта должны стоять печати..."
     mt "И, наконец, главная в музклубе японка, а у них подписей нет, только опять же печати!"
@@ -1308,6 +1326,7 @@ label ds_day2_pass_alone_clubs:
             el "Приветствуем нового члена клуба кибернетиков!"
             $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
+            $ ds_lp['el'] += 1
             "И тут в комнату кто-то входит."
         "Отказаться":
             me "Да нет, мне бы просто обходной лист подписать."
@@ -1336,6 +1355,7 @@ label ds_day2_pass_alone_clubs:
             sl "А, отлично. Тогда пойдём?"
         else:
             sl "А, отлично. Тогда я пойду!"
+            $ ds_lp['sl'] += 1
             hide sl with dissolve
     else:
         me "Да, понимаешь, на самом деле мне бы просто обходной подписать…"
@@ -1616,6 +1636,7 @@ label ds_day2_pass_alone_library:
             "Ты забираешь бумажку и складываешь в карман штанов."
             $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
+            $ ds_lp['un'] += 1
             mz "Cледующий!"
         "Отказаться":
             me "Нет, спасибо."
@@ -2228,7 +2249,7 @@ label ds_day2_pass_dv_clubs:
     show el scared pioneer at cleft with dspr
     el "Чего?"
     dv "Нет, это ты чего называешь меня всякими обидными прозвищами!"
-    dv "Чего, кстати, ты меня Алисой назвал, а не «ДваЧе\", как любишь?!"
+    dv "Чего, кстати, ты меня Алисой назвал, а не «ДваЧе», как любишь?!"
     el "И ничего я..."
     show dv rage pioneer2 at fright with dspr
     dv "Я тебе недостаточно ясно давала раньше понять, что это прозвище под запретом?!"
@@ -2261,6 +2282,7 @@ label ds_day2_pass_dv_clubs:
         "Остановить Алису":
             window show
             me "Алиса, прекрати, пожалуйста! Обходной!"
+            $ ds_lp['el'] += 1
             play sound ds_sfx_mot
             svf "Она тебя не слышит. Придётся влезть в пучину!"
             window hide
@@ -2275,8 +2297,11 @@ label ds_day2_pass_dv_clubs:
                 svf "Пока ты занимался Алисой, он продолжал бегать, споткнулся и упал."
             else:
                 window show
+                scene cg ds_day2_dv_hits_el with dissolve
+                play sound sfx_lena_hits_alisa
                 svf "Однако ты влезаешь неудачно, и кулак Алисы, отскочив от глаза Электроника, прилетает тебе в голову."
                 $ ds_health -= 1
+                scene bg int_clubs_male_day with dissolve
                 show dv scared pioneer2 at cright with dspr
                 show el fingal pioneer at cleft with dspr
                 play sound ds_sfx_fys
@@ -2290,7 +2315,10 @@ label ds_day2_pass_dv_clubs:
         "Ждать молча":
             "Ты стоишь и ждёшь разрешения конфликта."
             $ ds_semtype -= 1
+            scene cg ds_day2_dv_hits_el with dissolve
+            play sound sfx_lena_hits_alisa
             "И оно скоро наступает. {w}Алиса дотягивается до Электроника, и ему прилетает по глазу."
+            scene bg int_clubs_male_day with dissolve
     $ ds_witnessed_el_hit = True
     show dv angry pioneer2 at cright with dspr
     show el fingal pioneer at cleft with dspr
@@ -2350,6 +2378,7 @@ label ds_day2_pass_dv_clubs:
             "Ты ставишь свою подпись."
             $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
+            $ ds_lp['el'] += 1
         "Отказаться":
             window show
             me "Да нет, мне бы просто обходной лист подписать."
@@ -3630,6 +3659,7 @@ label ds_day2_pass_sl_clubs:
             if not (ds_member['music'] or ds_member['sport']):
                 $ ds_lp['sl'] += 1
             $ ds_member['cyber'] = True
+            $ ds_lp['el'] += 1
             $ ds_skill_points['interfacing'] += 1
         "Отказаться":
             me "Да нет, мне бы просто обходной лист подписать."
@@ -4060,6 +4090,7 @@ label ds_day2_pass_sl_library:
             show sl smile pioneer at center with dspr
             sl "Молодец, так тянешься к знаниям... или просто любишь читать!"
             $ ds_lp['sl'] += 1
+            $ ds_lp['un'] += 1
             $ ds_member['library'] = True
             $ ds_skill_points['encyclopedia'] += 1
             mz "Cледующий!"
@@ -4878,6 +4909,7 @@ label ds_day2_pass_un_clubs:
             el "Приветствуем нового члена клуба кибернетиков!"
             $ ds_member['cyber'] = True
             $ ds_skill_points['interfacing'] += 1
+            $ ds_lp['el'] += 1
             "И тут в комнату кто-то входит."
         "Отказаться":
             me "Да нет, мне бы просто обходной лист подписать."
@@ -4905,6 +4937,7 @@ label ds_day2_pass_un_clubs:
         me "Нет, я просто решил к ним записаться."
         show sl smile pioneer at center with dspr
         sl "А, отлично. Тогда я пойду!"
+        $ ds_lp['sl'] += 1
         hide sl with dissolve
     else:
         me "Да, понимаешь, на самом деле мне бы просто обходной подписать…"
@@ -5647,6 +5680,7 @@ label ds_day2_after_pass:
                 me "Я, между прочим, обходной тут подписал!"
                 show mt surprise panama pioneer at center with dspr
                 mt "А... да..."
+                $ ds_lp['mt'] -= 1
                 $ ds_karma -= 5
                 $ ds_skill_points['authority'] += 1
             else:
@@ -5669,22 +5703,29 @@ label ds_day2_after_pass:
     mt "В какой кружок записался?"
     if ds_member['music'] and ds_member['cyber'] and ds_member['sport']:
         me "Во все сразу!"
+        $ ds_lp['mt'] += 1
     elif ds_member['music'] and ds_member['cyber']:
         me "В музыкальный и к кибернетикам."
+        $ ds_lp['mt'] += 1
     elif ds_member['cyber'] and ds_member['sport']:
         me "В спортивный и к кибернетикам."
+        $ ds_lp['mt'] += 1
     elif ds_member['music'] and ds_member['sport']:
         me "В музыкальный и в спортивный."
+        $ ds_lp['mt'] += 1
     elif ds_member['music']:
         me "В музыкальный записался."
+        $ ds_lp['mt'] += 1
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
     elif ds_member['sport']:
         me "В спортивный записался."
+        $ ds_lp['mt'] += 1
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
     elif ds_member['cyber']:
         me "Записался к кибернетикам."
+        $ ds_lp['mt'] += 1
         show mt smile panama pioneer at center with dspr
         mt "Отлично!"
     else:
@@ -5730,6 +5771,7 @@ label ds_day2_after_pass:
                     me "Ольга Дмитриевна, вы не переживаете, смогу я везде. Тем более, пионер должен быть хорош во всём!"
                     show mt smile panama pioneer at center with dspr
                     mt "Тут ты прав... Ладно, оставайся везде."
+                    $ ds_lp['mt'] += 1
                     mt "Но чтобы везде успевал!"
                     $ ds_skill_points['suggestion'] += 1
                 else:
@@ -5835,6 +5877,7 @@ label ds_day2_after_pass:
             com "Показательно, как Электроник напрягся от твоих слов."
             mt "Вот как... что ж, надо будет более детально разобраться в случившемся."
             $ ds_lp['dv'] += 1
+            $ ds_lp['el'] -= 1
             $ ds_skill_points['suggestion'] += 1
             $ ds_eldv_side_taken = 1
         "Встать на сторону Электроника":
@@ -5844,6 +5887,7 @@ label ds_day2_after_pass:
             mt "Значит, получит у меня Алиса как следует!"
             mt "Это уже переходит все границы!"
             $ ds_lp['dv'] -= 1
+            $ ds_lp['el'] += 1
             if not ds_wintessed_el_hit:
                 play sound ds_sfx_psy
                 sug "А вдруг это не так?"
@@ -6543,6 +6587,7 @@ label ds_day2_cards_alone:
                                 play sound ds_sfx_mot
                                 res "Но Слави нет!"
                                 $ ds_lp['sl'] -= 1
+                                $ ds_lp['mt'] -= 1
                                 "Тебе приходится идти одному."
                             "Извиниться":
                                 window show
@@ -6652,6 +6697,7 @@ label ds_day2_cards_alone:
                             play sound ds_sfx_mot
                             res "Но Слави нет!"
                             $ ds_lp['sl'] -= 2
+                            $ ds_lp['mt'] -= 1
                             "Тебе приходится идти одному."
                         "Извиниться":
                             window show
@@ -7121,6 +7167,7 @@ label ds_day2_find_mz:
     hide mt 
     with dissolve
     el "Только быстрее!"
+    $ ds_lp['el'] += 1
 
     stop ambience fadeout 3
 
@@ -7208,7 +7255,8 @@ label ds_day2_find_mz:
                         window show
                         me "Я понимаю тебя..."
                         show mz angry glasses pioneer at center with dspr
-                        "Вот и хорошо!"
+                        mz "Вот и хорошо!"
+                        $ ds_lp['mz'] += 1
                     "Ответить с сарказмом":
                         window show
                         me "Да-да."
@@ -7221,6 +7269,7 @@ label ds_day2_find_mz:
                 stop ambience fadeout 2
                 play sound ds_sfx_psy
                 sug "У любого человека есть свои слабые места."
+                $ ds_lp['mz'] += 1
                 window hide
 
                 $ persistent.sprite_time = "sunset"
@@ -7258,13 +7307,14 @@ label ds_day2_find_mz:
                         if skillcheck('physical_instrument', lvl_medium):
                             window show
                             play sound ds_sfx_fys
-                            phi "Но ты хватаешь её так крепко, что она вынуждена остановится."
+                            phi "Ты хватаешь её так крепко, что она вынуждена остановится."
                             $ ds_skill_points['physical_instrument'] += 1
                             me "Нет, ты пойдёшь со мной!"
                             show mz rage glasses pioneer close at center with dspr
                             mz "Да что ты ко мне прицепился?!"
                             show mz bukal glasses pioneer at center with dspr
                             mz "Ладно-ладно, пойду я, раз тебе это так надо! Но это будет на твоей совести!"
+                            $ ds_lp['mz'] -= 1
                             window hide
 
                             $ persistent.sprite_time = "sunset"
@@ -7281,6 +7331,7 @@ label ds_day2_find_mz:
                             play sound ds_sfx_fys
                             phi "Но ей удаётся вырвать свою руку из твоей и убежать."
                             $ ds_skill_points['physical_instrument'] += 1
+                            $ ds_lp['mz'] -= 1
                             hide mz with dissolve
                             $ ds_bring_mz_fail = True
                             $ ds_attack_mz = True
@@ -7399,6 +7450,7 @@ label ds_day2_game:
         me "А она не пришла! Ни в какую не согласилась прийти!"
         $ ds_karma -= 5
         el "И что нам теперь делать?"
+        $ ds_lp['el'] -= 1
         show mt normal pioneer at right with dissolve
         mt "Что-что? Ну, сыграешь сам. А судить буду я!"
         show mt smile pioneer at right with dspr
@@ -7439,6 +7491,10 @@ label ds_day2_game:
         $ ds_lp['un'] -= 1
         $ ds_lp['mi'] -= 1
         $ ds_lp['us'] -= 1
+        $ ds_lp['el'] -= 2
+        $ ds_lp['mt'] -= 1
+        if not ds_bring_mz_fail:
+            $ ds_lp['mz'] -= 1
         $ ds_tour_result = -2
         $ ds_morale -= 1
         jump ds_day2_after_tour
@@ -7532,6 +7588,8 @@ label ds_day2_game:
             if not ds_bet_dv:
                 $ ds_lp['sl'] += 1
         "C Женей":
+            if ds_tour_result == 0:
+                $ ds_lp['mz'] += 1
             if not ds_bet_dv:
                 $ ds_lp['sl'] += 1
         "С Шуриком":
@@ -7563,6 +7621,8 @@ label ds_day2_game:
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "C Женей":
+                if ds_tour_result == 1:
+                    $ ds_lp['mz'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "С Шуриком":
@@ -7594,6 +7654,8 @@ label ds_day2_game:
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "C Женей":
+                if ds_tour_result == 2:
+                    $ ds_lp['mz'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "С Шуриком":

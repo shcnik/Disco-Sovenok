@@ -601,6 +601,9 @@ label ds_day1_sl_dialogue:
                         $ ds_lp['dv'] -= 1
                         $ ds_lp['us'] -= 1
                         $ ds_lp['mi'] -= 1
+                        $ ds_lp['mt'] -= 1
+                        $ ds_lp['mz'] -= 1
+                        $ ds_lp['el'] -= 1
                         emp "Ты её определённо разозлил своим поведением. Зачем, собственно?"
                         $ renpy.pause(1)
                         show sl normal pioneer at left with dspr
@@ -866,6 +869,9 @@ label ds_day1_inside_camp:
             $ ds_lp['us'] -= 2
             $ ds_lp['mi'] -= 2
             $ ds_lp['un'] += 1
+            $ ds_lp['mt'] -= 1
+            $ ds_lp['el'] -= 1
+            $ ds_lp['mz'] -= 1
         "Промолчать":
             window show
             $ ds_semtype -= 1
@@ -1379,6 +1385,7 @@ label ds_day1_inside_camp:
                 rhe "Начни говорить про то, какая она прекрасная!"
                 me "А вы всегда такая красивая, или только сегодня?"
                 $ ds_skill_points['rhetoric'] += 1
+                $ ds_lp['mt'] += 1
                 show mt surprise pioneer far at center with dspr
                 mtp "Эм... {w}спасибо."
                 show mt normal pioneer at center with dspr
@@ -1388,6 +1395,7 @@ label ds_day1_inside_camp:
                 rhe "Но тебе приходит совсем уж банальность..."
                 me "Простите, а вам зять не нужен?"
                 $ ds_skill_points['rhetoric'] += 1
+                $ ds_lp['mt'] -= 1
                 show mt surprise pioneer far at center with dspr
                 mtp "Чего?"
                 rhe "Она удивлена тем, что ты ляпнул... и удивлена не в хорошем смысле."
@@ -1526,6 +1534,7 @@ label ds_day1_inside_camp:
             window show
             me "Что же, давай."
             $ ds_accept_el = True
+            $ ds_lp['el'] += 1
         "Отказаться":
             window show
             me "Не... лучше я сам."
@@ -1670,6 +1679,7 @@ label ds_day1_inside_camp:
             dv "А ты не подлизывайся!"
             dv "Впрочем, ладно, позже с тобой разберёмся!"
             $ ds_lp['dv'] += 2
+            $ ds_lp['el'] -= 1
             $ ds_karma -= 5
             me "А я что? Я только за тебя!"
             "Она не отвечает и побежала догонять Электроника."
@@ -1686,6 +1696,7 @@ label ds_day1_inside_camp:
                 phi "Ты встаёшь перед ней и останавливаешь её."
                 show dv angry pioneer2 close at center with dissolve
                 $ ds_lp['dv'] -= 1
+                $ ds_lp['el'] += 1
                 dv "Что ты творишь?!"
                 me "Успокойся, он просто предупредил меня, чтобы я тебя так не называл."
                 dv "Зачем он это делал так, чтобы я услышала?!"
@@ -1711,6 +1722,9 @@ label ds_day1_inside_camp:
                             dv "Да что же ты творишь в конце концов-то?!"
                             me "Просто... Кстати, так приятно лежать вместе."
                             dv "А вот мне как-то не особо! Начали оскорблениями, а кончаете домогательствами!"
+                            $ ds_lp['dv'] -= 1
+                            $ ds_lp['mt'] -= 1
+                            $ ds_karma -= 20
                             scene bg ext_dining_hall_away_day with dissolve
                             show dv angry pioneer2 close at center with dissolve
                             "C этими словами она буквально выскальзывает из-под тебя и сбегает."
@@ -1742,6 +1756,8 @@ label ds_day1_inside_camp:
                         $ ds_lp['sl'] -= 1
                         $ ds_lp['us'] -= 1
                         $ ds_lp['mi'] -= 1
+                        $ ds_lp['mz'] -= 1
+                        $ ds_lp['mt'] -= 1
                         $ ds_karma -= 20
                     "Успокоить её словами":
                         if skillcheck('rhetoric'. lvl_heroic):
@@ -2003,6 +2019,7 @@ label ds_day1_inside_camp:
             show mt smile pioneer at center with dissolve
             show dv angry pioneer2 at left with dissolve
             mt "Вот видишь, даже твой товарищ говорит, что так форму не носят."
+            $ ds_lp['mt'] += 1
             dv "Да переодену я вашу форму!"
             $ ds_lp['dv'] -= 1
             mt "Она не моя, а твоя."
@@ -2561,6 +2578,7 @@ label ds_day1_sl_night:
                 me "Прошу, заходи!"
                 show dv smile pioneer at center with dspr
                 "И вы заходите в столовую."
+                $ ds_lp['sl'] -= 1
                 jump ds_day1_dining_dv
             else:
                 play sound_loop sfx_alisa_picklock
@@ -2693,6 +2711,7 @@ label ds_day1_sl_night:
                 edr "Впрочем, сегодня ты и без ужина прекрасно проживёшь."
                 "И ты уходишь."
                 $ ds_semtype -= 1
+                $ ds_lp['sl'] -= 1
                 jump ds_day1_meet_un
             else:
                 window show
@@ -3141,7 +3160,7 @@ label ds_day1_dining_dv:
             "Впрочем, Алиса уже пробежала в дверь, пока ты думал."
             window hide
             menu:
-                "Прыгать":
+                "Бежать":
                     window show
                     play sound ds_sfx_mot
                     svf "Теперь твоя очередь!"
@@ -3343,6 +3362,7 @@ label ds_day1_caught_dv:
                 dv "Беги сам, раз уж тебе это так важно!"
                 $ ds_lp['sl'] -= 3
                 $ ds_lp['dv'] -= 2
+                $ ds_lp['mt'] -= 1
                 $ ds_karma -= 20
                 $ ds_beat_sl = True
                 show dv rage pioneer at center with dspr
@@ -3477,6 +3497,7 @@ label ds_day1_caught_alone:
                 "Славя оказывается на полу без сознания."
                 $ ds_karma -= 20
                 $ ds_lp['sl'] -= 3
+                $ ds_lp['mt'] -= 1
                 $ ds_beat_sl = True
                 window hide
                 menu:
@@ -3585,6 +3606,7 @@ label ds_day1_meet_un:
     scene bg ext_square_night with dissolve
     show un normal pioneer at center   with dissolve
     me "Привет, чего читаешь?"
+    $ ds_lp['un'] += 1
     show un surprise pioneer at center   with dspr
     "Лена от удивления аж подпрыгивает на лавочке."
     me "Извини, не хотел тебя напугать!"
@@ -3609,6 +3631,7 @@ label ds_day1_un_dialogue:
             me "А про что она?"
             un "Да так, про любовь..."
             $ ds_skill_points['encyclopedia'] += 1
+            $ ds_lp['un'] += 1
             jump ds_day1_un_dialogue
         "Вспомнить эту книгу" if (not ds_know_novel_content) and (not ds_get_novel_content_failed):
             if skillcheck('encyclopedia', lvl_legendary):
@@ -3815,6 +3838,7 @@ label ds_day1_home:
             $ ds_rude_mt = True
             $ ds_semtype += 1
             me "Но ты-то не против?"
+            $ ds_lp['mt'] -= 1
             show mt surprise pioneer at center   with dspr
             "Она как-то странно на тебя смотрит."
             play sound ds_sfx_psy
@@ -3912,6 +3936,7 @@ label ds_day1_home:
                 mt "Видимо, не стоило ей их доверять..."
                 mt "Ладно, завтра она своё получит."
                 $ ds_lp['sl'] -= 1
+                $ ds_lp['mt'] += 1
                 $ ds_sl_keys = False
                 $ ds_karma += 10
                 $ ds_keys_return = True
@@ -3935,6 +3960,7 @@ label ds_day1_home:
                     mt "Видимо, не стоило ей их доверять..."
                     mt "Ладно, завтра она своё получит."
                     $ ds_lp['sl'] -= 1
+                    $ ds_lp['mt'] += 1
                     $ ds_sl_keys = False
                     $ ds_karma += 10
                     $ ds_keys_return = True
@@ -3959,6 +3985,7 @@ label ds_day1_home:
                             mt "Видимо, не стоило ей их доверять..."
                             mt "Ладно, завтра она своё получит."
                             $ ds_lp['sl'] -= 1
+                            $ ds_lp['mt'] += 1
                             $ ds_sl_keys = False
                             $ ds_karma += 10
                             $ ds_keys_return = True
