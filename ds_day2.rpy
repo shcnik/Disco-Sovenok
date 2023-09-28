@@ -22,6 +22,7 @@ init:
     $ ds_yield_un = False
     $ ds_cs_invite = False
     $ ds_eldv_side_taken = 0
+    $ ds_us_escape = False
     $ ds_cards_sl = False
     $ ds_cards_labeled = False
     $ ds_cards_damaged = False
@@ -1173,7 +1174,7 @@ label ds_day2_pass_alone_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -1181,7 +1182,7 @@ label ds_day2_pass_alone_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -3386,7 +3387,7 @@ label ds_day2_pass_sl_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -3394,7 +3395,7 @@ label ds_day2_pass_sl_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -4710,7 +4711,7 @@ label ds_day2_pass_un_music:
             "И с этими словами ты выходишь."
             show mi happy pioneer at center with dspr
             mi "Cпасибо-спасибо большое, Семён-кун!"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -4718,7 +4719,7 @@ label ds_day2_pass_un_music:
             $ renpy.pause(1)
 
             $ persistent.sprite_time = "day"
-            scene bg ext_musclub_veranda_day 
+            scene bg ds_ext_musclub_veranda_day 
             with dissolve
 
             play ambience ambience_camp_center_day fadein 3
@@ -6018,7 +6019,79 @@ label ds_day2_after_pass:
         "Cесть с Ульяной" if ds_eldv_side_taken != -1:
             window show
             $ ds_lp['us'] += 1
-            # TODO: написать диалог в столовой с Ульяной
+            show us smile pioneer at center with dissolve
+            play sound ds_sfx_fys
+            hfl "Ну, готовься..."
+            us "Привет!"
+            me "Ага, привет..."
+            us "Чего такой кислый?"
+            me "Да так..."
+            show us calml pioneer at center with dspr
+            us "А впрочем понимаю... мне тоже скучно тут!"
+            show us grin pioneer at center with dspr
+            us "Cлушай, а может сбежим отсюда?"
+            play sound ds_sfx_mot
+            res "В каком смысле сбежим? Из лагеря? Так ведь и наказать могут!"
+            me "Сбежим?"
+            show us laugh pioneer at center with dspr
+            us "Ну да! Запрыгнем на поезд завтра и убежим!"
+            vol "Это как бы небезопасно... во всех смыслах небезопасно."
+            play sound ds_sfx_psy
+            aut "Но с другой стороны разве ты трус? Соглашайся!"
+            vol "Это благоразумие, а не трусость."
+            play sound ds_sfx_psy
+            esp "Ульяна скорее всего убежит - с тобой или без. А бросать её одну вряд ли будет хорошо."
+            play sound ds_sfx_int
+            rhe "Поэтому нужно {i}убедить{/i} её не сбегать!"
+            window hide
+            menu:
+                "Принять":
+                    window show
+                    me "А давай!"
+                    show us smile pioneer at center with dspr
+                    us "Отлично! Завтра после завтрака встречаемся! У задних ворот!"
+                    me "Хорошо..."
+                    show us laugh pioneer at center with dspr
+                    us "И без опозданий!"
+                    $ ds_lp['us'] += 1
+                    $ ds_us_escape = True
+                    vol "В опасную авантюру ты ввязался..."
+                "Отказаться":
+                    window show
+                    me "Нет, нет и ещё раз нет! Это опасно!"
+                    show us dontlike pioneer at center with dspr
+                    us "Значит, сбегу одна! А ты тухни тут! Трусишка!"
+                    $ ds_lp['us'] -= 1
+                    $ ds_damage_morale()
+                "Убедить не сбегать":
+                    if skillcheck('rhetoric', lvl_formidable):
+                        window show
+                        rhe "Собственно, то, что найдут и накажут - это правда. А найдут обязательно."
+                        rhe "В конце концов, она ребёнок! Лагерь несёт за неё ответственность."
+                        me "Cлушай... я понимаю, конечно, что тебе скучно, но сбегать не следует."
+                        me "Дело не в трусости. Ты правда думаешь, что у нас получится скрываться вечно?"
+                        me "Я уже не говорю о том, что выбраться из лагеря - задача не из простых."
+                        show us dontlike pioneer at center with dspr
+                        us "Ну вот... как скучно."
+                        me "И вообще, подумай о вожатой. Её из-за тебя накажут! Она отвечает за тебя! Ты хочешь этого?"
+                        show us surp1 pioneer at center with dspr
+                        play sound ds_sfx_psy
+                        emp "Она не осознавала этого. А теперь поняла."
+                        show us grin pioneer at center with dspr
+                        us "Ну ладно... Но тогда ты должен будешь меня развлечь!"
+                        me "Ладно..."
+                        $ ds_karma += 10
+                    else:
+                        window show
+                        rhe "Ну, это опасно..."
+                        me "Я бы не сбегал, это опасно!"
+                        show us dontlike pioneer at center with dspr
+                        us "Значит, сбегу одна! А ты тухни тут! Трусишка!"
+                        $ ds_lp['us'] -= 1
+                        $ ds_damage_morale()
+            "Тут оказывается, что вы доели ужин."
+            us "Пока!"
+            hide us with dissolve
         "Сесть с Мику":
             window show
             $ ds_lp['mi'] += 1
@@ -8609,7 +8682,7 @@ label ds_day2_house17:
 
 label ds_day2_house23:
     $ persistent.sprite_time = "night"
-    scene bg ext_hosue_of_dv_night
+    scene bg ext_house_of_dv_night
     with dissolve
 
     "А вот и домик 23."
@@ -8654,7 +8727,7 @@ label ds_day2_house23:
             "Наконец, ты останавливаешься на площади."
             th "Что ж, куда теперь?"
             $ disable_current_zone_ds_small()
-            jump ds_day2_find_mi
+            jump ds_day2_find_mi_house
         "Ждать":
             window show
     $ renpy.pause(0.5)
@@ -8786,7 +8859,7 @@ label ds_day2_house23:
                 svf "Наконец, ты останавливаешься на площади."
                 th "Что ж, куда теперь?"
                 $ disable_current_zone_ds_small()
-                jump ds_day2_find_mi
+                jump ds_day2_find_mi_house
             else:
                 window show
                 play sound ds_sfx_mot

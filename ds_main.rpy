@@ -15,7 +15,7 @@ label ds_quit:
     $ MainMenu(confirm=False)()
 
 label ds_start:
-    scene black with dissolve
+    scene black
 
     show screen ds_call_hud
 
@@ -58,9 +58,9 @@ label ds_start:
 
     play music ds_dream fadein 2
 
-    # show ds_epigraph with dissolve2
-    # renpy.pause(3.0)
-    # hide ds_epigraph with dissolve2
+    show ds_epigraph with dissolve2
+    $ renpy.pause(3.0, hard=True)
+    hide ds_epigraph with dissolve2
 
     menu:
         "Начать":

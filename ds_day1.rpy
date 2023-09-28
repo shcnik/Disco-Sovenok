@@ -723,7 +723,7 @@ label ds_day1_entered:
     "Ты бы, наверное, так и наблюдал их занимательный диалог, если бы «СССР» вдруг не достала что-то из кармана и не начала трясти им перед лицом первой девочки."
     window hide
 
-    scene cg ds_day1_grasshopper_f1 with dissolve
+    scene cg ds_day1_grasshopper_f1
     $ renpy.pause(0.1, hard=True)
     scene cg ds_day1_grasshopper_f2
     $ renpy.pause(0.1, hard=True)
@@ -1578,13 +1578,18 @@ label ds_day1_inside_camp:
 
     window show
     "Вы выходите к некоей постройке."
-    play sound ds_sfx_int
-    lgc "Думаю, излишне пояснять, что это столовая."
-    show el normal pioneer at center   with dissolve
-    el "А вот это…"
-    me "Я понял, здесь вы принимаете органическую пищу!"
-    show el smile pioneer at center   with dspr
-    el "Ну, что-то вроде того…"
+    if skillcheck('logic', lvl_trivial, passive=True):
+        play sound ds_sfx_int
+        lgc "Думаю, излишне пояснять, что это столовая."
+        show el normal pioneer at center   with dissolve
+        el "А вот это…"
+        me "Я понял, здесь вы принимаете органическую пищу!"
+        show el smile pioneer at center   with dspr
+        el "Ну, что-то вроде того…"
+        $ ds_skill_points['logic'] += 1
+    else:
+        show el normal pioneer at center   with dissolve
+        el "А вот это столовая!"
     show el normal pioneer at center   with dspr
     show dv normal pioneer2 far at left    with dissolve   
     "На крыльце столовой стоит недружелюбная девочка, которая до этого ударила меня по спине."
@@ -3493,7 +3498,6 @@ label ds_day1_caught_alone:
                 "И ты бьёшь её."
                 play sound sfx_lena_hits_alisa
                 hide sl with dspr
-                show dv shocked pioneer at center with dspr
                 "Славя оказывается на полу без сознания."
                 $ ds_karma -= 20
                 $ ds_lp['sl'] -= 3
@@ -3524,14 +3528,12 @@ label ds_day1_caught_alone:
                 play sound ds_sfx_fys
                 phi "Однако, у тебя не получается ничего больше шлепка по щеке."
                 show sl angry pioneer at center with dspr
-                show dv angry pioneer at left with dspr
                 sl "Что ты делаешь, Семён?"
                 $ ds_lp['sl'] -= 1
                 $ ds_karma -= 10
                 show sl serious pioneer at center with dspr
                 sl "Ладно, иди! Но вожатая узнает обо всём!"
                 scene bg ext_dining_hall_away_night with dissolve
-                hide dv with dissolve
                 "Ты решил пойти на площадь, а там и к вожатой."
                 jump ds_day1_meet_un
         "Улизнуть":
@@ -3547,12 +3549,10 @@ label ds_day1_caught_alone:
                 svf "Однако, Славя перегораживает тебе проход."
                 scene bg ds_int_dininghall_door_night
                 show sl angry pioneer at center
-                show dv angry pioneer close at right
-                with dissolve
                 sl "Не так быстро!"
                 show sl serious pioneer at center with dspr
                 sl "Это серьёзное нарушение! Вожатая в любом случае узнает!"
-                sl "Всё, теперь идите!"
+                sl "Всё, теперь иди!"
                 scene bg ext_dining_hall_away_night with dissolve
                 "Ты решил пойти на площадь, а там и к вожатой."
                 jump ds_day1_meet_un
