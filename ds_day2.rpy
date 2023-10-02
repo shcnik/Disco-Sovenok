@@ -10908,7 +10908,16 @@ label ds_day2_home:
     jump ds_day2_sleep
 
 label ds_day2_mt_play:
-    
+    python:
+        dialogs = {
+            (0, 'win', 'jump'): 'ds_day2_mt_play_won',
+            (0, 'fail', 'jump'): 'ds_day2_mt_play_lose',
+            (0, 'draw', 'jump'): 'ds_day2_mt_play_draw'
+        }
+        ds_generate_cards('bg int_house_of_mt_night', dialogs)
+        rival = DSCardGameRivalWiseUsual(ds_mt_avatar, u"Ольга", 'defense', 3)
+    $ ds_hint_poker = True
+    jump ds_card_gameloop
 
 label ds_day2_clubs:
     pass
