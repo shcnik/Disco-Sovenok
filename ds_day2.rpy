@@ -38,6 +38,7 @@ init:
     $ ds_sl_door_broken = False
     $ ds_dv_rescued = False
     $ ds_dv_steal_got = False
+    $ ds_know_mz_el = False
  
 label ds_day2_morning:
     $ ds_health = 0
@@ -7525,10 +7526,40 @@ label ds_day2_game:
         el "И что нам теперь делать?"
         $ ds_lp['el'] -= 1
         show mt normal pioneer at right with dissolve
-        mt "Что-что? Ну, сыграешь сам. А судить буду я!"
-        show mt smile pioneer at right with dspr
-        mt "Не переживай, я справлюсь!"
-        el "Ладно..."
+        mt "Что-что?.. Ян, нужна твоя помощь!"
+        play sound ds_sfx_mot
+        res "Это кто такая - Яна?"
+        show ya normal pioneer at left with dissolve
+        $ ds_met['ya'] = 2
+        ya "Вы меня звали, Ольга Дмитриевна?"
+        mt "Да. Может, сыграешь в карты? Нам одного человека не хватает."
+        show ya surprise pioneer at left with dspr
+        ya "Хорошо..."
+        play sound ds_sfx_int
+        con "И это девушка тоже красива. Может, отметишь это?"
+        window hide
+        menu:
+            "Сделать комплимент":
+                if skillcheck('suggestion', lvl_medium):
+                    window show
+                    sug "Что может быть проще? Отметь, что у неё волосы красивы, зелёные как трава."
+                    me "Привет. У тебя, кстати, красивые волосы. Прям как травка такие зелёные, яркие."
+                    sug "Последнее ты сказал шёпотом, чтобы все вокруг не слышали."
+                    show ya shy pioneer at left with dspr
+                    ya "Да? Спасибо..."
+                    $ ds_lp['ya'] += 1
+                else:
+                    window show
+                    sug "Да просто скажи, что она красива."
+                    me "Прекрасно выглядишь!"
+                    show ya shy2 pioneer at left with dspr
+                    ya "Э... хорошо."
+                    play sound ds_sfx_psy
+                    emp "Ты ей сделал очень некомфортно."
+                $ ds_skill_points['suggestion'] += 1
+            "Промолчать":
+                window show
+        hide ya with dissolve
     show el normal pioneer at center   with dissolve
     "Все внимательно уставились на Электроника."
     el "Итак..."
@@ -7568,6 +7599,8 @@ label ds_day2_game:
         $ ds_lp['mt'] -= 1
         if not ds_bring_mz_fail:
             $ ds_lp['mz'] -= 1
+        else:
+            $ ds_lp['ya'] -= 1
         $ ds_tour_result = -2
         $ ds_morale -= 1
         jump ds_day2_after_tour
@@ -7660,9 +7693,14 @@ label ds_day2_game:
                 $ ds_lp['mi'] += 1
             if not ds_bet_dv:
                 $ ds_lp['sl'] += 1
-        "C Женей":
+        "C Женей" if not ds_bring_mz_fail:
             if ds_tour_result == 0:
                 $ ds_lp['mz'] += 1
+            if not ds_bet_dv:
+                $ ds_lp['sl'] += 1
+        "С Яной" if ds_bring_mz_fail:
+            if ds_tour_result == 0:
+                $ ds_lp['ya'] += 1
             if not ds_bet_dv:
                 $ ds_lp['sl'] += 1
         "С Шуриком":
@@ -7693,9 +7731,14 @@ label ds_day2_game:
                     $ ds_lp['mi'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
-            "C Женей":
+            "C Женей" if not ds_bring_mz_fail:
                 if ds_tour_result == 1:
                     $ ds_lp['mz'] += 1
+                if not ds_bet_dv:
+                    $ ds_lp['sl'] += 1
+            "С Яной" if ds_bring_mz_fail:
+                if ds_tour_result == 1:
+                    $ ds_lp['ya'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "С Шуриком":
@@ -7726,9 +7769,14 @@ label ds_day2_game:
                     $ ds_lp['mi'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
-            "C Женей":
+            "C Женей" if not ds_bring_mz_fail:
                 if ds_tour_result == 2:
                     $ ds_lp['mz'] += 1
+                if not ds_bet_dv:
+                    $ ds_lp['sl'] += 1
+            "С Яной" if ds_bring_mz_fail:
+                if ds_tour_result == 2:
+                    $ ds_lp['ya'] += 1
                 if not ds_bet_dv:
                     $ ds_lp['sl'] += 1
             "С Шуриком":
@@ -7750,22 +7798,24 @@ label ds_day2_after_tour:
     $ night_time()
 
     $ disable_all_zones_ds_small()
-    $ set_zone_ds_small("medic_house", "ds_day2_medic")
-    $ set_zone_ds_small("square","ds_day2_square")
-    $ set_zone_ds_small("beach","ds_day2_beach")
-    $ set_zone_ds_small("boathouse","ds_day2_dock_eve")
-    $ set_zone_ds_small("entrance", "ds_day2_entrance")
-    $ set_zone_ds_small("scene","ds_day2_scene")
-    $ set_zone_ds_small("sport_area","ds_day2_badminton")
-    $ set_zone_ds_small("library", "ds_day2_library")
-    $ set_zone_ds_small("house_me_mt", "ds_day2_night")
+    $ set_zone_ds_small("medic_house", "ds_day2_medic") # CS*
+    $ set_zone_ds_small("square","ds_day2_square") # ME
+    $ set_zone_ds_small("beach","ds_day2_beach") # DV
+    $ set_zone_ds_small("boathouse","ds_day2_dock_eve") # MI
+    $ set_zone_ds_small("entrance", "ds_day2_entrance") # SL
+    $ set_zone_ds_small("scene","ds_day2_scene") # US
+    $ set_zone_ds_small("sport_area","ds_day2_badminton") # UN
+    $ set_zone_ds_small("library", "ds_day2_library") # MZ*
+    $ set_zone_ds_small("house_me_mt", "ds_day2_home") # MT*
+    $ set_zone_ds_small("forest", "ds_day2_forest") # YA
+    $ set_zone_ds_small("clubs", "ds_day2_clubs") # EL*
     $ show_small_map_ds()
 
 label ds_day2_medic:
     scene bg ext_aidpost_night
     with dissolve
     window show
-    if (ds_health == ds_skill_points['endurance']) and not ds_cs_invite:
+    if (ds_health == 0) and not ds_cs_invite:
         "Ты просто шёл куда-то и вышел к медпункту."
         play sound ds_sfx_fys
         edr "Тебе тут делать нечего - со здоровьем у тебя всё в порядке."
@@ -7775,7 +7825,7 @@ label ds_day2_medic:
         play sound ds_sfx_fys
         ins "Ну вот ты и пришёл к медсестре."
         ins "Она уже ждёт - нет, жаждет тебя."
-    if ds_health < ds_skill_points['endurance']:
+    if ds_health < 0:
         play sound ds_sfx_fys
         edr "Ты чувствуешь себя плоховато, так что медпункт - то, что надо!"
     scene bg int_aidpost_night
@@ -7919,8 +7969,6 @@ label ds_day2_medic:
         dra "Шоу должно продолжаться!"
         $ ds_skill_points['drama'] += 1
     jump ds_day2_night
-    
-
 
 label ds_day2_square:
     scene bg ext_square_night
@@ -9650,6 +9698,23 @@ label ds_day2_entrance:
     play sound ds_sfx_int
     lgc "Действительно, Славя говорила, что любит природу…"
     lgc "Получается, что и в ней скрыта какая-то загадка…"
+    "Последняя одежда летит на землю и..."
+    window hide
+    scene cg ds_day2_sl_swim
+    with dissolve
+    window show
+    "Славя заходит в воду.{w} Голая..."
+    play sound ds_sfx_psy
+    vol "Подглядывать стыдно, но ты не можешь отвести взгляд."
+    con "Яркий лунный свет отражается от её мокрой кожи, делая Славю похожей на древнегреческую статую.{w} Может быть, Венеру Милосскую?"
+    сon "Это зрелище настолько прекрасно, что в нём как будто не остаётся места ни для чего мирского, плотского – только возвышенное восхищение истинной красотой."
+    con "Ты любуешься Славей и в тот миг забываешь обо всём прочем."
+    th "Возможно, это совсем не ад, а рай?.."
+    $ persistent.sprite_time = "night"
+    scene bg ext_path_night
+    with dissolve
+    window show
+    "Славя быстро вылезает из озера, наскоро оделась и скрылась в чаще."
     window hide
 
     $ persistent.sprite_time = "night"
@@ -9661,7 +9726,7 @@ label ds_day2_entrance:
     vol "Ты решаешь не делать поспешных выводов и последовать за ней…"
     play sound ds_sfx_mot
     svf "Славя неслышно плывёт между деревьями, выбирая самые удобные тропки и изящно обходя поваленные деревья, ямки и коряги."
-    svf "Тебе составляет большого труда не отставать, к тому же ты совершенно не хочешь, чтобы меня обнаружили – во-первых, подглядывать просто нехорошо, во-вторых, еще неизвестно до конца, что именно она тут делала."
+    svf "Тебе составляет большого труда не отставать, к тому же ты совершенно не хочешь, чтобы тебя обнаружили – во-первых, подглядывать просто нехорошо, во-вторых, еще неизвестно до конца, что именно она тут делала."
     play sound ds_sfx_psy
     ine "Хотя почему-то казалось, что ничего такого – и дело даже не в том, что ничего фантастического или связанного с моим попаданием в этот мир..."
     ine "Просто – {i}ничего такого{/i}.{w} Ничего, за чем бы стоило подглядывать."
@@ -10386,6 +10451,467 @@ label ds_day2_scene:
     window hide
 
     stop ambience fadeout 2
+    jump ds_day2_night
+
+label ds_day2_forest:
+    $ persistent.sprite_time = 'night'
+    scene bg ext_path2_night
+    with dissolve
+
+    th "Cхожу прогуляюсь."
+    "Ты забредаешь в лес."
+    if skillcheck('half_light', lvl_easy, passive=True):
+        play sound ds_sfx_fys
+        hfl "А стоит ли заходить вглубь? Заблудишься ещё."
+        window hide
+        menu:
+            "Пойти дальше":
+                pass
+            "Развернуться":
+                window show
+                th "И то верно."
+                "Ты идёшь обратно."
+                $ ds_skill_points['half_light'] += 1
+                jump ds_day2_after_tour
+    $ renpy.pause(1.0)
+    window show
+    scene bg ext_bathhouse_night
+    with dissolve
+    "Ходя по лесу, ты вдруг выходишь к какому-то деревянному зданию."
+    play sound ds_sfx_mot
+    per_eye "Из трубы идёт дым."
+    play sound ds_sfx_int
+    lgc "Там кто-то есть."
+    window hide
+    menu:
+        "Постучаться":
+            window show
+            th "Интересно, кто же там?"
+            play sound sfx_knocking_door_2
+        "Ворваться":
+            window show
+            play sound sfx_knock_door_closed_hard1
+            "Но дверь не поддаётся."
+            play sound ds_sfx_mot
+            per_hea "Cудя по звукам, ты привлёк внимание находящегося внутри."
+        "Уйти":
+            window show
+            th "И что мне там делать?"
+            "Ты разворачиваешься и идёшь к себе в палатку."
+            jump ds_day2_night
+    if ds_met['ya'] == 2:
+        ya "Кто там?"
+        play sound ds_sfx_int
+        enc "Это Яна."
+    else:
+        yap "Кто там?"
+        play sound ds_sfx_int
+        enc "Это точно не Алиса, не Лена, не Славя, не Ульяна, не Мику, не Женя. Это какая-то новая, незнакомая тебе девушка."
+        play sound ds_sfx_int
+        lgc "Что это тут за гарем: всё новые и новые девушки?"
+    window hide
+    menu:
+        "Извиниться и уйти":
+            window show
+            me "Извините... я пойду."
+            if ds_met['ya'] == 2:
+                ya "Ладно..."
+            else:
+                yap "Ладно..."
+            "И ты уходишь к себе."
+            jump ds_day2_night
+        "Извиниться и подождать":
+            window show
+            me "Извините... я подожду."
+            if ds_met['ya'] == 2:
+                ya "Да я недолго..."
+            else:
+                yap "Да я недолго..."
+        "Потребовать выйти":
+            window show
+            me "Слушайте, можете побыстрее освободить помещение, мне тоже надо!"
+            if ds_met['ya'] == 2:
+                ya "Cейчас, я быстро..."
+            else:
+                yap "Сейчас, я быстро..."
+            $ ds_lp['ya'] -= 1
+        "Войти без церемоний":
+            window show
+            play sound sfx_knock_door_closed_hard1
+            "Дверь всё ещё не поддаётся."
+    window hide
+    $ renpy.pause(0.5)
+    window show
+    show ya surprise pioneer at center with dissolve
+    $ ds_met['ya'] = 1
+    "И действительно, через буквально пару минут девушка выходит."
+    me "Привет!"
+    if ds_met['ya'] == 2:
+        ya "Привет..."
+    else:
+        yap "Привет..."
+        me "А как тебя зовут?"
+        yap "Яна... Имерай Яна..."
+        $ ds_met['ya'] = 2
+    show ya shy pioneer at center with dspr
+    ya "А тебя как зовут?"
+    me "Семён."
+    ya "Приятно познакомиться..."
+    window hide
+    menu:
+        "Продолжить разговор":
+            pass
+        "Уйти":
+            window show
+            me "Ладно, я пойду..."
+            show ya normal pioneer at center with dspr
+            ya "Пока..."
+            "И ты уходишь к себе."
+            jump ds_day2_night
+    if skillcheck('empathy', lvl_easy):
+        window show
+        play sound ds_sfx_psy
+        emp "Она крайне, КРАЙНЕ стеснительная и замкнутая, даже более, чем Лена."
+        emp "Будь предельно аккуратен."
+        me "Как у тебя дела?"
+        show ya sad pioneer at center with dspr
+        ya "Тяжело..."
+        emp "А почему?"
+        me "Ты чего?"
+        ya "Да так... дети... мой отряд..."
+        play sound ds_sfx_int
+        lgc "Она, получается, вожатая, не пионерка."
+        play sound ds_sfx_int
+        vic "Такая молодая - и уже вожатая? Она явно не старше Слави или Алисы."
+        lgc "Потому и лишь шестой отряд - самые младшие."
+        emp "Предложи помочь."
+        me "Понимаю, с детьми сложно... Тебе помощь не нужна?"
+        show ya guilty pioneer at center with dspr
+        ya "Да нет, я справляюсь... мне Ольга Дмитриевна помогает..."
+        me "Это хорошо, умница!"
+        show ya surprise pioneer at center with dspr
+        ya "Cпасибо..."
+        $ ds_lp['ya'] += 1
+        show ya smile pioneer at center with dspr
+    else:
+        window show
+        play sound ds_sfx_psy
+        emp "Всё отлично. Говори с ней непринуждённо."
+        me "Как тебе лагерь? Классно же?"
+        show ya guilty pioneer at center with dspr
+        ya "Трудно... у меня же отряд, шестой, дети..."
+        play sound ds_sfx_int
+        lgc "Она, получается, вожатая, не пионерка."
+        play sound ds_sfx_int
+        vic "Такая молодая - и уже вожатая? Она явно не старше Слави или Алисы."
+        lgc "Потому и лишь шестой отряд - самые младшие."
+        me "Так ведь весело с детьми-то наверное!"
+        ya "Наверное..."
+        play sound ds_sfx_psy
+        sug "Что-то идёт не так."
+        $ ds_lp['ya'] -= 1
+        show ya sad2 pioneer at center with dspr
+    ya "Я пойду спать, пожалуй... спокойной ночи..."
+    hide ya with dissolve
+    "И она словно испаряется прежде, чем ты успеваешь как-то отреагировать."
+    play sound ds_sfx_psy
+    ine "Она такая тихая..."
+    "Тебе остаётся только пойти к себе."
+    jump ds_day2_night
+
+label ds_day2_library:
+    $ persistent.sprite_time = 'night'
+    scene bg ext_library_night
+    with dissolve
+    th "Возможно, в библиотеке будет какая-то информация касаемо происходящего."
+    play sound ds_sfx_int
+    lgc "В конце концов, это же собрание знаний!"
+    play sound ds_sfx_int
+    rhe "Лучше всего спроси библиотекаршу Женю."
+    "Ты подходишь к библиотеке."
+    if not skillcheck('shivers', lvl_medium, passive=True):
+        "Но тут никого нет."
+        th "И что мне тут делать?"
+        $ disable_current_zone_ds_small()
+        jump ds_day2_after_tour
+    play sound ds_sfx_fys
+    shi "В библиотеке кто-то есть. Сидит и думает о чём-то. Зайди туда!"
+    $ ds_skill_points['shivers'] += 1
+    window hide
+    menu:
+        "Зайти":
+            window show
+        "Уйти":
+            window show
+            th "Да ну, зачем?"
+            $ disable_current_zone_ds_small()
+            jump ds_day2_after_tour
+    play sound sfx_open_door_clubs
+    scene bg int_library_night
+    with dissolve
+    "Ты заходишь в библиотеку. Тебя встречает тьма."
+    th "Тут кто-то есть?"
+    "Тишина."
+    shi "Продолжай искать."
+    $ ds_lamp_illuminate = False
+    window hide
+    menu:
+        "Включить свет":
+            window show
+            scene bg int_library_night2
+            with dissolve
+            "Ты включаешь свет."
+            $ ds_lamp_illuminate = True
+        "Не включать":
+            pass
+    window hide
+    $ renpy.pause(0.5)
+    menu:
+        "Продолжить искать":
+            if skillcheck('perception', lvl_medium, modifiers=[('ds_lamp_illuminate', 2)]):
+                window show
+                $ ds_skill_points['perception'] += 1
+            else:
+                window show
+                $ ds_skill_points['perception'] += 1
+                per_eye "Ты всё ещё не можешь никого разглядеть. Нет тут никого!"
+                th "Ну и ладно!"
+                "И ты уходишь к себе."
+                jump ds_day2_night
+        "Не продолжать":
+            th "Да нет тут никого!"
+            "И ты уходишь к себе."
+            jump ds_day2_night
+
+    play sound ds_sfx_mot
+    per_eye "Когда твои глаза адаптируются к тьме, ты можешь разглядеть дверцу в полу."
+    window hide
+    menu:
+        "Залезть":
+            window show
+        "Не залезать":
+            window show
+            th "Не буду я лазить по подвалам!"
+            "И с этими мыслями ты уходишь."
+    play sound sfx_cellar_open
+    scene bg ds_int_library_basement
+    with dissolve
+    "Внизу библиотеки оказывается ещё больше книг, чем наверху."
+    show mz bukal glasses pioneer at center with dissolve
+    "И тут что-то делает Женя."
+    me "Привет..."
+    $ ds_lp['mz'] += 1
+    show mz angry glasses pioneer at center with dspr
+    mz "Что ты тут забыл?!"
+    window hide
+    menu:
+        "Cпросить про неё":
+            window show
+            me "А чего ты тут делаешь так поздно?"
+            mz "Не твоё дело!"
+            play sound ds_sfx_psy
+            emp "Что-то определённо случилось."
+            me "Ты чего?"
+            show mz rage glasses pioneer at center with dspr
+            mz "Да вы все одинаковые, отстань от меня! Не трогай меня!"
+            show mz angry glasses pioneer far at center with dspr
+            play sound ds_sfx_int
+            rhe "К диалогу она не расположена."
+            if skillcheck('empathy', lvl_easy, passive=True):
+                emp "Похоже, случай тут непростой... Её что-то в тебе пугает..."
+                $ ds_skill_points['empathy'] += 1
+            me "Пожалуйста, успокойся, давай поговорим."
+            mz "Не буду я с тобой разговаривать! Ты зачем сюда забрался?! Отстань!"
+            mz "Специально забрался сюда, чтобы загнать меня в угол!"
+            $ ds_lp['mz'] -= 1
+            hide mz with dissolve
+            "C этими словами она прячется вглубь книжных шкафов."
+            play sound ds_sfx_psy
+            vol "Искать её бесполезно. Ты проведёшь тут всю ночь."
+        "Cпросить про информацию":
+            window show
+            me "Мне нужна твоя помощь."
+            show mz confused glasses pioneer at center with dspr
+            "Недоверие на лице Жени сменяется удивлением."
+            mz "Эээм... помощь?"
+            me "Да ничего такого. Просто вдруг интересно стало, а кто вообще этот Генда?"
+            mz "Как это ты не знаешь?! Это же генсек КПСС!"
+            me "А как же Горбачёв?"
+            mz "Не знаю я никаких Горбачёвых!"
+            me "Странно."
+            show mz normal glasses pioneer at center with dspr
+            mz "Что тут странного?"
+            me "Ну ты же библиотекарь, значит читаешь много. У тебя там в библиотеке столько..."
+            play sound ds_sfx_int
+            con "...«совковой пропаганды»."
+            me "Разных энциклопедий, других книг. Неужели там про него ничего не написано?"
+            show mz bukal glasses pioneer at center with dspr
+            "Женя задумывается на мгновение."
+            mz "Ну, я даже не пыталась узнать ничего о нём, как-то в голову не приходило."
+            mz "Но когда ты об этом сказал... Может действительно стоит поискать."
+            me "А тебе известно про путешествия во времени?"
+            show mz confused glasses pioneer at center with dspr
+            mz "Ну, в библиотеке есть книги по теории относительности, может, там что будет..."
+            mz "А я ничего про это не знаю! Я не Электроник!"
+            show mz sad glasses pioneer at center with dspr
+            show mz normal glasses pioneer at center with dspr
+            if skillcheck('encyclopedia', lvl_easy, passive=True):
+                play sound ds_sfx_int
+                enc "Общая теория относительности - физическая теория, созданная Альбертом Эйнштейном и помимо прочего описывающая пространство-время как единую сущность."
+                enc "Женя имеет ввиду, что при определённых раскладах эта теория, по крайней мере в чистом виде, позволяет путешествия во времени."
+            if skillcheck('reaction_speed', lvl_medium, passive=True):
+                play sound ds_sfx_mot
+                res "При упоминании Электроника она ненадолго погрустнела."
+            mz "А почему тебе интересно, кстати?"
+            window hide
+            menu:
+                "Отговориться":
+                    window show
+                    me "Да так, просто заинтересовался этим..."
+                    mz "С подобными темами иди к кибернетикам!"
+                "Признаться":
+                    window show
+                    me "Да просто мне кажется, что я переместился во времени..."
+                    show mz confused glasses pioneer at center with dspr
+                    mz "Чего?! У тебя крыша поехала, что ли?!"
+                    me "Да нет вроде..."
+                    play sound ds_sfx_int
+                    rhe "Ты не забывай, что для них этот мир естественный."
+            mz "В общем, я ухожу, у меня дела!"
+            if not ds_bring_mz_fail:
+                window hide
+                menu:
+                    "Cпросить про карты":
+                        window show
+                        me "Женя!"
+                        show mz normal glasses pioneer at cright with dspr
+                        mz "Чего ещё?"
+                        me "Понравилась игра?"
+                        mz "Что?"
+                        me "Я говорю: понравилось в карты играть?"
+                        show mz angry glasses pioneer at cright with dspr
+                        mz "Да чего ты с этими картами привязался!"
+                        mz "Нет, не понравилось! Чего там интересного, если всё только от везения зависит?"
+                        $ ds_lp['mz'] += 1
+                    "Не спрашивать":
+                        window show
+            me "Ладно... Ну пока тогда!"
+            "Женя ничего не ответила."
+            hide zh with dissolve
+            stop music fadeout 2
+            "Я тоже не спеша отправился к себе в домик."
+        "Уйти":
+            window show
+            me "Извини-извини, я уже ухожу. Пока..."
+            mz "Иди давай!"
+    if ds_lamp_illuminated:
+        scene bg int_library_night2
+        with dissolve
+    else:
+        scene bg int_library_night
+        with dissolve
+    "Ты поднимаешься обратно наверх."
+    if skillcheck('perception', lvl_challenging, passive=True, modifiers=[('ds_lamp_illuminated', 2)]):
+        play sound ds_sfx_mot
+        per_eye "Твоё внимание привлекает комок бумаги около стола."
+        $ ds_skill_points['perception'] += 1
+        window hide
+        menu:
+            "Изучить":
+                window show
+                "Ты разворачиваешь листок."
+                per_eye "Это письмо."
+                per_eye "{i}Мой милый Серёжа! Я очень давно хотела поблагодарть тебя за то, что ты сделал для меня тогда...{/i}"
+                per_eye "{i}Тогда ты оказался единственным, кто не наплевал на меня. Весь мир встал против, но не ты. Я тебя люблю. Твоя Ж.{/i}"
+                if skillcheck('logic', lvl_trivial, passive=True):
+                    play sound ds_sfx_int
+                    lgc "Ж - значит, Женя. А Серёжа - это Электроник."
+                    $ ds_skill_points['logic'] += 1
+                    play sound ds_sfx_psy
+                    sug "Значит, Женя влюблена в Электроника?"
+                    play sound ds_sfx_psy
+                    emp "А что он для неё сделал? По всей видимости, это имеет отношение к её агрессивности."
+                    $ ds_know_mz_el = True
+            "Забить":
+                window show
+                "Ты кладёшь комок на место."
+    scene bg ext_library_night
+    with dissolve
+    "Ты выходишь из библиотеки и идёшь к себе."
+    jump ds_day2_night
+
+label ds_day2_home:
+    $ persistent.sprite_time = 'night'
+    scene bg ext_house_of_mt_night
+    with dissolve
+
+    "Ты идёшь к себе в домик."
+
+    scene bg int_house_of_mt_night
+
+    show mt normal night at center with dissolve
+    play sound ds_sfx_mot
+    per_eye "Ольга Дмитриевна переоделась в довольно симпатичную ночнушку."  
+    "Ты садишься на кровать."
+    if ds_tour_result < 2:
+        me "А кто в итоге то победил в турнире?"
+        mt "Алиса смогла обыграть всех."
+        th "Неудивительно..."
+        me "И что за приз вы ей выдали?"
+    if ds_tour_result == 2:
+        me "А что за приз вы вручили Алисе, за победу в турнире?"
+    if day2_card_result == 3:
+        me "А что я получу в качестве приза за победу в турнире?"
+    "Ольга Дмитриевна тем временем готовит себе место ночлега."
+    mt "Завтра придумаю."
+    play sound ds_sfx_int
+    lgc "Завтра все уже забудут про приз."
+    hide mt with dissolve
+    window hide
+    scene bg int_house_of_mt_night
+    with dissolve
+    window show
+    if skillcheck('conceptualization', lvl_easy, passive=True):
+        play sound ds_sfx_int
+        con "Тебе в голову приходит интересная мысль - а что, если сыграть в карты с вожатой?" 
+        window hide
+        menu:
+            "Предложить":
+                window show
+                $ ds_skill_points['conceptualization'] += 1
+                show mt normal nightdress at center with dissolve
+                me "Ольга Дмитриевна, а карты остались у вас?"
+                mt "Да, а почему ты спрашиваешь?"
+                me "Давайте сыграем одну партию, ведь вы не участвовали в турнире."
+                mt "Не знаю... уже поздно, да и завтра много дел."
+                play sound ds_sfx_psy
+                sug "Вы сыграете лишь один раз."
+                me "Ну, пожалуйста, хотя бы один разок."
+                "Ольга Дмитриевна задумалась на секунду и всё-таки в итоге соглашается на твоё предложение." 
+                $ ds_lp['mt'] += 1
+                show mt smile nightdress at center with dspr
+                mt "Ладно картёжник, но только одну игру."
+                me "Договорились."
+                hide mt with dissolve
+                play sound sfx_open_table 
+                "Вожатая достаёт из тумбочки колоду карт и вручает её тебе."
+                show mt normal nightdress at center with dissolve
+                "Ты аккуратно перетасовываешь карты и раздаёшь каждому по шесть штук."  
+                me "Правила помните?"
+                mt "Да."
+                me "Ну тогда начнём."
+                hide mt with dissolve
+                jump ds_day2_mt_play
+            "Отбросить мысль":
+                window show
+                th "Да ну, не хочу я с ней играть..."
+    jump ds_day2_sleep
+
+label ds_day2_mt_play:
+    
+
+label ds_day2_clubs:
+    pass
 
 label ds_day2_night:
     $ persistent.sprite_time = "night"
@@ -10700,7 +11226,7 @@ label ds_day2_dream:
             window show
             show dvw normal:
                 xalign 0.5 yalign 0.5
-                linear 0.5 zoom 120
+                linear 1.0 zoom 1.2
             sug "Трясущимися ногами ты пододвигаешься ближе к ней. Её тело приближается к тебе. Такое тёплое... Закрыв глаза, ты тянешься своим ртом к её губам."
             sug "Вот ты соприкасаешься... но она не отвечает."
             per_sme "Ты можешь почувствовать её запах... такой приятный."
@@ -10711,8 +11237,8 @@ label ds_day2_dream:
             "Этот момент кончается. Она отводит своё лицо от тебя."
             show dvw normal:
                 xalign 0.5 yalign 0.5
-                zoom 120
-                linear 0.5 zoom 100
+                zoom 1.2
+                linear 1.0 zoom 1
             "Она старается на тебя не смотреть."
             sug "Ты должен меня придушить. Нет слов, чтобы описать, как я тебя подвёл..."
             me "Но... почему?"

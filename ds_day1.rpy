@@ -2393,7 +2393,7 @@ label ds_day1_inside_camp:
 
 label ds_day1_think_square:
     scene bg ext_square_day with dissolve
-    play ambience abience_camp_center_day fadein 1
+    play ambience ambience_camp_center_day fadein 1
     "Ты выходишь на площадь и решаешь присесть на скамейку."
     play sound ds_sfx_fys
     shi "Ты прислушиваешься к шуму лагеря."

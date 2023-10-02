@@ -3,6 +3,9 @@
 
 init:
     $ mods["disco_sovenok"] = u'Disco Sovenok'
+    $ ds_was_on_lineup = False
+    $ ds_accept_mz = False
+    $ ds_understood_mz_reason = False
 
 label ds_day3_morning:
     $ backdrop = "days"
@@ -606,6 +609,7 @@ label ds_day3_sl_workout:
             else:
                 window show
                 edr "Ты пытаешься побежать... но от усталости падаешь."
+                scene bg ext_house_of_mt_day
                 play sound sfx_body_bump
                 with vpunch
                 $ ds_damage_health()
@@ -817,9 +821,21 @@ label ds_day3_meet_mt:
     window show
     "Когда ты возвращаешься в домик вожатой, Ольга Дмитриевна уже проснулась."
     "Она стоит перед зеркалом и расчёсывает волосы."
+    play sound ds_sfx_psy
+    sug "Похвали волосы! Ей будет приятно, и это улучшит её отношение к тебе."
     show mt smile pioneer at center   with dspr
     mt "Доброе утро, Семён!"
-    me "Доброе."
+    window hide
+    menu:
+        "Похвалить волосы":
+            window show
+            me "Доброе утро. У вас, кстати, прекрасные волосы!"
+            show mt laugh pioneer at center with dspr
+            mt "Cпасибо, Семён!"
+            $ ds_lp['mt'] += 1
+        "Просто поздороваться":
+            window show
+            me "Доброе."
     play sound ds_sfx_psy
     vol "От недосыпа ещё немного гудит голова и путаются мысли, но это лучше, что ты всё-таки вылез из кровати, а не остался, как обычно, досыпать дежурные пару-тройку часов."
     show mt normal pioneer at center   with dspr
@@ -1025,9 +1041,6 @@ label ds_day3_meet_mt:
 
     with fade2
 
-    jump ds_day3_breakfast
-
-label ds_day3_breakfast:
     $ persistent.sprite_time = "day"
     scene bg ext_dining_hall_away_day 
     with dissolve
@@ -1035,7 +1048,7 @@ label ds_day3_breakfast:
     play ambience ambience_camp_center_day fadein 2
 
     window show
-    "Похоже, я несколько переборщил со временем – обычной толпы голодных пионеров возле столовой не наблюдалось."
+    "Обычной толпы голодных пионеров возле столовой не наблюдается."
     window hide
 
     stop ambience fadeout 2
@@ -1049,30 +1062,379 @@ label ds_day3_breakfast:
     play ambience ambience_dining_hall_empty fadein 3
 
     window show
-    "Да и внутри было немноголюдно."
-    "Наверное, большинство детей позавтракало ещё до 9 часов."
+    play sound ds_sfx_mot
+    res "Да и внутри немноголюдно."
+    play sound ds_sfx_int
+    lgc "Наверное, большинство детей позавтракало ещё до 9 часов."
     th "И хорошо: меньше народу – больше кислороду!"
-    "В дальнем углу столовой одиноко сидела Лена и лениво ковыряла вилкой нечто бесформенное, отдалённо напоминающее кашу."
-    "Позавтракать с ней – отличная идея: тихо, спокойно и можно о чём-нибудь поговорить."
-    th "Ну, или хотя бы попытаться."
-    "Я уже было направился в её сторону, как меня кто-то схватил за рукав."
-    show mz normal glasses pioneer at center   with dissolve
-    "Женя, вчерашняя библиотекарша."
-    mz "Бери завтрак и садись, есть разговор."
-    me "…"
-    show mz bukal glasses pioneer at center   with dspr
-    mz "Чего стоишь?"
-    "Я несколько растерялся."
-    me "Извини, но не слишком ли это… резко?"
-    show mz normal glasses pioneer at center   with dspr
-    mz "А что такого-то? Бери завтрак и садись."
-    "Похоже, для неё такое поведение совершенно нормально."
+
+    jump ds_day3_breakfast
+
+label ds_day3_lineup:
+    $ ds_was_on_lineup = True
+
+    $ persistent.sprite_time = 'day'
+    scene bg ext_square_day
+    with dissolve
+    show mt normal pioneer at center with dspr
+    play ambience ambience_medium_crowd_outdoors 
+    mt "А вот и мы! Все построились?"
+    stop ambience
+    mt "Отлично, приступаем!"
+
+    scene cg ds_day2_lineup
+    with dissolve
+
+    mt "Сегодня очень важный день в жизни лагеря! Начну с того, что вечером у нас состоятся танцы!"
+    voices "Ура!"
+    mt "Явка обязательна без исключений! Как известно, пионер должен проводить время вместе со своим коллективом!"
+    play sound ds_sfx_mot
+    res "Непохоже, что обязательная явка хоть кого-то расстроила..."
+    if skillcheck('empathy', lvl_easy, passive=True):
+        play sound ds_sfx_psy
+        emp "Разве что Алиса, похоже, не очень-то горит желанием танцевать."
+    mt "Однако, как известно, делу время, а потехе час! Поэтому сегодня мы должны поработать на славу!"
+    play sound ds_sfx_int
+    rhe "Говоря «мы», она подразумевает «вы», то есть пионеры."
+    mt "Cегодня по плану наши основные задачи - следующие!"
+    mt "А - уборка территории. За неё отвечает Славяна Феоктистова!"
+    mt "Б - наши учёные-кибернетики Александр Демьяненко и Сергей Сыроежкин разрабатывают очень важный для лагеря проект. Желающие могут присоединиться!"
+    play sound ds_sfx_psy
+    sug "Как хитро устроились! Занимаются своими делами, пока остальные работают!"
+    mt "В - сегодня проводится ремонт спортплощадки под руководством нашего уважаемого преподавателя физической культуры Бориса Александровича!"
+    mt "Г - наведение порядка на сцене... под ответственность Алисы Двачевской..."
+    if skillcheck('perception', lvl_challenging, passive=True):
+        play sound ds_sfx_mot
+        per_hea "Ты можешь услышать, как вожатая говорит шёпотом: «прости господи»."
+        $ ds_skill_points['perception'] += 1
+        play sound ds_sfx_psy
+        emp "Видимо, она назначила Алису скрепя сердце."
+    mt "Д - сортировка книг в библиотеке. За это отвечает наша уважаемая библиотекарша Евгения Мицгол."
+    play sound ds_sfx_int
+    lgc "Она весь алфавит решила использовать, что ли?"
+    mt "Е - разбор вещей, хранящихся в кладовке музыкального клуба, под руководством Мику Хацуне."
+    mt "И наконец Ж - вашей любимой вожатой, то есть мне, нужна помощь с наведением порядка в документации в административном корпусе."
+    mt "Прошу после завтрака подойти ко мне и отметиться, куда вы пойдёте!"
+    window hide
+    play sound sfx_dinner_horn_processed
+    $ renpy.pause(1.0)
+    window show
+    play sound ds_sfx_mot
+    res "Она закончила аккурат к завтраку."
+    mt "Линейка окончена!"
+    scene bg ext_square_day with dissolve
+    "Все идут завтракать."
+    $ persistent.sprite_time = "day"
+    scene bg ext_dining_hall_away_day 
+    with dissolve
+
+    play ambience ambience_camp_center_day fadein 2
+
+    window show
+    "У столовой как обычно многолюдно. Однако, тебе удаётся прорваться одним из первых."
     window hide
 
+    stop ambience fadeout 2
+
+    $ renpy.pause(1)
+
+    $ persistent.sprite_time = "day"
+    scene bg int_dining_hall_day 
+    with dissolve
+
+    play ambience ambience_dining_hall_full fadein 3
+
+    window show
+    show ck normal at center with dissolve
+    "Ты берёшь еду без особых задержек."
+    hide ck with dissolve
+
+    jump ds_day3_breakfast
+
+
+label ds_day3_breakfast:
+    "В дальнем углу столовой одиноко сидит Лена и лениво ковыряет вилкой нечто бесформенное, отдалённо напоминающее кашу."
+    play sound ds_sfx_psy
+    sug "Позавтракать с ней – отличная идея: тихо, спокойно и можно о чём-нибудь поговорить."
+    sug "Ну, или хотя бы попытаться."
+    window hide
     menu:
-        "Извини, но я уже с Леной договорился":
-            $ day3_breakfast_with_un = 1
-            $ lp_un = lp_un + 1
-            jump day3_breakfast_un
-        "Ладно, подожди минутку":
-            jump day3_breakfast_mz
+        "Позавтракать с Леной":
+            if skillcheck('volition', lvl_easy):
+                window show
+                play sound ds_sfx_psy
+                vol "Ты решительно направляешься в её сторону."
+                $ ds_skill_points['volition'] += 1
+                play sound ds_sfx_mot
+                svf "Но тут тебя хватают за руку!"
+                show mz normal glasses pioneer at center   with dissolve
+                "Женя, вчерашняя библиотекарша."
+                mz "Бери завтрак и садись, есть разговор."
+                if not skillcheck('composure', lvl_medium, passive=True):
+                    play sound ds_sfx_mot
+                    com "Ты несколько растерялся и молчишь."
+                    show mz bukal glasses pioneer at center   with dspr
+                    mz "Чего стоишь?"
+                else:
+                    $ ds_skill_points['composure'] += 1
+                me "Извини, но не слишком ли это… резко?"
+                show mz normal glasses pioneer at center   with dspr
+                mz "А что такого-то? Бери завтрак и садись."
+                play sound ds_sfx_psy
+                aut "Похоже, для неё такое поведение совершенно нормально."
+                window hide
+                menu:
+                    "Пойти к Лене":
+                        $ ds_lp['mz'] += 1
+                        jump ds_day3_breakfast_un
+                    "Остаться с Женей":
+                        $ ds_lp['un'] += 1
+                        jump ds_day3_breakfast_mz
+            else:
+                window show
+                play sound ds_sfx_psy
+                vol "Однако у тебя не хватает решимости предложить свою компанию Лене - вдруг откажет?"
+        "Позавтракать одному":
+            window show
+    "Ты только сел было за стол, как к тебе подсаживается Женя, вчерашняя библиотекарша."
+    show mz normal glasses pioneer at center with dissolve
+    mz "Есть разговор!"
+    if not skillcheck('composure', lvl_medium, passive=True):
+        play sound ds_sfx_mot
+        com "Ты несколько растерялся и молчишь."
+        show mz bukal glasses pioneer at center   with dspr
+        mz "Чего расселся?"
+    else:
+        $ ds_skill_points['composure'] += 1
+    window hide
+    menu:
+        "Сделать замечание":
+            me "Извини, но не слишком ли это… резко?"
+            show mz normal glasses pioneer at center   with dspr
+            mz "А что такого-то?"
+            play sound ds_sfx_psy
+            aut "Похоже, для неё такое поведение совершенно нормально."
+        "Сделать комплимент":
+            if skillcheck('suggestion', lvl_challenging):
+                window show
+                sug "Скажи ей про её волосы. Или про лицо."
+                me "А у тебя прекрасные волосы. Такие густые, и цвет красивый!"
+                $ ds_lp['mz'] += 1
+                show mz shy glasses pioneer at center with dspr
+                mz "Это хорошо, что ты так считаешь... но разговор не ждёт!"
+            else:
+                window show
+                sug "Тебе не приходит в голову хороших комплиментов."
+                me "Прекрасно выглядишь!"
+                $ ds_lp['mz'] += 1
+                show mz shy glasses pioneer at center with dspr
+                mz "Это хорошо, что ты так считаешь... но разговор не ждёт!"
+            $ ds_skill_points['suggestion'] += 1
+        "Промолчать":
+            pass
+    window hide
+    jump ds_day3_breakfast_mz
+
+label ds_day3_breakfast_mz:
+    window show
+    play sound ds_sfx_int
+    enc "Вдруг получится узнать что-то новое.{w} Всё-таки она книжный червь."
+    window hide
+
+    with fade
+
+    play music music_list["your_bright_side"] fadein 5
+
+    show mz normal glasses pioneer at center   with dspr
+    window show
+    "Через минуту ты уже сидишь напротив Жени, а перед тобой на столе стоял поднос с нехитрым набором блюд: каша овсяная, два яйца варёных, хлеб белый, четыре куска, сосиска варёная, одна штука, компот из непонятного набора фруктов и ягод, один стакан."
+    me "Приятного аппетита!"
+    mz "Спасибо."
+    play sound ds_sfx_int
+    rhe "Будь вежливым."
+    play sound ds_sfx_psy
+    aut "А также постарайся есть как можно аккуратнее – не чавкая, не роняя на себя кусочки еды и не обливаясь компотом."
+    me "Так о чём ты хотела поговорить?"
+    show mz smile glasses pioneer at center   with dspr
+    mz "Сегодня у нас в библиотеке…"
+    play sound ds_sfx_psy
+    ine "Дальше тебе вспоминились слова Ольги Дмитриевны о задачах на сегодня, так что дальше ты не слушаешь."
+    mz "… не забудь!"
+    window hide
+    menu:
+        "Переспросить":
+            window show
+            me "А? Чего?"
+        "Восстановить просьбу Жени":
+            if skillcheck('logic', lvl_medium, modifiers=[('ds_was_on_lineup', 2)]):
+                window show
+                play sound ds_sfx_int
+                lgc "Она, скорее всего, хочет, чтобы ты ей помог. В библиотеке. В рамках общественно-полезного труда, упомянутого вожатой утром."
+                me "Да, я понял: нужно помочь тебе в библиотеке."
+                show mz normal glasses pioneer at center with dspr
+                mz "Отлично, тогда до встречи!"
+                hide mz with dissolve
+                me "Ладно..."
+                hide mz with dissolve
+                "Женя встаёт и направляется к выходу."
+                if skillcheck('reaction_speed', lvl_trivial, passive=True):
+                    play sound ds_sfx_mot
+                    res "Она же не доела!"
+                    $ ds_skill_points['reaction_speed'] += 1
+                    window hide
+                    menu:
+                        "Окликнуть":
+                            window show
+                            me "Подожди, ты же не доела…"
+                            play sound ds_sfx_psy
+                            emp "Но она, похоже, даже не собирается оборачиваться."
+                        "Отпустить":
+                            window show
+                            th "Ну и пусть идёт!"
+                jump ds_day3_breakfast_un
+            else:
+                window show
+                play sound ds_sfx_int
+                lgc "Однако, у тебя не получается ничего подходящего придумать."
+                $ ds_skill_points['logic'] += 1
+                play sound ds_sfx_int
+                dra "Более того, ваше выражение лица выдаёт, что вы не понимаете происходящего."
+                show mz angry glasses pioneer at center with dspr
+                mz "Ты не слушаешь!"
+        "Притвориться, что понял":
+            if skillcheck('drama', lvl_up_medium):
+                window show
+                play sound ds_sfx_int
+                dra "Вы, мессир, прекрасно всё поняли и уж точно ничего не забыли!"
+                $ ds_skill_points['drama'] += 1
+                me "Хорошо, я тебя понял."
+                $ ds_accept_mz = True
+                show mz normal glasses pioneer at center with dspr
+                mz "Отлично, тогда до встречи!"
+                hide mz with dissolve
+                "Женя встаёт и направляется к выходу."
+                if skillcheck('reaction_speed', lvl_trivial, passive=True):
+                    play sound ds_sfx_mot
+                    res "Она же не доела!"
+                    $ ds_skill_points['reaction_speed'] += 1
+                    window hide
+                    menu:
+                        "Окликнуть":
+                            window show
+                            me "Подожди, ты же не доела…"
+                            play sound ds_sfx_psy
+                            emp "Но она, похоже, даже не собирается оборачиваться."
+                        "Отпустить":
+                            window show
+                            th "Ну и пусть идёт!"
+                res "А чего она, собственно, от тебя хотела?"
+                jump ds_day3_breakfast_un
+            else:
+                window show
+                play sound ds_sfx_int
+                dra "На вашем лице, мессир, всё написано, как в книге."
+                $ ds_skill_points['drama'] += 1
+                show mz angry glasses pioneer at center with dspr
+                mz "Ты не слушаешь!"
+                $ ds_lp['mz'] -= 1
+    show mz normal glasses pioneer at center   with dspr
+    mz "Говорю, не забудь после обеда прийти в библиотеку."
+    me "Зачем?"
+    show mz angry glasses pioneer at center   with dspr
+    mz "Ты меня вообще слушал?"
+    me "Нет."
+    show mz rage glasses pioneer at center   with dspr
+    "Женя сначала краснеет, потом, зеленеет, а потом её лицо принимает нежно-фиолетовый оттенок."
+    mz "Сегодня! После обеда! В библиотеку! Понял, хунта проклятая?!"
+    play sound ds_sfx_mot
+    res "Хунта?{w} Это ещё что за матерное слово такое неведомое?"
+    rhe "Пионер же не ругается, как ты мог забыть!"
+    if skillcheck('encyclopedia', lvl_medium, passive=True):
+        play sound ds_sfx_int
+        enc "Вообще, «хунта» - это группировка, обычно военная, захватившая власть насильственно."
+        enc "Но на имиджбордах недовольство постом нередко выражали словом «х***а», записанном именно что в виде «XYNTA», читаемом «хунта». Мем ещё был такой, с Номадом."
+        $ ds_skill_points['encyclopedia'] += 1
+        play sound ds_sfx_psy
+        aut "То есть, она выматерилась на тебя?!"
+    window hide
+    menu:
+        "Мирно согласиться":
+            window show
+            me "Конечно, обязательно приду!"
+            $ ds_accept_mz = True
+            show mz normal glasses pioneer at center with dspr
+            mz "Отлично, тогда до встречи!"
+            hide mz with dissolve
+            me "Ладно..."
+        "Начать перепалку":
+            window show
+            me "Ты как меня назвала?!"
+            show mz angry glasses pioneer at center with dspr
+            mz "Как слышал! После завтрака в библиотеку!"
+            play sound ds_sfx_psy
+            aut "Чего это она вздумала тобой командовать?! Непорядок!"
+            me "Никуда я не пойду! Сама разбирайся со своей библиотекой!"
+            mz "Значит, так?! Да я вожатой расскажу, как ты отлыниваешь от общественной работы!"
+            play sound ds_sfx_int
+            rhe "Вообще говоря, никто не сказал, что ты обязан именно в библиотеке отбывать трудовую повинность!"
+            me "А причём тут библиотека? Я не отказываюсь от работы, я лишь требую уважения к себе!"
+            show mz rage glasses pioneer at center with dspr
+            mz "Ах ты так?! Не нужна мне твоя помощь, попрошу других мужчин!"
+            hide mz with dissolve
+            $ ds_lp['mz'] -= 1
+        "Докопаться до «хунты»":
+            window show
+            me "Какая такая хунта?! Причём тут я?!"
+            mz "Притом! Не слушаешь меня совсем! Полное неуважение!"
+            rhe "По всей видимости, она использует это слово как ругательство, не вникая в смысл."
+            rhe "Примерно так же обсценную лексику используют, не вспоминая, что они связаны с половым актом."
+            me "Нет, всё-таки, хунта-то тут причём? Ты вообще знаешь, что это значит?"
+            show mz angry glasses pioneer at center with dspr
+            mz "Да что ты прицепился?!"
+            mz "Назвала и назвала? По сути ответить нечего?!"
+            me "Мне как бы неприятно, что ты меня оскорбляешь."
+            mz "Ладно, я поняла... попрошу кого-нибудь другого!"
+            hide mz with dissolve
+        "Спросить про год" if ds_knowing == 0:
+            window show
+            if skillcheck('rhetoric', lvl_easy, passive=True):
+                rhe "Согласись с ней, а затем спроси"
+                me "Ах, да, конечно! Извини! Обязательно приду!"
+                $ ds_skill_points['rhetoric'] += 1
+            me "Слушай, а какой сейчас год, что-то совсем со счёта сбился?"
+            rhe "Ты решаешь играть в открытую."
+            show mz bukal glasses pioneer at center   with dspr
+            "Она недоуменно смотрит на тебя."
+            mz "Совсем, что ли, крыша поехала?"
+            me "Признаться, последние несколько дней есть такое подозрение."
+            "Женя ничего не отвечает."
+            me "Так год какой?"
+            "Ты мило улыбаешься."
+            show mz normal glasses pioneer at center   with dspr
+            mz "Слушай, может, тебе в медпункт сходить?"
+            me "А там мне подскажут, какой год?"
+            show mz bukal glasses pioneer at center   with dspr
+            mz "И не только это подскажут!"
+            hide mz  with dissolve
+    "Женя встаёт и направляется к выходу."
+    if skillcheck('reaction_speed', lvl_trivial, passive=True):
+        play sound ds_sfx_mot
+        res "Она же не доела!"
+        $ ds_skill_points['reaction_speed'] += 1
+        window hide
+        menu:
+            "Окликнуть":
+                window show
+                me "Подожди, ты же не доела…"
+                play sound ds_sfx_psy
+                emp "Но она, похоже, даже не собирается оборачиваться."
+            "Отпустить":
+                window show
+                th "Ну и пусть идёт!"
+    window hide
+
+    stop music fadeout 3
+
+    $ renpy.pause(1)
+
+    jump day3_main2
