@@ -656,8 +656,8 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value max(ds_get_total_skill('endurance')+ds_health, 1)
-                    range max(ds_get_total_skill('endurance'), -ds_health+1)
+                    value ds_get_total_skill('endurance')+ds_health
+                    range ds_get_total_skill('endurance')
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -677,8 +677,8 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value max(ds_get_total_skill('volition')+ds_morale, 1)
-                    range max(ds_get_total_skill('volition'), -ds_morale+1)
+                    value ds_get_total_skill('volition')+ds_morale
+                    range ds_get_total_skill('volition')
             fixed:
                 xmaximum 120
                 ymaximum 15

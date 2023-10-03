@@ -4864,7 +4864,7 @@ label ds_cards_tournament_start:                                            # н
         $ ds_day2_gambler_skill = 5
 #-------------------------------------------------------------------------------------------------
 
-label ds_day2_1_tour_re_game:                                                              # игра 1 тура — сюда возвращаемся на повторную игру
+label ds_day2_us_game:
     $ ds_my_poker_hand = None
     $ ds_rival_poker_hand = None
 
@@ -4873,29 +4873,13 @@ label ds_day2_1_tour_re_game:                                                   
 
     python:
         dialogs = {
-                        (0, 'win','jump'):'ds_cards_participate_win_end',
-                        (0, 'fail','jump'):'ds_cards_participate_fail_end',
-                        (0, 'draw','jump'):'ds_cards_draw'
+                        (0, 'win','jump'):'ds_cards_us_game_win',
+                        (0, 'fail','jump'):'ds_cards_us_game_fail',
+                        (0, 'draw','jump'):'ds_cards_us_game_draw'
                     }
-        generate_cards_alt('bg hall', dialogs)
+        ds_generate_cards('bg ext_dining_hall_near_sunset', dialogs)
 
-# ****************   НОВЫЕ  СОПЕРНИКИ   ******************************************
-        if ds_my_rival_1_tour.take == 'un':
-            rival = CardGameRivalWiseUsual(ds_un_avatar, u"Лена", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'sl':
-            rival = CardGameRivalWiseUsual(ds_sl_avatar, u"Славя", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'dv':
-            rival = CardGameRivalWiseUsual(ds_dv_avatar, u"Алиса", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'mi':
-            rival = CardGameRivalWiseUsual(ds_mi_avatar, u"Мику", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'us':
-            rival = CardGameRivalWiseLikeUS(ds_us_avatar, u"Ульяна", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'sh':
-            rival = CardGameRivalWiseUsual(ds_sh_avatar, u"Шурик", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'mz':
-            rival = CardGameRivalWiseUsual(ds_mz_avatar, u"Женя", ds_day2_gambler_behavior, ds_day2_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'ya':
-            rival = CardGameRivalWiseUsual(ds_ya_avatar, u"Яна", ds_day2_gambler_behavior, ds_day2_gambler_skill)
+        rival = CardGameRivalWiseLikeUS(ds_us_avatar, u"Ульяна", ds_day2_gambler_behavior, ds_day2_gambler_skill)
 # ************************************************************************************
 
     $ ds_hint_poker = ds_hint_poker_contractual                                           # подсказки комбинаций — по просмотру правил
@@ -4994,6 +4978,9 @@ label ds_cards_participate_fail_end:
 
 
     elif ds_my_rival_1_tour.take == 'sl':
+        $ ds_lp['sl'] += 1
+        if not ds_bet_dv:
+            $ ds_lp['sl'] += 1
         show sl smile pioneer with dissolve
         sl "Семён, если ты захочешь сыграть ещё раз, я не против."
         play sound ds_sfx_psy
@@ -5054,52 +5041,101 @@ label ds_cards_participate_fail_end:
             hfl "Ничего хорошего от неё ожидать нельзя."
             window hide
             menu:
-                "Промолчать":
+                "Поздравить с победой":
                     window show
+                    "Ты вежливо встаёшь, наклоняешь голову и говоришь."
+                    me "Поздравляю тебя с победой."
+                    me "И удачи в полуфинале."
+                    "Разворачиваешься и уходишь к болельщикам."
+                    th "Может быть, удастся затеряться в толпе?"
                 "Устроить скандал":
-                    if skillcheck('authority', lvl_challenging, passive=True, [('ds_karma >= 20', 1)])
+                    if skillcheck('authority', lvl_challenging, passive=True, [('ds_karma >= 20', 1)]):
+                        window show
+                        play sound ds_sfx_psy
+                        aut "Начинай скандалить, напугай её."
+                        me "Да что ты говоришь?! Люди добрые, тут клевещут на меня!"
+                        show dv shocked pioneer2 with dspr
+                        dv "Что ты делаешь?.."
+                        aut "Она удивлена таким твоим ходом."
+                        $ ds_skill_points['authority'] += 1
+                        me "Честной народ обвиняют в домогательствах! Вы представьте только!"
+                        show mt angry pioneer at right with dissolve
+                        show dv scared pioneer2 with dspr
+                        dv "Успокойся!"
+                        mt "Что тут происходит?"
+                        me "Клевета тут происходит! Попытка засудить невиновного!"
+                        me "Наверняка, она и сжульничала, чтобы меня обвинить!"
+                        mt "Так, Алиса, ты снова разыгрываешь парней?!"
+                        play sound ds_sfx_mot
+                        res "Стоп, это был розыгрыш?!"
+                        show dv guilty pioneer2 with dspr
+                        dv "Извините..."
+                        $ ds_lp['dv'] -= 2
+                        show mt normal with dspr
+                        mt "Так, ладно! Давайте продолжать."
+                        hide mt with dissolve
+                    else:
+                        window show
+                        play sound ds_sfx_psy
+                        aut "Нет, слишком опасно. Лучше не привлекай внимания."
+                        $ ds_skill_points['authority'] += 1
+                        "Ты вежливо встаёшь, наклоняешь голову и говоришь."
+                        me "Поздравляю тебя с победой."
+                        me "И удачи в полуфинале."
+                        "Разворачиваешься и уходишь к болельщикам."
+                        th "Может быть, удастся затеряться в толпе?"
+                "Потребовать реванша":
                     window show
-                    play sound ds_sfx_psy
-                    aut "Начинай скандалить, напугай её."
-                    me "Да что ты говоришь?! Люди добрые, тут клевещут на меня!"
-                    show dv shocked pioneer2 with dspr
-                    dv "Что ты делаешь?.."
-                    play sound ds_sfx_psy
-                    aut "Она удивлена таким твоим ходом."
-                    me "Честной народ обвиняют в домогательствах! Вы представьте только!"
-                    show mt angry pioneer at right with dissolve
-                    show dv scared pioneer2 with dspr
-                    dv "Успокойся!"
-                    mt "Что тут происходит?"
-                    me "Клевета тут происходит! Попытка засудить невиновного!"
-                    mt "Так, Алиса, ты снова разыгрываешь парней?!"
-                    play sound ds_sfx_mot
-                    res "Стоп, это был розыгрыш?!"
-                    show dv guilty pioneer2 with dspr
-                    dv "Извините..."
-                    mt "Так, ладно! Давайте продолжать."
-        "Я постарался сохранить лицо."
-        "Вежливо встал, наклонил голову, и сказал:"
-        me "Поздравляю тебя с победой."
-        me "И удачи в полуфинале."
-        "Развернулся и ушёл к болельщикам."
-        th "Может быть, удастся затеряться в толпе?"
+                    me "Требую реванша! Наверняка ты жульничала!"
+                    show dv laugh pioneer2 with dspr
+                    dv "Что, испугался?"
+                    $ ds_damage_morale()
+                    $ ds_lp['dv'] -= 1
+                    me "И ничего не испугался!"
+                    show dv grin pioneer2 with dspr
+                    dv "В любом случае, забыл? Никаких переигровок!"
+                    "Ты уходишь несолоно хлебавши."
 
     elif ds_my_rival_1_tour.take == 'mi':
+        $ ds_lp['mi'] += 1
+        if not ds_bet_dv:
+            $ ds_lp['sl'] += 1
         show mi happy pioneer with dspr
         mi "Ой, какое счастье! А то мне никогда-никогда не везло в картах, я и решила, что это не моё, а тут попросили, и я согласилась."
         mi "Я даже не думала, что сумею победить! Сенечка, ты не обижаешься? А то хочешь, переиграем, мне не жалко! Нет, правда-правда не обижаешься?"
         show mi smile pioneer with dspr
         mi "Просто я не хочу, чтобы мне было хорошо за счёт других, это плохо, мне всегда Па говорил, что счастья на чужих слезах не построишь."
-        me "Всё в порядке. Ты здорово играешь, поэтому и победила."
-        me "Удачи тебе в полуфинале."
-        hide mi with dissolve
-        "Пожелал я и, отвернувшись, удалился."
-
+        window hide
+        menu:
+            "Поддержать Мику":
+                window show
+                me "Всё в порядке. Ты здорово играешь, поэтому и победила."
+                me "Удачи тебе в полуфинале."
+                $ ds_lp['mi'] += 1
+                hide mi with dissolve
+                "Желаешь ты и, отвернувшись, удаляешься."
+            "Обидеться":
+                window show
+                me "Да вообще, как я мог тебе проиграть?! Ты же даже толком правила не поняла!"
+                show mi sad pioneer with dspr
+                mi "Ой, извини-извини, Семён-кун, я не хотела тебя обидеть... Давай сыграем ещё раз, чтобы ты победил..."
+                me "Да не нужны мне никакие переигровки! Я пошёл!"
+                hide mi with dissolve
+                "И ты уходишь."
+                $ ds_lp['mi'] -= 1
+            "Отреагировать нейтрально":
+                window show
+                me "Поздравляю с победой!"
+                mi "Ой, спасибо-спасибо, Семён-кун! Мне очень приятно!"
+                hide mi with dissolve
+                "И ты, попрощавшись, удаляешься."
     elif ds_my_rival_1_tour.take == 'us':
+        if not ds_bet_dv:
+            $ ds_lp['sl'] += 1
         show us laugh pioneer with dissolve
         us "Хы! Продул!"
-        "Спасибо, кэп."
+        play sound ds_sfx_psy
+        aut "Спасибо, кэп."
         me "Обязательно орать об этом на всю столовую?"
         us "Ну конечно же!"
         show us grin pioneer with dspr
@@ -5108,6 +5144,15 @@ label ds_cards_participate_fail_end:
         me "В чём подвох?"
         us "Подвоха нет."
         us "Так что, будешь?"
+        window hide
+        menu:
+            "Принять":
+                window show
+                me "Давай!"
+                $ ds_lp['us'] += 1
+                jump ds_day2_us_game
+            "Отклонить":
+                window show
         me "Спасибо, но нет."
         show us dontlike pioneer with dissolve
         us "Зануда! {w}И что, даже отыграться не хочешь?"
@@ -5116,37 +5161,52 @@ label ds_cards_participate_fail_end:
         th "Кто там что думает и решает, остаётся его достоянием."
         "Мудрый совет на все случаи жизни: болтать поменьше."
         us "Зануда! {w}Зануда."
-        "Кричала она."
         show us dontlike pioneer at fright with move
-        "А потом резко вскочила и пошла к столику, отведённому под следующую игру."
+        "А потом резко вскакивает и идёт к столику, отведённому под следующую игру."
         us "Просто боишься проиграть ещё раз! Слабак!"
+        $ ds_damage_morale()
         me "Да, возьми меня ещё раз на «слабо», детка."
         me "Наслаждайся вечером."
         stop music fadeout 3
         hide us with dissolve
-        "Я отправился в сторону толпы зрителей. Пришёл мой черёд сменить амплуа."
+        "Ты отправляешься в сторону толпы зрителей. Пришёл твой черёд сменить амплуа."
         play music music_list["my_daily_life"] fadein 3
 
     elif ds_my_rival_1_tour.take == 'sh':
         show sh normal pioneer with dissolve
         sh "Это была достойная игра. Спасибо."
-        if loki:
-            me "Взаимно."
-        elif herc:
-            "Он протянул мне руку, которую я с достоинством пожал."
-        else:
-            "Мы обменялись рукопожатиями."
-            "Всё же крепкая у него хватка для того, кто тяжелее паяльника ничего не поднимает."
+        window hide
+        menu:
+            "Пожать руку":
+                window show
+                me "Взаимно."
+                "Он протягивает тебе руку, которую ты с достоинством пожал."
+                per_tor "Всё же крепкая у него хватка для того, кто тяжелее паяльника ничего не поднимает."
+            "Не пожимать руку":
+                window show
+                me "Ага, спасибо."
         sh "А я пошёл дальше громить вражеские порядки."
 
     elif ds_my_rival_1_tour.take == 'mz':
+        $ ds_lp['mz'] += 1
+        if not ds_bet_dv:
+            $ ds_lp['sl'] += 1
         show mz normal glasses pioneer with dissolve
-        "Женя пожала плечами и встала из-за стола."
+        "Женя пожимает плечами и встаёт из-за стола."
         mz "Похоже, это будет ещё проще, чем мне казалось."
+    elif ds_my_rival_1_tour.take == 'ya':
+        $ ds_lp['ya'] += 1
+        if not ds_bet_dv:
+            $ ds_lp['sl'] += 1
+        show ya normal pioneer with dissolve
+        ya "Спасибо за игру..."
+        "И больше ничего не говоря, она встаёт и идёт за следующий стол."
+        hide ya with dissolve
+        me "Спасибо..."
 # ---------------------------------------------------- \\Диалоги
 
     scene bg int_dining_hall_sunset with dissolve
-    "А ситуация, между тем, складывалась следующая:"
+    "А ситуация, между тем, складывается следующая:"
     pause(.5)
     call ds_day2_1_tour_analizer                                                   # Вызов анализатора 1 раунда
     $ renpy.block_rollback()                                                          # блокируем роллбак
@@ -5158,9 +5218,7 @@ label ds_cards_participate_fail_end:
 #------------------------------------------------------------------------------------------------
 label ds_day2_participate_win_end:
     $ ds_day2_result_tour = 2                                              # Семён выиграл в 1 туре
-    if not ds_day2_detour_semifinal:                                       # если не "выигрыш" в 1 туре скипом
-        $ persistent.altCardsWonRivals[ds_spr_my_rival] = True         # Выиграли у этого соперника
-    $ persistent.altCardsWon1 = True
+    $ persistent.ds_cards_max_stage = max(persistent.ds_cards_max_stage, 1)
     $ ds_day2_gamblers_1_tour[places_my_table[0]].winner = True            # Семён выиграл
     $ ds_tournament_state = "1_round_end"                                  # устанавливаем конец 1-го раунда
 
@@ -5169,115 +5227,144 @@ label ds_day2_participate_win_end:
     if (ds_my_rival_1_tour.take in ['sl','mi','sh']) and not ds_day2_detour_semifinal:
         scene bg int_dining_hall_sunset with dissolve
         "Первый тур закончился."
-        "Ситуация, между тем, складывалась следующая:"
+        "Ситуация, между тем, складывается следующая:"
         call ds_day2_1_tour_analizer                                                   # вызываем анализатор 1 тура
         $ renpy.block_rollback()                                                          # блокируем роллбак
 # -------------------------------------------------------------------------
     pause(1)
     scene bg int_dining_hall_sunset with dissolve
-    call ds_day2_summary_poker_round
+    call ds_cards_summary_round
 
 # ---------------------------------------------------- ДИАЛОГИ
     if ds_my_rival_1_tour.take == 'un':
-        if ds_day2_rival_win == 0:
-            "У неё не было ничего."
-            "А с тем, что было, я бы постеснялся открывать карты."
-        else:
-            "Лене досталась за эти игры пара-другая хороших карт."
-            "К сожалению, для победы этого оказалось недостаточно."
-        "Бедная девочка."
+        play sound ds_sfx_psy
+        emp "Бедная девочка."
         show un sad pioneer with dissolve
-        "Она сидела, будто сама не способная поверить в то, что только что произошло."
-        if lp_un >= 6 and not ds_day2_detour_semifinal:
+        emp "Она сидит, будто сама не способная поверить в то, что только что произошло."
+        if not ds_day2_detour_semifinal:
             menu:
-                "Предложить матч-реванш":
-                    $ karma += 5
-                    $ lp_un += 1
+                "Предложить реванш":
+                    $ ds_karma += 5
+                    $ ds_lp['un'] += 1
                     me "Неудачная партия."
                     un "Да…"
                     me "Может, ещё разок?"
                     show un smile pioneer with dspr
-                    "Лена улыбнулась."
                     un "Предложение соблазнительное, но я откажусь."
                     me "Почему?"
                     show un shy pioneer with dspr
                     un "Ну…"
+                    if skillcheck('empathy', lvl_easy, passive=True):
+                        emp "Ей не очень хочется об этом говорить. Может, не стоит?"
                     pause(0.5)
-                    if dr:
-                        me "Ладно, можешь не говорить."
-                        me "Не хочешь — твоё право."
-                        me "Не могу же я тебя заставлять."
-                        show un smile pioneer with dspr
-                        "Лена благодарно улыбнулась."
-                        un "Удачи. Я буду болеть за тебя."
-                        me "Угу…{w} Спасибо."
-                    else:
-                        me "Да?…"
-                        th "Прости, Лена, но я чуточку поработаю клещами."
-                        show un sad pioneer with dspr
-                        un "Я не слишком люблю такие игры, и играть в них совсем не умею."
-                        un "Поэтому к победе я не рвусь. Ещё до начала решила для себя — будь что будет."
-                        un "А реванш… {w}Реванш — это не то."
-                        "А на лице явственно читалось — я не хочу больше проигрывать."
-                        me "Право твоё. Настаивать не буду."
-                        show un cry_smile pioneer with dspr
-                        un "Спасибо."
-                        show un shy pioneer with dspr
-                        un "Лучше я буду болеть за тебя."
+                    window hide
+                    menu:
+                        "Отступить":
+                            me "Ладно, можешь не говорить."
+                            me "Не хочешь — твоё право."
+                            me "Не могу же я тебя заставлять."
+                            show un smile pioneer with dspr
+                            "Лена благодарно улыбается."
+                            un "Удачи. Я буду болеть за тебя."
+                            me "Угу…{w} Спасибо."
+                            $ ds_lp['un'] += 1
+                            $ ds_skill_points['empathy'] += 1
+                        "Выяснить до конца":
+                            me "Да?…"
+                            th "Прости, Лена, но я чуточку поработаю клещами."
+                            show un sad pioneer with dspr
+                            un "Я не слишком люблю такие игры, и играть в них совсем не умею."
+                            un "Поэтому к победе я не рвусь. Ещё до начала решила для себя — будь что будет."
+                            un "А реванш… {w}Реванш — это не то."
+                            emp "А на лице явственно читается: «я не хочу больше проигрывать»."
+                            me "Право твоё. Настаивать не буду."
+                            show un cry_smile pioneer with dspr
+                            un "Спасибо."
+                            show un shy pioneer with dspr
+                            un "Лучше я буду болеть за тебя."
                     hide un with dissolve
-                    "Она встала из-за стола и исчезла за болельщиками."
-                    jump ds_day2_1_tour_end                                                 # В ПОЛУФИНАЛ
+                    "Она встаёт из-за стола и исчезает за болельщиками."
+                    jump ds_cards_1_tour_end                                                 # В ПОЛУФИНАЛ
                 "Ничего не делать":
                     pass
-        $ lp_un -= 1
-        $ lp_dv += 1
-        "Я улыбнулся."
+        $ ds_lp['un'] -= 1
+        "Ты улыбаешься."
         me "Спасибо за игру!"
         show un shy pioneer with dspr
         un "Н-не за что."
         hide un with dissolve
-        "Она встала из-за стола и исчезла за болельщиками."
+        "Она встаёт из-за стола и исчезает за болельщиками."
 
 # ====================================================== Пропускаем часть диалога, если "выиграли" 1 тур скипом
         if not ds_day2_detour_semifinal:
-            "А я не мог сдержать ликования."
+            "А ты не можешь сдержать ликования."
             th "Я подебил! То есть я победил."
-            dreamgirl "Ура! {w=.4}У девочки. {w=.4}В игру, которую ни ты, ни она не знаете. {w}Велико достижение."
+            play sound ds_sfx_psy
+            vol "Ура! {w=.4}У девочки. {w=.4}В игру, которую ни ты, ни она не знаете. {w}Велико достижение."
             th "Заткнись."
             th "Я буду радоваться победе так, как буду радоваться только когда раскатаю эту рыжую нахалку!"
-            dreamgirl "Нет, ну ты и правда герой. Спору нет."
-            dreamgirl "Может, следовало дать девочке выиграть? Она и так выглядит не самой счастливой, а ты выбил из-под неё остатки почвы."
-            dreamgirl "И как оно по ощущениям? Стоило того?"
-            th "Я сказал — заткнись."
-            show blinking with dissolve
-            if herc or loki:
-                "У меня цель — не ободрить каждого сирого, а утереть нос одной рыжей зазнайке!"
-                "Хотя, честно сказать, искушение слить партию просто для того, чтобы посмотреть, как она выполнит свои угрозы, достаточно велико. {w}Нет, ну серьезно!"
-                scene bg ext_square_sunset
-                show prologue_dream
-                with fade
-                "Завтра мы встаём, идём на линейку, а там уже на трибуне, между Ольгой Дмитриевной и Славей, стоит она."
-                show dv grin pioneer2 behind prologue_dream with diam
-                "И своим вредным голосом говорит — так, мол, и так, некий Семён, приехать в лагерь ещё не успел, как пошёл подглядывать за мной и даже полапал немного."
-                "Да это же реклама такая, что я за неё ещё и приплачивать должен!"
-                "В духе «Сёма едет! Прячьте девок!»."
-                hide dv with dissolve
-            else:
-                "Даже если девочки внезапно начнут строить мне глазки, я не собираюсь кому-либо из них сливать партию."
-                "Представляю себе, как рыжая стерлядь воплотит свои угрозы."
-                scene bg ext_square_sunset
-                show prologue_dream
-                with fade
-                "Например, на утренней линейке."
-                show dv grin pioneer behind prologue_dream with dissolve
-                "Выйдет вперёд, самодовольно подмигнёт мне и скажет во всеуслышанье:"
-                dv "{i}Ольга Дмитриевна, разрешите доложить!{/i}"
-                "И далее по тексту."
-                "Коллективный суд, а вместе с ним и позор, мне обеспечен."
-                dreamgirl "А вот правильный перевод твоего словоблудия — я трясусь за свою шкуру."
-                dreamgirl "Волков бояться — в лес не ходить, в курсе?"
-                th "Мне и в городе неплохо живётся."
-                th "А волки пускай достаются охотникам."
+            vol "Нет, ну ты и правда герой. Спору нет."
+            emp "Может, следовало дать девочке выиграть? Она и так выглядит не самой счастливой, а ты выбил из-под неё остатки почвы."
+            emp "И как оно по ощущениям? Стоило того?"
+            window hide
+            menu:
+                "Цель - утереть нос Алисе":
+                    window show
+                    th "Я сказал — заткнись."
+                    th "У меня цель — не ободрить каждого сирого, а утереть нос одной рыжей зазнайке!"
+                    if skillcheck('inland_empire', lvl_trivial, passive=True):
+                        play sound ds_sfx_psy
+                        ine "Хотя, честно сказать, искушение слить партию просто для того, чтобы посмотреть, как она выполнит свои угрозы, достаточно велико. {w}Нет, ну серьезно!"
+                        scene bg ext_square_sunset
+                        show prologue_dream
+                        with fade
+                        ine "Завтра мы встаём, идём на линейку, а там уже на трибуне, между Ольгой Дмитриевной и Славей, стоит она."
+                        show dv grin pioneer2 behind prologue_dream with diam
+                        ine "И своим ехидным голосом говорит — так, мол, и так, некий Семён, приехать в лагерь ещё не успел, как пошёл подглядывать за мной и даже полапал немного."
+                        play sound ds_sfx_fys
+                        ins "Да это же реклама такая, что ты за неё ещё и приплачивать должен!"
+                        ins "В духе «Сёма едет! Прячьте девок!»."
+                        hide dv with dissolve
+                        show blinking with dissolve
+                        $ ds_skill_points['inland_empire'] += 1
+                "Цель - защитить себя от угроз":
+                    window show
+                    th "Даже если девочки внезапно начнут строить мне глазки, я не собираюсь кому-либо из них сливать партию."
+                    th "Представляю себе, как рыжая стерлядь воплотит свои угрозы..."
+                    if skillcheck('inland_empire', lvl_trivial, passive=True):
+                        scene bg ext_square_sunset
+                        show prologue_dream
+                        with fade
+                        play sound ds_sfx_psy
+                        ine "Например, на утренней линейке."
+                        show dv grin pioneer behind prologue_dream with dissolve
+                        ine "Выйдет вперёд, самодовольно подмигнёт мне и скажет во всеуслышанье:"
+                        dv "{i}Ольга Дмитриевна, разрешите доложить!{/i}"
+                        ine "И далее по тексту."
+                        play sound ds_sfx_fys
+                        hfl "Коллективный суд, а вместе с ним и позор, тебе обеспечен."
+                        $ ds_skill_points['inland_empire'] += 1
+                    else:
+                        play sound ds_sfx_psy
+                        ine "Нет, ты не хочешь себе это представлять."
+                    if skillcheck('authority', lvl_easy, passive=True):
+                        play sound ds_sfx_psy
+                        aut "А вот правильный перевод твоего словоблудия: «я трясусь за свою шкуру»."
+                        aut "Волков бояться - в лес не ходить, в курсе?"
+                        aut "И да - поддаваясь на шантаж, ты лишь поощряешь шантажистов применять подобные методы и дальше."
+                        $ ds_skill_points['authority'] += 1
+                    if skillcheck('suggestion', lvl_medium, passive=True):
+                        play sound ds_sfx_psy
+                        sug "А ты думаешь, у Алисы тут такая безупречная репутация, что ей сразу поверят?"
+                        sug "Сомнительно. Тем более, в Советском Союзе теме домогательств уделяли не столь пристальное внимание, нежели в нашем XXI веке."
+                        $ ds_skill_points['suggestion'] += 1
+                "Признать себя неправым":
+                    window show
+                    th "Да, наверное, не стоило так делать..."
+                    vol "Вот то-то же!"
+                    th "Но уже ничего не поделаешь!"
+                    play sound ds_sfx_psy
+                    aut "Поэтому вперёд, вперёд, вперёд-вперёд-вперёд!"
         scene bg int_dining_hall_sunset with dissolve
 
     elif ds_my_rival_1_tour.take == 'sl':
@@ -5317,43 +5404,57 @@ label ds_day2_participate_win_end:
 
 # ====================================================== Пропускаем часть диалога, если "выиграли" 1 тур скипом
         if not ds_day2_detour_semifinal:
-            "Что ж, это была трудная схватка, но я победил."
+            th "Что ж, это была трудная схватка, но я победил."
             th "Идеальное же противостояние — игра, в которой вы оба ничего не понимаете."
-            dreamgirl "Ну да, ну да."
-            "Пробормотал внутренний голос."
-            dreamgirl "Носкиллер рандомный."
-            th "Помолчи. Ты ничего не понимаешь."
-            th "Это вопрос индивидуального престижа. Я буду двигаться к финалу."
-            if ds_result_dv_1_tour == 4:                                                       # Дваче в другом полуфинале
-                th "И раскатаю там рыжее хамло!"
-            elif ds_result_dv_1_tour == 3:                                                     # Дваче в 1/2 к Семёну
-                th "И раскатаю там любого!"
-            elif ds_result_dv_1_tour == 2:                                                     # Дваче слетела в 1 туре
-                th "Чего не скажешь о Алисе. Значит, это будет лёгкая победа."
-            dreamgirl "Надежды… Мечты… Фантазии…"
-            th "Ты что, сомневаешься во мне?!"
-            dreamgirl "Нет-нет-нет, ты что! {w}Я в тебя верю! Я знаю твой потенциал."
-            th "Вот видишь!"
-            dreamgirl "Ты слетишь на полпути."
-            th "Да ну тебя!"
-            if ds_result_dv_1_tour == 4:                                                                # Дваче в другом полуфинале
-                "Может быть, это {i}она{/i} слетит на полпути!"
-                "Вот возьмёт и проиграет."
-                dreamgirl "Надежды… Мечты…"
-                th "Ты повторяешься."
-                dreamgirl "Просто ты слишком нос задираешь. {w}А, как говорят Великие, — настоящий мастер лишён гордыни."
-            elif ds_result_dv_1_tour == 3:                                                              # Дваче в 1/2 к Семёну
-                th "Между прочим, у нас сейчас как раз будет шанс стреножить Рыжевскую в полуфинале."
-                dreamgirl "Ну да, это нам, конечно, повезло."
-                dreamgirl "Но лучше приготовься к суровому испытанию — просто так она тебе победу не отдаст!"
-            elif ds_result_dv_1_tour == 2:                                                              # Дваче слетела в 1 туре
-                "Я усмехнулся."
-                th "А даже если и слечу."
-                th "Обращаю твоё внимание, что пока мы тут препирались, Двачевская изволила вылететь в самом первом раунде."
-                "Я снял воображаемую шапку и прижал её к груди."
-                me "Помянем!"
-                show dv angry pioneer2 far at left with dissolve
-                "Двачевская оскалилась, но ничего не сказала."
+            if not skillcheck('volition', lvl_challenging, passive=True):
+                vol "Ну да, ну да."
+                vol "Носкиллер рандомный."
+                th "Помолчи. Ты ничего не понимаешь."
+                th "Это вопрос индивидуального престижа. Я буду двигаться к финалу."
+                if ds_result_dv_1_tour == 4:                                                       # Дваче в другом полуфинале
+                    th "И раскатаю там рыжее хамло!"
+                elif ds_result_dv_1_tour == 3:                                                     # Дваче в 1/2 к Семёну
+                    th "И раскатаю там любого!"
+                elif ds_result_dv_1_tour == 2:                                                     # Дваче слетела в 1 туре
+                    th "Чего не скажешь о Алисе. Значит, это будет лёгкая победа."
+                vol "Надежды… Мечты… Фантазии…"
+                th "Ты что, сомневаешься во мне?!"
+                vol "Нет-нет-нет, ты что! {w}Я в тебя верю! Я знаю твой потенциал."
+                th "Вот видишь!"
+                vol "Ты слетишь на полпути."
+                th "Да ну тебя!"
+                if ds_result_dv_1_tour == 4:                                                                # Дваче в другом полуфинале
+                    th "Может быть, это {i}она{/i} слетит на полпути!"
+                    th "Вот возьмёт и проиграет."
+                    vol "Надежды… Мечты…"
+                    th "Ты повторяешься."
+                    vol "Просто ты слишком нос задираешь. {w}А, как говорят Великие, — настоящий мастер лишён гордыни."
+                elif ds_result_dv_1_tour == 3:                                                              # Дваче в 1/2 к Семёну
+                    th "Между прочим, у нас сейчас как раз будет шанс стреножить Рыжевскую в полуфинале."
+                    vol "Ну да, это нам, конечно, повезло."
+                    vol "Но лучше приготовься к суровому испытанию — просто так она тебе победу не отдаст!"
+                elif ds_result_dv_1_tour == 2:                                                              # Дваче слетела в 1 туре
+                    th "А даже если и слечу."
+                    th "Обращаю твоё внимание, что пока мы тут препирались, Двачевская изволила вылететь в самом первом раунде."
+                    window hide
+                    menu:
+                        "Посмеяться над Алисой":
+                            window show
+                            "Ты снимаешь воображаемую шапку и прижимаешь её к груди."
+                            me "Помянем!"
+                            show dv angry pioneer2 far at left with dissolve
+                            "Алиса оскалилась, но ничего не говорит."
+                            $ ds_lp['dv'] -= 1
+                        "Ничего не делать":
+                            window show
+            else:
+                play sound ds_sfx_psy
+                vol "Ну что ж, вперёд!"
+                if ds_result_dv_1_tour > 2:
+                    vol "И даже Алису ты победишь!"
+                else:
+                    vol "Уж если Алиса слетела - то ты точно всех остальных раскатаешь!"
+                $ ds_skill_points['volition'] += 1
 
     elif ds_my_rival_1_tour.take == 'dv':
         show dv sad pioneer2 with dspr
@@ -5645,17 +5746,17 @@ label ds_day2_1_tour_end:
     stop music fadeout 3
 # -------------------------------------------------------------------------
 
-    "Ладно, это всё лирика."
-    jump ds_day2_semifinal                                             # переход в полуфинал
+    th "Ладно, это всё лирика."
+    jump ds_cards_semifinal                                             # переход в полуфинал
 
 #-------------------------------------------------------------------------------------------------
-label ds_day2_semifinal:
+label ds_cards_semifinal:
     stop music fadeout 1
     scene bg int_dining_hall_sunset with dissolve
     show el smile pioneer at left with dissolve
     play music music_list["get_to_know_me_better"] fadein 2
     el "Итак!"
-    "Подал голос Электроник, явно гордящийся своей ролью мастер-церемониймейстера."
+    "Подаёт голос Электроник, явно гордящийся своей ролью мастер-церемониймейстера."
     el "Первый тур окончен, победители встречаются во втором туре!"
 
     $ ds_tournament_state = "semifinal_start"                                                      # устанавливаем начало полуфинала
@@ -5680,7 +5781,7 @@ label ds_day2_semifinal:
 
         if ds_my_rival_1_tour.take == 'un':
             hide el with dissolve
-            "Лена скромно стояла в сторонке и следила за событиями турнира."
+            "Лена скромно стоит в сторонке и следит за событиями турнира."
             show un smile2 pioneer far at right with dissolve
             "При этом на лице её не было ни злости, ни обиды, ни чего-либо в этом духе."
             "Напротив, она искренне поддерживала меня и остальных ребят."
@@ -6005,7 +6106,7 @@ label ds_day2_semifinal_fail_end:
     $ ds_day2_gamblers_semifinal[places_my_table[0]].winner = False            # Семён проиграл
     $ ds_tournament_state = "semifinal_end"                                   # устанавливаем конец полуфинала
     scene bg int_dining_hall_sunset with dissolve
-    call ds_day2_summary_poker_round
+    call ds_cards_summary_round
 
 # ---------------------------------------------------- ДИАЛОГИ;
     if ds_my_rival_semifinal.take == 'un':

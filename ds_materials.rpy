@@ -60,19 +60,57 @@ init python:
             renpy.hide('second_dice')
         return result
 
-    def ds_damage_health():
+    def ds_damage_health(go_if_zero='ds_end_out_of_health'):
         global ds_health
         ds_health -= 1
         renpy.show('health damage', at_list=[show_damage])
         renpy.pause(1.5)
         renpy.hide('health')
+        if ds_health <= 0:
+            ui.jumps(go_if_zero)
     
-    def ds_damage_morale(go_if_zero=''):
+    def ds_damage_morale(go_if_zero='ds_end_out_of_morale'):
         global ds_morale
         ds_morale -= 1
         renpy.show('morale damage', at_list=[show_damage])
         renpy.pause(1.5)
         renpy.hide('morale')
+        if ds_morale <= 0:
+            ui.jumps(go_if_zero)
+    
+    def ds_up_health():
+        if ds_health < 0:
+            ds_health += 1
+        renpy.show('health up')
+        renpy.with_statement(wiperight)
+        renpy.pause(1.5)
+        renpy.hide('health')
+        renpy.with_statement(wiperight)
+    
+    def ds_up_morale():
+        if ds_morale < 0:
+            ds_morale += 1
+        renpy.show('morale up')
+        renpy.with_statement(wiperight)
+        renpy.pause(1.5)
+        renpy.hide('morale')
+        renpy.with_statement(wiperight)
+    
+    def ds_restore_health():
+        ds_health = 0
+        renpy.show('health restore')
+        renpy.with_statement(wiperight)
+        renpy.pause(1.5)
+        renpy.hide('health')
+        renpy.with_statement(wiperight)
+    
+    def ds_restore_morale():
+        ds_morale = 0
+        renpy.show('morale restore')
+        renpy.with_statement(wiperight)
+        renpy.pause(1.5)
+        renpy.hide('morale')
+        renpy.with_statement(wiperight)
 
     def ds_get_maximal_girl():
         res = None
@@ -2027,3 +2065,7 @@ init:
     image check failure = Transform(Image("mods/disco_sovenok/bg/failure.png"), alpha=0.3)
     image health damage = "mods/disco_sovenok/bg/health_damage.png"
     image morale damage = "mods/disco_sovenok/bg/morale_damage.png"
+    image health up = "mods/disco_sovenok/bg/health_up.png"
+    image morale up = "mods/disco_sovenok/bg/morale_up.png"
+    image health restore = "mods/disco_sovenok/bg/health_restore.png"
+    image morale restore = "mods/disco_sovenok/bg/morale_restore.png"
