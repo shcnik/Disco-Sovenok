@@ -58,6 +58,7 @@ init python:
             renpy.hide('check')
             renpy.hide('first_dice')
             renpy.hide('second_dice')
+        ds_last_skillcheck = result
         return result
 
     def ds_damage_health(go_if_zero='ds_end_out_of_health'):
@@ -327,6 +328,8 @@ init:
 
     $ ds_game_started = False
 
+    $ ds_last_skillcheck = False # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
+
 # Эффекты
 
     transform semi_transparent:
@@ -426,6 +429,7 @@ init:
 # Изображения
 
     image ds_epigraph = "mods/disco_sovenok/cg/epigraph.png"
+    image ds_tournament = "mods/disco_sovenok/gui/cards/table/alt_tournament_bg.png"
 
 ## BG
 
@@ -488,6 +492,21 @@ init:
 
     image bg ds_int_library_basement = "mods/disco_sovenok/bg/int_library_basement.jpg"
 
+    image bg ds_ext_backdoor_day = "mods/disco_sovenok/bg/ext_backdoor_day_7dl.jpg"
+    image bg ds_ext_backdoor_sunset = "mods/disco_sovenok/bg/ext_backdoor_sunset_7dl.jpg"
+    image bg ds_ext_backdoor_night = "mods/disco_sovenok/bg/ext_backdoor_night_7dl.jpg"
+
+    image bg ds_ext_backroad_day = "mods/disco_sovenok/bg/ext_backroad_day_7dl.jpg"
+    image bg ds_ext_backroad_sunset = "mods/disco_sovenok/bg/ext_backroad_sunset_7dl.jpg"
+
+    image bg ds_ext_railroad_day = "mods/disco_sovenok/bg/ext_railroad_day.jpg"
+    image bg ds_ext_railroad_sunset = "mods/disco_sovenok/bg/ext_railroad_sunset.jpg"
+
+    image bg ds_int_train = "mods/disco_sovenok/bg/int_train_7dl.jpg"
+    image bg ds_ext_train = "mods/disco_sovenok/bg/ext_train.jpg"
+
+    image bg ds_ext_bus_town = "mods/disco_sovenok/bg/ext_bus_city.jpg"
+
 ## Новые CG
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
@@ -511,6 +530,8 @@ init:
     image cg ds_day2_dv_hits_el = "mods/disco_sovenok/cg/dv_hits_el.jpg"
 
     image cg ds_day2_swim_dv = "mods/disco_sovenok/cg/d2_water_dan.jpg"
+
+    image cg ds_day3_train = "mods/disco_sovenok/cg/d2_us_trainhop_7dl.jpg"
 
     image cg ds_day3_disco_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"
     image cg ds_day3_dv_dance = "mods/disco_sovenok/cg/d6_dv_dance_pioneer_7dl.jpg"
@@ -602,14 +623,18 @@ init:
     $ ds_sfx_mot = "mods/disco_sovenok/sound/motorics.ogg"
 
     $ ds_crash = "mods/disco_sovenok/sound/car_crash_7dl.ogg"
-    $ ds_horn = "mods/disco_sovenok/sound/train_horn_7dl.ogg"
+    $ ds_train_horn = "mods/disco_sovenok/sound/train_horn_7dl.ogg"
+    $ ds_train = "mods/disco_sovenok/sound/train_income_7dl.ogg"
     $ ds_un_scream = "mods/disco_sovenok/sound/kriklol.ogg"
     $ ds_stamp = "mods/disco_sovenok/sound/stamp.mp3"
     $ ds_mi_sign = "mods/disco_sovenok/sound/paper_on_wood.mp3"
     $ ds_pen = "mods/disco_sovenok/sound/pismo-ruchkoj.mp3"
+    $ ds_fall = "mods/disco_sovenok/sound/bodyfall_7dl.ogg"
 
     $ ds_btn_click = "mods/disco_sovenok/sound/click.mp3"
     $ ds_selection = "mods/disco_sovenok/sound/selection.mp3"
+
+    $ ds_ambience_train = "mods/disco_sovenok/ambience/train_depart_7dl.ogg"
 
 # Спрайты
 
@@ -1986,7 +2011,7 @@ init:
     image ya laugh naked close = ds_define_sprite('ya', 'laugh', body_num=2, dist='close')
     image ya normal naked close = ds_define_sprite('ya', 'normal', body_num=1, dist='close')
     image ya sad naked close = ds_define_sprite('ya', 'sad', body_num=1, dist='close')
-    image ya sad2 naked close = ds_define_sprite('ya', 'verysad', body_num=1), dist='close'
+    image ya sad2 naked close = ds_define_sprite('ya', 'verysad', body_num=1, dist='close')
     image ya shy naked close = ds_define_sprite('ya', 'shy', body_num=1, dist='close')
     image ya shy2 naked close = ds_define_sprite('ya', 'veryshy', body_num=1, dist='close')
     image ya smile naked close = ds_define_sprite('ya', 'smile', body_num=2, dist='close')
@@ -2020,7 +2045,7 @@ init:
     image ya laugh naked far = ds_define_sprite('ya', 'laugh', body_num=2, dist='far')
     image ya normal naked far = ds_define_sprite('ya', 'normal', body_num=1, dist='far')
     image ya sad naked far = ds_define_sprite('ya', 'sad', body_num=1, dist='far')
-    image ya sad2 naked far = ds_define_sprite('ya', 'verysad', body_num=1), dist='far'
+    image ya sad2 naked far = ds_define_sprite('ya', 'verysad', body_num=1, dist='far')
     image ya shy naked far = ds_define_sprite('ya', 'shy', body_num=1, dist='far')
     image ya shy2 naked far = ds_define_sprite('ya', 'veryshy', body_num=1, dist='far')
     image ya smile naked far = ds_define_sprite('ya', 'smile', body_num=2, dist='far')

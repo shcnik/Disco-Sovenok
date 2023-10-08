@@ -39,6 +39,7 @@ init:
     $ ds_dv_rescued = False
     $ ds_dv_steal_got = False
     $ ds_know_mz_el = False
+    $ ds_us_betray = False
  
 label ds_day2_morning:
     $ ds_health = 0
@@ -6050,67 +6051,112 @@ label ds_day2_after_pass:
             me "Да так..."
             show us calml pioneer at center with dspr
             us "А впрочем понимаю... мне тоже скучно тут!"
-            show us grin pioneer at center with dspr
-            us "Cлушай, а может сбежим отсюда?"
-            play sound ds_sfx_mot
-            res "В каком смысле сбежим? Из лагеря? Так ведь и наказать могут!"
-            me "Сбежим?"
-            show us laugh pioneer at center with dspr
-            us "Ну да! Запрыгнем на поезд завтра и убежим!"
-            vol "Это как бы небезопасно... во всех смыслах небезопасно."
-            play sound ds_sfx_psy
-            aut "Но с другой стороны разве ты трус? Соглашайся!"
-            vol "Это благоразумие, а не трусость."
-            play sound ds_sfx_psy
-            esp "Ульяна скорее всего убежит - с тобой или без. А бросать её одну вряд ли будет хорошо."
-            play sound ds_sfx_int
-            rhe "Поэтому нужно {i}убедить{/i} её не сбегать!"
-            window hide
-            menu:
-                "Принять":
-                    window show
-                    me "А давай!"
-                    show us smile pioneer at center with dspr
-                    us "Отлично! Завтра после завтрака встречаемся! У задних ворот!"
-                    me "Хорошо..."
-                    show us laugh pioneer at center with dspr
-                    us "И без опозданий!"
-                    $ ds_lp['us'] += 1
-                    $ ds_us_escape = True
-                    vol "В опасную авантюру ты ввязался..."
-                "Отказаться":
-                    window show
-                    me "Нет, нет и ещё раз нет! Это опасно!"
-                    show us dontlike pioneer at center with dspr
-                    us "Значит, сбегу одна! А ты тухни тут! Трусишка!"
-                    $ ds_lp['us'] -= 1
-                    $ ds_damage_morale()
-                "Убедить не сбегать":
-                    if skillcheck('rhetoric', lvl_formidable):
+            if ds_lp['us'] >= 10:
+                show us grin pioneer at center with dspr
+                us "Cлушай, а может сбежим отсюда?"
+                play sound ds_sfx_mot
+                res "В каком смысле сбежим? Из лагеря? Так ведь и наказать могут!"
+                me "Сбежим?"
+                show us laugh pioneer at center with dspr
+                us "Ну да! Запрыгнем на поезд завтра и убежим!"
+                vol "Это как бы небезопасно... во всех смыслах небезопасно."
+                play sound ds_sfx_psy
+                aut "Но с другой стороны разве ты трус? Соглашайся!"
+                vol "Это благоразумие, а не трусость."
+                play sound ds_sfx_psy
+                esp "Ульяна скорее всего убежит - с тобой или без. А бросать её одну вряд ли будет хорошо."
+                play sound ds_sfx_int
+                rhe "Поэтому нужно {i}убедить{/i} её не сбегать!"
+                window hide
+                menu:
+                    "Принять":
                         window show
-                        rhe "Собственно, то, что найдут и накажут - это правда. А найдут обязательно."
-                        rhe "В конце концов, она ребёнок! Лагерь несёт за неё ответственность."
-                        me "Cлушай... я понимаю, конечно, что тебе скучно, но сбегать не следует."
-                        me "Дело не в трусости. Ты правда думаешь, что у нас получится скрываться вечно?"
-                        me "Я уже не говорю о том, что выбраться из лагеря - задача не из простых."
-                        show us dontlike pioneer at center with dspr
-                        us "Ну вот... как скучно."
-                        me "И вообще, подумай о вожатой. Её из-за тебя накажут! Она отвечает за тебя! Ты хочешь этого?"
-                        show us surp1 pioneer at center with dspr
-                        play sound ds_sfx_psy
-                        emp "Она не осознавала этого. А теперь поняла."
-                        show us grin pioneer at center with dspr
-                        us "Ну ладно... Но тогда ты должен будешь меня развлечь!"
-                        me "Ладно..."
-                        $ ds_karma += 10
-                    else:
+                        me "А давай!"
+                        show us smile pioneer at center with dspr
+                        us "Отлично! Завтра после завтрака встречаемся! У задних ворот!"
+                        me "Хорошо..."
+                        show us laugh pioneer at center with dspr
+                        us "И без опозданий!"
+                        $ ds_lp['us'] += 1
+                        $ ds_us_escape = True
+                        vol "В опасную авантюру ты ввязался..."
+                    "Отказаться":
                         window show
-                        rhe "Ну, это опасно..."
-                        me "Я бы не сбегал, это опасно!"
+                        me "Нет, нет и ещё раз нет! Это опасно!"
                         show us dontlike pioneer at center with dspr
                         us "Значит, сбегу одна! А ты тухни тут! Трусишка!"
                         $ ds_lp['us'] -= 1
                         $ ds_damage_morale()
+                    "Убедить не сбегать":
+                        if skillcheck('rhetoric', lvl_formidable):
+                            window show
+                            rhe "Собственно, то, что найдут и накажут - это правда. А найдут обязательно."
+                            rhe "В конце концов, она ребёнок! Лагерь несёт за неё ответственность."
+                            me "Cлушай... я понимаю, конечно, что тебе скучно, но сбегать не следует."
+                            me "Дело не в трусости. Ты правда думаешь, что у нас получится скрываться вечно?"
+                            me "Я уже не говорю о том, что выбраться из лагеря - задача не из простых."
+                            show us dontlike pioneer at center with dspr
+                            us "Ну вот... как скучно."
+                            me "И вообще, подумай о вожатой. Её из-за тебя накажут! Она отвечает за тебя! Ты хочешь этого?"
+                            show us surp1 pioneer at center with dspr
+                            play sound ds_sfx_psy
+                            emp "Она не осознавала этого. А теперь поняла."
+                            show us grin pioneer at center with dspr
+                            us "Ну ладно... Но тогда ты должен будешь меня развлечь!"
+                            me "Ладно..."
+                            $ ds_karma += 10
+                        else:
+                            window show
+                            rhe "Ну, это опасно..."
+                            me "Я бы не сбегал, это опасно!"
+                            show us dontlike pioneer at center with dspr
+                            us "Значит, сбегу одна! А ты тухни тут! Трусишка!"
+                            $ ds_lp['us'] -= 1
+                            $ ds_damage_morale()
+            else:
+                show us smile pioneer at center with dspr
+                us "Ну ничего, завтра вроде как танцы!"
+                if ds_lp['dv'] >= 15:
+                    show us calml pioneer at center with dspr
+                    us "Там, кстати, Алиса..."
+                    play sound ds_sfx_mot
+                    res "Что Алиса?"
+                    show us surp1 pioneer at center with dspr
+                    us "Я ничего не говорила!"
+                    window hide
+                    menu:
+                        "Надавить":
+                            if skillcheck('authority', lvl_easy):
+                                play sound ds_sfx_psy
+                                aut "Заставь её сказать! Выбей из неё... эм, фигурально. Она же ребёнок!"
+                                "Ты показываешь грозное выражение лица."
+                                me "Говори!"
+                                show us upset pioneer at center with dspr
+                                $ ds_lp['us'] -= 1
+                                us "Ладно, Алиса собирается вместо танцев на гитаре играть."
+                                us "И что-то там говорила про тебя. Я честно-честно не разобрала!"
+                                play sound ds_sfx_int
+                                lgc "Кажется, кое-кто имеет виды на тебя."
+                                play sound ds_sfx_fys
+                                hfl "Ага, самая опасная девушка лагеря..."
+                            else:
+                                play sound ds_sfx_psy
+                                aut "Ты пытаешься пригрозить ей, но в твоём исполнении слишком уж потешно это выгялдит."
+                                me "Скажи."
+                                show us laugh pioneer at center with dspr
+                                us "Ты бы видел себя! Такой смешной!"
+                                $ ds_damage_morale()
+                                us "Не скажу! Это военная тайна!"
+                            $ ds_skill_points['authority'] += 1
+                        "Оставить в покое":
+                            window show
+                            "Ты никак не реагируешь на это."
+                else:
+                    show us grin pioneer at center with dspr
+                    us "Возможно, даже приду на танцы и чего-нибудь устрою!"
+                    us "Возможно, даже с Алисой!"
+                    play sound ds_sfx_fys
+                    hfl "Возможно, следует предупредить вожатую..."
             "Тут оказывается, что вы доели ужин."
             us "Пока!"
             hide us with dissolve
@@ -7672,145 +7718,15 @@ label ds_day2_game:
     show el normal pioneer at center   with dspr
     "Пионеры наконец угомонились."
     hide el  with dissolve
-    # TODO: написать турнир
-    window hide
-    menu:
-        "Желаемый результат турнира (ОТЛАДКА!)"
-        "Проиграл в первой игре":
-            $ ds_tour_result = 0
-        "Проиграл в полуфинале":
-            $ ds_tour_result = 1
-        "Проиграл в финале":
-            $ ds_tour_result = 2
-        "Выиграл турнир":
-            $ ds_tour_result = 3
-            if ds_bet_dv:
-                $ ds_lp['dv'] += 1
-        "Дисквалифицировали" if ds_cards_labeled:
-            $ ds_karma -= 20
-            jump ds_day2_disqual
-    menu:
-        "C кем играл четвертьфинал?"
-        "С Алисой":
-            if ds_tour_result > 0:
-                $ ds_lp['dv'] += 1
-        "C Леной":
-            if ds_tour_result == 0:
-                $ ds_lp['un'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "Cо Славей":
-            if ds_tour_result == 0:
-                $ ds_lp['sl'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "С Ульяной":
-            if ds_tour_result == 0:
-                $ ds_lp['us'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "C Мику":
-            if ds_tour_result == 0:
-                $ ds_lp['mi'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "C Женей" if not ds_bring_mz_fail:
-            if ds_tour_result == 0:
-                $ ds_lp['mz'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "С Яной" if ds_bring_mz_fail:
-            if ds_tour_result == 0:
-                $ ds_lp['ya'] += 1
-            if not ds_bet_dv:
-                $ ds_lp['sl'] += 1
-        "С Шуриком":
-            pass
-    if ds_tour_result > 0:
-        menu:
-            "C кем играл полуфинал?"
-            "С Алисой":
-                if ds_tour_result > 1:
-                    $ ds_lp['dv'] += 1
-            "C Леной":
-                if ds_tour_result == 1:
-                    $ ds_lp['un'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "Cо Славей":
-                if ds_tour_result == 1:
-                    $ ds_lp['sl'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Ульяной":
-                if ds_tour_result == 1:
-                    $ ds_lp['us'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "C Мику":
-                if ds_tour_result == 1:
-                    $ ds_lp['mi'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "C Женей" if not ds_bring_mz_fail:
-                if ds_tour_result == 1:
-                    $ ds_lp['mz'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Яной" if ds_bring_mz_fail:
-                if ds_tour_result == 1:
-                    $ ds_lp['ya'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Шуриком":
-                pass
-    if ds_tour_result > 1:
-        menu:
-            "C кем играл финал?"
-            "С Алисой":
-                if ds_tour_result > 2:
-                    $ ds_lp['dv'] += 1
-            "C Леной":
-                if ds_tour_result == 2:
-                    $ ds_lp['un'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "Cо Славей":
-                if ds_tour_result == 2:
-                    $ ds_lp['sl'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Ульяной":
-                if ds_tour_result == 2:
-                    $ ds_lp['us'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "C Мику":
-                if ds_tour_result == 2:
-                    $ ds_lp['mi'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "C Женей" if not ds_bring_mz_fail:
-                if ds_tour_result == 2:
-                    $ ds_lp['mz'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Яной" if ds_bring_mz_fail:
-                if ds_tour_result == 2:
-                    $ ds_lp['ya'] += 1
-                if not ds_bet_dv:
-                    $ ds_lp['sl'] += 1
-            "С Шуриком":
-                pass
+    jump ds_cards_tournament
+
+label ds_day2_after_tour:
     window show
     "Ты выходишь из столовой."
     play sound ds_sfx_fys
     edr "Спать ложиться ещё рано, так что небольшая прогулка кажется отличным вариантом."
     th "Куда же направиться?"
     th "А может, всё-таки просто спать пойти?"
-    jump ds_day2_after_tour
-
-label ds_day2_after_tour:
     window hide
 
     stop ambience fadeout 3
@@ -10873,19 +10789,7 @@ label ds_day2_home:
     play sound ds_sfx_mot
     per_eye "Ольга Дмитриевна переоделась в довольно симпатичную ночнушку."  
     "Ты садишься на кровать."
-    if ds_tour_result < 2:
-        me "А кто в итоге то победил в турнире?"
-        mt "Алиса смогла обыграть всех."
-        th "Неудивительно..."
-        me "И что за приз вы ей выдали?"
-    if ds_tour_result == 2:
-        me "А что за приз вы вручили Алисе, за победу в турнире?"
-    if day2_card_result == 3:
-        me "А что я получу в качестве приза за победу в турнире?"
     "Ольга Дмитриевна тем временем готовит себе место ночлега."
-    mt "Завтра придумаю."
-    play sound ds_sfx_int
-    lgc "Завтра все уже забудут про приз."
     hide mt with dissolve
     window hide
     scene bg int_house_of_mt_night
@@ -10899,7 +10803,7 @@ label ds_day2_home:
             "Предложить":
                 window show
                 $ ds_skill_points['conceptualization'] += 1
-                show mt normal nightdress at center with dissolve
+                show mt normal night at center with dissolve
                 me "Ольга Дмитриевна, а карты остались у вас?"
                 mt "Да, а почему ты спрашиваешь?"
                 me "Давайте сыграем одну партию, ведь вы не участвовали в турнире."
@@ -10909,13 +10813,13 @@ label ds_day2_home:
                 me "Ну, пожалуйста, хотя бы один разок."
                 "Ольга Дмитриевна задумалась на секунду и всё-таки в итоге соглашается на твоё предложение." 
                 $ ds_lp['mt'] += 1
-                show mt smile nightdress at center with dspr
+                show mt smile night at center with dspr
                 mt "Ладно картёжник, но только одну игру."
                 me "Договорились."
                 hide mt with dissolve
                 play sound sfx_open_table 
                 "Вожатая достаёт из тумбочки колоду карт и вручает её тебе."
-                show mt normal nightdress at center with dissolve
+                show mt normal night at center with dissolve
                 "Ты аккуратно перетасовываешь карты и раздаёшь каждому по шесть штук."  
                 me "Правила помните?"
                 mt "Да."
@@ -10925,6 +10829,23 @@ label ds_day2_home:
             "Отбросить мысль":
                 window show
                 th "Да ну, не хочу я с ней играть..."
+    if ds_us_escape:
+        th "Кстати, может, сказать вожатой о планах Ульяны?"
+        window hide
+        menu:
+            "Предупредить о побеге Ульяны":
+                window show
+                me "Ольга Дмитриевна, мне, кстати, Ульяна тут сказала, что собирается сбежать из лагеря..."
+                show mt scared night at center with dspr
+                mt "Чего?!"
+                mt "Она совсем сошла с ума?!"
+                mt "Спасибо, что предупредил, завтра её поймаю и накажу!"
+                $ ds_us_betray = True
+                $ ds_lp['mt'] += 1
+                $ ds_karma += 20
+            "Не предупреждать":
+                window show
+                th "Да ну, не буду..."
     jump ds_day2_sleep
 
 label ds_day2_mt_play:
@@ -10937,7 +10858,45 @@ label ds_day2_mt_play:
         ds_generate_cards('bg int_house_of_mt_night', dialogs)
         rival = DSCardGameRivalWiseUsual(ds_mt_avatar, u"Ольга", 'defense', 3)
     $ ds_hint_poker = True
-    jump ds_card_gameloop
+    me "Cейчас я подброшу монетку, чтобы решить, кто ходит первый."
+    $ ds_whose_first_move = renpy.random.choice(['rival', 'player'])
+    jump ds_cards_gameloop
+
+label ds_day2_mt_play_won:
+    $ persistent.sprite_time = 'night'
+    scene bg int_house_of_mt_night
+    show mt normal night at center
+    with dissolve
+    me "Я выиграл..."
+    show mt smile night at center with dissolve
+    mt "Молодец! Поздравляю с победой!"
+    mt "А теперь спать!"
+    "С этими словами она выключает свет и ложится спать."
+    jump ds_day2_sleep
+
+label ds_day2_mt_play_lose:
+    $ persistent.sprite_time = 'night'
+    scene bg int_house_of_mt_night
+    show mt normal night at center
+    with dissolve
+    me "Вы выиграли... поздравляю!"
+    show mt smile night at center with dissolve
+    mt "Спасибо."
+    mt "А теперь спать!"
+    "С этими словами она выключает свет и ложится спать."
+    jump ds_day2_sleep
+
+label ds_day2_mt_play_draw:
+    $ persistent.sprite_time = 'night'
+    scene bg int_house_of_mt_night
+    show mt normal night at center
+    with dissolve
+    me "Ничья! Играем ещё раз."
+    mt "Нет уж, мы договаривались на одну игру."
+    mt "А у нас победила дружба!"
+    mt "А теперь спать!"
+    "С этими словами она выключает свет и ложится спать."
+    jump ds_day2_sleep
 
 label ds_day2_clubs:
     pass

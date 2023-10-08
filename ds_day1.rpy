@@ -162,7 +162,6 @@ label ds_day1:
             "..."
             "Физические упражнения освежают мозг, мысли проясняются, становится легче оценивать окружающую действительность."
             $ ds_skill_points['endurance'] += 1
-            $ ds_health += 1
             play sound ds_sfx_fys
             edr "Впрочем, это все совершенно не про тебя – ты сидишь на обочине дороги, хрипя и пытаясь жадными глотками раскаленного воздуха хоть немного успокоить обожженные легкие."
             play sound ds_sfx_psy
@@ -525,7 +524,6 @@ label ds_day1_sl_dialogue:
                 vol "Тебе тяжело говорить от страха. Запинаясь, ты произносишь..."
                 me "Ну… да…"
             $ ds_skill_points['volition'] += 1
-            $ ds_morale += 1
             $ ds_lp['sl'] += 1
             show sl smile2 pioneer at center   with dspr
             slp "Что же, добро пожаловать!"
@@ -3036,7 +3034,7 @@ label ds_day1_dining_dv:
     play sound ds_sfx_fys
     edr "Впрочем, и это куда лучше, чем большая часть твоего обычного рациона."
 
-    $ ds_health += 1
+    $ ds_up_health()
 
     $ renpy.pause(2)
 
@@ -3145,7 +3143,7 @@ label ds_day1_dining_dv:
                         scene bg ext_dining_hall_away_night with dissolve
                         show dv smile pioneer at center with dissolve
                         dv "А ты всё-таки не совсем бестолковый. Сообразил, молодец!"
-                        $ ds_morale += 1
+                        $ ds_up_morale()
                     else:
                         svf "Но ты замешкиваешься, и Славя тебя замечает."
                         jump ds_day1_caught_alone
