@@ -80,6 +80,7 @@ init python:
             ui.jumps(go_if_zero)
     
     def ds_up_health():
+        global ds_health
         if ds_health < 0:
             ds_health += 1
         renpy.show('health up')
@@ -89,6 +90,7 @@ init python:
         renpy.with_statement(wiperight)
     
     def ds_up_morale():
+        global ds_morale
         if ds_morale < 0:
             ds_morale += 1
         renpy.show('morale up')
@@ -98,6 +100,7 @@ init python:
         renpy.with_statement(wiperight)
     
     def ds_restore_health():
+        global ds_health
         ds_health = 0
         renpy.show('health restore')
         renpy.with_statement(wiperight)
@@ -106,6 +109,7 @@ init python:
         renpy.with_statement(wiperight)
     
     def ds_restore_morale():
+        global ds_morale
         ds_morale = 0
         renpy.show('morale restore')
         renpy.with_statement(wiperight)
@@ -163,7 +167,7 @@ init python:
             result -= 2
         return result
 
-    def ds_define_sprite(char, emo, dist='normal', body_num=1, cloth=None, acc=None, body_name='body'):
+    def ds_define_sprite(char, emo, dist='normal', body_num=1, cloth=None, acc=None, acc2=None, body_name='body'):
         if cloth and acc:
             return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png") )
         if cloth:
@@ -237,98 +241,95 @@ init:
 # Переменные
 
 ## Значения атрибутов
-    $ ds_skill_points = {}
-    # ИНТ
-    $ ds_skill_points['logic'] = 0 # Логика - способность делать умозаключения
-    $ ds_skill_points['encyclopedia'] = 0 # Энциклопедия - знания об окружающем мире
-    $ ds_skill_points['rhetoric'] = 0 # Риторика - способность внятно озвучивать свои мысли
-    $ ds_skill_points['drama'] = 0 # Драма - способность лгать и распознавать ложь
-    $ ds_skill_points['conceptualization'] = 0 # Концептуализация - способность к творчеству
-    $ ds_skill_points['visual_calculus'] = 0 # Визуальный анализ - способность исследовать мир с помощью законов природы
-        # ПСИ
-    $ ds_skill_points['volition'] = 0 # Сила воли - способность мотивировать себя на активные действия
-    $ ds_skill_points['inland_empire'] = 0 # Внутренняя империя - способность воображать, интуиция
-    $ ds_skill_points['authority'] = 0 # Авторитет - способность доминировать над людьми
-    $ ds_skill_points['empathy'] = 0 # Эмпатия - способность понимать, что чувствуют другие люди
-    $ ds_skill_points['esprit'] = 0 # Командная волна - способность действовать в одной команде с другими людьми
-    $ ds_skill_points['suggestion'] = 0 # Внушение - способность продвигать свои мысли и чувства
-        # ФИЗ
-    $ ds_skill_points['endurance'] = 0 # Стойкость - способность противостоять внешним воздействиям
-    $ ds_skill_points['pain_threshold'] = 0 # Болевой порог - способность выдерживать боль
-    $ ds_skill_points['physical_instrument'] = 0 # Грубая сила - способность использовать свои мышцы
-    $ ds_skill_points['instinct'] = 0 # Инстинкт - способность физически хотеть кого-либо
-    $ ds_skill_points['shivers'] = 0 # Трепет - способность синхронизироваться с окружающей средой
-    $ ds_skill_points['half_light'] = 0 # Cумрак - способность осознавать надвигающуюся опасность и готовиться к ней
-        # МОТ
-    $ ds_skill_points['perception'] = 0 # Восприятие - способность подмечать мелкие детали
-    $ ds_skill_points['coordination'] = 0 # Координация - способность точно управлять своими движениями
-    $ ds_skill_points['reaction_speed'] = 0 # Скорость реакции - способность быстро отвечать на внешние воздействия
-    $ ds_skill_points['savoir_faire'] = 0 # Эквилибристика - способность действовать правильно сообразно ситуации
-    $ ds_skill_points['interfacing'] = 0 # Техника - способность манипулировать мелкими предметами
-    $ ds_skill_points['composure'] = 0 # Самообладание - способность сохранять внешнее спокойствие
+    default ds_skill_points = {
+        'logic': 0,
+        'encyclopedia': 0,
+        'rhetoric': 0,
+        'drama': 0,
+        'conceptualization': 0,
+        'visual_calculus': 0,
+        'volition': 0,
+        'inland_empire': 0,
+        'authority': 0,
+        'empathy': 0,
+        'esprit': 0,
+        'suggestion': 0,
+        'endurance': 0,
+        'pain_threshold': 0,
+        'physical_instrument': 0,
+        'instinct': 0,
+        'shivers': 0,
+        'half_light': 0,
+        'perception': 0,
+        'coordination': 0,
+        'reaction_speed': 0,
+        'savoir_faire': 0,
+        'interfacing': 0,
+        'composure': 0
+    }
 
 ## C кем знаком? (0 - не знает ничего, 1 - знает внешность, 2 - знает, как зовут)
 
-    $ ds_met = {}
-
-    $ ds_met['dv'] = 0 # Алиса
-    $ ds_met['un'] = 0 # Лена
-    $ ds_met['sl'] = 0 # Славя
-    $ ds_met['us'] = 0 # Ульяна
-    $ ds_met['mi'] = 0 # Мику
-    $ ds_met['el'] = 0 # Электроник
-    $ ds_met['mt'] = 0 # ОД
-    $ ds_met['mz'] = 0 # Женя
-    $ ds_met['cs'] = 0 # Виола
-    $ ds_met['ya'] = 0 # Яна
+    default ds_met = {
+        'dv': 0,
+        'un': 0,
+        'sl': 0,
+        'us': 0,
+        'mi': 0,
+        'el': 0,
+        'mt': 0,
+        'mz': 0,
+        'cs': 0,
+        'ya': 0
+    }
 
 ## Куда записан?
 
-    $ ds_member = {}
-
-    $ ds_member['music'] = False
-    $ ds_member['cyber'] = False
-    $ ds_member['sport'] = False
-    $ ds_member['library'] = False
+    default ds_member = {
+        'music': False,
+        'cyber': False,
+        'sport': False,
+        'library': False
+    }
  
 ## Уровни сложности проверок
-    $ lvl_trivial = 6
-    $ lvl_easy = 8
-    $ lvl_medium = 10
-    $ lvl_up_medium = 11
-    $ lvl_challenging = 12
-    $ lvl_formidable = 13
-    $ lvl_legendary = 14
-    $ lvl_heroic = 15
-    $ lvl_godly = 16
-    $ lvl_unimaginable = 18
-    $ lvl_impossible = 20
+    define lvl_trivial = 6
+    define lvl_easy = 8
+    define lvl_medium = 10
+    define lvl_up_medium = 11
+    define lvl_challenging = 12
+    define lvl_formidable = 13
+    define lvl_legendary = 14
+    define lvl_heroic = 15
+    define lvl_godly = 16
+    define lvl_unimaginable = 18
+    define lvl_impossible = 20
 
 ## Отношение персонажей
-    $ ds_lp = {}
-
-    $ ds_lp['dv'] = 0
-    $ ds_lp['sl'] = 0
-    $ ds_lp['un'] = 0
-    $ ds_lp['us'] = 0
-    $ ds_lp['mi'] = 0
-    $ ds_lp['el'] = 0
-    $ ds_lp['mt'] = 0
-    $ ds_lp['mz'] = 0
-    $ ds_lp['cs'] = 0
-    $ ds_lp['ya'] = 0
+    default ds_lp = {
+        'dv': 0,
+        'sl': 0,
+        'un': 0,
+        'us': 0,
+        'mi': 0,
+        'el': 0,
+        'mt': 0,
+        'mz': 0,
+        'cs': 0,
+        'ya': 0
+    }
 
 ## Общие параметры
-    $ ds_karma = 0 # Репутация - насколько хорошо себя ведёт ГГ
-    $ ds_health = 0 # Здоровье
-    $ ds_morale = 0 # Боевой дух
-    $ ds_archetype = 0 # Избранный персонаж
-    $ ds_knowing = 0 # Знание
-    $ ds_semtype = 0 # Тип Семёна
+    default ds_karma = 0 # Репутация - насколько хорошо себя ведёт ГГ
+    default ds_health = 0 # Здоровье
+    default ds_morale = 0 # Боевой дух
+    default ds_archetype = 0 # Избранный персонаж
+    default ds_knowing = 0 # Знание
+    default ds_semtype = 0 # Тип Семёна
 
     $ ds_game_started = False
 
-    $ ds_last_skillcheck = False # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
+    default ds_last_skillcheck = False # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
 
 # Эффекты
 
@@ -506,6 +507,36 @@ init:
     image bg ds_ext_train = "mods/disco_sovenok/bg/ext_train.jpg"
 
     image bg ds_ext_bus_town = "mods/disco_sovenok/bg/ext_bus_city.jpg"
+
+    image bg ds_ext_square2_day = "mods/disco_sovenok/bg/ext_square2_day_7dl.jpg"
+    image bg ds_ext_square2_night = "mods/disco_sovenok/bg/ext_square_alt_night.jpg"
+
+    image bg ds_ext_another_club_day = "mods/disco_sovenok/bg/ext_another_club_day.jpg"
+
+    image bg ds_ext_admin_day = "mods/disco_sovenok/bg/ext_admins_day_7dl.jpg"
+    image bg ds_ext_admin_night = "mods/disco_sovenok/bg/ext_admins_night_7dl.jpg"
+
+    image bg ds_int_admin_corridor = "mods/disco_sovenok/bg/int_admin_corridor.jpg"
+
+    image bg ds_int_admin_day = "mods/disco_sovenok/bg/int_admin_day.png"
+    image bg ds_int_admin_night = "mods/disco_sovenok/bg/int_admin_night.png"
+    image bg ds_int_admin_night_light = "mods/disco_sovenok/bg/int_admin_night_light.png"
+    image bg ds_int_admin_day_boxes1 = "mods/disco_sovenok/bg/int_admin_boxes_day.png"
+    image bg ds_int_admin_sunset_boxes1 = "mods/disco_sovenok/bg/int_admin_boxes_sunset.png"
+    image bg ds_int_admin_day_boxes2 = "mods/discos_sovenok/bg/int_admin_halfboxes_day.png"
+    image bg ds_int_admin_sunset_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_sunset.png"
+    image bg ds_int_admin_night_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_night.png"
+    image bg ds_int_admin_morning_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_morning.png"
+
+    image bg ds_int_kitchen_day = "mods/disco_sovenok/bg/int_kitchen_day.jpg"
+    image bg ds_int_kitchen_sunset = "mods/disco_sovenok/bg/int_kitchen_sunset.jpg"
+    image bg ds_int_kitchen_night = "mods/disco_sovenok/bg/int_kitchen_night.jpg"
+
+    image bg ds_int_wardrobe = "mods/disco_sovenok/bg/int_wardrobe.jpg"
+
+    image bg ds_int_clubs_pantry = "mods/disco_sovenok/bg/int_clubs_storage.jpg"
+
+    image bg ds_field_day = "mods/disco_sovenok/bg/ext_meadow_day.jpg"
 
 ## Новые CG
 
@@ -2072,6 +2103,19 @@ init:
     image ya shy2 dress far = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='dress', dist='far')
     image ya smile dress far = ds_define_sprite('ya', 'smile', body_num=2, cloth='dress', dist='far')
     image ya surprise dress far = ds_define_sprite('ya', 'surprise', body_num=1, cloth='dress', dist='far')
+
+    # Физрук
+    image fz angry uniform = ds_define_sprite('ba', 'evil', cloth='uniform')
+    image fz normal uniform = ds_define_sprite('ba', 'normal', cloth='uniform')
+    image fz rage uniform = ds_define_sprite('ba', 'rage', cloth='uniform')
+    image fz serious uniform = ds_define_sprite('ba', 'em1', cloth='uniform')
+    image fz smile uniform = ds_define_sprite('ba', 'smile', cloth='uniform')
+
+    image fz angry naked = ds_define_sprite('ba', 'evil')
+    image fz normal naked = ds_define_sprite('ba', 'normal')
+    image fz rage naked = ds_define_sprite('ba', 'rage')
+    image fz serious naked = ds_define_sprite('ba', 'em1')
+    image fz smile naked = ds_define_sprite('ba', 'smile')
 
 ## Сны Семёна
 

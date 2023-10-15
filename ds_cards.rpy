@@ -4767,10 +4767,10 @@ label ds_cards_tour_1:
         me "Привет."
         play sound ds_sfx_psy
         emp "Она не склонна к разговорам. И вообще играет только потому, что её попросили."
-    jump ds_cards_participate
+    jump ds_cards_1_tour
 # ------------------------------------------------- /ДИАЛОГИ
 
-label ds_cards_participate:
+label ds_cards_1_tour:
     $ ds_cards_gamblers_1_tour = ds_gamblers_arrange(ds_cards_gamblers_begin)      # получаем список игроков, рассаженных по столам попарно (1 тур)
     $ renpy.fix_rollback()                                                          # фиксируем выбор — "откатом" поменять будет нельзя
     $ places_my_table = ds_get_my_table(ds_cards_gamblers_1_tour)                  # Стол Семёна = [место Семёна, место соперника, № их стола]
@@ -4818,9 +4818,9 @@ label ds_cards_participate:
         "Ты киваешь, сигнализируя о готовности."
 
     if ds_cards_detour_1_tour and not ds_cards_detour_semifinal:                # если пропуск 1 тура и не пропуск полуфинала
-        jump ds_cards_participate_fail_end                                  # переход на  поражение в 1 туре
+        jump ds_cards_1_tour_fail_end                                  # переход на  поражение в 1 туре
     elif ds_cards_detour_semifinal:                                             # если пропуск полуфинала
-        jump ds_cards_participate_win_end                                  # переход на победу в 1 туре
+        jump ds_cards_1_tour_win_end                                  # переход на победу в 1 туре
     jump ds_cards_tournament_start
 
 label ds_cards_tournament_start:                                            # начало 1 тура — сюда переходим при реванше
@@ -8394,7 +8394,7 @@ label ds_cards_checking_scores:
             elif ds_tournament_state == "semifinal_start":                                     # если полуфинал
                 jump ds_cards_semifinal_win_end                                             # победа в полуфинале
             elif (ds_tournament_state == "1_round_start"):                                     # если первый тур
-                jump ds_cards_participate_win_end                                           # победа в 1 туре
+                jump ds_cards_1_tour_win_end                                           # победа в 1 туре
     else:                                                                                       # соперник выигрывает
         call ds_cards_current_game_end_compare_hands                                            # сравнение комбинаций по итогам игры
         if ds_cards_game_played_out == 1:                                                       # по итогам первой игры
@@ -8416,7 +8416,7 @@ label ds_cards_checking_scores:
             elif ds_tournament_state == "semifinal_start":                                     # если полуфинал
                 jump ds_cards_semifinal_fail_end                                            # поражение в полуфинале
             elif (ds_tournament_state == "1_round_start"):                                     # если первый тур
-                jump ds_cards_participate_fail_end                                          # поражение в 1 туре
+                jump ds_cards_1_tour_fail_end                                          # поражение в 1 туре
 
 
 #-----------------------------------------------------------------------------------

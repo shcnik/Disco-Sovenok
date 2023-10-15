@@ -26,6 +26,7 @@ init:
     $ ds_cards_sl = False
     $ ds_cards_labeled = False
     $ ds_cards_damaged = False
+    $ ds_know_parents = False
     $ ds_bet_dv = False
     $ ds_mz_brought_el = False
     $ ds_bring_mz_fail = False
@@ -40,10 +41,11 @@ init:
     $ ds_dv_steal_got = False
     $ ds_know_mz_el = False
     $ ds_us_betray = False
+    $ ds_support_dv = 0
  
 label ds_day2_morning:
-    $ ds_health = 0
-    $ ds_morale = 0
+    $ ds_restore_health()
+    $ ds_restore_morale()
 
     $ backdrop = "days"
 
@@ -385,19 +387,39 @@ label ds_day2_morning:
                     window show
                     play sound ds_sfx_mot
                     com "Ты застываешь как вкопанный, стараясь даже не дышать."
+
+                    scene cg ds_day2_mt_undress2
+                    "Наконец вожатая замечает твоё присутствие..."
                 "Приставать к ней":
                     if skillcheck('instinct', lvl_easy):
                         window show
                         play sound ds_sfx_fys
                         ins "У тебя в штанах от наблюдаемой сцены настоящий праздник."
                         ins "Ты подходишь к ней и хватаешь её за спину."
+                        scene cg ds_day2_mt_undress2
                     else:
                         window show
                         play sound ds_sfx_fys
                         ins "Ты настолько перенервничал от неудобства ситуации, что ничего сделать не можешь."
+                        scene cg ds_day2_mt_undress2
+                        "Наконец вожатая замечает твоё присутствие..."
                     $ ds_skill_points['instinct'] += 1
-            scene cg ds_day2_mt_undress2
-            "Наконец вожатая замечает твоё присутсвие..."
+                "Тихо выйти из домика":
+                    if skillcheck('savoir_faire', lvl_medium):
+                        window show
+                        play sound ds_sfx_mot
+                        svf "Ты тихонько вылезаешь из домика и прикрываешь дверь."
+                        scene bg ext_house_of_mt_day
+                        with dissolve
+                        svf "Кажется, вожатая ничего не заметила."
+                        $ ds_skill_points['savoir_faire'] += 1
+                        jump ds_day2_mt_out
+                    else:
+                        window show
+                        play sound ds_sfx_mot
+                        svf "Под тобой предательски скрипит ступенька, и Ольга Дмитриевна замечает тебя!"
+                        scene cg ds_day2_mt_undress2
+                        $ ds_skill_points['savoir_faire'] += 1
             mt "Семен!"
             $ ds_lp['mt'] -= 1
             "Ты тут же отворачиваешься."
@@ -438,6 +460,9 @@ label ds_day2_morning:
             $ renpy.pause(1)
             "Ты стоишь и ждёшь."
             $ ds_karma += 5
+    jump ds_day2_mt_out
+
+label ds_day2_mt_out:
     "Через минуту показывается Ольга Дмитриевна."
     show mt normal panama pioneer at center   with dissolve
     mt "Вот, держи.{w} Теперь это и твой дом тоже."
@@ -2433,6 +2458,7 @@ label ds_day2_pass_dv_clubs:
                         me "Если что, засвидетельствую."
                         show dv smile pioneer2 at center with dspr
                         $ ds_lp['dv'] += 1
+                        $ ds_support_dv += 1
                     "Осудить Алису":
                         me "Я всё понимаю, конечно, но бить не стоило всё же..."
                         show dv angry pioneer2 at center with dspr
@@ -5970,7 +5996,7 @@ label ds_day2_after_pass:
             window hide
             menu:
                 "Попытаться выяснить":
-                    if skillcheck('empathy', lvl_legendary):
+                    if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', 2 * ds_support_dv), ('ds_eldv_side_taken == 1', 2)]):
                         play sound ds_sfx_psy
                         emp "Алису по какой-то причине сильно задевает прозвище «ДваЧе». Попробуй выяснить, с чем это связано."
                         $ ds_skill_points['empathy'] += 1
@@ -6014,6 +6040,7 @@ label ds_day2_after_pass:
                                 emp "Кажется, она оценила. Но снова не подала виду."
                                 emp "Если ты решишь разбираться в Алисе дальше - путь определённо будет тернистым. Но, вероятно, оно того стоит."
                                 $ ds_lp['dv'] += 1
+                                $ ds_support_dv += 1
                             "Осудить Алису":
                                 me "И всё-таки это ты побила Электроника."
                                 me "И обзывать тебя стали явно не просто так!"
@@ -6702,22 +6729,22 @@ label ds_day2_cards_alone:
                                 com "Ты продолжаешь читать, будто Слави тут нет вовсе."
                                 $ ds_karma -= 10
                                 $ ds_semtype += 1
-                                per_eye "2. Мицгол Евгения Исааковна{n}Дата рождения - ... ... 1970 года{n}Место рождения - город Одесса, УССР"
+                                per_eye "2. Мицгол Евгения Исааковна{n}Дата рождения - ... ... 1972 года{n}Место рождения - город Одесса, УССР"
                                 play sound ds_sfx_int
                                 enc "Таки она еврейской национальности..."
                                 show sl surprise pioneer far at right with dspr
                                 com "Тем временем Славя потеряла дар речи от такой хуцпы."
-                                per_eye "3. Cоветова Ульяна Ильична{n}Дата рождения - ... ... 1973 года{n}Место рождения - город Ленинград, РСФСР"
+                                per_eye "3. Cоветова Ульяна Ильична{n}Дата рождения - 8 декабря 1975 года{n}Место рождения - город Ленинград, РСФСР"
                                 per_eye "ПРИМЕЧАНИЕ: включена в первый отряд по ошибке. Исправлять не следует."
                                 play sound ds_sfx_int
                                 lgc "Так вот почему она в первом отряде рядом с 16-17-летними девушками!"
-                                per_eye "4. Cыроежкин Сергей ...{n}Дата рождения - 23 марта 1970 года, место рождения - город Москва, РСФСР"
-                                per_eye "5. Унылова Елена ...{n}Дата рождения - 25 сентября 1970 года{n}Место рождения - город ..., РСФСР"
-                                per_eye "6. Феоктистова Славяна ...{n}Дата рождения - 12 мая 1970 года{n}Место рождения - деревня Мятусово, Ленинградская область, РСФСР"
-                                per_eye "7. Хацуне Мику (отчество отсутствует){n}Дата рождения - 31 августа 1970 года{n}Место рождения - город Токио, Япония"
+                                per_eye "4. Cыроежкин Сергей ...{n}Дата рождения - 23 марта 1972 года, место рождения - город Москва, РСФСР"
+                                per_eye "5. Унылова Елена ...{n}Дата рождения - 25 сентября 1972 года{n}Место рождения - город ..., РСФСР"
+                                per_eye "6. Феоктистова Славяна ...{n}Дата рождения - 12 мая 1972 года{n}Место рождения - деревня Мятусово, Ленинградская область, РСФСР"
+                                per_eye "7. Хацуне Мику (отчество отсутствует){n}Дата рождения - 31 августа 1972 года{n}Место рождения - город Токио, Япония"
                                 per_eye "ВНИМАНИЕ! На родине является известной певицей, поэтому во избежание дипломатических инцидентов следите за ней особенно пристально."
                                 per_eye "Тут же есть и сведения о тебе."
-                                per_eye "8. Пёрсунов Семён ...{n}Дата рождения - ... ... 1970 года{n}Место рождения - город Ленинград, РСФСР"
+                                per_eye "8. Пёрсунов Семён ...{n}Дата рождения - ... ... 1972 года{n}Место рождения - город Ленинград, РСФСР"
                                 per_eye "ПРИМЕЧАНИЕ: прибывает 9 августа в связи с работой родителей. Родители - послы, поэтому будьте аккуратнее с ним."
                                 per_eye "ВНИМАНИЕ! Отличается крайней рассеянностью, поэтому возможно, что приедет в неподходящей одежде без вещей."
                                 lgc "Так вот почему никто не задался вопросом, почему ты в зимней одежде..."
@@ -6833,6 +6860,7 @@ label ds_day2_cards_alone:
                             lgc "Так вот почему никто не задался вопросом, почему ты в зимней одежде..."
                             play sound ds_sfx_int
                             dra "Да вы, оказывается, мажор, мессир."
+                            $ ds_know_parents = True
                             dra "Теперь мы наконец-то знаем, кого отыгрывать!"
                             "Ты закрываешь ящик и собирался было окликнуть Славю..."
                             play sound ds_sfx_mot
@@ -7745,7 +7773,6 @@ label ds_day2_after_tour:
     $ set_zone_ds_small("library", "ds_day2_library") # MZ*
     $ set_zone_ds_small("house_me_mt", "ds_day2_home") # MT*
     $ set_zone_ds_small("forest", "ds_day2_forest") # YA
-    $ set_zone_ds_small("clubs", "ds_day2_clubs") # EL*
     $ show_small_map_ds()
 
 label ds_day2_medic:
@@ -9495,7 +9522,7 @@ label ds_day2_beach:
             th "Возможно, у нее проснулась совесть…"
             th "Хотя какое там…"
             window hide
-            if skillcheck('empathy', lvl_challenging):
+            if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', ds_support_dv)]):
                 window show
                 emp "Ты так и не понял? Она таким образом привлекает твоё внимание."
                 emp "Она изначально и понимала, что поступает не совсем правильно."

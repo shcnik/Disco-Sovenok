@@ -443,6 +443,7 @@ label ds_day1_approach:
                         play music ds_sl_theme
                         "Ты вылезаешь и здороваешься с ней."
                         me "Привет..."
+                        $ ds_met['sl'] = 1
                         jump ds_day1_sl_dialogue
                     "Ждать дальше":
                         $ renpy.pause(1.0)
