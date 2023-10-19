@@ -6042,13 +6042,11 @@ label ds_day3_punishment2:
             "Вы совершенно не замечаете результатов вашего боя. Пока..."
             play sound sfx_brass_drop
             "Таз переворачивается, а вода из него разливается по полу."
-            scene bg ds_int_kitchen_day
-            show us surp1 sport at center
+            scene cg ds_day3_us_potato_2
             with dissolve
             us "Ой..."
-            show us angry sport at center
-            with dspr
             us "Это всё ты!"
+            scene bg ds_int_kitchen_day
             show ck serious at center
             show us angry sport at right
             with dissolve
