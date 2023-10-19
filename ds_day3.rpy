@@ -8,12 +8,16 @@ init:
     $ ds_understood_mz_reason = False
     $ ds_promise_un = False
     $ ds_dance_dv = False
+    $ ds_dv_invite = False
     $ ds_el_mz_relation = False
     $ ds_seen_catgirl_photo = False
     $ ds_un_club = False
     $ ds_sugar = 0
     $ ds_morning_exercise = False
     $ ds_mi_costume = False
+    $ ds_promise_sl = False
+    $ ds_framed_dv = False
+    $ ds_punished = False
 
 label ds_day3_morning:
     $ ds_restore_health()
@@ -676,6 +680,7 @@ label ds_day3_sl_workout:
     "Ты заходишь в кабинку и снимаешь с себя всю одежду."
     window hide
     play sound sfx_open_water_sink
+    play ambience ds_ambience_shower
     $ renpy.pause(1.0)
     window show
     play sound ds_sfx_fys
@@ -683,6 +688,7 @@ label ds_day3_sl_workout:
     window hide
     $ renpy.pause(1.0)
     play sound sfx_close_water_sink
+    stop ambience
     "Ты надеваешь на себя пионерскую форму и выходишь из кабинки."
     show sl normal sport far at right with dissolve
     "В этот момент тебе навстречу идёт Славя."
@@ -693,6 +699,7 @@ label ds_day3_sl_workout:
     sl "Ну и хорошо. До встречи!"
     hide sl with dissolve
     "Она заходит в душ, также скидывает с себя всё и включает воду."
+    play ambience ds_ambience_shower
     if skillcheck('instinct', lvl_trivial, passive=True):
         play sound ds_sfx_fys
         ins "Тебе очень хочется посмотреть на её девичью красу..."
@@ -741,6 +748,7 @@ label ds_day3_sl_workout:
                 window show
                 th "И правда, не стоит..."
                 "И ты уходишь."
+    stop ambience fadeout 3
     jump ds_day3_meet_mt
 
 label ds_day3_dressing:
@@ -2289,7 +2297,7 @@ label ds_day3_escape:
 
                 mt "Так, Советова и Пёрсунов, марш в столовую!"
                 mt "Как раз обед уже закончился, вам надо будет убрать!"
-                jump ds_day3_punishment
+                jump ds_day3_punishment2
             else:
                 window show
                 play sound ds_sfx_mot
@@ -2693,6 +2701,7 @@ label ds_day3_stage_dv:
                 show dv smile pioneer at center   with dspr
                 dv "Вот и отлично."
                 $ ds_lp['dv'] += 1
+                $ ds_dv_invite = True
                 "Она как-то странно улыбается."
             "Отказаться":
                 window show
@@ -2721,6 +2730,7 @@ label ds_day3_stage_dv:
                         show dv smile pioneer at center   with dspr
                         dv "Вот и отлично."
                         $ ds_lp['dv'] += 1
+                        $ ds_dv_invite = True
                         "Она как-то странно улыбается."
                     "Отказаться":
                         window show
@@ -2765,6 +2775,7 @@ label ds_day3_stage_dv:
                                     show dv smile pioneer at center   with dspr
                                     dv "Вот и отлично."
                                     $ ds_lp['dv'] += 1
+                                    $ ds_dv_invite = True
                                     "Она как-то странно улыбается."
                                 "Отказаться":
                                     window show
@@ -2807,6 +2818,7 @@ label ds_day3_stage_dv:
                             show dv smile pioneer at center   with dspr
                             dv "Вот и отлично."
                             $ ds_lp['dv'] += 1
+                            $ ds_dv_invite = True
                             "Она как-то странно улыбается."
                         "Отказаться":
                             window show
@@ -4954,3 +4966,1912 @@ label ds_day3_mz_dialogue:
     play sound sfx_dinner_horn_processed
     me "Приду..."
     jump ds_day3_lunch
+
+label ds_day3_help_ya:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_beach_day
+    with dissolve
+    "Ты подходишь к пляжу."
+    play sound ds_sfx_mot
+    per_eye "В воде плещутся и играют друг с другом дети."
+    th "Так, а где же Яна?.."
+    show ya normal pioneer far at fright
+    with dissolve
+    per_eye "Она рядом с тобой. Сидит тихонько, читает книгу."
+    play sound ds_sfx_psy
+    emp "Старается не привлекать внимания."
+    th "А ей точно нужна помощь?"
+    "Cловно отвечая на твой вопрос, один из мальчиков толкает второго в воду."
+    "Тому это не понравилось, и он начинает кричать, набрасываясь на первого с кулаками."
+    ya "Успокойтесь..."
+    play sound ds_sfx_mot
+    per_hea "Голос Яны слишком тихий - даже тебе непросто расслышать её слова."
+    window hide
+    menu:
+        "Потребовать успокоиться":
+            if skillcheck('authority', lvl_trivial):
+                window show
+                play sound ds_sfx_psy
+                aut "Ты набираешь воздуха в грудь и громко, чётко произносить."
+                me "ТИШИНА!"
+                "Все оборачиваются на тебя."
+                $ ds_lp['ya'] += 1
+                $ ds_skill_points['authority'] += 1
+                ya "Cпасибо..."
+            else:
+                window show
+                play sound ds_sfx_psy
+                aut "Тебе даже на детей не хватает смелости прикрикнуть..."
+                me "Успокойтесь, пожалуйста..."
+                "Но шум и гам продолжаются."
+                $ ds_skill_points['authority'] += 1
+                hide ya with dissolve
+                "Яне приходится заходить в воду и разделять их - что для неё оказывается непросто."
+                "Но через некоторое время она наконец выходит из воды."
+                show ya normal pioneer at center with dissolve
+                ya "Cпасибо..."
+        "Разнять детей":
+                play sound ds_sfx_mot
+                svf "Сделаем по-другому. Забегай в воду и растащи их."
+                "Ты вбегаешь в воду (благо дети не заходят далеко) и пытаешься их разнять."
+                if skillcheck('savoir_faire', lvl_medium):
+                    svf "Это не вызывает у тебя затруднений - это же маленькие дети."
+                    me "Я сказал - успокойтесь."
+                    "С этими словами ты выводишь их из воды."
+                    $ ds_skill_points['savoir_faire'] += 1
+                    $ ds_lp['ya'] += 1
+                else:
+                    svf "Мальчики оказываются проворными, а их кулаки летают хаотично - тебе сложно их поймать."
+                    with red_flash
+                    play sound ds_sfx_fys
+                    pat "В итоге тебе прилетает удар."
+                    $ ds_damage_health()
+                    "Но это заставляет их остановиться."
+                    # ...
+                    "Ты выходишь из воды, выводя мальчиков."
+                    $ ds_lp['ya'] += 1
+        "Молча наблюдать":
+            window show
+            hide ya with dissolve
+            "Яна заходит в воду и аккуратно пытается разнять дерущихся."
+            "У неё это занимает немало времени, но в итоге она справляется."
+        "Призвать Яну быть решительнее":
+            window show
+            me "Скажи им громче! Они не слышат тебя!"
+            show ya shy pioneer far at fright
+            with dspr
+            ya "Ладно... Прекратите!"
+            play sound ds_sfx_mot
+            per_hea "Не то, чтобы она сказала сильно громче."
+            hide ya with dissolve
+            "Ей приходится заходить в воду."
+            "Немалых трудов ей стоило разнять детей, но в итоге у неё получается."
+    show ya normal pioneer at center
+    with dissolve
+    ya "Тяжело с детьми..."
+    me "Да, соглашусь."
+    play sound ds_sfx_int
+    lgc "А почему, интересно, она в принципе пытается быть вожатой, будучи явным флегматиком?"
+    window hide
+    menu:
+        "Спросить про характер":
+            window show
+            me "А почему ты... скажем так, вожатая? Твоему характеру это же явно не подходит..."
+            ya "Ну... мне сказали, что надо. Я и пошла."
+            play sound ds_sfx_psy
+            emp "Партия сказала «надо» - комсомол ответил «есть». Она - живое воплощение этого принципа."
+            me "То есть, ты просто следуешь чужим инструкциям."
+            ya "Ну да..."
+            me "Понятно..."
+        "Приободрить":
+            window show
+            me "Неплозо справляешься! Тебе бы чуть больше решимости - и вообще будешь идеальной вожатой."
+            show ya smile pioneer at center
+            with dspr
+            ya "Спасибо..."
+            $ ds_lp['ya'] += 1
+        "Молча понаблюдать":
+            window show
+            "Ты просто смотришь вдаль."
+            "Ни ты, ни Яна не проявляете стремления к разговору."
+            show blink
+            "В какой-то момент ты засыпаешь."
+            scene black
+            window hide
+            $ renpy.pause(2.0)
+            window show
+            scene bg ext_beach_day
+            hide blink
+            show unblink
+            show ya normal pioneer at center
+            with dissolve
+            ya "Уже обедать пора..."
+            me "А, да? Идём!"
+            "Ты подрываешься и идёшь в сторону столовой."
+            jump ds_day3_lunch
+    ya "Но я не понимаю, зачем меня назначили?.. И зачем вообще я нужна?.."
+    play sound ds_sfx_psy
+    emp "Экзистенциальный кризис, как он есть. Причём, похоже, перманентный."
+    me "Ты о чём?"
+    ya "Кто я такая? Зачем я в этом мире? Постоянно задаю себе эти вопросы..."
+    play sound ds_sfx_int
+    con "Да она философ!"
+    ya "Зачем вообще все мы нужны? В чём смысл жизни?"
+    play sound ds_sfx_psy
+    vol "Её вопросы напоминают тебе о твоих потерях... о твоих переживаниях..."
+    vol "И что-то неведомое {i}вынуждает{/i} тебя озвучить свои мысли."
+    me "Я тоже задаюсь подобными вопросами... особенно после..."
+    show ya surprise pioneer at center
+    with dspr
+    ya "После чего?"
+    me "После разлуки..."
+    show ya normal pioneer at center
+    with dspr
+    ya "Разлуки с кем?"
+    me "C девушкой... которую я любил..."
+    show ya guilty pioneer at center
+    with dspr
+    ya "А каково это - любовь? Никогда не испытывала подобного чувства..."
+    emp "Такое ощущение, что она в принципе не видит необходимости в общении с людьми, в обществе. Ей лучше всего одной."
+    me "Как, совсем никого не любила?"
+    ya "Только... своего отца... и мать."
+    show ya sad pioneer at center
+    with dspr
+    ya "Но мать я никогда не видела..."
+    me "Ничего себе..."
+    show ya normal pioneer at center
+    with dspr
+    ya "А ты уверен, что твоя девушка тебя любила?"
+    me "Да, наверное... и она должна по-прежнему любить меня!"
+    ya "Ты уверен? Может, лучше отбросить это?"
+    me "Возможно, ты и права... Но я не могу!"
+    me "Отношения с ней были всем для меня!"
+    show ya surprise pioneer at center
+    with dspr
+    ya "Вот как... значит, так выглядит любовь?"
+    me "Наверное, так..."
+    show ya normal pioneer at center
+    with dspr
+    ya "Приятное чувство, наверное... может, и у меня получится его испытать..."
+    me "Так ты же говорила про родителей..."
+    ya "Да... но это не то, что ты описываешь..."
+    me "И то верно."
+    ya "Пора обедать уже..."
+    play sound sfx_dinner_horn_processed
+    "Её слова подтверждаются звуками горна."
+    play sound ds_sfx_psy
+    ine "Разговор с ней оставил у тебя неизгладимое впечатление... что-то странное, загадочное в ней есть..."
+    th "Кто же она такая на самом деле?"
+    "С этими мыслями ты идёшь на обед."
+    jump ds_day3_lunch
+
+label ds_day3_lunch:
+    stop ambience fadeout 2
+
+    $ persistent.sprite_time = "day"
+    scene bg int_dining_hall_people_day 
+    with dissolve
+
+    play ambience ambience_dining_hall_full fadein 3
+
+    window show
+    play sound ds_sfx_int
+    con "«Кто шагает дружно в ряд? Пионерский наш отряд!»"
+    con "{i}Дружно{/i} в лагере «Совёнок» пионеры шагают в основном в столовую."
+    "Столовая битком."
+    show mt normal pioneer at center   with dissolve
+    "На входе стоит Ольга Дмитриевна."
+    con "Как почётный караул у Вечного огня."
+    mt "Ну что, Семён, как сегодня потрудился?"
+    me "Неплохо."
+    show mt smile pioneer at center   with dspr
+    mt "Молодец, молодец! То ли ещё будет!"
+    play sound ds_sfx_fys
+    edr "Да уж…"
+    mt "Ладно, садись к девочкам."
+    "Она показывает на столик рядом с колонной.{w} За ним уже сидят Славя, Ульяна и Лена."
+    window hide
+    menu:
+        "Сесть к девочкам":
+            window show      
+            th "Неплохая компания.{w} По крайней мере не самая плохая..."
+            play sound ds_sfx_fys
+            ins "Тем более {i}девочки{/i}."
+            hide mt  with dissolve
+        "Сесть одному":
+            window show
+            play sound ds_sfx_mot
+            per_eye "А нет мест больше!"
+            th "Чёрт, снова придётся сидеть с кем-то..."
+    "Ты берёшь обед и подходишь к ним."
+    show sl normal pioneer at right
+    show us laugh sport at center
+    show un normal pioneer at left 
+    with dissolve
+    me "Не возражаете, если я присяду?"
+    play sound ds_sfx_int
+    rhe "Так как садиться больше некуда, твои слова звучат наиграно."
+    show sl smile pioneer at right   with dspr
+    sl "Да, конечно!"
+    us "Будь любезен."
+    "Лена молчит."
+    "Сегодня обед состоит из борща (возможно, даже с мясом), мяса птицы (по всей видимости, курицы обыкновенной) с картошкой жареной и традиционного компота."
+    play sound ds_sfx_mot
+    per_tas "С каждым разом еда здесь нравится тебе всё больше."
+    play sound ds_sfx_psy
+    vol "Впрочем, выбирать особо не из чего, а в таком случае и нечего жаловаться на то, что есть."
+    play sound ds_sfx_fys
+    edr "Благо есть {i}что{/i} есть."
+    show sl normal pioneer at right   with dspr
+    sl "Пойдёшь сегодня на танцы?"
+    if ds_dv_invite:
+        th "И что делать? Я ведь договорился с Алисой..."
+    window hide
+    menu:
+        "Ответить положительно":
+            window show
+            me "Ну да, пойду."
+            $ ds_promise_sl = True
+            show sl smile pioneer at right
+            with dspr
+            sl "Это хорошо!"
+        "Ответить отрицательно":
+            window show
+            me "Нет, не хочется как-то..."
+            if ds_promise_un:
+                $ ds_lp['un'] -= 2
+                $ ds_promise_un = False
+                show un sad pioneer at left
+                with dspr
+                play sound ds_sfx_psy
+                emp "Ты же обещал Лене прийти... она, мягко говоря, обиделась на такой поворот событий."
+        "Сказать про Алису" if ds_dv_invite:
+            window show
+            me "У меня другие планы на вечер. С Алисой будем играть на гитаре!"
+            show sl serious pioneer at right
+            with dspr
+            sl "То есть, она тоже не идёт?"
+            play sound ds_sfx_psy
+            sug "Ну ты даёшь... подставил на ровном месте Алису..."
+            show sl normal pioneer at right
+            with dspr
+            sl "А впрочем ладно - не хочет, не надо. Проблем меньше будет!"
+            sl "Но ты ведь пойдёшь?"
+        "Ответить неопределённо":
+            window show
+            me "Не знаю..."
+
+    show us laugh2 sport at center   with dspr
+    us "Пойдёт, пойдёт! Куда он денется!"
+    "Радостно вставляет Ульяна."
+    me "Ты-то точно пойдёшь…"
+    show us surp1 sport at center   with dspr
+    us "Конечно! Не упущу случая посмотреть, как ты опростоволосишься."
+    play sound ds_sfx_psy
+    aut "Она попала в точку."
+    $ ds_damage_morale()
+    if skillcheck('composure', lvl_medium, passive=True):
+        play sound ds_sfx_mot
+        com "Не подавай виду. Переведи внимание, например, на Лену."
+        $ ds_skill_points['composure'] += 1
+    else:
+        me "Ах ты... Да как ты смеешь?!"
+        show sl serious pioneer at right
+        with dspr
+        sl "Успокойтесь!"
+        "Ты решаешь обратить внимание на Лену."
+    me "А ты?"
+    show us laugh sport at center   with dspr
+    show un smile pioneer at left   with dspr
+    un "Да…"
+    show sl smile pioneer at right   with dspr
+    sl "Видишь, значит, и тебе тоже стоит пойти."
+    aut "Славя словно не оставляет тебе выбора."
+    show us grin sport at center   with dspr
+    us "Не забудь фрак надеть."
+    play sound ds_sfx_int
+    rhe "Ульяна, видимо, так довольна своей шуткой, что громко рассмеялась."
+    if not ds_mi_costume:
+        play sound ds_sfx_psy
+        sug "Но ведь тебе действительно нечего надеть."
+        sug "Весь твой гардероб состоит из пионерской формы и зимней одежды, которая даже вечером вряд ли покажется уместной."
+    window hide
+    menu:
+        "Сказать про костюм Мику" if ds_mi_costume:
+            window show
+            me "У меня есть замечательный костюм. От Мику, между прочим."
+            show us laugh sport at center
+            with dspr
+            us "Так я и поверила!"
+            us "И вообще, я же говорю - фрак наденешь!"
+        "Изобразить, будто есть костюм" if not ds_mi_costume:
+            window show
+            me "Вообще-то у меня есть просто сногсшибательный костюм..."
+            show us laugh sport at center
+            with dspr
+            us "Ну я же говорю - фрак наденешь!"
+            us "Цилиндр ещё не забудь!"
+        "Подцепить в ответ":
+            if skillcheck('rhetoric', lvl_easy):
+                window show
+                play sound ds_sfx_int
+                rhe "Нет ничего проще - спроси про {i}её{/i} одежду."
+                me "Ты-то в чём придёшь, массовик-затейник?"
+                show us laugh2 sport at center   with dspr
+                us "Се-к-рет!"
+                me "Платьице как на детском утреннике небось?"
+                show us angry sport at center   with dspr
+                rhe "Ульяна краснеет от злости – похоже, ты смог её задеть."
+            else:
+                window show
+                play sound ds_sfx_int
+                rhe "Но ты не находишь, что ответить."
+                me "И ничего не во фраке я пойду! В нормальной одежде!"
+                me "Как будто тебе до этого есть дело."
+                show us laugh2 sport at center
+                with dspr
+                us "Ну я же о тебе забочусь..."
+                play sound ds_sfx_int
+                dra "Саркастичный тон явно даёт понять - не заботится она о вас, мессир, просто издевается."
+            $ ds_skill_points['rhetoric'] += 1
+        "Промолчать":
+            window show
+            "Ты делаешь вид, будто её нет."
+            show us dontlike pioneer at center
+            with dspr
+            us "Ну, чего молчишь как рыба?"
+            show us laugh2 pioneer at center
+            with dspr
+            us "Ответить-то и нечего?"
+            show us grin pioneer at center
+            with dspr
+            us "Или - о нет! - тебе вообще нечего надеть?"
+            if skillcheck('composure', lvl_up_medium):
+                window show
+                com "Держись дальше."
+                show us dontlike pioneer at center
+                with dspr
+                us "Приём-приём! Ну не молчи!"
+                $ ds_lp['us'] -= 1
+            else:
+                window show
+                com "Это оказывается последней каплей для тебя."
+                me "Ах ты!"
+                "Ты дёргаешься в её сторону."
+    show sl serious pioneer at right   with dspr
+    show un normal pioneer at left   with dspr
+    sl "Ребята, хватит! Не ссорьтесь!"
+    show us surp1 sport at center   with dspr
+    us "Знаешь, я надену-ка костюм химзащиты, от греха подальше!"
+    me "Зачем это?"
+    us "А чтоб не заразиться!"
+    me "Чем это ты собралась заражаться?"
+    us "Слабоумием, конечно же!"
+    play sound ds_sfx_psy
+    emp "Похоже, Ульянка опять очень довольна своим, на её взгляд, искромётным ответом."
+    window hide
+    menu:
+        "Развернуть против неё":
+            window show
+            me "Знаешь, если ты уже болеешь гриппом, то простудиться не получится."
+            aut "В эту игру могут играть двое."
+            show us dontlike sport at center   with dspr
+            us "Это ты на что намекаешь?"
+            me "Да так, ни на что…"
+            "Ты хитро отводишь взгляд."
+        "Отмолчаться":
+            window show
+            "Ты делаешь вид, будто тебя заинтересовали трещины на потолке."
+            show us dontlike sport at center
+            with dspr
+            us "Да что ты молчишь? Правда слабоумный, что ли?"
+            me "Да так, знаешь, лезут тут некоторые, мешают..."
+    show us angry sport at center   with dspr
+    us "То есть ты хочешь сказать?.."
+    "Она опять краснеет."
+    me "Я ничего не хочу сказать."
+    show un surprise pioneer at left   with dspr
+    un "Ребята…"
+    play sound ds_sfx_psy
+    vol "Если в разговор вмешивается даже Лена, то, значит, дело правда начинает принимать плохой оборот."
+    us "Ты допросишься!"
+    me "Чего? Что ты поумнеешь наконец?"
+    hide sl 
+    hide un 
+    with dissolve
+    window hide
+
+    play sound sfx_borshtch
+
+    with vpunch
+
+    pause(1)
+
+    show us laugh2 sport at center   with dspr
+    window show
+    "Вместо ответа Ульянка берёт свою тарелку борща и опрокидывает тебе на голову."
+    "Эндшпиль заканчивается неожиданным финалом…"
+    me "Ах ты, маленькая…"
+
+    play music music_list["awakening_power"] fadein 2
+
+    hide us  with dissolve
+    "Она вскакивает из-за стола и пытается убежать."
+    window hide
+    menu:
+        "Побежать за ней":
+            window show
+        "Не реагировать":
+            if skillcheck('composure', lvl_formidable):
+                window show
+                play sound ds_sfx_mot
+                com "Держись спокойно. Будь умнее. Погнавшись за ней, только навлечёшь на себя проблем."
+                "Ты встаёшь и идёшь к раковинам, чтобы умыться."
+                hide sl
+                hide un with dissolve
+                show us upset sport at center
+                with dissolve
+                us "Эй! Ты даже не побежишь за мной?!"
+                me "Отстань!"
+                us "Ну и ладно! Не очень-то и хотелось!"
+                $ ds_lp['us'] -= 1
+                $ ds_skill_points['composure'] += 1
+                "Умывшись, ты выходишь из столовой."
+                jump ds_day3_after_lunch
+            else:
+                window show
+                play sound ds_sfx_mot
+                com "Ты ну никак не можешь стерпеть подобного оскорбления!"
+
+    if skillcheck('savoir_faire', lvl_easy, passive=True):
+        scene cg d3_us_dinner 
+        with dissolve
+        window show
+        play sound ds_sfx_mot
+        svf "Но в этот раз у неё ничего не вышло – ты хватаешь её за руку."
+        play sound ds_sfx_psy
+        vol "Ну а дальше что? Не головой же её об стол!"
+        "Немая сцена продолжается несколько секунд."
+        window hide
+
+        play sound sfx_throw_compote
+
+        $ renpy.pause(1)
+
+        window show
+        "Вдруг Ульяна ловко хватает компот и плещет им тебе в лицо."
+        "От неожиданности ты отпускаешь её руку."
+        window hide
+        $ ds_skill_points['savoir_faire'] += 1
+
+    $ persistent.sprite_time = "day"
+    scene black 
+    show bg int_dining_hall_people_day :
+        linear 0.05 pos (-5,-5)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (5,5)
+        linear 0.05 pos (0,5)
+        linear 0.05 pos (5,0)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (-5,-5)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (5,5)
+        linear 0.05 pos (0,5)
+        linear 0.05 pos (5,0)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (-5,-5)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (5,5)
+        linear 0.05 pos (0,5)
+        linear 0.05 pos (5,0)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (-5,-5)
+        linear 0.05 pos (0,0)
+        linear 0.05 pos (5,5)
+        linear 0.05 pos (0,5)
+        linear 0.05 pos (5,0)
+        linear 0.05 pos (0,0)
+        repeat
+    with dissolve
+
+    window show
+    "Она бежит куда-то в сторону буфета, а ты – за ней."
+    "Результатами вашей гонки становятся несколько опрокинутых столов, гора разбитой посуды, пять в разной степени покалеченных пионеров и полное изнеможение обеих сторон."
+    th "Можно сказать, ничья."
+    vol "Боевая ничья.{w} Слишком боевая ничья."
+    $ ds_karma -= 10
+
+    stop music fadeout 3
+
+    scene bg int_dining_hall_people_day 
+
+    "Вы стоите друг напротив друга и тяжело дышите."
+    show us sad sport at center   with dissolve
+    me "Больше не будешь так?!"
+    show us shy sport at center   with dspr
+    us "А ты?!"
+    show mt angry pioneer at right   with dissolve
+    "Сзади к вам незаметно подкрадывается Ольга Дмитриевна."
+    th "Действительно, такой погром не мог пройти без последствий."
+    mt "Ну что, довольны собой?"
+    play sound ds_sfx_mot
+    com "Её голос звучит спокойно, но ты уверен, что она вот-вот готова взорваться."
+    show mt rage pioneer at right   with dspr
+    mt "И кто всё это должен убирать теперь?!"
+    com "Так и произошло."
+    mt "Кто, я спрашиваю, кто?!"
+    show us surp3 sport at center   with dspr:
+        linear 0.2 xalign 0.4
+        linear 0.2 xalign 0.5
+    us "Он!"
+    "Совершенно невозмутимо отвечает Ульянка."
+    window hide
+    menu:
+        "Свалить вину на Ульяну":
+            window show
+            if skillcheck('authority', lvl_challenging, passive=True):
+                me "Это всё она!"
+                "Уверенно заявляешь ты."
+                $ ds_skill_points['authority'] += 1
+            else:
+                me "Она..."
+                "Менее уверенно говоришь ты."
+            $ ds_lp['us'] -= 1
+            mt "Оба!"
+            "Ставит жирную точку в не успевшем начаться споре вожатая."
+            window hide
+            menu:
+                "Убедить вожатую":
+                    if skillcheck('suggestion', lvl_heroic, modifiers=[('ds_last_skillcheck', 1), ('ds_karma >= 50', 3), ('ds_karma <= -50', -4)]):
+                        window show
+                        play sound ds_sfx_psy
+                        sug "Говори чётко. Уверенно."
+                        me "Ещё раз повторяю: я тут не причём. Это Ульяна меня спровоцировала. Я не хотел, так случайно вышло."
+                        show mt normal pioneer at right
+                        with dspr
+                        mt "Ладно! Но только потому, что ты у меня на хорошем счету!"
+                        mt "Иди!"
+                        hide mt with dissolve
+                        $ ds_skill_points['suggestion'] += 1
+                        $ ds_lp['us'] -= 1
+                        window hide
+                        menu:
+                            "Посмеяться над Ульяной":
+                                window show
+                                me "Удачи в уборке!"
+                                show us dontlike sport at center
+                                with dspr
+                                us "Эй!"
+                                hide us with dissolve
+                                "Но ты её не слушаешь и выходишь"
+                            "Молча уйти":
+                                window show
+                                show us dontlike sport at center
+                                with dspr
+                                us "Эй! Так нечестно! Ты должен мне помочь!"
+                                hide us with dissolve
+                                "Ты выходишь, не слушая возмущения Ульяны."
+                        jump ds_day3_after_lunch
+                    else:
+                        window show
+                        play sound ds_sfx_psy
+                        sug "Ну что ж, попробуй. Но вряд ли вожатая изменит свою позицию."
+                        me "Ещё раз повторяю: это всё она! Это не я!"
+                        show mt angry pioneer at right
+                        with dspr
+                        mt "Я всё сказала! Не пытайся меня переубедить: это бесполезно!"
+                        hide mt with dissolve
+                        me "Да как так-то!"
+                        show us laugh sport at center
+                        with dspr
+                        us "А вот так!"
+                        $ ds_skill_points['suggestion'] += 1
+                "Отступить":
+                    window show
+                    th "Ну ладно..."
+        "Взять вину на себя":
+            window show
+            me "Извините... это я вывел из себя Ульяну, вот она и взбесилась."
+            $ ds_lp['us'] += 1
+            mt "Без разницы! Убирать будете всё равно вы оба!"
+        "Промолчать":
+            mt "Ты тоже поучаствовала! Так что убирать будете оба!"
+    "Ульянка, кажется, вовсе не считает себя виноватой."
+    show us surp2 sport at center   with dspr
+    us "Вот ещё!{w} Не буду я ничего убирать!"
+    us "Это он всё! Он начал!"
+    me "Вот и нет!"
+    show us dontlike sport at center   with dspr
+    us "Вот и да!"
+    show mt angry pioneer at right   with dspr
+    mt "Я не собираюсь разбираться в этих глупостях!"
+    mt "Семён, иди возьми швабру, совочек, тряпку и так далее в кладовке, а ты!!!"
+    show mt rage pioneer at right   with dspr
+    play sound ds_sfx_psy
+    emp "Она смотрит на Ульяну таким взглядом, что девочку можно только пожалеть."
+    show us fear sport at center   with dspr:
+        parallel:
+            linear 0.5 yalign -0.2
+        parallel:
+            linear 0.5 xalign 0.4
+    mt "Ты!!!{w} Немедленно начинай собирать разбитую посуду!"
+    "Ольга Дмитриевна отдышалась немного и продолжает."
+    show mt angry pioneer at right   with dspr
+    mt "От тебя одни проблемы!{w} Сколько раз я тебе говорила…"
+    window hide
+    menu:
+        "Дослушать":
+            window show
+            mt "...что пионерка должна соблюдать правила, должна быть примером для подрастающего поколения."
+            mt "Ну кто возьмёт в жёны такую непослушную егозу?"
+            play sound ds_sfx_int
+            dra "Ольга Дмитриевна явно не учитывает, что такое привлечение внимания характерно для детей."
+            mt "Ты мне объясни, зачем ты это творишь? Почему бы не заняться чем-нибудь созидательным?"
+            mt "Даже твоя подружка Алиса - и та играет на гитаре! А ты?"
+            mt "Я же тебе даже спортклуб отдала, чтобы ты могла выпустить свою энергию!"
+            mt "Почему все дети твоего отряда как дети, а ты?.."
+            play sound ds_sfx_int
+            lgc "Кажется, вожатая забыла про то, что в отряде Ульяна намного младше остальных."
+            mt "Короче, всё, иди!"
+            "Ульяна плетётся убирать осколки, а ты идёшь в кладовую."
+        "Уйти":
+            window show
+    hide mt 
+    hide us 
+    with dissolve
+    jump ds_day3_punishment1
+
+label ds_day3_punishment1:
+    $ persistent.sprite_time = 'day'
+    scene bg ds_int_dininghall_door_day
+    with dissolve
+    $ ds_punished = True
+    "Пока Ольга Дмитриевна, отчитав Ульяну, выходит, ты идёшь в кладовку, которая находится рядом с выходом."
+    play sound ds_sfx_mot
+    svf "А может сбежать?"
+    play sound ds_sfx_psy
+    vol "Ольга Дмитриевна уже вас поймала."
+    play sound ds_sfx_psy
+    sug "Но ты-то ни в чём не виноват."
+    sug "Конечно, «образцовый пионер» - это не про тебя, но по сравнению с Ульянкой..."
+    play sound ds_sfx_int
+    lgc "В любом случае всё спишут на неё."
+
+    window hide
+    menu:
+        "Сбежать одному":
+            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2)]):
+                window show
+                play sound ds_sfx_mot
+                svf "Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                scene bg ext_dining_hall_near_day
+                with dissolve
+                th "Получается, всё? Я свободен?"
+                $ ds_skill_points['savoir_faire'] += 1
+                "И ты идёшь куда-нибудь."
+                $ ds_lp['us'] -= 1
+                $ ds_karma -= 10
+                jump ds_day3_after_lunch
+            else:
+                window show
+                play sound ds_sfx_mot
+                svf "Ты рвёшься в сторону двери..."
+                show us angry sport at center
+                with dissolve
+                us "Куда собрался? А помогать мне кто будет?"
+                show us dontlike sport at center
+                with dissolve
+                us "И даже не позвал меня с собой сбежать!"
+                me "Пусти меня!"
+                show ck serious far at left
+                with dissolve
+                ck "Она права. Ты должен поработать вместе с ней!"
+                $ ds_karma -= 10
+                $ ds_lp['us'] -= 1
+                $ ds_skill_points['savoir_faire'] += 1
+                hide us
+                hide ck
+                with dissolve
+                th "Не прокатило..."
+        "Сбежать с Ульяной":
+            window show
+            me "Ульян! Пс!"
+            "Ты говоришь максимально тихо."
+            show us surprise sport at center
+            with dissolve
+            us "Что такое?"
+            me "Я предлагаю сбежать!"
+            show us smile2 sport at center
+            with dspr
+            us "О, давай! Веди!"
+            $ ds_lp['us'] += 1
+            th "Так..."
+             if skillcheck('savoir_faire', lvl_godly):
+                window show
+                play sound ds_sfx_mot
+                svf "Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                scene bg ext_dining_hall_near_day
+                show us laugh sport at center
+                with dissolve
+                us "Получилось! Получилось!"
+                $ ds_skill_points['savoir_faire'] += 1
+                me "Ты потише!.."
+                show us smile sport at center
+                with dspr
+                us "Ладно-ладно!"
+                us "Я побежала! Пока!"
+                hide us with dissolve
+                "Ты тоже идёшь куда-нибудь."
+                $ ds_karma -= 10
+                $ ds_skill_points['savoir_faire'] += 1
+                jump ds_day3_after_lunch
+            else:
+                window show
+                play sound ds_sfx_mot
+                svf "Ты рвёшься в сторону двери..."
+                show ck serious far at left
+                with dissolve
+                ck "Куда это вы собрались?!"
+                show us upset sport at center
+                with dspr
+                us "Ну вот, не вышло..."
+                ck "Так, давайте убираться!"
+                $ ds_karma -= 10
+                $ ds_skill_points['savoir_faire'] += 1
+                hide us
+                hide ck
+                with dissolve
+                th "Не прокатило..."
+        "Остаться с Ульяной":
+            window show
+            th "Лучше всё же останусь и помогу Ульяне."
+            play sound ds_sfx_psy
+            emp "Тем более, что и твоя вина есть."
+            play sound ds_sfx_mot
+            com "Потому что ты не удержался от пробежки!"
+    play sound sfx_open_cupboard
+
+    pause(1)
+
+    window show
+    "Открыв шкаф, ты берёшь метлу, швабру и совок."
+    show us sad sport at center   with dissolve
+    me "Она ушла?"
+    show us dontlike sport at center   with dspr
+    us "Как видишь!"
+    play sound ds_sfx_psy
+    emp "Ульянка выглядит расстроеной, весь её детский задор куда-то исчез."
+    me "Ладно, подожди, сначала пойду отмоюсь."
+    hide us  with dissolve
+    "Ты бросаешь на неё злобный взгляд и направляешься к выходу."
+    window hide
+
+    with fade
+
+    window show
+    "Смыв с себя остатки обеда, ты возвращаешься в столовую."
+    me "Ну, ничего не поделаешь – придётся убираться."
+    show us angry sport at center   with dspr
+    us "Это всё из-за тебя!"
+    play sound ds_sfx_mot
+    com "Она смотрит так, что у тебя невольно мурашки побежали по всему телу."
+    me "Конечно!"
+    me "Я во всём виноват!{w} Я же у нас местное стихийное бедствие."
+    show us sad sport at center   with dspr
+    us "Помолчи уж…"
+    play sound ds_sfx_int
+    lgc "Странно, что она не отлынивает от уборки."
+    lgc "Ульянка могла спокойно оставить тебя одного и убежать, но почему-то, напротив, старательно собирает осколки тарелок, моет пол, поднимает стулья и столы."
+    "Она делает всё так быстро, что ты еле успеваешь за ней."
+    me "Что-то ты чересчур стараешься."
+    show us dontlike sport at center   with dspr
+    us "А чтобы побыстрее закончить, дурень!"
+    "Голос её звучит всё так же недовольно."
+    play sound ds_sfx_psy
+    aut "Используй свой авторитет. Объясни ей, что так вести себя нехорошо."
+    window hide
+    menu:
+        "Начать воспитывать":
+            window show
+            me "Слушай, ну ты же понимаешь, что нельзя себя так вести…{w} По крайней мере доводить до подобного…"
+            show us surp1 sport at center   with dspr
+            us "А я ничего такого и не делала!{w} Это же ты меня ребёнком обозвал."
+            hide us  with dissolve
+            "Ульяна берёт ведро с тряпкой и уходит в дальний конец столовой."
+            emp "Похоже, обиделась."
+            $ ds_lp['us'] -= 1
+            play sound ds_sfx_int
+            vic "Окинув взглядом гору битой посуды, ты понимаешь, что дел вы действительно натворили."
+            th "Хорошо, хотя бы ложки и вилки металлические – если что, будет чем есть.{w} Но вот только из чего..."
+        "Промолчать":
+            window show
+        "Похвалить":
+            window show
+            me "Неплохо ты придумала!"
+            "Молчание становится ответом тебе."
+            th "Обиделась..."
+    us "Слушай…"
+    "Кричит тебе Ульяна."
+    "Ты подходишь к ней поближе."
+    show us shy2 sport at center   with dissolve
+
+    stop ambience fadeout 2
+
+    play music music_list["two_glasses_of_melancholy"] fadein 1
+
+    us "А почему ты меня так не любишь?"
+    show us normal sport at center   with dspr
+    window hide
+
+    $ renpy.pause(1)
+
+    window show
+    emp "Её лицо становится настолько серьёзным, что ты уже готов поверить – это не просто очередной розыгрыш."
+    me "Почему ты так решила?"
+    show us shy2 sport at center   with dspr
+    us "Не знаю, поэтому и спрашиваю."
+    window hide
+    menu:
+        "Это неправда":
+            window show
+            me "Я тебя не не люблю.{w} Просто иногда ты себя так ведёшь…{w} Ну, сама знаешь."
+            show us surp3 sport at center   with dspr
+            us "Как?{w} Не знаю."
+            "Она поднимает на тебя полные любопытства глаза."
+            me "Ну, зачем, скажем, было обливать меня компотом?"
+            show us grin sport at center   with dspr
+            us "Так ты же сам напросился."
+            "Впервые за всё время уборки она улыбается."
+            $ ds_lp['us'] += 1
+            me "Да, точно..."
+            me "Ну, и какой реакции ты тогда ждёшь от окружающих?"
+            us "Никакой."
+        "Из-за поведения":
+            window show
+            me "Просто ты так себя ведёшь..."
+            show us supr3 sport at center
+            with dspr
+            us "Как?"
+            me "Отвратительно! Ну как так себя можно вести?!"
+            show us upset sport at center
+            with dspr
+            us "Мне скучно просто! Вечно какие-то дела, дела, дела, а развлечений толком нет!"
+            us "Вот я и развлекаю себя!"
+            emp "Что естественно для ребёнка."
+            me "Но ты же должна понимать, что есть правила, и за их несоблюдение наказывают..."
+            show us dontlike sport at center
+            with dspr
+            us "Вот и соблюдай свои скучные правила!"
+            $ ds_lp['us'] -= 1
+        "Сама по себе":
+            window show
+            me "Просто не нравишься ты мне! Не в моём вкусе!"
+            show us sad sport at center
+            with dspr
+            us "В смысле? Я тебе не нравлюсь?!"
+            show us cry sport at center
+            with dspr
+            emp "А вот тут ты её расстроил по-настоящему."
+            emp "Впрочем, она ребёнок, должна отойти вскоре."
+            me "Ульян..."
+            us "Отстань! Не хочу видеть тебя!"
+            $ ds_lp['us'] -= 2
+    hide us  with dissolve
+    "В разговоре была поставлена жирная точка, и ты молча продолжаешь убираться."
+    window hide
+
+    with fade
+
+    jump ds_day3_punishment
+
+label ds_day3_punishment2:
+    $ persistent.sprite_time = 'day'
+    scene bg int_dining_hall_day
+    show ck smile at center
+    show us sad sport at right
+    with dissolve
+
+    ck "А вот и помощнички пришли!"
+    us "Угу..."
+    show ck normal at center
+    with dspr
+    ck "Значит так. Идите на кухню, там мешки с картошкой. Вам нужно её начистить."
+    play sound ds_sfx_mot
+    res "Чего?"
+    show us dontlike sport at right
+    with dspr
+    us "Чего? Не буду я картошку чистить!"
+    ck "Надо, моя милая, надо."
+    hide ck with dissolve
+    play sound ds_sfx_mot
+    svf "А может сбежать?"
+    play sound ds_sfx_psy
+    vol "Идея так себе - тебя уже поймали, просто накажут сильнее."
+
+    window hide
+    menu:
+        "Сбежать одному":
+            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2)]):
+                window show
+                play sound ds_sfx_mot
+                svf "Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                scene bg ext_dining_hall_near_day
+                with dissolve
+                th "Получается, всё? Я свободен?"
+                $ ds_skill_points['savoir_faire'] += 1
+                "И ты идёшь куда-нибудь."
+                $ ds_lp['us'] -= 1
+                $ ds_karma -= 10
+                jump ds_day3_after_lunch
+            else:
+                window show
+                play sound ds_sfx_mot
+                svf "Ты рвёшься в сторону двери..."
+                show us angry sport at center
+                with dissolve
+                us "Куда собрался? А помогать мне кто будет?"
+                show us dontlike sport at center
+                with dissolve
+                us "И даже не позвал меня с собой сбежать!"
+                me "Пусти меня!"
+                show ck serious far at left
+                with dissolve
+                ck "Она права. Ты должен поработать вместе с ней!"
+                $ ds_karma -= 10
+                $ ds_lp['us'] -= 1
+                $ ds_skill_points['savoir_faire'] += 1
+                hide us
+                hide ck
+                with dissolve
+                th "Не прокатило..."
+        "Сбежать с Ульяной":
+            window show
+            me "Ульян! Пс!"
+            "Ты говоришь максимально тихо."
+            show us surprise sport at center
+            with dissolve
+            us "Что такое?"
+            me "Я предлагаю сбежать!"
+            show us smile2 sport at center
+            with dspr
+            us "О, давай! Веди!"
+            $ ds_lp['us'] += 1
+            th "Так..."
+             if skillcheck('savoir_faire', lvl_godly):
+                window show
+                play sound ds_sfx_mot
+                svf "Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                scene bg ext_dining_hall_near_day
+                show us laugh sport at center
+                with dissolve
+                us "Получилось! Получилось!"
+                $ ds_skill_points['savoir_faire'] += 1
+                me "Ты потише!.."
+                show us smile sport at center
+                with dspr
+                us "Ладно-ладно!"
+                us "Я побежала! Пока!"
+                hide us with dissolve
+                "Ты тоже идёшь куда-нибудь."
+                $ ds_karma -= 10
+                $ ds_skill_points['savoir_faire'] += 1
+                jump ds_day3_after_lunch
+            else:
+                window show
+                play sound ds_sfx_mot
+                svf "Ты рвёшься в сторону двери..."
+                show ck serious far at left
+                with dissolve
+                ck "Куда это вы собрались?!"
+                show us upset sport at center
+                with dspr
+                us "Ну вот, не вышло..."
+                ck "Так, давайте убираться!"
+                $ ds_karma -= 10
+                $ ds_skill_points['savoir_faire'] += 1
+                hide us
+                hide ck
+                with dissolve
+                th "Не прокатило..."
+        "Остаться с Ульяной":
+            window show
+            th "Лучше всё же останусь и помогу Ульяне."
+            play sound ds_sfx_psy
+            emp "Тем более, что и твоя вина есть."
+    scene bg ds_int_kitchen_day
+    show us upset sport at center
+    with dissolve
+    us "Ну и где тут эта картошка?"
+    play sound ds_sfx_mot
+    per_eye "Она прямо рядом с вами."
+    me "Да вот она."
+    us "Ну что ж, давай приступать..."
+    play sound ds_sfx_psy
+    emp "Весь её задор пропал. Она явно не планировала сегодня чистить картошку. Ребёнок же - хочется развлечений."
+    play sound ds_sfx_int
+    vic "Картошки тут килограммов пять, не меньше. Вы тут явно до вечера просидите."
+
+    scene cg ds_day3_us_potato_1
+    with dissolve
+    "Вы усаживаетесь: Ульяна на стул, ты на ящик - и приступаете к чистке картошки."
+    play sound ds_sfx_psy
+    vol "Работа на редкость монотонная - почистил картофелину, бросил в таз, взял новую. И так до бесконечности."
+    vol "Немудрено, что ни ты, ни Ульяна не испытываете удовольствия от подобной работы."
+    us "Сколько там ещё этой картошки?.."
+    me "Много..."
+    us "Ну вот почему ты мне не позволил убежать?"
+    me "Потому что это небезопасно... да и думаешь, тебе было бы легче, когда бы тебя поймали?"
+    us "Меня бы не поймали, если бы не ты!"
+    me "Ага, конечно...  Поезд так-то куда-то едет, а не в небытие!"
+    me "И вообще, увезли бы тебя куда-нибудь на Дальний Восток - что бы ты делала?"
+    us "Уж точно не чистила бы картошку!"
+    play sound ds_sfx_psy
+    emp "Как бы ты её ни убеждал - её детская логика в любом случае сделает виноватым тебя."
+    window hide
+    menu:
+        "Извиниться":
+            window show
+            me "Ладно, извини..."
+            us "Да что толку от твоих извинений? Картошку лучше чисти быстрее!"
+        "Промолчать":
+            pass
+    window hide
+    $ renpy.pause(1.5)
+    window show
+    us "Слушай, а давай кто быстрее?"
+    play sound ds_sfx_psy
+    sug "С одной стороны идея заманчивая - соревновательный элемент разбавит муторность процесса."
+    play sound ds_sfx_psy
+    aut "Заодно сможешь показать превосходство над ней!"
+    play sound ds_sfx_psy
+    vol "Но как бы вы дров не наломали в пылу борьбы!"
+    window hide
+    menu:
+        "Согласиться":
+            window show
+            me "А давай!"
+            us "Готов потерпеть поражение?"
+            me "Нет, это ты проиграешь!"
+            us "Нет, ты!"
+            me "Старт!"
+            $ ds_lp['us'] += 1
+            "И вы начинаете чистить картошку на скорость."
+            "Первой жертвой битвы пало качество работы - шкурки и ошмётки картошки начали лететь во все стороны. От каждой картофелины остаётся максимум половина."
+            us "А я быстрее!"
+            me "Нет, я быстрее!"
+            "Вы совершенно не замечаете результатов вашего боя. Пока..."
+            play sound sfx_brass_drop
+            "Таз переворачивается, а вода из него разливается по полу."
+            scene bg ds_int_kitchen_day
+            show us surp1 sport at center
+            with dissolve
+            us "Ой..."
+            show us angry sport at center
+            with dspr
+            us "Это всё ты!"
+            show ck serious at center
+            show us angry sport at right
+            with dissolve
+            "Ты хотел было возразить, но тут приходит повариха."
+            ck "И что вы наделали?"
+            us "Это всё он!"
+            me "Это она..."
+            ck "Неважно! Давайте убирайте за собой!"
+            hide ck
+            show us upset sport at center
+            with dissolve
+            us "Это всё ты!"
+            me "Ты же предложила..."
+            us "А ты... а ты..."
+            play sound ds_sfx_int
+            "Она не знает, что ответить."
+            us "Давай убирайся уже!"
+            "Вы приступаете к уборке."
+            show us sad sport far at right
+            with dspr
+            "Ты берёшь швабру и принимаешься убирать воду, пока Ульяна ходит по кухне и собирает шкурки."
+            show us sad sport far at center
+            with dspr
+            "А шкурки оказываются разбросаны по всей кухне, так что её работа оказывается непростой."
+            show us sad sport far at left
+            with dspr
+            "Как и твоя - целый таз воды оказался на полу."
+            show us sad sport far at center
+            with dspr
+            window hide
+            $ renpy.pause(1.5)
+        "Отказаться":
+            window show
+            me "Нет уж, давай просто почистим картошку!"
+            us "Какой ты скучный... слов нет просто..."
+            $ ds_lp['us'] -= 1
+            us "А, я знаю - ты просто боишься!"
+            if skillcheck('authority', lvl_easy, passive=True):
+                aut "Она неправа. Прописью: она не-пра-ва."
+                me "Ничего я не боюсь! Это ты боишься!"
+                us "И чего же я боюсь по-твоему? Тебя?!"
+                "Она заливается смехом."
+                me "Подкроватного монстра. Или привидений!"
+                us "Вообще-то я не пятилетка, чтобы бояться этого!"
+                $ ds_skill_points['authority'] += 1
+            else:
+                me "Не боюсь я... просто не хочу..."
+                us "Боишься-боишься! Ты просто трус!"
+                $ ds_damage_morale()
+            "На этом её вновь охватывает тоска, и она умолкает."
+            "Вы продолжаете чистить картошку."
+            window hide
+            $ renpy.pause(2.0)
+    scene bg ds_int_kitchen_day
+    show us normal sport at center
+    with dissolve
+    window show
+    "И вот вы заканчиваете работу. Уже подходит время ужина."
+    us "Наконец-то... Всё, я пошла!"
+    hide us with dissolve
+    "И она уходит. Ты следуешь за ней."
+    jump ds_day3_dinner
+
+label ds_day3_punishment_return:
+    $ persistent.sprite_time = 'day'
+    scene bg int_dining_hall_day
+    with dissolve
+    window show
+    th "Лучше вернусь - нехорошо как-то бросать Ульяну одну..."
+    show us upset sport at center
+    with dissolve
+    us "Надо же, вернулся!"
+    play sound ds_sfx_psy
+    emp "Она обижена на тебя за то, что ты во-первых сбежал, а во-вторых, не потащил с собой её."
+    me "Да, вернулся..."
+    window hide
+    menu:
+        "Извиниться":
+            window show
+            me "Извини, что ушёл."
+            show us smile sport at center
+            with dspr
+            us "Ладно, так уж и быть, прощу тебя! Я добрая сегодня!"
+            $ ds_lp['us'] += 1
+        "Промолчать":
+            window show
+    "Ты идёшь к шкафу, берёшь метлу и совок и идёшь убираться."
+    window hide
+    $ renpy.pause(3.0)
+    jump ds_day3_punishment
+
+label ds_day3_punishment:
+    window show
+    "Вам потребовалось несколько часов, чтобы навести в столовой марафет."
+    "И вот наконец вся битая посуда собрана, столы и стулья расставлены, пол вымыт."
+    show us normal sport at center   with dissolve
+    "Вы с Ульянкой сидите рядом с буфетом и отдыхаете."
+    me "Вот видишь, сколько приходится потратить сил из-за одной глупой выходки."
+    us "А я совсем и не устала!"
+    play sound ds_sfx_int
+    vic "Пот, струящийся по её лицу, говорит совершенно об обратном."
+    me "Что же, рад за тебя…"
+    us "Чем займёмся дальше?"
+    me "Ты – не знаю, а я пойду…"
+    show us surp3 sport at center   with dspr
+    us "Нет! Ещё не всё!"
+    us "Ты должен…"
+    show us shy2 sport at center   with dspr
+    "Она заминается."
+    show us surp1 sport at center   with dspr
+    us "Мне ещё помочь!"
+    me "Придумываешь очередную глупость?"
+    show us laugh2 sport at center   with dspr
+    us "Точно!"
+    "Она широко улыбается."
+    me "Тут я тебе не помощник.{w} Мне на сегодня одного наказания уже хватит."
+    show us laugh sport at center   with dspr
+    us "А давай так!{w} Если ты поможешь мне сейчас, я больше не буду над тобой прикалываться!"
+    th "Вариант, конечно, выглядит заманчиво"
+    play sound ds_sfx_int
+    dra "Но, кажется, эта дева обмануть вас хочет, мессир."
+    th "Ради интереса можно и спросить."
+    me "И в чём же состоит твой хитрый план?"
+    show us grin sport at center   with dspr
+    us "Давай украдём конфеты!"
+    me "Что?!"
+    play sound ds_sfx_int
+    lgc "Чего-то такого от неё и стоило ожидать."
+    th "Конфеты – детям…"
+    show us laugh sport at center   with dspr
+    us "Сейчас как раз повариха пойдёт мусор выбрасывать, так что нас никто не заметит!"
+    window hide
+    menu:
+        "Согласиться":
+            window show
+            me "А давай! Только потом поделим поровну?"
+            show us grin sport at center
+            with dspr
+            $ ds_lp['us'] += 1
+            us "Как скажешь!"
+            hide us with dissolve
+            "Пока Ульяна дежурит у двери, ты подходишь к шкафу..."
+            window hide
+            if skillcheck('interfacing', lvl_medium):
+                window show
+                inf "И резкими чёткими движениями распахиваешь шкаф, хватаешь конфеты, кладёшь их себе в карман и закрывааешь дверь, будто всё так и было."
+                $ ds_skill_points['interfacing'] += 1
+                $ ds_lp['us'] += 1
+                "Ты подходишь к Ульяне."
+            else:
+                window show
+                inf "Ты открываешь дверцу и начинешь искать конфеты... но безуспешно."
+                us "Быстрее давай! Сюда идут!"
+                me "Да не могу я найти."
+                show us dontlike sport at center
+                with dspr
+                us "Эх ты... давай я!"
+                "Вы меняетесь местами. Ульяне быстро удаётся найти нужный кулёк."
+                "Она подпрыгивает к тебе и всучивает его тебе в карман за секунду до появления поварихи."
+            me "И что мы будем делать?"
+            show us laugh sport at center
+            with dspr
+            us "Догоняй!"
+            "И прежде чем ты успеваешь как-либо отреагировать, она выхватывает у тебя конфеты и выбегает из столовой."
+            th "Вот же зараза..."
+            window hide
+            menu:
+                "Погнаться за ней":
+                    window show
+                    play sound ds_sfx_fys
+                    edr "У девочки приличная фора, но ты вкладываешь в погоню все силы."
+
+                    stop ambience fadeout 2
+                    if not ds_caught_us:
+                        th "Второй раз я ей не проиграю!"
+                    else:
+                        th "Догоним её на бис!"
+                    window hide
+                "Доложить поварихе":
+                    window show
+                    "Ты кричишь что есть мочи."
+                    me "Тут конфеты украли!"
+                    show ck serious at center
+                    with dspr
+                    ck "Что случилось? Кто украл?"
+                    me "Та несносная красноволосая девчонка!"
+                    ck "Вот как... и чего же ты её не догоняешь?"
+                    me "Да я не догоню её..."
+                    show ck serious at center
+                    with dspr
+                    ck "Ольга Дмитриевна разберётся... вот только победитель вчерашнего турнира останется без конфет."
+                    play sound ds_sfx_mot
+                    res "Конфеты были призом за турнир? Да, неудача..."
+                    "Тем временем в столовой собираются люди. Подходит время ужина."
+                    jump ds_day3_dinner
+                "Забить":
+                    window show
+                    "Ты остаёшься в столовой. Подходит время ужина."
+                    window hide
+                    $ persistent.sprite_time = "day"
+                    scene bg int_dining_hall_people_day 
+                    with dissolve
+
+                    play ambience ambience_dining_hall_full fadein 3
+
+                    window show
+                    "Постепенно народу прибавляется."
+                    "Ты начинаешь прикидывать, куда можешь присесть."
+                    show ck serious at center
+                    with dissolve
+                    ck "Пионер, а ты не видел конфеты? Лежали в шкафу, а теперь их нет."
+                    window hide
+                    menu:
+                        "Изобразить непонимание":
+                            if skillcheck('drama', lvl_medium):
+                                window show
+                                dra "У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
+                                me "Понятия не имею, о каких вы конфетах."
+                                $ ds_skill_points['drama'] += 1
+                                show ck normal at center
+                                with dspr
+                                ck "Ясно... Похоже, победитель вчерашнего турнира останется без приза."
+                                hide ck with dissolve
+                                play sound ds_sfx_mot
+                                res "Так это приз был?"
+                            else:
+                                window show
+                                dra "Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
+                                me "Я не знаю..."
+                                ck "Ага, как же... Наверное, ты и украл."
+                                $ ds_skill_points['drama'] += 1
+                                $ ds_karma -= 5
+                                me "Не крал я ничего!"
+                                ck "Разберётся Ольга Дмитриевна."
+                                ck "А пока я могу сказать лишь то, что победитель турнира останется без приза."
+                                play sound ds_sfx_mot
+                                res "Так это приз был?"
+                        "Взять вину на себя":
+                            window show
+                            me "Да знаете... это я их съел, пока убирался..."
+                            ck "Вот как? Ты же понимаешь, что оставил победителя турнира без приза?"
+                            play sound ds_sfx_mot
+                            res "Без приза?"
+                            ck "Ладно, это уже дело твоей вожатой. А пока иди ужинай!"
+                            hide ck with dissolve
+                            $ ds_karma -= 10
+                        "Сказать, что не знаешь":
+                            window show
+                            me "Я не видел... просто заметил, что конфеты пропали, и всё!"
+                            ck "Учитывая, что тут были только двое... это или ты, или ты рыжеволосая девчонка!"
+                            play sound ds_sfx_int
+                            lgc "Тут не нужно быть Сократом, чтобы сделать вывод, кто тогда украл конфеты."
+                            ck "В общем, я скажу Ольге Дмитриевне, она разберётся."
+                            ck "А ты иди ужинать!"
+                            hide ck with dissolve
+                        "Оговорить Алису":
+                            window show
+                            me "Знаю, знаю! Вы видели рыжеволосую девушку, с хвостиками."
+                            show ck normal at center
+                            with dspr
+                            ck "Конечно, видела, припоминаю такую..."
+                            me "Ну так вот, пока мы убирались, она пролезла в окно, выкрала конфеты и убежала!"
+                            ck "Вот как... Значит, она лишила победителя турнира приза!"
+                            ck "Вожатая разберётся, в общем."
+                            $ ds_framed_dv = True
+                            $ ds_lp['dv'] -= 2
+                        "Назвать фантастичную причину":
+                            if skillcheck('conceptualization', lvl_up_medium):
+                                window show
+                                play sound ds_sfx_int
+                                con "Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
+                                $ ds_skill_points['conceptualization'] += 1
+                                me "Вы не поверите, что тут произошло!"
+                                me "Вот убираемся мы тут с Ульяной. И тут - бац!"
+                                me "Заходит шпион! Американский! Чернокожий, в костюме, с портфелем."
+                                me "Открывает свой чемодан, кладёт туда конфеты, в потом облучает нас какой-то штукой, от чего мы не могли ему противодействовать. И был таков!"
+                                show ck laugh at center
+                                with dspr
+                                ck "Я не знаю, как на это реагировать! Такое уморительное враньё! Может, тебе в писатели податься?"
+                                show ck serious at center
+                                with dspr
+                                ck "А если серьёзно - поздравляю, победитель турнира остался без приза! Не знаю, что с этим вожатая делать будет."
+                                show ck smile at center
+                                with dspr
+                                ck "Наверное, в КГБ позвонит со словами: «в стратегический объект «Совёнок» проникли империалистические разведчики и выкрали стратегически важные конфеты»."
+                                hide ck with dissolve
+                            else:
+                                window show
+                                play sound ds_sfx_int
+                                con "Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
+                                me "Да так, знаете... инопланетяне сюда зашли и украли конфеты... мы ничего не смогли поделать..."
+                                show ck laugh at center
+                                with dspr
+                                ck "Интересная история... долго придумывал?"
+                                show ck serious at center
+                                with dspr
+                                ck "Поздравляю, победитель турнира остался без приза! Не знаю, что с этим вожатая делать будет."
+                            $ ds_karma -= 10
+                            play sound ds_sfx_psy
+                            sug "А теперь серьёзно - зачем это было?"
+                            th "Не знаю... просто посмеяться!"
+                        "Сдать Ульяну":
+                            window show
+                            me "Это всё та девочка! Красноволосая!"
+                            ck "Почему-то я так и подумала..."
+                            ck "Ладно, с ней будет Ольга Дмитриевна разбираться... как и с призом для турнира."
+                            $ ds_lp['us'] -= 2
+                            play sound ds_sfx_mot
+                            res "С призом?"
+                    hide ck with dissolve
+                    jump ds_day3_dinner
+        "Привлечь внимание поварихи":
+            window show
+            "Ты громко кричишь."
+            me "Тут воруют! Конфеты украсть хотят!"
+            show us angry sport at center
+            with dspr
+            us "Предатель! Ну ничего..."
+            $ ds_lp['us'] -= 2
+            "И тут она бросается к шкафу и в мгновение ока выхватывает конфеты оттуда."
+            hide us
+            show ck normal far at right
+            with dissolve
+            "К тому времени, как повариха подходит к тебе, её уже и след простыл."
+            show ck serious at center
+            with dspr
+            ck "Что случилось?"
+            window hide
+            menu:
+                "Побежать за Ульяной":
+                    window show
+                    me "Я сейчас! Я всё верну!"
+                    "И ты выбегаешь из столовой."
+                "Остаться и рассказать":
+                    window show
+                    me "Это всё та девочка! Красноволосая! Украла конфеты!"
+                    ck "Вот как... и чего же ты её не догоняешь?"
+                    me "Да я не догоню её..."
+                    ck "Плохо, конечно... с ней будет Ольга Дмитриевна разбираться... как и с призом для турнира."
+                    $ ds_lp['us'] -= 2
+                    play sound ds_sfx_mot
+                    res "С призом?"
+        "Отказаться тихо":
+            window show
+            me "Я в этом участвовать не буду!"
+            show us dontlike sport at center   with dspr
+            us "Ну и ладно!"
+            "Она фыркает и отворачивается."
+            us "Тогда я сама!"
+
+            stop music fadeout 3
+
+            play ambience ambience_dining_hall_full fadein 3
+
+            me "И тебя я не…"
+            hide us  with dissolve
+            "Ты не успеваешь закончить фразу, а Ульянка уже ловко перепрыгивает через стенку буфета, подходит к шкафу, открывает его и начинает рыться там."
+            me "Да подожди ты!{w} Мало тебе, что ли, проблем с Ольгой Дмитриевной!"
+            "Она не отвечает."
+            me "За такое тебя не просто убираться заставят."
+            "Ульянка закрывает шкаф.{w} В её руках ты видишь большой пакет с конфетами."
+            me "А ну, положи на место!"
+            "Она показывает тебе язык и выбегает через заднюю дверь."
+            play sound ds_sfx_psy
+            aut "Это нельзя просто так оставлять!"
+            window hide
+            menu:
+                "Погнаться за ней":
+                    window show
+                    play sound ds_sfx_fys
+                    edr "У девочки приличная фора, но ты вкладываешь в погоню все силы."
+
+                    stop ambience fadeout 2
+
+                    th "Второй раз я ей не проиграю!"
+                    window hide
+                "Доложить поварихе":
+                    window show
+                    "Ты кричишь что есть мочи."
+                    me "Тут конфеты украли!"
+                    show ck serious at center
+                    with dspr
+                    ck "Что случилось? Кто украл?"
+                    me "Та несносная красноволосая девчонка!"
+                    ck "Вот как... и чего же ты её не догоняешь?"
+                    me "Да я не догоню её..."
+                    show ck serious at center
+                    with dspr
+                    ck "Ольга Дмитриевна разберётся... вот только победитель вчерашнего турнира останется без конфет."
+                    play sound ds_sfx_mot
+                    res "Конфеты были призом за турнир? Да, неудача..."
+                    "Тем временем в столовой собираются люди. Подходит время ужина."
+                    jump ds_day3_dinner
+                "Забить":
+                    window show
+                    "Ты остаёшься в столовой. Подходит время ужина."
+                    window hide
+                    $ persistent.sprite_time = "day"
+                    scene bg int_dining_hall_people_day 
+                    with dissolve
+
+                    play ambience ambience_dining_hall_full fadein 3
+
+                    window show
+                    "Постепенно народу прибавляется."
+                    "Ты начинаешь прикидывать, куда можешь присесть."
+                    show ck serious at center
+                    with dissolve
+                    ck "Пионер, а ты не видел конфеты? Лежали в шкафу, а теперь их нет."
+                    window hide
+                    menu:
+                        "Изобразить непонимание":
+                            if skillcheck('drama', lvl_medium):
+                                window show
+                                dra "У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
+                                me "Понятия не имею, о каких вы конфетах."
+                                $ ds_skill_points['drama'] += 1
+                                show ck normal at center
+                                with dspr
+                                ck "Ясно... Похоже, победитель вчерашнего турнира останется без приза."
+                                hide ck with dissolve
+                                play sound ds_sfx_mot
+                                res "Так это приз был?"
+                            else:
+                                window show
+                                dra "Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
+                                me "Я не знаю..."
+                                ck "Ага, как же... Наверное, ты и украл."
+                                $ ds_skill_points['drama'] += 1
+                                $ ds_karma -= 5
+                                me "Не крал я ничего!"
+                                ck "Разберётся Ольга Дмитриевна."
+                                ck "А пока я могу сказать лишь то, что победитель турнира останется без приза."
+                                play sound ds_sfx_mot
+                                res "Так это приз был?"
+                        "Взять вину на себя":
+                            window show
+                            me "Да знаете... это я их съел, пока убирался..."
+                            ck "Вот как? Ты же понимаешь, что оставил победителя турнира без приза?"
+                            play sound ds_sfx_mot
+                            res "Без приза?"
+                            ck "Ладно, это уже дело твоей вожатой. А пока иди ужинай!"
+                            hide ck with dissolve
+                            $ ds_karma -= 10
+                        "Сказать, что не знаешь":
+                            window show
+                            me "Я не видел... просто заметил, что конфеты пропали, и всё!"
+                            ck "Учитывая, что тут были только двое... это или ты, или ты рыжеволосая девчонка!"
+                            play sound ds_sfx_int
+                            lgc "Тут не нужно быть Сократом, чтобы сделать вывод, кто тогда украл конфеты."
+                            ck "В общем, я скажу Ольге Дмитриевне, она разберётся."
+                            ck "А ты иди ужинать!"
+                            hide ck with dissolve
+                        "Оговорить Алису":
+                            window show
+                            me "Знаю, знаю! Вы видели рыжеволосую девушку, с хвостиками."
+                            show ck normal at center
+                            with dspr
+                            ck "Конечно, видела, припоминаю такую..."
+                            me "Ну так вот, пока мы убирались, она пролезла в окно, выкрала конфеты и убежала!"
+                            ck "Вот как... Значит, она лишила победителя турнира приза!"
+                            ck "Вожатая разберётся, в общем."
+                            $ ds_framed_dv = True
+                            $ ds_lp['dv'] -= 2
+                        "Назвать фантастичную причину":
+                            if skillcheck('conceptualization', lvl_up_medium):
+                                window show
+                                play sound ds_sfx_int
+                                con "Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
+                                $ ds_skill_points['conceptualization'] += 1
+                                me "Вы не поверите, что тут произошло!"
+                                me "Вот убираемся мы тут с Ульяной. И тут - бац!"
+                                me "Заходит шпион! Американский! Чернокожий, в костюме, с портфелем."
+                                me "Открывает свой чемодан, кладёт туда конфеты, в потом облучает нас какой-то штукой, от чего мы не могли ему противодействовать. И был таков!"
+                                show ck laugh at center
+                                with dspr
+                                ck "Я не знаю, как на это реагировать! Такое уморительное враньё! Может, тебе в писатели податься?"
+                                show ck serious at center
+                                with dspr
+                                ck "А если серьёзно - поздравляю, победитель турнира остался без приза! Не знаю, что с этим вожатая делать будет."
+                                show ck smile at center
+                                with dspr
+                                ck "Наверное, в КГБ позвонит со словами: «в стратегический объект «Совёнок» проникли империалистические разведчики и выкрали стратегически важные конфеты»."
+                                hide ck with dissolve
+                            else:
+                                window show
+                                play sound ds_sfx_int
+                                con "Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
+                                me "Да так, знаете... инопланетяне сюда зашли и украли конфеты... мы ничего не смогли поделать..."
+                                show ck laugh at center
+                                with dspr
+                                ck "Интересная история... долго придумывал?"
+                                show ck serious at center
+                                with dspr
+                                ck "Поздравляю, победитель турнира остался без приза! Не знаю, что с этим вожатая делать будет."
+                            $ ds_karma -= 10
+                            play sound ds_sfx_psy
+                            sug "А теперь серьёзно - зачем это было?"
+                            th "Не знаю... просто посмеяться!"
+                        "Сдать Ульяну":
+                            window show
+                            me "Это всё та девочка! Красноволосая!"
+                            ck "Почему-то я так и подумала..."
+                            ck "Ладно, с ней будет Ольга Дмитриевна разбираться... как и с призом для турнира."
+                            $ ds_lp['us'] -= 2
+                            play sound ds_sfx_mot
+                            res "С призом?"
+                    hide ck with dissolve
+                    jump ds_day3_dinner
+    $ persistent.sprite_time = "day"
+    scene bg ext_square_day:
+        zoom 1.05 anchor (48,27)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (25,25)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (-25,25)
+        repeat 
+    with dissolve
+
+    play music music_list["always_ready"] fadein 5
+
+    window show
+    "Вы пробегаете по площади…"
+    window hide
+
+    $ persistent.sprite_time = "day"
+    scene bg ext_musclub_day:
+        zoom 1.05 anchor (48,27)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (25,25)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (-25,25)
+        repeat  
+    with dissolve
+
+    window show
+    "Сворачиваете к зданию музыкального кружка…"
+    window hide
+
+    $ persistent.sprite_time = "day"
+    scene bg ext_path2_day:
+        zoom 1.05 anchor (48,27)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (25,25)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (-25,25)
+        repeat  
+    with dissolve
+
+    window show
+    "И выбегаете на лесную тропинку."
+    "Ты уже почти догнал Ульянку, как вдруг она останавливается…"
+    if skillcheck('reaction_speed', lvl_legendary, passive=True):
+        play sound ds_sfx_mot
+        res "Тормози!"
+        "У тебя получается остановиться так, чтобы её не зацепить."
+        $ ds_skill_points['reaction_speed'] += 1
+        show us laugh sport at center
+        with dissolve
+        us "Не догнал! Не догнал! Я победила!"
+        res "Ты пытаешься её схватить..."
+
+        window hide
+        show us laugh sport at right
+        with dspr
+        $ renpy.pause(0.5)
+        show us laugh sport at left
+        with dspr
+        $ renpy.pause(0.5)
+        show us laugh sport at right
+        with dspr
+        $ renpy.pause(0.5)
+        show us laugh sport at left
+        with dspr
+        $ renpy.pause(0.5)
+        show us laugh2 sport at center
+        with dspr
+        window show
+
+        res "...но она оказывается слишком юркой, и ты ничего не можешь поделать."
+        if not ds_caught_us:
+            play sound ds_sfx_psy
+            aut "Снова поражение от этой девчонки..."
+    else:
+        play sound ds_sfx_mot
+        res "У тебя же так резко затормозить не получилось, и ты сбиваешь её с ног."
+        $ ds_skill_points['reaction_speed'] += 1
+        window hide
+
+        stop music fadeout 3
+
+        play sound sfx_fall_grass
+
+        with vpunch
+
+        pause(1)
+
+        window show
+        "Вы повалились на траву..."
+        $ ds_damage_health()
+
+        scene cg ds_day3_us_caught_f1
+        $ renpy.pause(0.1, hard=True)
+        scene cg ds_day3_us_caught_f2
+        $ renpy.pause(0.1, hard=True)
+        scene cg ds_day3_us_caught_f3
+
+        play music music_list["eternal_longing"] fadein 5
+
+        window show
+        me "Догнал!"
+        us "И ничего не догнал…"
+        "Смущённо отвечает она."
+        "Ульяна лежит под тобой."
+        "Её лицо – совсем рядом с твоим."
+        play sound ds_sfx_mot
+        per_toc "Ты чувствуешь прерывистое дыхание и жар тела."
+        play sound ds_sfx_fys
+        ins "Конечно, сейчас она ещё ребёнок, но скоро станет женщиной."
+        play sound ds_sfx_mot
+        com "Всё это тебя сильно смущает."
+        us "Насиловать будешь?"
+        "Немного придя в себя, говорит она."
+        play sound ds_sfx_fys
+        hfl "Бутылка зовёт... Твой зад рефлекторно сжимается от осознания возможных последствий."
+        play sound ds_sfx_int
+        dra "Всё-таки в данной ситуации это больше детская игра."
+        hfl "Но лучше быть осторожным."
+        me "А ты хочешь?"
+        us "А то!"
+        "Она хитро улыбнулась и тихо хрюкает.{w} Или тебе просто показалось."
+        me "А вот я что-то не очень…"
+        us "Ну и ладно!"
+        window hide
+
+        stop music fadeout 3
+
+        play sound sfx_punch_medium
+
+        with vpunch
+
+        pause(1)
+
+        scene bg black 
+        with dissolve
+
+        window show
+        play sound ds_sfx_fys
+        pat "Ульянка больно кусает тебя за нос."
+        com "От неожиданности ты немного привстаёшь."
+        window hide
+
+        $ persistent.sprite_time = "day"
+        scene bg ext_path2_day 
+        with dissolve
+
+        play ambience ambience_forest_day fadein 2
+
+        show us grin sport at center   with dissolve
+        window show
+        "Этих мгновений как раз хватает ей, чтобы вырваться и отбежать на несколько метров."
+        show us laugh sport far at center   with dissolve
+        us "Смотри!{w} Потом пожалеешь!"
+    hide us  with dissolve
+    "Она громко смеётся и скрывается в лесу."
+    "Пакет с конфетами же остаётся лежать на земле рядом с тобой."
+    th "Интересно, она специально их бросила?"
+    play sound ds_sfx_psy
+    vol "Время близится к ужину, так что нужно поскорее вернуть конфеты."
+    play sound ds_sfx_fys
+    hfl "И желательно (очень желательно) остаться незамеченным."
+    play sound ds_sfx_int
+    rhe "Конечно, ты можешь объяснить всю ситуацию, что их украла Ульяна…"
+    rhe "Но кто тебе поверит?"
+    window hide
+
+    stop ambience fadeout 2
+
+    $ persistent.sprite_time = "day"
+    scene bg ext_dining_hall_near_day 
+    with dissolve
+
+    play ambience ambience_camp_center_day fadein 2
+
+    show mt normal pioneer at center   with dissolve
+    window show
+    "На входе в столовую тебя уже ждёт Ольга Дмитриевна…"
+    show mt smile pioneer at center   with dspr
+    mt "Молодец, Семён!"
+    me "Это вы про что?"
+    "Пакет с конфетами ты прячешь за спиной."
+    "Он прозрачен, да и таких размеров, что в карман не запихнёшь!"
+    mt "Я про уборку.{w} Всё чисто и аккуратно!"
+    me "А, да…"
+    show mt normal pioneer at center   with dspr
+    mt "А Ульяна где?"
+    play sound ds_sfx_int
+    lgc "Ты бы и сам хотел знать!"
+    me "Она… скоро придёт…"
+    mt "Хорошо. Ну, иди ужинать тогда."
+    $ ds_karma += 5
+    window hide
+
+    stop ambience fadeout 2
+
+    $ persistent.sprite_time = "day"
+    scene bg int_dining_hall_people_day 
+    with dissolve
+
+    play ambience ambience_dining_hall_full fadein 3
+
+    window show
+    "Ты заходишь в столовую."
+    "Там, что неудивительно, полно народу."
+    "Как вернуть пакет так, чтобы тебя не заметили, ты и представить не можешь."
+    th "Конечно, можно вечером, но сейчас-то куда мне его девать?!"
+    sl "Семён!"
+    show sl normal pioneer at center   with dissolve
+    "Ты оборачиваешься.{w} Перед тобой стоит Славя."
+    sl "Ой, а что это у тебя?"
+    "Она смотрит на пакет, который ты не успеваешь спрятать за спину."
+    play sound ds_sfx_psy
+    aut "Раскрыт, разоблачён, опозорен и раздавлен!"
+    play sound ds_sfx_int
+    dra "Врать бессмысленно."
+    me "Это…{w} конфеты…"
+    sl "А откуда?"
+    window hide
+    menu:
+        "Сказать про Ульяну":
+            window show
+            me "Ульяна отдала."
+            if ds_lp['sl'] >= 0:
+                show sl smile pioneer at center   with dspr
+                sl "Понятно. Значит, она опять за своё."
+                me "Опять?"
+                sl "Ну, она уже не первый раз ворует конфеты."
+                th "И почему я не удивлён?"
+                show sl normal pioneer at center   with dspr
+                sl "Давай я их отнесу."
+                me "Спасибо…"
+                play sound ds_sfx_psy
+                vol "Славя в очередной раз спасает тебя."
+                th "Какая же она замечательная..."
+                "Она берёт пакет и направляется к буфету."
+                hide sl  with dissolve
+                "А ты быстро бегаешь глазами и ногами по столовой в поисках свободного места."
+            else:
+                show sl angry pioneer at center
+                with dspr
+                sl "Вот как, значит... Украл конфеты?"
+                me "И ничего я не крал! Это всё она!"
+                show sl serious pioneer at center
+                with dspr
+                sl "Ольга Дмитриевна разберётся... а вот и она, кстати!"
+                show mt normal pioneer at right
+                with dissolve
+                mt "А что случилось?"
+                sl "Да так, тут Семён на пару с Ульяной конфеты похитили!"
+                show mt angry pioneer at right
+                with dspr
+                mt "Вот как, значит? А я тебя похвалила ещё..."
+                me "Да не делал я ничего!"
+                mt "Но не уследил за Ульяной! Хотя должен был!"
+                aut "С чего это вдруг?"
+                mt "Всё, не хочу в этом разбираться! Вот и доверяй вам! Иди ужинать!"
+                $ ds_lp['mt'] -= 1
+                $ ds_karma -= 10
+        "Прикрыть Ульяну":
+            window show
+            me "Так получилось... я взял конфеты, пока убирался..."
+            show sl serious pioneer at center
+            with dspr
+            sl "Ну, хоть честно..."
+            $ ds_lp['sl'] -= 1
+            if ds_lp['sl'] >= 10:
+                show sl normal pioneer at center
+                with dspr
+                sl "Ладно, не буду тебя в этот раз сдавать Ольге Дмитриевне... но больше так не делай!"
+                me "Спасибо…"
+                play sound ds_sfx_psy
+                vol "Славя в очередной раз спасает тебя."
+                th "Какая же она замечательная..."
+                "Она берёт пакет и направляется к буфету."
+                hide sl  with dissolve
+                "А ты быстро бегаешь глазами и ногами по столовой в поисках свободного места."
+            else:
+                sl "Вот как, значит... Украл конфеты?"
+                sl "Да как ты мог?!"
+                show sl serious pioneer at center
+                with dspr
+                sl "Ольга Дмитриевна разберётся... а вот и она, кстати!"
+                show mt normal pioneer at right
+                with dissolve
+                mt "А что случилось?"
+                sl "Да так, тут Семён на пару с Ульяной конфеты похитили!"
+                show mt angry pioneer at right
+                with dspr
+                mt "Вот как, значит? А я тебя похвалила ещё..."
+                me "Извините..."
+                mt "Вот и доверяй вам! Иди ужинать!"
+                $ ds_lp['mt'] -= 1
+                $ ds_karma -= 10
+    jump ds_day3_dinner
+
+label ds_day3_after_lunch:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_dining_hall_away_day
+    with dissolve
+
+    window show
+    th "Так, и куда бы мне пойти?"
+
+    window hide
+    $ disable_all_zones_ds_small()
+    $ set_zone_ds_small("house_me_mt", "ds_day3_home")
+    $ set_zone_ds_small("library", "ds_day3_library")
+    if ds_member['music']:
+        $ set_zone_ds_small("music_club", "ds_day3_music")
+    if ds_member['cyber']:
+        $ set_zone_ds_small("clubs", "ds_day3_cyber")
+    $ set_zone_ds_small("forest", "ds_day3_forest")
+    $ set_zone_ds_small("medic_house", "ds_day3_medic")
+    if ds_punished:
+        $ set_zone_ds_small("dining_hall", "ds_day3_punishment_return")
+    $ show_small_map_ds()
