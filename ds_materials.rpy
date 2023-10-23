@@ -534,7 +534,7 @@ init:
 
     image bg ds_int_wardrobe = "mods/disco_sovenok/bg/int_wardrobe.jpg"
 
-    image bg ds_int_clubs_pantry = "mods/disco_sovenok/bg/int_clubs_storage.jpg"
+    image bg ds_int_clubs_pantry = "mods/disco_sovenok/bg/backroom.jpg"
 
     image bg ds_field_day = "mods/disco_sovenok/bg/ext_meadow_day.jpg"
 
@@ -577,6 +577,16 @@ init:
 
     image cg ds_day3_us_potato_1 = "mods/disco_sovenok/cg/d5_potato_1.jpg"
     image cg ds_day3_us_potato_2 = "mods/disco_sovenok/cg/d5_potato_2.jpg"
+
+    image cg ds_day3_mi_piano_1 = "mods/disco_sovenok/cg/cg_mi_piano1_ll.jpg"
+    image cg ds_day3_mi_piano_2 = "mods/disco_sovenok/cg/cg_mi_piano2_ll.jpg"
+    image cg ds_day3_mi_guitar = "mods/disco_sovenok/cg/d4_mi_guitar_club_7dl.jpg"
+    image cg ds_day3_mi_teaching = "mods/disco_sovenok/cg/d7_mi_embrace.png"
+
+    image cg ds_day3_robot_fail = "mods/disco_sovenok/cg/catday_warp_cat.jpg"
+
+    image cg ds_day3_hatch = "mods/disco_sovenok/cg/d4_hatch_night_7dl.jpg"
+    image cg ds_dayx_hatch_open = "mods/disco_sovenok/cg/d4_hatch_night_open_7dl.jpg"
 
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
@@ -651,6 +661,12 @@ init:
     $ ds_goodend_mi_jp = "mods/disco_sovenok/music/goluboy_vagon.ogg"
     $ ds_goodend_un = "mods/disco_sovenok/music/yanderesong.ogg"
 
+    $ ds_mi_piano_1 = "mods/disco_sovenok/music/mi_piano_1.mp3"
+    $ ds_mi_piano_2 = "mods/disco_sovenok/music/mi_piano_2.mp3"
+    $ ds_mi_piano_3 = "mods/disco_sovenok/music/mi_piano_3.mp3"
+    $ ds_mi_piano_4 = "mods/disco_sovenok/music/mi_piano_4.mp3"
+    $ ds_mi_piano_5 = "mods/disco_sovenok/music/mi_piano_5.mp3"
+
 ## SFX
 
     $ ds_check_success = "mods/disco_sovenok/sound/check-success.ogg"
@@ -674,6 +690,8 @@ init:
 
     $ ds_ambience_train = "mods/disco_sovenok/ambience/train_depart_7dl.ogg"
     $ ds_ambience_shower = "mods/disco_sovenok/ambience/ambience_showers_7dl.ogg"
+
+    $ ds_electrocution = "mods/disco_sovenok/sound/electrocution.mp3"
 
 # Спрайты
 
