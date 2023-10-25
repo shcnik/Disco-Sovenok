@@ -538,6 +538,9 @@ init:
 
     image bg ds_field_day = "mods/disco_sovenok/bg/ext_meadow_day.jpg"
 
+    image bg ds_int_toilet_day = "mods/disco_sovenok/bg/int_toilet_day.png"
+    image bg ds_int_toilet_night = "mods/disco_sovenok/bg/int_toilet_night.jpg"
+
 ## Новые CG
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
@@ -587,6 +590,8 @@ init:
 
     image cg ds_day3_hatch = "mods/disco_sovenok/cg/d4_hatch_night_7dl.jpg"
     image cg ds_dayx_hatch_open = "mods/disco_sovenok/cg/d4_hatch_night_open_7dl.jpg"
+
+    image cg ds_day3_cs_waiting = "mods/disco_sovenok/cg/ViCG1.jpg"
 
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
@@ -692,6 +697,9 @@ init:
     $ ds_ambience_shower = "mods/disco_sovenok/ambience/ambience_showers_7dl.ogg"
 
     $ ds_electrocution = "mods/disco_sovenok/sound/electrocution.mp3"
+
+    $ ds_alert = "mods/disco_sovenok/sound/alert.mp3"
+    $ ds_bombing = "mods/disco_sovenok/sound/bombing.mp3"
 
 # Спрайты
 
@@ -2005,6 +2013,80 @@ init:
     image mz bukal casual  = ds_define_sprite('mz', 'bukal', body_num=1, dist='', cloth='casual')
     image mz normal casual  = ds_define_sprite('mz', 'normal', body_num=1, dist='', cloth='casual')
     image mz fun casual  = ds_define_sprite('mz', 'fun', body_num=1, dist='', cloth='casual')
+
+    # Лена
+
+    image un angry modern = ds_define_sprite('un', 'angry', body_num=1, cloth='designer')
+    image un angry modern close = ds_define_sprite('un', 'angry', dist='close', body_num=1, cloth='designer')
+    image un angry modern far = ds_define_sprite('un', 'angry', dist='far', body_num=1, cloth='designer')
+
+    image un angry2 modern = ds_define_sprite('un', 'angry2', body_num=3, cloth='designer')
+    image un angry2 modern close = ds_define_sprite('un', 'angry2', dist='close', body_num=3, cloth='designer')
+    image un angry2 modern far = ds_define_sprite('un', 'angry2', dist='far', body_num=3, cloth='designer')
+
+    image un cry modern = ds_define_sprite('un', 'cry', body_num=2, cloth='designer')
+    image un cry modern close = ds_define_sprite('un', 'cry', dist='close', body_num=2, cloth='designer')
+    image un cry modern far = ds_define_sprite('un', 'cry', dist='far', body_num=2, cloth='designer')
+
+    image un cry_smile modern = ds_define_sprite('un', 'cry_smile', body_num=2, cloth='designer')
+    image un cry_smile modern close = ds_define_sprite('un', 'cry_smile', dist='close', body_num=2, cloth='designer')
+    image un cry_smile modern far = ds_define_sprite('un', 'cry_smile', dist='far', body_num=2, cloth='designer')
+
+    image un evil_smile modern = ds_define_sprite('un', 'evil_smile', body_num=1, cloth='designer')
+    image un evil_smile modern close = ds_define_sprite('un', 'evil_smile', dist='close', body_num=1, cloth='designer')
+    image un evil_smile modern far = ds_define_sprite('un', 'evil_smile', dist='far', body_num=1, cloth='designer')
+
+    image un grin modern = ds_define_sprite('un', 'grin', body_num=3, cloth='designer')
+    image un grin modern close = ds_define_sprite('un', 'grin', dist='close', body_num=3, cloth='designer')
+    image un grin modern far = ds_define_sprite('un', 'grin', dist='far', body_num=3, cloth='designer')
+
+    image un laugh modern = ds_define_sprite('un', 'laugh', body_num=3, cloth='designer')
+    image un laugh modern close = ds_define_sprite('un', 'laugh', dist='close', body_num=3, cloth='designer')
+    image un laugh modern far = ds_define_sprite('un', 'laugh', dist='far', body_num=3, cloth='designer')
+
+    image un normal modern = ds_define_sprite('un', 'normal', body_num=1, cloth='designer')
+    image un normal modern close = ds_define_sprite('un', 'normal', dist='close', body_num=1, cloth='designer')
+    image un normal modern far = ds_define_sprite('un', 'normal', dist='far', body_num=1, cloth='designer')
+
+    image un rage modern = ds_define_sprite('un', 'rage', body_num=3, cloth='designer')
+    image un rage modern close = ds_define_sprite('un', 'rage', dist='close', body_num=3, cloth='designer')
+    image un rage modern far = ds_define_sprite('un', 'rage', dist='far', body_num=3, cloth='designer')
+
+    image un sad modern = ds_define_sprite('un', 'sad', body_num=2, cloth='designer')
+    image un sad modern close = ds_define_sprite('un', 'sad', dist='close', body_num=2, cloth='designer')
+    image un sad modern far = ds_define_sprite('un', 'sad', dist='far', body_num=2, cloth='designer')
+
+    image un scared modern = ds_define_sprite('un', 'scared', body_num=2, cloth='designer')
+    image un scared modern close = ds_define_sprite('un', 'scared', dist='close', body_num=2, cloth='designer')
+    image un scared modern far = ds_define_sprite('un', 'scared', dist='far', body_num=2, cloth='designer')
+
+    image un serious modern = ds_define_sprite('un', 'serious', body_num=3, cloth='designer')
+    image un serious modern close = ds_define_sprite('un', 'serious', dist='close', body_num=3, cloth='designer')
+    image un serious modern far = ds_define_sprite('un', 'serious', dist='far', body_num=3, cloth='designer')
+
+    image un shocked modern = ds_define_sprite('un', 'shocked', body_num=2, cloth='designer')
+    image un shocked modern close = ds_define_sprite('un', 'shocked', dist='close', body_num=2, cloth='designer')
+    image un shocked modern far = ds_define_sprite('un', 'shocked', dist='far', body_num=2, cloth='designer')
+
+    image un shy modern = ds_define_sprite('un', 'shy', body_num=1, cloth='designer')
+    image un shy modern close = ds_define_sprite('un', 'shy', dist='close', body_num=1, cloth='designer')
+    image un shy modern far = ds_define_sprite('un', 'shy', dist='far', body_num=1, cloth='designer')
+
+    image un smile modern = ds_define_sprite('un', 'smile', body_num=1, cloth='designer')
+    image un smile modern close = ds_define_sprite('un', 'smile', dist='close', body_num=1, cloth='designer')
+    image un smile modern far = ds_define_sprite('un', 'smile', dist='far', body_num=1, cloth='designer')
+
+    image un smile2 modern = ds_define_sprite('un', 'smile2', body_num=1, cloth='designer')
+    image un smile2 modern close = ds_define_sprite('un', 'smile2', dist='close', body_num=1, cloth='designer')
+    image un smile2 modern far = ds_define_sprite('un', 'smile2', dist='far', body_num=1, cloth='designer')
+
+    image un smile3 modern = ds_define_sprite('un', 'smile3', body_num=3, cloth='designer')
+    image un smile3 modern close = ds_define_sprite('un', 'smile3', dist='close', body_num=3, cloth='designer')
+    image un smile3 modern far = ds_define_sprite('un', 'smile3', dist='far', body_num=3, cloth='designer')
+
+    image un surprise modern = ds_define_sprite('un', 'surprise', body_num=2, cloth='designer')
+    image un surprise modern close = ds_define_sprite('un', 'surprise', dist='close', body_num=2, cloth='designer')
+    image un surprise modern far = ds_define_sprite('un', 'surprise', dist='far', body_num=2, cloth='designer')
 
 ## Новые персонажи
 

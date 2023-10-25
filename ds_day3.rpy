@@ -24,6 +24,16 @@ init:
     $ ds_forest_accept_sl = 0
     $ ds_helped_sl_lib = False
 
+    default ds_pp_approved = {
+        'dv': False,
+        'un': False,
+        'sl': False,
+        'us': False,
+        'mi': False,
+        'el': False,
+        'mt': False
+    }
+
 label ds_day3_morning:
     $ ds_restore_health()
     $ ds_restore_morale()
@@ -7931,6 +7941,7 @@ label ds_day3_clubs:
     play sound sfx_open_door_clubs
     scene cg d5_clubs_robot
     with dissolve
+    play ambience ambience_clubs_inside_day fadein 2
     "В клубе ты видишь Электроника, Шурика и..."
     play sound ds_sfx_mot
     per_eye "И робота-кошкодевочку!"
@@ -7975,6 +7986,8 @@ label ds_day3_clubs:
             with dspr
             el "Ну ладно..."
             "И ты идёшь куда-нибудь в другую локацию."
+            $ disable_current_zone_ds_small()
+            stop ambience fadeout 2
             jump ds_day3_after_lunch
     show el smile pioneer at center
     show sh normal pioneer at center
@@ -8002,12 +8015,14 @@ label ds_day3_clubs:
             edr "Последнее, что ты чувствуешь перед тем, как пасть - разряд, прокатившийся по твоему телу и сковавший твои движения."
             scene black with dissolve2
             stop sound_loop fadeout 2
+            stop ambience fadeout 2
             jump ds_end_electrocution
         "Бежать":
             window show
             me "СПАСАЙСЯ КТО МОЖЕТ!"
             scene bg ext_clubs_day
             with dissolve
+            stop ambience
             "С истошным воплем ты выбегаешь из клуба."
             "Отдышаться у тебя получается только на улице."
             show el surprise pioneer at left
@@ -8035,6 +8050,7 @@ label ds_day3_clubs:
                     show el normal pioneer at left
                     show sh normal pioneer at right
                     with dissolve
+                    play ambience ambience_clubs_inside_day fadein 2
                 "Отказаться":
                     window show
                     me "Нет уж! Я не хочу погибнуть!"
@@ -8047,6 +8063,7 @@ label ds_day3_clubs:
                     with dissolve
                     "И они заходят в клуб."
                     "Ты же думаешь, куда тебе двигаться дальше."
+                    $ disable_current_zone_ds_small()
                     jump ds_day3_after_lunch
         "Отключить электричество":
             if skillcheck('visual_calculus', lvl_easy):
@@ -8093,6 +8110,7 @@ label ds_day3_clubs:
     me "Ладно..."
     scene bg int_clubs_male2_night
     with dissolve
+    stop ambience fadeout 2
     th "Так-так, и где тут микросхемы?"
     play sound ds_sfx_mot
     per_eye "Начни осматривать ящики."
@@ -8130,6 +8148,7 @@ label ds_day3_clubs:
             show sh normal pioneer at right
             with dissolve
             window show
+            play ambience ambience_clubs_inside_day fadein 2
             me "Слушайте... а вот там в кладовке люк, он зачем?"
             show el scared pioneer at left
             show sh scared pioneer at right
@@ -8153,6 +8172,7 @@ label ds_day3_clubs:
             show el normal pioneer at left
             show sh normal pioneer at right
             with dissolve
+            play ambience ambience_clubs_inside_day fadein 2
             "Наконец, ты возвращаешься к кибернетикам - с пустыми руками."
     show el upset pioneer at left
     with dspr
@@ -8195,14 +8215,781 @@ label ds_day3_clubs:
     el "Идём ужинать!"
     sh "Да, идём."
     me "Идём..."
+    stop ambience fadeout 5
     if ds_punished:
         jump ds_day3_mt_interrogate
     else:
         jump ds_day3_dinner
 
+label ds_day3_medic:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_aidpost_day
+    with dissolve
+    "Ты выходишь к медпункту."
+    if ds_health < 0:
+        play sound ds_sfx_fys
+        edr "Тебе явно не лишним будет взять каких-нибудь таблеток - чувствуешь ты себя не очень."
+    
+    play sound sfx_open_dooor_campus_1
+    scene cg ds_day3_cs_waiting
+    with dissolve
+    play sound ds_sfx_int
+    lgc "Кажется, ты тут ожидаемый гость."
+    play sound ds_sfx_fys
+    ins "И {i}желанный{/i}!"
+    play music ds_cs_theme
+    cs "Ну привет... пионер. Решил вновь навестить... одинокую женщину?"
+    play sound ds_sfx_int
+    rhe "Она так нарочито делает паузы и говорит таким нарочито томным голосом... как будто намекает на что-то."
+    ins "Не намекает, а говорит прямо: «я хочу тебя!»"
+    ins "Заметь, кстати, какая у неё привлекательная попка... так выпячена."
+    play sound ds_sfx_fys
+    edr "Так, всё, {i}hör auf{/i}! Довольно пошлостей, нам нужны лекарства!"
+    scene bg int_aidpost_day
+    show cs normal medic2 glasses at center
+    with dissolve
+    "Наконец, Виола встаёт и смотрит на тебя суровым пристальным взглядом."
+    cs "Ну-с, чего изволите, молодой человек?"
+    window hide
+    menu:
+        "Попросить лекарств" if ds_health < 0:
+            window show
+            me "Мне бы таблеток... голова болит сильно."
+            show cs sorrow medic2 glasses at center
+            with dspr
+            cs "Сейчас будут... пионер."
+            hide cs with dissolve
+            play sound ds_sfx_psy
+            emp "На лице и в голосе читается некоторое разочарование."
+            show cs serious medic3 glasses at center
+            with dissolve
+            cs "Вот, держи, пионер."
+            "Ты берёшь таблетку и принимаешь её."
+            $ ds_restore_health()
+            play sound ds_sfx_fys
+            edr "Уже через пару минут тебе становится лучше."
+            cs "Это всё?"
+            window hide
+            menu:
+                "Остаться":
+                    window show
+                    me "Нет, конечно, ещё мне нужны {i}вы{/i}!"
+                "Уйти":
+                    window show
+                    me "Да... спасибо."
+                    show cs normal medic2 glasses at center
+                    with dspr
+                    cs "Ну как скажешь... пионер. Если что надо - приходи в любое время."
+                    $ ds_lp['cs'] -= 1
+                    scene bg ext_aidpost_day
+                    with dissolve
+                    th "Так, куда теперь?"
+                    $ disable_current_zone_ds_small()
+                    jump ds_day3_after_lunch
+        "Предложить провести время вместе":
+            window show
+            me "А знаете... я ради {i}вас{/i} пришёл!"
+        "Уйти":
+            window show
+            me "Ой, извините, я ошибся! Я пойду, пожалуй."
+            show cs sorrow medic2 glasses at center
+            with dspr
+            cs "Ну ладно... пионер."
+            scene bg ext_aidpost_day
+            with dissolve
+            th "Так, куда теперь?"
+            $ disable_current_zone_ds_small()
+            jump ds_day3_after_lunch
+    show cs shy medic2 glasses at center
+    with dspr
+    cs "То есть, пионер пришёл скрасить одиночество такой женщины как я?"
+    me "Ну да... а почему бы и нет?"
+    $ ds_lp['cs'] += 1
+    show cs smile medic1 glasses at center
+    with dspr
+    "Она снимает очки и откладывает их на стол."
+    show cs smile medic2 at center
+    with dspr
+    cs "И чем же займёмся? Может, чаю выпьем?"
+    me "Давайте..."
+    # TODO: CG: чай с Виолой
+    "Вы садитесь за стол. Виола разливает чай, и вы приступаете."
+    cs "И как твоя жизнь пионерская?"
+    me "Да нормально, не жалуюсь. А у вас как дела?"
+    cs "Знаешь, мне так {i}одиноко{/i}."
+    play sound ds_sfx_int
+    rhe "На слове «одиноко» она делает особый акцент. Будто подталкивает к действию."
+    play sound ds_sfx_mot
+    per_toc "Хорошее замечание насчёт «подталкивает». Потому что ты чувствуешь её ногу кое-где между твоих."
+    play sound ds_sfx_fys
+    ins "Именно там, где надо. Судя по реакции твоего маленького друга - уж точно."
+    per_tas "Вкусный чай!"
+    ins "Не сейчас! Тут происходят вещи и повкуснее!"
+    play sound ds_sfx_psy
+    vol "Ситуация, мягко говоря, некомфортная. Лучше всего будет продолжать пить чай как ни в чём не бывало."
+    window hide
+    menu:
+        "Ответить взаимностью":
+            if skillcheck('coordination', lvl_challenging):
+                window show
+                play sound ds_sfx_mot
+                cor "Ты, скинув обувь, естественно, тоже попадаешь своей ногой в точку."
+                $ ds_skill_points['coordination'] += 1
+                ins "Хотелось бы сказать «в точку G», но до неё не дошло - пока."
+                "На лице Виолы отражается точное попадание."
+                cs "Ах... ну ты даёшь, пионер..."
+                $ ds_lp['cs'] += 2
+                "Ты тем временем продолжаешь двигать своей ногой между её. Как и она - между твоими."
+            else:
+                window show
+                play sound ds_sfx_mot
+                cor "Сняв обувь с ноги, ты пытаешься сделать ей то же самое."
+                cor "Но вместо этого ты попадаешь по ноге."
+                $ ds_skill_points['coordination'] += 1
+                cs "Ой... немного не туда, пионер."
+                "C этими словами она аккуратно поправляет твою ногу, чтобы она оказалась в нужном месте."
+                $ ds_lp['cs'] += 1
+                ins "Ну уж тут-то ты сообразишь!"
+                th "Да я знаю..."
+                "И ты шевелишь своими пальцами между её ног, пока она проделывает манипуляции своей у тебя."
+        "Попросить прекратить":
+            window show
+            me "Прекратите, пожалуйста."
+            cs "Ладно, как хочешь... пионер."
+            play sound ds_sfx_psy
+            emp "Видно, что она погрустнела."
+            $ ds_lp['cs'] -= 1
+            me "Ладно... давайте допивать чай, и я пойду..."
+            cs "Как скажешь, пионер."
+            window hide
+            $ renpy.pause(5.0)
+            window show
+            play sound sfx_dinner_horn_processed
+            "Вскоре звучит сигнал на ужин, и ты пытаешься, не подавая виду, уйти."
+            scene bg ext_aidpost_day
+            with dissolve
+            play sound ds_sfx_mot
+            com "Но получается откровенно плохо - более-менее собраться у тебя получается лишь на улице."
+            th "Ладно, идём в столовую!"
+            if ds_punished:
+                jump ds_day3_mt_interrogate
+            else:
+                jump ds_day3_dinner
+        "Закатить скандал":
+            window show
+            me "Да что вы себе позволяете вообще?! Среди бела дня домогаетесь до пионеров! Я буду жаловаться!"
+            $ ds_lp['cs'] -= 2
+            scene bg int_aidpost_day
+            show cs irritated medic2 at center
+            with dissolve
+            cs "Не ори ты так, ничего я тебе не сделала ведь."
+            me "Да я..! Да вы..! Да вы домогаетесь меня!"
+            show cs normal medic2 at center
+            with dspr
+            cs "И ничего я не домогаюсь. Ну, случайно положила ногу, с кем не бывает?"
+            play sound ds_sfx_int
+            dra "А её так просто не проведёшь, однако! Причём, так спокойно говорит."
+            play sound ds_sfx_psy
+            sug "Нет, без шансов. Никого ты не убедишь, что она тебя домогалась."
+            window hide
+            menu:
+                "Остаться":
+                    window show
+                    me "Ладно... давайте допивать чай, и я пойду..."
+                    cs "Как скажешь, пионер."
+                    window hide
+                    $ renpy.pause(5.0)
+                    window show
+                    play sound sfx_dinner_horn_processed
+                    "Вскоре звучит сигнал на ужин, и ты пытаешься, не подавая виду, уйти."
+                    scene bg ext_aidpost_day
+                    with dissolve
+                    play sound ds_sfx_mot
+                    com "Но получается откровенно плохо - более-менее собраться у тебя получается лишь на улице."
+                    th "Ладно, идём в столовую!"
+                    if ds_punished:
+                        jump ds_day3_mt_interrogate
+                    else:
+                        jump ds_day3_dinner
+                "Уйти":
+                    window show
+                    me "Я пошёл! Счастливо оставаться!"
+                    $ ds_lp['cs'] -= 1
+                    play sound sfx_close_door_1
+                    scene bg ext_aidpost_day
+                    with dissolve
+                    "И ты выходишь, хлопнув дверью напоследок."
+                    th "Надо убираться отсюда поскорее..."
+                    $ disable_current_zone_ds_small()
+                    jump ds_day3_after_lunch
+        "Никак не реагировать":
+            window show
+            "Ты делаешь вид, будто ничего, ну совсем ничего не происходит."
+            "Хотя это и становится труднее - Виола же начинает двигать у тебя между ног, натирая твой ствол."
+    per_toc "Вскоре ты чувствуешь влажную теплоту между твоих ног."
+    play sound ds_sfx_mot
+    com "Как неудобно вышло! Тебе {i}срочно{/i} нужно выйти!"
+    scene bg int_aidpost_day
+    show cs grin medic2 at center
+    with dissolve
+    me "Извините... мне нужно отойти."
+    cs "Что, уже {i}всё{/i}, пионер?"
+    play sound ds_sfx_fys
+    ins "В определённом смысле - да, всё."
+    me "Я скоро приду!"
+    scene bg ext_aidpost_day
+    with dissolve
+    "С этими словами ты выбегаешь из медпункта в сторону ближайшего туалета."
+    window hide
+    $ renpy.pause(1.0)
+    scene bg ds_int_toilet_day
+    with dissolve
+    window show
+    play sound ds_sfx_psy
+    ine "Тебя уже в который раз удивляет, насколько тут чистый туалет - ведь лагерные туалеты ты представлял себе по-другому."
+    th "Ага, в «совке» настоящем туалет ничуть не «совковый»."
+    play sound ds_sfx_int
+    enc "Ну, не считая «чаш Генуя» вместо унитазов."
+    "Ты подходишь к ближайшей раковине, приспускаешь штаны и трусы, чтобы смыть с себя последствия времяпровождения с Виолой."
+    th "Лишь бы никто не зашёл, лишь бы никто не зашёл..."
+    play sound ds_sfx_psy
+    aut "Ага, щас. По закону подлости именно сейчас сюда заходит человек."
+    show un scared pioneer far at center
+    with dissolve
+    th "Лена?!"
+    play sound ds_sfx_mot
+    res "Быстро натягивай штаны!"
+    play sound ds_sfx_psy
+    emp "Ну, это надо сделать, хоть и поздно уже - Лену определённо впечатлило увиденное. И не то, чтобы в хорошем смысле."
+    show un scared pioneer at center
+    with dspr
+    un "Cемён... а ты что делаешь тут?"
+    $ ds_lp['un'] -= 1
+    me "Да так... запачкался, вот и отмываюсь..."
+    show un serious pioneer at center
+    with dspr
+    un "И как ты {i}там{/i} запачкался?"
+    me "Это... личное."
+    show un shocked pioneer at center
+    with dspr
+    un "Ты прям тут... в лагере... {i}этим{/i} занимаешься?"
+    play sound ds_sfx_int
+    rhe "Она имеет ввиду мастурбацию."
+    play sound ds_sfx_fys
+    ins "А у нас было кое-что покруче!"
+    me "Нет, ты не так всё поняла!"
+    show un serious pioneer at center
+    with dspr
+    un "Вот же вы, мужчины..."
+    res "А типа в этом СССР подростки в принципе {i}говорят{/i} об этом? И знают?"
+    window hide
+    menu:
+        "Cпросить":
+            window show
+            me "Подожди... а ты откуда знаешь о том, чем мужчины занимаются?"
+            show un shy pioneer at center
+            with dspr
+            un "Так ведь... я была в седьмом классе, честно отсидела все уроки биологии."
+            un "И... это... «половое просвещение» там было..."
+            play sound ds_sfx_int
+            lgc "Значит, в этом Союзе и уроки секспросвета тоже ввели."
+            play sound ds_sfx_int
+            enc "В то время, как в «нашем» домиинировало «в СССР секса нет!»"
+            play sound ds_sfx_int
+            dra "На которых и вы должны были отсидеть в рамках этого мира, мессир. Так что не палите контору!"
+            me "А... точно... уже забыл совсем."
+        "Не спрашивать":
+            window show
+    show un shy pioneer at center
+    with dspr
+    un "В общем... я пойду... не буду мешать тебе в твоём важном деле!"
+    hide un with dissolve
+    "И Лена убегает. Ты же возвращаешься к Виоле."
+    scene bg ext_aidpost_day
+    with dissolve
+    play sound sfx_dinner_horn_processed
+    "Но тут звучит сигнал на ужин, и ты перенаправляешься в сторону столовой."
+    if ds_punished:
+        jump ds_day3_mt_interrogate
+    else:
+        jump ds_day3_dinner
+
+label ds_day3_home:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_house_of_mt_day
+    with dissolve
+    play sound ds_sfx_int
+    con "«Дом, милый дом». А милый ли? И дом ли?"
+    th "Неважно, в любом случае я сейчас живу тут."
+    scene bg int_house_of_mt_day
+    with dissolve
+    play sound ds_sfx_fys
+    edr "Перед тобой кровать. Возможно, тебе не помешало бы поспать."
+    window hide
+    menu:
+        "Вздремнуть":
+            window show
+            th "Да, хорошая идея."
+            show blink
+            "Ты ложишься на кровать и закрываешь глаза..."
+            scene black
+        "Отбросить мысль":
+            window show
+            th "Мне ещё столько надо сделать! Некогда почивать!"
+            scene bg ext_house_of_mt_day
+            with dissolve
+            "С этими мыслями ты выходишь из дома и прикидываешь, куда бы тебе пойти."
+            $ disable_current_zone_ds_small()
+            jump ds_day3_after_lunch
+    play music ds_papers_please fadein 5
+    # TODO: BG: пограничный пункт
+    $ ds_num_faults_pp = 0
+    play sound ds_sfx_psy
+    vol "Перед тобой инструкция. Прочти её."
+    $ set_mode_nvl()
+    "Добро пожаловать на ваше место работы, инспектор."
+    "Вы должны тщательно проверить все документы согласно инструкции."
+    "Вы можете пропустить въезжающего только при полном соответствии всех документов, во всех остальных случаях отказ."
+    "Если имеются признаки подделки документов, или человек находится в розыске, он должен быть арестован."
+    "В случае нарушения вы будете оштрафованы."
+    "Хорошо вам потрудиться, инспектор."
+    "Слава Арстотцке!"
+    $ set_mode_adv()
+    th "Значит, теперь я угодил на пограничный пункт... ясно..."
+    show dv normal modern at center
+    with dissolve
+    me "Ваши документы!"
+    "Девушка протягивает тебе документы."
+    # TODO: CG: документы Алисы
+    me "Цель визита?"
+    dvg "Навестить родителей."
+    me "Время пребывания?"
+    dvg "Один год, там же всё написано!"
+    play sound ds_sfx_mot
+    per_eye "Право на въезд просрочено. Оно 1978 года, а сейчас 1989."
+    me "Ваше право на въезд истекло."
+    show dv angry modern at center
+    with dspr
+    dvg "Вы издеваетесь?! Я сюда так долго шла не для того, чтобы на пороге развернуться!"
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            "Cкрепя сердце ты ставишь зелёную печать в паспорт девушки."
+            me "Обновите право немедленно."
+            show dv smile modern at center
+            with dspr
+            dvg "Cпасибо и до свидания!"
+            hide dv with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Право на въезд истекло{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            $ ds_approved_pp['dv'] = True
+        "Отказать":
+            window show
+            play sound ds_stamp
+            "Ты всё же решаешь развернуть её."
+            me "Простите."
+            dvg "Как так?!"
+            show dv cry modern at center
+            with dspr
+            dvg "Что, я не увижу родителей больше?"
+            me "Оформите все документы как надо - и увидите."
+            show dv rage modern at center
+            dvg "Не поеду я больше к вам!"
+            hide dv with dissolve
+    th "И почему эта девушка так похожа на Алису?.. Ещё и зовут её точно так же..."
+    play sound ds_sfx_psy
+    ine "Всему своё время, Семён..."
+    me "Cледующий!"
+    show sl normal modern at center
+    with dissolve
+    slg "Здравствуйте!"
+    me "Ваши документы."
+    slg "Вот, пожалуйста."
+    "Она протягивает тебе бумаги."
+    th "Как будто бы всё в порядке..."
+    me "Цель визита?"
+    slg "Работа."
+    me "Время пребывания?"
+    slg "Три месяца."
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            me "Добро пожаловать в Арстотцку!"
+            show sl smile modern at center
+            with dspr
+            slg "Cпасибо! Хорошего дня вам, инспектор!"
+            hide sl with dissolve
+            th "Это было просто."
+            $ ds_approved_pp['sl'] = True
+        "Отказать":
+            window show
+            play sound ds_stamp
+            "Почему-то ты решаешь, что с ней что-то не так, и ставишь красную печать."
+            show sl surprise modern at center
+            with dspr
+            slg "Как отказано? У меня же всё в порядке."
+            me "Cказано, что въезд запрещён - значит запрещён."
+            show sl angry modern at center
+            with dspr
+            slg "До свидания!"
+            hide sl with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+    show mi normal modern at center
+    with dissolve
+    mig "Доброго дня вам, инспектор-сан!"
+    me "Ваши документы."
+    "Вместо обычного права на въезд вместе с паспортом она протягивает «Дипломатический статус»."
+    play sound ds_sfx_int
+    enc "Согласно инструкции в нём должна быть заявлена Арстотцка."
+    play sound ds_sfx_mot
+    per_eye "А тут этого нет."
+    me "У вас нет дипломатического статуса в Арстотцке."
+    show mi sad modern at center
+    with dspr
+    mig "Как так? Видимо, опечатка. Я поправлю обязательно, инспектор-сан!"
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            me "Ладно... только не создавайте проблем."
+            show mi smile modern at center
+            with dspr
+            mig "Ой, спасибочки, инспектор-сан!"
+            hide mi with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует дипломатический статус в Арстотцке{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            $ ds_approved_pp['mi'] = True
+        "Отказать":
+            play sound ds_stamp
+            me "Вот когда поправите - тогда и приезжайте. Всего доброго."
+            show mi dontlike modern at center
+            with dspr
+            mig "Вот же бака!"
+            hide mi with dissolve
+    dreamgirl "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Для приезжающих из Объединённой Федерации обязательно наличие прививки от ВИЧ.{nw}Вакцина должна быть действительна. В случае отсутствия - отказ.{nw}Cлава Арстотцке!"
+    show el normal modern at center
+    with dissolve
+    elg "Здравствуйте, товарищ инспектор!"
+    "С этими словами он протягивает документы."
+    play sound ds_sfx_mot
+    per_eye "Он из Объединённой Федерации. И даже вакцина от ВИЧ есть. Только вот же незадача - она просрочена."
+    me "У вас просрочена вакцина."
+    show el scared modern at center
+    with dspr
+    elg "Чего? Проверьте ещё раз. В любом случае я ничем не болею!"
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            me "Ладно, проезжайте. Но вакцину сделайте!"
+            show el normal modern at center
+            with dspr
+            elg "Обязательно, товарищ инспектор!"
+            hide el with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Срок действия вакцины от ВИЧ истёк{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            $ ds_approved_pp['el'] = True
+        "Отказать":
+            window show
+            play sound ds_stamp
+            me "Не надо тащить к нам ваши болячки! Когда сделаете прививку - тогда приходите снова."
+            show el upset modern at center
+            with dspr
+            elg "Вот же незадача..."
+            hide el with dissolve
+    show mt normal dress at center
+    with dissolve
+    mtg "Добрый день, инспектор! Вот мои документы."
+    "C этими словами она протягивает тебе паспорт и личную карту гражданина Арстотцки."
+    play sound ds_sfx_mot
+    per_eye "Проблем нет."
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            me "Cлава Арстотцке!"
+            mtg "Cлава Арстотцке, инспектор!"
+            mtg "А вы Двачевскую Алису не видели случаем?"
+            if ds_approved_pp['dv']:
+                me "Да, видел, я её пропустил парой человек раньше."
+                show mt smile dress at center
+                with dspr
+                mtg "Ой, отлично, спасибо. Вы сделали доброе дело, инспектор!"
+            else:
+                me "Да, у неё не было действительных документов, поэтому во въезде ей было отказано."
+                show mt angry dress at center
+                with dspr
+                mtg "Зря вы это сделали, инспектор... вы сломали ей жизнь!"
+            hide mt with dissolve
+            th "И зачем ей Алиса понадобилась?"
+            $ ds_approved_pp['mt'] = True
+        "Отказать":
+            window show
+            play sound ds_stamp
+            show mt surprise dress at center
+            with dspr
+            mtg "Вы не имеете права! Я гражданка Арстотцки! У меня всё нормально!"
+            me "Имею право. Так будет безопаснее."
+            show mt angry dress at center
+            with dspr
+            mtg "Я пожалуюсь в вышестоящие инстанции! Счастливо оставаться!"
+            hide mt with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+    show us normal sport at center
+    with dissolve
+    usg "Здасьте!"
+    "И она бросает тебе паспорт. Только лишь паспорт."
+    me "Ваше право на въезд?"
+    show us surp1 sport at center
+    with dspr
+    usg "Какое право на въезд?"
+    me "Обычное. Дающее право на въезд в Арстотцку."
+    show us upset sport at center
+    with dspr
+    usg "Нет у меня ничего такого, только паспорт!"
+    window hide
+    menu:
+        "Разрешить":
+            window show
+            me "В последний раз пропускаю."
+            show us grin sport at center
+            with dspr
+            usg "Как скажете, гражданин начальник!"
+            hide us with dissolve
+            $ ds_num_faults_pp += 1
+            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует право на въезд{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            $ ds_approved_pp['us'] = True
+        "Отказать":
+            window show
+            me "Без права на въезд нельзя. Приходите в другой раз."
+            show us dontlike sport at center
+            with dspr
+            usg "Какой же ты бука!"
+            hide us with dissolve
+    show un normal modern at center
+    with dissolve
+    ung "Здравствуйте..."
+    me "Ваши документы."
+    "Она отдаёт тебе паспорт."
+    play sound ds_sfx_int
+    enc "Колечия. Враждебная Арстотцке страна. Оттуда постоянно пытаются проникнуть террористы."
+    dreamgirl "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Досматривать всех граждан Колечии. Без исключений.{nw}Cлава Арстотцке!"
+    me "Цель визита?"
+    ung "Мимо проезжаю..."
+    me "Время пребывания?"
+    ung "Неделя..."
+    window hide
+    menu:
+        "Досмотреть":
+            window show
+            me "Повернитесь лицом к сканеру."
+            "Из принтера вылезает снимок голой девушки. А на нём видны заряды."
+            th "Плохо дело..."
+            window hide
+            menu:
+                "Разрешить":
+                    window show
+                    play sound ds_stamp
+                    me "Добро пожаловать в Арстотцку!"
+                    show un evil_smile modern at center
+                    with dspr
+                    ung "Cпасибо, инспектор."
+                    hide un with dissolve
+                    $ ds_approved_pp['un'] = True
+                "Отказать":
+                    window show
+                    play sound ds_stamp
+                    me "Провоз контрабанды запрещён."
+                    show un rage modern at center
+                    with dspr
+                    ung "Вы пожалеете об этом, инспектор! Горько пожалеете!"
+                    hide un with dissolve
+                "Арестовать":
+                    window show
+                    me "Подождите."
+                    show un scared modern at center
+                    with dspr
+                    ung "Что вы делаете?"
+                    voice "Пройдёмте!"
+                    hide un with dissolve
+        "Разрешить":
+            window show
+            play sound ds_stamp
+            me "Добро пожаловать в Арстотцку!"
+            show un evil_smile modern at center
+            with dspr
+            ung "Cпасибо, инспектор."
+            hide un with dissolve
+            $ ds_approved_pp['un'] = True
+        "Отказать":
+            window show
+            play sound ds_stamp
+            me "Вы из Колечии. Колечианцам в Арстотцке не рады."
+            show un rage modern at center
+            with dspr
+            ung "Вы пожалеете об этом, инспектор! Горько пожалеете!"
+            hide un with dissolve
+    th "Кажется, Лена из Колечии более агрессивная, чем Лена из СССР..."
+    if ds_approved_pp['un']:
+        dreamgirl "МВ: ЗАМЕЧАНИЕ"
+        with hpunch
+        stop music
+        play sound2 ds_bombing
+        play sound_loop ds_alert
+        play sound ds_sfx_mot
+        res "Взрыв! Это теракт!"
+        play sound ds_sfx_int
+        lgc "Лена оказалась не такой простой!"
+        "Ты выбегаешь на улицу с пистолетом в руке."
+        show pi at center
+        with dissolve
+        pi "Ну привет, Семён."
+        me "Кто ты такой?!"
+        pi "Я - это ты. А ты - это я."
+        me "А взрывать тут всё зачем было?"
+        show pi smile at center
+        with dspr
+        pi "Ты так и не понял? Ты во сне! Ну какая Арстотцка, ну какая граница?"
+        me "А почему я во сне оказался тут?! В вымышленной стране!"
+        show pi at center
+        with dspr
+        pi "А ты не заметил никаких пересечений с реальностью?"
+        me "Я заметил, что прошедшие через границу люди уж очень напоминают тех, кто в «Совёнке»!"
+        pi "Вот, правильно мыслишь..."
+        me "Но Лена не устроила бы вот этот теракт!"
+        pi "Кто знает, кто знает..."
+        me "Да она же тихоня!"
+        pi "В тихом омуте черти водятся..."
+        me "Да ты можешь мне объяснить, что тут происходит!"
+        arb "Это порождение твоего подсознания."
+        lim "А почему оно такое? Уж извини - мы тебе подсказать не можем. Не сейчас."
+        lim "Возможно, это обманка. Возможно, это предвидение."
+        pi "Твои друзья уже всё сказали. Я же добавлю - присмотрись к рыжеволосой девушке."
+        me "К Алисе?!"
+        pi "Я не помню, как её зовут. Но она тебе нужна. Как и ты ей. Просто вы ещё этого не поняли."
+        pi "А теперь прощай."
+        hide pi with dissolve
+        play sound ds_bombing
+        with vpunch
+        "Вдруг раздаётся новый взрыв, и ты падаешь на землю."
+        stop sound_loop fadeout 2
+        window hide
+        scene black with dissolve2
+        $ renpy.pause(2.0)
+    else:
+        show pi at center
+        with dissolve
+        pi "Привет, Семён."
+        me "Ваши документы."
+        pi "Очнись. Это сон! Ну какая Арстотцка, ну какая граница?"
+        me "А... а ты кто такой?"
+        pi "Я - это ты. А ты - это я."
+        me "Как я оказался тут?"
+        pi "А ты не заметил никаких пересечений с реальностью?"
+        me "Я заметил, что прошедшие через границу люди уж очень напоминают тех, кто в «Совёнке»!"
+        pi "Вот, правильно мыслишь..."
+        me "Да ты можешь мне объяснить, что тут происходит!"
+        arb "Это порождение твоего подсознания."
+        lim "А почему оно такое? Уж извини - мы тебе подсказать не можем. Не сейчас."
+        lim "Возможно, это обманка. Возможно, это предвидение."
+        pi "Твои друзья уже всё сказали. Я же добавлю - присмотрись к рыжеволосой девушке."
+        me "К Алисе?!"
+        pi "Я не помню, как её зовут. Но она тебе нужна. Как и ты ей. Просто вы ещё этого не поняли."
+        pi "А теперь прощай."
+        hide pi with dissolve
+        play sound sfx_hell_alarm_clock
+        window hide
+        stop music fadeout 2
+        $ renpy.pause(2.0)
+    scene bg int_house_of_mt_day
+    hide blink
+    show unblink
+    show mt surprise pioneer at center
+    with dissolve
+    window show
+    mt "Доброе утро, Семён! Точнее, уже добрый вечер!"
+    me "И вам того же, Ольга Дмитриевна."
+    if ds_punished:
+        play music music_list["revenga"] fadein 2
+
+        show mt rage pioneer at cleft 
+        with dissolve
+        window show
+        mt "Ничего не хотите мне сказать, молодой человек?"
+        play sound ds_sfx_psy
+        vol "А ты и правда кое-что забыл…"
+        me "Нет…"
+        mt "Как уборка прошла?"
+        me "Хорошо…"
+        mt "А мне Ульяна сказала, что не очень."
+        me "Так это она виновата!"
+        mt "Я что тебе сказала?"
+        mt "Чтобы вы вместе убрались!{w} А ты?!"
+        $ ds_lp['mt'] -= 1
+        play sound ds_sfx_psy
+        aut "Так-то она права. Раньше протестовать надо было."
+            show mt angry pioneer at cleft   with dspr
+            mt "В общем, останешься без ужина!"
+            if skillcheck('rhetoric', lvl_up_medium, passive=True):
+                play sound ds_sfx_int
+                rhe "Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
+            window hide
+            menu:
+                "Протестовать":
+                    window show
+                    me "Как, почему?!"
+                    play sound ds_sfx_psy
+                    aut "Твой протест больше походит на требование добавки в тюремной столовой – дерзко, опасно, но глупо и бесполезно."
+                    mt "В следующий раз будешь знать, что бывает с теми, кто меня не слушается!"
+                    play sound ds_sfx_psy
+                    ine "Ольга Дмитриевна представляется тебе не вожатой пионеротряда, а командующей древнеримскими легионами."
+                    play sound ds_sfx_int
+                    rhe "Ты просто не знаешь, что ей возразить."
+                "Промолчать":
+                    window show
+                "Пригрозить администрацией" if ds_last_skillcheck:
+                    window show
+                    me "А если я доложу куда надо о вашем самоуправстве?"
+                    show mt surprise pioneer at center
+                    with dspr
+                    mt "Э... ну ладно... иди ужинать..."
+                    me "Вот то-то же!"
+                    show mt rage pioneer at center
+                    with dspr
+                    mt "Иди уже, пока не передумала!"
+                    $ ds_lp['mt'] -= 2
+                    $ ds_skill_points['rhetoric'] += 1
+                    jump ds_day3_dinner
+            mt "Я всё сказала! Свободен!"
+            hide mt
+            with dissolve
+            th "Печально..."
+            jump ds_day3_no_dinner
+        stop music fadeout 3
+    else:
+        show mt normal pioneer at center
+        with dissolve
+        mt "Пора ужинать уже."
+        me "А, да, уже иду..."
+
+    scene bg ext_house_of_mt_day
+    with dissolve
+    "Быстро собравшись, ты направляешься в сторону столовой."
+    jump ds_day3_dinner
+
 label ds_day3_mt_interrogate:
     play music music_list["revenga"] fadein 2
 
+    scene bg ext_dining_hall_near_day
     show mt rage pioneer at cleft 
     show sl normal pioneer at cright 
     with dissolve
