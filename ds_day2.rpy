@@ -50,6 +50,7 @@ label ds_day2_morning:
     $ backdrop = "days"
 
     $ new_chapter(2, u"Disco Sovenok. День 2")
+    $ save_name = u"Disco Sovenok. Общий рут. День 2."
     $ day_time()
 
     $ persistent.sprite_time = "day"
@@ -5996,7 +5997,7 @@ label ds_day2_after_pass:
             window hide
             menu:
                 "Попытаться выяснить":
-                    if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', 2 * ds_support_dv), ('ds_eldv_side_taken == 1', 2)]):
+                    if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', 2 * ds_support_dv, 'Поддерживал Алису'), ('ds_eldv_side_taken == 1', 2, 'Взял сторону Алисы')]):
                         play sound ds_sfx_psy
                         emp "Алису по какой-то причине сильно задевает прозвище «ДваЧе». Попробуй выяснить, с чем это связано."
                         $ ds_skill_points['empathy'] += 1
@@ -8634,7 +8635,7 @@ label ds_day2_house17:
                     me "Ладно, вы правы..."
                     jump ds_day2_sleep
                 "Настоять на походе сегодня":
-                    if skillcheck('suggestion', lvl_formidable, modifiers=[('ds_karma <= -50', -2)]):
+                    if skillcheck('suggestion', lvl_formidable, modifiers=[('ds_karma <= -50', -2, 'Вожатая не доверяет')]):
                         window show
                         play sound ds_sfx_psy
                         sug "Вспомни о столь любимых ею обязанностях пионера."
@@ -9522,7 +9523,7 @@ label ds_day2_beach:
             th "Возможно, у нее проснулась совесть…"
             th "Хотя какое там…"
             window hide
-            if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', ds_support_dv)]):
+            if skillcheck('empathy', lvl_challenging, modifiers=[('ds_support_dv > 0', ds_support_dv, 'Поддерживал Алису')]):
                 window show
                 emp "Ты так и не понял? Она таким образом привлекает твоё внимание."
                 emp "Она изначально и понимала, что поступает не совсем правильно."
@@ -10631,7 +10632,7 @@ label ds_day2_library:
     $ renpy.pause(0.5)
     menu:
         "Продолжить искать":
-            if skillcheck('perception', lvl_medium, modifiers=[('ds_lamp_illuminate', 2)]):
+            if skillcheck('perception', lvl_medium, modifiers=[('ds_lamp_illuminate', 2, 'Включён свет')]):
                 window show
                 $ ds_skill_points['perception'] += 1
             else:
@@ -10774,7 +10775,7 @@ label ds_day2_library:
         scene bg int_library_night
         with dissolve
     "Ты поднимаешься обратно наверх."
-    if skillcheck('perception', lvl_challenging, passive=True, modifiers=[('ds_lamp_illuminated', 2)]):
+    if skillcheck('perception', lvl_challenging, passive=True, modifiers=[('ds_lamp_illuminated', 2, 'Включён свет')]):
         play sound ds_sfx_mot
         per_eye "Твоё внимание привлекает комок бумаги около стола."
         $ ds_skill_points['perception'] += 1

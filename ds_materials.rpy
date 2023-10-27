@@ -3,6 +3,28 @@
 init python:
     from random import randint
 
+    class DSSkillcheckRes:
+        def __init__(self, skill, level, threshold, dices, modifiers, result):
+            self.skill = skill
+            self.level = level
+            self.threshold = threshold
+            self.dices = dices
+            self.applied_modifiers = modifiers
+            self.result = result
+            self.show = True
+        
+        def total_points(self):
+            points = self.level + self.dices[0] + self.dices[1]
+            for modifier in self.applied_modifiers:
+                points += modifier[1]
+            return points
+        
+        def hide(self):
+            self.show = False
+        
+        def need_show(self):
+            return self.show
+
     ds_skill_list = {
         'logic': u"Логика",
         'encyclopedia': u"Энциклопедия",
@@ -30,15 +52,21 @@ init python:
         'composure': u"Самообладание",
     }
 
+    ds_show_check_result = 0
+
     # Функция, организующая проверки
     def skillcheck(skill, threshold, passive=False, modifiers=[]):
+        global ds_last_skillcheck
+        global ds_show_check_result
         dices = [1, 2, 3, 4, 5, 6]
         first_dice = renpy.random.choice(dices)
         second_dice = renpy.random.choice(dices)
         points = ds_get_total_skill(skill)
-        for variable, bonus in modifiers:
+        applied_modifiers = []
+        for variable, label, bonus in modifiers:
             if eval(variable):
                 points += bonus
+                applied_modifiers.append((variable, label, bonus))
         result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
         if not passive:
             # renpy.show('roll')
@@ -58,7 +86,8 @@ init python:
             renpy.hide('check')
             renpy.hide('first_dice')
             renpy.hide('second_dice')
-        ds_last_skillcheck = result
+        ds_last_skillcheck = DSSkillcheckRes(skill, ds_get_total_skill(skill), threshold, (first_dice, second_dice), applied_modifiers, result)
+        ds_show_check_result = 2
         return result
 
     def ds_damage_health(go_if_zero='ds_end_out_of_health'):
@@ -293,17 +322,17 @@ init:
     }
  
 ## Уровни сложности проверок
-    define lvl_trivial = 6
-    define lvl_easy = 8
-    define lvl_medium = 10
-    define lvl_up_medium = 11
-    define lvl_challenging = 12
-    define lvl_formidable = 13
-    define lvl_legendary = 14
-    define lvl_heroic = 15
-    define lvl_godly = 16
-    define lvl_unimaginable = 18
-    define lvl_impossible = 20
+    define lvl_trivial = 6 # Элементарно
+    define lvl_easy = 8 # Просто
+    define lvl_medium = 10 # Средне
+    define lvl_up_medium = 11 # Средне
+    define lvl_challenging = 12 # Сложно
+    define lvl_formidable = 13 # Тяжело
+    define lvl_legendary = 14 # Легендарно
+    define lvl_heroic = 15 # Героично
+    define lvl_godly = 16 # Невероятно
+    define lvl_unimaginable = 18 # Немыслимо
+    define lvl_impossible = 20 # Невозможно
 
 ## Отношение персонажей
     default ds_lp = {
@@ -329,7 +358,7 @@ init:
 
     $ ds_game_started = False
 
-    default ds_last_skillcheck = False # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
+    default ds_last_skillcheck = None # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
 
 # Эффекты
 

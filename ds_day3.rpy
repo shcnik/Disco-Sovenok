@@ -40,6 +40,7 @@ label ds_day3_morning:
 
     $ backdrop = "days"
     $ new_chapter(3, u"Disco Sovenok. День 3")
+    $ save_name = u"Disco Sovenok. Общий рут. День 3."
     $ day_time()
 
     scene bg black 
@@ -1698,7 +1699,7 @@ label ds_day3_breakfast_un:
                 th "Или вообще к тому времени сбегу!"
             show un normal pioneer at center with dspr
             un "Ну, как скажешь..."
-        "Пойду только с тобой" if ds_last_skillcheck:
+        "Пойду только с тобой" if ds_last_skillcheck and (ds_last_skillcheck.result):
             window show
             me "Ну не знаю..."
             me "Если, конечно, ты меня приглашаешь..."
@@ -4915,7 +4916,7 @@ label ds_day3_mz_dialogue:
                 emp "А если нет? Тогда ты жестоко обманешь её!"
             window hide
             menu:
-                "Соврать во благо" if ds_last_skillcheck:
+                "Соврать во благо" if ds_last_skillcheck and (ds_last_skillcheck.result):
                     window show
                     me "Знаешь, я тут говорил с ним... и мне кажется, ты ему небезразлична..."
                     show mz hope glasses pioneer far at right
@@ -5537,7 +5538,7 @@ label ds_day3_lunch:
             window hide
             menu:
                 "Убедить вожатую":
-                    if skillcheck('suggestion', lvl_heroic, modifiers=[('ds_last_skillcheck', 1), ('ds_karma >= 50', 3), ('ds_karma <= -50', -4)]):
+                    if skillcheck('suggestion', lvl_heroic, modifiers=[('ds_last_skillcheck and (ds_last_skillcheck.result)', 1), ('ds_karma >= 50', 3), ('ds_karma <= -50', -4)]):
                         window show
                         play sound ds_sfx_psy
                         sug "Говори чётко. Уверенно."
@@ -7050,7 +7051,7 @@ label ds_day3_music_mi_dialogue:
             with dspr
             mi "Ой, мне так приятно, Семён-кун! Сейчас всё будет!"
             $ ds_lp['mi'] += 2
-            image cg ds_day3_mi_piano_1
+            scene cg ds_day3_mi_piano_1
             with dissolve
             "Она садится за рояль."
             mi "Назови число от 1 до 5."
@@ -7084,7 +7085,7 @@ label ds_day3_music_mi_dialogue:
             hide blink
             show unblink
             stop sound3 fadeout 5
-            image cg ds_day3_mi_piano_1
+            scene cg ds_day3_mi_piano_1
             with dissolve
             window show
             "Наконец, Мику заканчивает играть."
@@ -7254,7 +7255,7 @@ label ds_day3_music_mi_dialogue:
                         jump ds_day3_music_mi_dialogue
         "Попросить урок игры":
             window show
-        "Попросить помочь с сочинением" if ds_last_skillcheck:
+        "Попросить помочь с сочинением" if ds_last_skillcheck and (ds_last_skillcheck.result):
             window show
             jump ds_day3_music_mi_compose
         "Сказать насчёт выступления Алисы" if ds_dance_dv and not ds_mi_accept_dv:
@@ -7843,7 +7844,7 @@ label ds_day3_library:
             window show
             vol "Ты, может, и хочешь встать, но не можешь."
             "Славя же просто лежит молча и смотрит тебе в глаза."
-        "Вскочить на ноги" if ds_last_skillcheck:
+        "Вскочить на ноги" if ds_last_skillcheck and (ds_last_skillcheck.result):
             window show
             "Ты вскакиваешь со Слави как ни в чём не бывало."
             $ ds_lay_sl = False
@@ -8937,54 +8938,53 @@ label ds_day3_home:
         $ ds_lp['mt'] -= 1
         play sound ds_sfx_psy
         aut "Так-то она права. Раньше протестовать надо было."
-            show mt angry pioneer at cleft   with dspr
-            mt "В общем, останешься без ужина!"
-            if skillcheck('rhetoric', lvl_up_medium, passive=True):
+        show mt angry pioneer at cleft   with dspr
+        mt "В общем, останешься без ужина!"
+        if skillcheck('rhetoric', lvl_up_medium, passive=True):
+            play sound ds_sfx_int
+            rhe "Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
+        window hide
+        menu:
+            "Протестовать":
+                window show
+                me "Как, почему?!"
+                play sound ds_sfx_psy
+                aut "Твой протест больше походит на требование добавки в тюремной столовой – дерзко, опасно, но глупо и бесполезно."
+                mt "В следующий раз будешь знать, что бывает с теми, кто меня не слушается!"
+                play sound ds_sfx_psy
+                ine "Ольга Дмитриевна представляется тебе не вожатой пионеротряда, а командующей древнеримскими легионами."
                 play sound ds_sfx_int
-                rhe "Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
-            window hide
-            menu:
-                "Протестовать":
-                    window show
-                    me "Как, почему?!"
-                    play sound ds_sfx_psy
-                    aut "Твой протест больше походит на требование добавки в тюремной столовой – дерзко, опасно, но глупо и бесполезно."
-                    mt "В следующий раз будешь знать, что бывает с теми, кто меня не слушается!"
-                    play sound ds_sfx_psy
-                    ine "Ольга Дмитриевна представляется тебе не вожатой пионеротряда, а командующей древнеримскими легионами."
-                    play sound ds_sfx_int
-                    rhe "Ты просто не знаешь, что ей возразить."
-                "Промолчать":
-                    window show
-                "Пригрозить администрацией" if ds_last_skillcheck:
-                    window show
-                    me "А если я доложу куда надо о вашем самоуправстве?"
-                    show mt surprise pioneer at center
-                    with dspr
-                    mt "Э... ну ладно... иди ужинать..."
-                    me "Вот то-то же!"
-                    show mt rage pioneer at center
-                    with dspr
-                    mt "Иди уже, пока не передумала!"
-                    $ ds_lp['mt'] -= 2
-                    $ ds_skill_points['rhetoric'] += 1
-                    jump ds_day3_dinner
-            mt "Я всё сказала! Свободен!"
-            hide mt
-            with dissolve
-            th "Печально..."
-            jump ds_day3_no_dinner
+                rhe "Ты просто не знаешь, что ей возразить."
+            "Промолчать":
+                window show
+            "Пригрозить администрацией" if ds_last_skillcheck and (ds_last_skillcheck.result):
+                window show
+                me "А если я доложу куда надо о вашем самоуправстве?"
+                show mt surprise pioneer at center
+                with dspr
+                mt "Э... ну ладно... иди ужинать..."
+                me "Вот то-то же!"
+                show mt rage pioneer at center
+                with dspr
+                mt "Иди уже, пока не передумала!"
+                $ ds_lp['mt'] -= 2
+                $ ds_skill_points['rhetoric'] += 1
+                jump ds_day3_dinner
+        mt "Я всё сказала! Свободен!"
+        hide mt
+        with dissolve
+        th "Печально..."
+        jump ds_day3_no_dinner
         stop music fadeout 3
     else:
         show mt normal pioneer at center
         with dissolve
         mt "Пора ужинать уже."
         me "А, да, уже иду..."
-
-    scene bg ext_house_of_mt_day
-    with dissolve
-    "Быстро собравшись, ты направляешься в сторону столовой."
-    jump ds_day3_dinner
+        scene bg ext_house_of_mt_day
+        with dissolve
+        "Быстро собравшись, ты направляешься в сторону столовой."
+        jump ds_day3_dinner
 
 label ds_day3_mt_interrogate:
     play music music_list["revenga"] fadein 2
@@ -9064,7 +9064,7 @@ label ds_day3_mt_interrogate:
                 rhe "Ты просто не знаешь, что ей возразить."
             "Промолчать":
                 window show
-            "Пригрозить администрацией" if ds_last_skillcheck:
+            "Пригрозить администрацией" if ds_last_skillcheck and (ds_last_skillcheck.result):
                 window show
                 me "А если я доложу куда надо о вашем самоуправстве?"
                 show mt surprise pioneer at center

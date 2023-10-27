@@ -6,6 +6,7 @@ init:
 label ds_prologue:
     $ backdrop = "prologue"
     $ new_chapter(-1, "Пролог")
+    $ save_name = u"Disco Sovenok. Пролог."
     $ prolog_time()
     
     window show
@@ -22,10 +23,13 @@ label ds_prologue:
             arb "Теперь у тебя не будет страданий."
             arb "Полностью."
             arb "Как тебе?"
+            window hide
             menu:
                 "Шикарно!":
+                    window show
                     arb "А то!"
                 "Я не хочу умирать!":
+                    window show
                     arb "Пути назад нет. Всё кончено. Навеки."
         "Не существовать дальше":
             window show
@@ -54,6 +58,7 @@ label ds_prologue:
     vol "Нет, отставить! Ты должен выжить!"
     play sound ds_sfx_fys
     edr "У твоего тела ещё есть воля к жизни... Борись!"
+    window hide
     menu:
         "Но зачем? Я не хочу больше жить!":
             window show
@@ -84,4 +89,5 @@ label ds_prologue:
             me "Да! Я смогу всё исправить!"
     play sound ds_horn
     lim "Твой череп пронзает огненная полоса. Это звук. Очень резкий звук. Горн из ада..."
+    window hide
     jump ds_day1

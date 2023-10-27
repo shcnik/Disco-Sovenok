@@ -7,6 +7,31 @@ init python:
     import renpy.store as store
     from renpy.store import *
     from renpy.display.im import ImageBase, image, cache, Composite
+    from abc import ABCMeta, abstractmethod
+
+    ds_level_names = {
+        6: u'Элементарно',
+        8: u'Просто',
+        10: u'Средне',
+        11: u'Средне',
+        12: u'Сложно',
+        13: u'Опасно',
+        14: u'Рискованно',
+        15: u'Легендарно',
+        16: u'Невероятно',
+        18: u'Немыслимо',
+        20: u'Невозможно'
+    }
+
+    def ds_result_tag(tag, argument):
+        global ds_last_skillcheck
+        global ds_level_names
+        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_level_names[ds_last_skillcheck.threshold]),  (renpy.TEXT_TEXT, ': '), (renpy.TEXT_TEXT, 'Успех' if ds_last_skillcheck.result else 'Неудача'), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
+
+    config.self_closing_custom_text_tags['result'] = ds_result_tag
+
+    def ds_get_check_res_style(*args):
+        return ds_check_res_style
 
     def ds_init_custom():
         ds_skill_points['logic'], ds_skill_points['encyclopedia'], ds_skill_points['rhetoric'], ds_skill_points['drama'], ds_skill_points['conceptualization'], ds_skill_points['visual_calculus'] = 3, 3, 3, 3, 3, 3
@@ -21,19 +46,21 @@ init python:
             return -x
         return x
 
+    # ПЕРЕОПРЕДЕЛЕНИЕ ЭКРАНОВ
+
     # Источник кода ниже: https://es-doc.vercel.app/guide/code-examples.html
     # (с правками автора данного мода)
     SCREENS = [
         "main_menu",
-        # "game_menu_selector",
+        "game_menu_selector",
         # "quit",
-        # "say",
+        "say",
         # "preferences",
         # "save",
         # "load",
         # "nvl",
-        # "choice",
-        # "text_history_screen",
+        "choice",
+        "text_history_screen",
         # "yesno_prompt",
     ]
 
@@ -82,6 +109,8 @@ init python:
             ),
         )
         return "text " + bgname
+
+    # КАРТЫ (НАВИГАЦИОННЫЕ)
 
     store.small_map_pics_ds = {
         "bgpic_ds": "mods/disco_sovenok/gui/map/small_map_bg.jpg",  # Путь до фона карты
@@ -305,6 +334,416 @@ init python:
 
         def init_small_map_zones_ds():
             init_small_map_zones_realization_ds(store.small_map_zones_ds, "nothing_here")
+    
+    # ГАЛЕРЕЯ
+
+    class DSImage():
+        __metaclass__ = ABCMeta
+
+        @abstractmethod
+        def get_type(self):
+            pass
+
+        @abstractmethod
+        def get_name(self):
+            pass
+
+        @abstractmethod
+        def get_full_name(self):
+            pass
+
+        @abstractmethod
+        def get_add_img(self):
+            pass
+
+        @abstractmethod
+        def is_hentai(self):
+            pass
+
+        @abstractmethod
+        def is_orig(self):
+            pass
+
+        def is_seen(self):
+            return renpy.seen_image(self.get_full_name())
+        
+        def get_all_img(self):
+            return [self.get_full_name()] + self.get_add_img()
+    
+    class DSBackground(DSImage):
+        def __init__(self, name, add_img=[], orig=False, hent=False):
+            self.__name = name
+            self.__orig = orig
+            self.__hent = hent
+            self.__add_img = []
+            for img in add_img:
+                self.__add_img.append('bg '+img)
+        
+        def get_name(self):
+            return self.__name
+        
+        def get_type(self):
+            return 'bg'
+        
+        def get_add_img(self):
+            return self.__add_img
+
+        def is_orig(self):
+            return self.__orig
+
+        def is_hentai(self):
+            return self.__hent
+
+        def get_full_name(self):
+            return self.get_type() + ' ' + self.get_name()
+    
+    class DSArtImage(DSImage):
+        def __init__(self, name, add_img=[], orig=False, hent=False):
+            self.__name = name
+            self.__orig = orig
+            self.__hent = hent
+            self.__add_img = []
+            for img in add_img:
+                self.__add_img.append('cg '+img)
+        
+        def get_name(self):
+            return self.__name
+        
+        def get_type(self):
+            return 'cg'
+        
+        def get_add_img(self):
+            return self.__add_img
+
+        def is_orig(self):
+            return self.__orig
+
+        def is_hentai(self):
+            return self.__hent
+
+        def get_full_name(self):
+            return self.get_type() + ' ' + self.get_name()
+    
+    ds_bg_list = [
+        DSBackground('bus_stop', orig=True),
+        DSBackground('ext_aidpost_day', orig=True),
+        DSBackground('ext_aidpost_night', orig=True),
+        DSBackground('ext_bathhouse_night', orig=True),
+        DSBackground('ext_beach_day', orig=True),
+        DSBackground('ext_beach_sunset', orig=True),
+        DSBackground('ext_beach_night', orig=True),
+        DSBackground('ext_boathouse_day', orig=True),
+        DSBackground('ext_boathouse_night', orig=True),
+        DSBackground('ext_bus', orig=True),
+        DSBackground('ext_bus_night', orig=True),
+        DSBackground('ext_camp_entrance_day', orig=True),
+        DSBackground('ext_camp_entrance_night', orig=True),
+        DSBackground('ext_clubs_day', orig=True),
+        DSBackground('ext_clubs_night', orig=True),
+        DSBackground('ext_dining_hall_away_day', orig=True),
+        DSBackground('ext_dining_hall_away_sunset', orig=True),
+        DSBackground('ext_dining_hall_away_night', orig=True),
+        DSBackground('ext_dining_hall_near_day', orig=True),
+        DSBackground('ext_dining_hall_near_sunset', orig=True),
+        DSBackground('ext_dining_hall_near_night', orig=True),
+        DSBackground('ext_house_of_dv_day', orig=True),
+        DSBackground('ext_house_of_dv_night', orig=True),
+        DSBackground('ext_house_of_mt_day', orig=True),
+        DSBackground('ext_house_of_mt_night', orig=True),
+        DSBackground('ext_house_of_mt_night_without_light', orig=True),
+        DSBackground('ext_house_of_mt_sunset', orig=True),
+        DSBackground('ext_house_of_sl_day', orig=True),
+        DSBackground('ds_ext_sl_house_sunset'),
+        DSBackground('ds_ext_sl_house_night'),
+        DSBackground('ds_ext_sl_house_night2'),
+        DSBackground('ext_house_of_un_day', orig=True),
+        DSBackground('ds_ext_un_sunset'),
+        DSBackground('ds_ext_un_night'),
+        DSBackground('ext_houses_day', orig=True),
+        DSBackground('ext_houses_sunset', orig=True),
+        DSBackground('ext_island_day', orig=True),
+        DSBackground('ext_island_night', orig=True),
+        DSBackground('ext_library_day', orig=True),
+        DSBackground('ext_library_night', orig=True),
+        DSBackground('ext_musclub_day', orig=True),
+        DSBackground('ds_ext_musclub_sunset'),
+        DSBackground('ds_ext_musclub_night'),
+        DSBackground('ds_ext_musclub_veranda_day'),
+        DSBackground('ext_no_bus', orig=True),
+        DSBackground('ext_no_bus_night', orig=True),
+        DSBackground('ext_no_bus_sunset', orig=True),
+        DSBackground('ext_old_building_night', orig=True),
+        DSBackground('ext_old_building_night_moonlight', orig=True),
+        DSBackground('ext_path2_day', orig=True),
+        DSBackground('ext_path2_night', orig=True),
+        DSBackground('ext_path_day', orig=True),
+        DSBackground('ext_path_night', orig=True),
+        DSBackground('ext_path_sunset', orig=True),
+        DSBackground('ext_playground_day', orig=True),
+        DSBackground('ext_playground_night', orig=True),
+        DSBackground('ext_polyana_day', orig=True),
+        DSBackground('ext_polyana_sunset', orig=True),
+        DSBackground('ext_polyana_night', orig=True),
+        DSBackground('ext_road_day', orig=True),
+        DSBackground('ext_road_night', orig=True),
+        DSBackground('ext_road_night2', orig=True),
+        DSBackground('ext_road_sunset', orig=True),
+        DSBackground('ext_square_day', orig=True),
+        DSBackground('ext_square_day_city', orig=True),
+        DSBackground('ext_square_night', orig=True),
+        DSBackground('ext_square_night_party', orig=True),
+        DSBackground('ext_square_night_party2', orig=True),
+        DSBackground('ext_square_sunset', orig=True),
+        DSBackground('ext_stage_big_night', orig=True),
+        DSBackground('ext_stage_normal_day', orig=True),
+        DSBackground('ext_stage_normal_night', orig=True),
+        DSBackground('ext_washstand2_day', orig=True),
+        DSBackground('ext_washstand_day', orig=True),
+        DSBackground('ds_ext_train'),
+        DSBackground('ds_ext_el_house_day'),
+        DSBackground('ds_ext_el_house_sunset'),
+        DSBackground('ds_ext_el_house_night'),
+        DSBackground('ds_ext_houses_night'),
+        DSBackground('ds_ext_clubs_gate_night'),
+        DSBackground('ds_ext_clubs_gate_day'),
+        DSBackground('ds_ext_storage_day'),
+        DSBackground('ds_ext_storage_sunset'),
+        DSBackground('ds_ext_storage_night'),
+        DSBackground('ds_ext_showers_day'),
+        DSBackground('ds_ext_showers_night'),
+        DSBackground('ds_ext_backdoor_day'),
+        DSBackground('ds_ext_backdoor_sunset'),
+        DSBackground('ds_ext_backdoor_night'),
+        DSBackground('ds_ext_backroad_day'),
+        DSBackground('ds_ext_backroad_sunset'),
+        DSBackground('ds_ext_railroad_day'),
+        DSBackground('ds_ext_railroad_sunset'),
+        DSBackground('ds_ext_bus_town'),
+        DSBackground('ds_ext_square2_day'),
+        DSBackground('ds_ext_square2_night'),
+        DSBackground('ds_ext_another_club_day'),
+        DSBackground('ds_ext_admin_day'),
+        DSBackground('ds_ext_admin_night'),
+        DSBackground('int_aidpost_day', orig=True),
+        DSBackground('int_aidpost_day_apple', orig=True),
+        DSBackground('int_aidpost_night', orig=True),
+        DSBackground('int_bus', orig=True),
+        DSBackground('ds_int_bus_forest'),
+        DSBackground('int_bus_black', orig=True),
+        DSBackground('int_bus_night', orig=True),
+        DSBackground('int_bus_people_day', orig=True),
+        DSBackground('int_bus_people_night', orig=True),
+        DSBackground('int_catacombs_door', orig=True),
+        DSBackground('int_catacombs_entrance', orig=True),
+        DSBackground('int_catacombs_entrance_red', orig=True),
+        DSBackground('int_catacombs_hole', orig=True),
+        DSBackground('int_catacombs_living', orig=True),
+        DSBackground('int_catacombs_living_nodoor', orig=True),
+        DSBackground('int_clubs_male2_night', orig=True),
+        DSBackground('int_clubs_male2_night_nolight', orig=True),
+        DSBackground('int_clubs_male_day', orig=True),
+        DSBackground('int_clubs_male_sunset', orig=True),
+        DSBackground('int_dining_hall_day', orig=True),
+        DSBackground('int_dining_hall_night', orig=True),
+        DSBackground('int_dining_hall_people_day', orig=True),
+        DSBackground('int_dining_hall_sunset', orig=True),
+        DSBackground('int_house_of_dv_day', orig=True),
+        DSBackground('int_house_of_dv_night', orig=True),
+        DSBackground('int_house_of_mt_day', orig=True),
+        DSBackground('int_house_of_mt_night', orig=True),
+        DSBackground('int_house_of_mt_night2', orig=True),
+        DSBackground('int_house_of_mt_noitem_night', orig=True),
+        DSBackground('int_house_of_mt_sunset', orig=True),
+        DSBackground('int_house_of_sl_day', orig=True),
+        DSBackground('int_house_of_un_day', orig=True),
+        DSBackground('int_house_of_un_night', orig=True),
+        DSBackground('int_liaz', orig=True),
+        DSBackground('int_library_day', orig=True),
+        DSBackground('int_library_night', orig=True),
+        DSBackground('int_library_night2', orig=True),
+        DSBackground('int_mine', orig=True),
+        DSBackground('int_mine_coalface', orig=True),
+        DSBackground('int_mine_crossroad', orig=True),
+        DSBackground('int_mine_door', orig=True),
+        DSBackground('int_mine_exit_night_light', orig=True),
+        DSBackground('int_mine_exit_night_nolight', orig=True),
+        DSBackground('int_mine_exit_night_torch', orig=True),
+        DSBackground('int_mine_halt', orig=True),
+        DSBackground('int_mine_room', orig=True),
+        DSBackground('int_mine_room_red', orig=True),
+        DSBackground('int_musclub_day', orig=True),
+        DSBackground('int_old_building_night', orig=True),
+        DSBackground('ds_int_storage_day'),
+        DSBackground('ds_int_storage_day2'),
+        DSBackground('ds_int_storage_night'),
+        DSBackground('ds_int_sporthall_day'),
+        DSBackground('ds_int_sporthall_night'),
+        DSBackground('ds_int_dininghall_table1_day'),
+        DSBackground('ds_int_dininghall_table1_sunset'),
+        DSBackground('ds_int_dininghall_table1_night'),
+        DSBackground('ds_int_dininghall_table2_day'),
+        DSBackground('ds_int_dininghall_table2_sunset'),
+        DSBackground('ds_int_dininghall_door_day'),
+        DSBackground('ds_int_dininghall_door_sunset'),
+        DSBackground('ds_int_dininghall_door_night'),
+        DSBackground('ds_int_el_house_sunset'),
+        DSBackground('ds_int_el_house_night'),
+        DSBackground('ds_int_sl_night'),
+        DSBackground('ds_int_sl_night_light'),
+        DSBackground('ds_int_bathhouse'),
+        DSBackground('ds_int_bathhouse_steam'),
+        DSBackground('ds_int_library_basement'),
+        DSBackground('ds_int_train'),
+        DSBackground('ds_int_admin_corridor'),
+        DSBackground('ds_int_admin_day'),
+        DSBackground('ds_int_admin_night'),
+        DSBackground('ds_int_admin_night_light'),
+        DSBackground('ds_int_admin_day_boxes1'),
+        DSBackground('ds_int_admin_sunset_boxes1'),
+        DSBackground('ds_int_admin_day_boxes2'),
+        DSBackground('ds_int_admin_sunset_boxes2'),
+        DSBackground('ds_int_admin_night_boxes2'),
+        DSBackground('ds_int_admin_morning_boxes2'),
+        DSBackground('ds_int_kitchen_day'),
+        DSBackground('ds_int_kitchen_sunset'),
+        DSBackground('ds_int_kitchen_night'),
+        DSBackground('ds_int_wardrobe'),
+        DSBackground('ds_int_clubs_pantry'),
+        DSBackground('ds_int_toilet_day'),
+        DSBackground('ds_int_toilet_night'),
+        DSBackground('ds_field_day'),
+        DSBackground('semen_room', orig=True),
+        DSBackground('semen_room_window', orig=True),
+    ]
+
+    ds_cg_list = [
+        DSArtImage('ds_day1_bus_window'),
+        DSArtImage('ds_day1_bus_exit'),
+        DSArtImage('ds_day1_hide'),
+        DSArtImage('d1_food_normal', orig=True),
+        DSArtImage('d1_food_skolop', orig=True),
+        DSArtImage('d1_grasshopper', orig=True),
+        DSArtImage('d1_rena_sunset', orig=True),
+        DSArtImage('d1_sl_dinner_0', orig=True, add_img=['d1_sl_dinner']),
+        DSArtImage('d1_uv_2', orig=True, add_img=['d1_uv']),
+        DSArtImage('ds_day1_grasshopper_f1', add_img=['ds_day1_grasshopper_f2', 'ds_day1_grasshopper_f3']),
+        DSArtImage('ds_day1_dv_on_grass'),
+        DSArtImage('ds_day1_dv_dinner'),
+        DSArtImage('ds_day1_dv_hiding'),
+        DSArtImage('ds_day1_un_book'),
+        DSArtImage('d2_mirror', orig=True),
+        DSArtImage('ds_day2_mt_undress1', add_img=['ds_day2_mt_undress2']),
+        DSArtImage('ds_day2_lineup'),
+        DSArtImage('d2_micu_lib', orig=True),
+        DSArtImage('ds_day2_mi_piano1', add_img=['ds_day2_mi_piano2']),
+        DSArtImage('ds_day2_cs_near', orig=True),
+        DSArtImage('ds_day2_dv_hits_el'),
+        DSArtImage('d2_sovenok', orig=True),
+        DSArtImage('d2_ussr_falling', orig=True),
+        DSArtImage('d2_2ch_beach', orig=True),
+        DSArtImage('ds_day2_swim_dv'),
+        DSArtImage('d2_slavya_forest', orig=True),
+        DSArtImage('ds_day2_sl_swim', hent=True),
+        DSArtImage('d3_disco', orig=True),
+        DSArtImage('ds_day3_dv_guitar', orig=True),
+        DSArtImage('d3_dv_scene_2', add_img=['d3_dv_scene_1']),
+        DSArtImage('ds_day3_train'),
+        DSArtImage('ds_day3_sl_bath', hent=True),
+        DSArtImage('d3_sl_dance', orig=True),
+        DSArtImage('d3_sl_evening', orig=True),
+        DSArtImage('d3_sl_library', orig=True),
+        DSArtImage('d3_soccer', orig=True),
+        DSArtImage('d3_un_dance', orig=True),
+        DSArtImage('d3_un_forest', orig=True),
+        DSArtImage('d3_us_dinner', orig=True),
+        DSArtImage('d3_us_library_1', orig=True, add_img=['d3_us_library_2', 'd3_us_library_3', 'd3_us_library_4']),
+        DSArtImage('d3_ussr_catched', orig=True),
+        DSArtImage('ds_day3_disco_dv'),
+        DSArtImage('ds_day3_dv_dance'),
+        DSArtImage('ds_day3_us_caught_f1', add_img=['ds_day3_us_caught_f2', 'ds_day3_us_caught_f3']),
+        DSArtImage('ds_day3_us_potato_1', add_img=['ds_day3_us_potato_2']),
+        DSArtImage('ds_day3_mi_piano_1', add_img=['ds_day3_mi_piano_2']),
+        DSArtImage('ds_day3_mi_guitar'),
+        DSArtImage('ds_day3_mi_teaching'),
+        DSArtImage('ds_day3_robot_fail'),
+        DSArtImage('ds_day3_hatch', add_img=['ds_dayx_hatch_open']),
+        DSArtImage('ds_day3_cs_waiting'),
+        DSArtImage('day4_us_morning', orig=True),
+        DSArtImage('d4_catac', orig=True),
+        DSArtImage('d4_catac_dv', orig=True),
+        DSArtImage('d4_catac_sl', orig=True),
+        DSArtImage('d4_catac_un', orig=True),
+        DSArtImage('d4_catac_us_2', orig=True, add_img=['d4_catac_us']),
+        DSArtImage('d4_dv_mt', orig=True),
+        DSArtImage('ds_day4_el_undress'),
+        DSArtImage('d4_mi_guitar', orig=True),
+        DSArtImage('d4_mi_sing', orig=True),
+        DSArtImage('d4_sh_sit', orig=True),
+        DSArtImage('d4_sh_stay', orig=True),
+        DSArtImage('d4_us_cancer', orig=True),
+        DSArtImage('d4_us_morning', orig=True),
+        DSArtImage('d4_uv', orig=True),
+        DSArtImage('d4_uv_1', orig=True),
+        DSArtImage('d5_boat', orig=True),
+        DSArtImage('d5_boat_2', orig=True),
+        DSArtImage('d5_cake', orig=True),
+        DSArtImage('d5_clubs_robot', orig=True),
+        DSArtImage('d5_dv_argue', orig=True, add_img=['d5_dv_argue_2', 'd5_dv_argue_3']),
+        DSArtImage('d5_dv_island', orig=True),
+        DSArtImage('ds_dayx_us_wash1', orig=True, add_img=['ds_dayx_us_wash2', 'ds_dayx_us_wash3']),
+        DSArtImage('d5_mi', orig=True),
+        DSArtImage('d5_sh_us', orig=True),
+        DSArtImage('d5_sl_sleep_2', orig=True, add_img=['d5_sl_sleep']),
+        DSArtImage('d5_strawberry_race', orig=True),
+        DSArtImage('d5_un_island', orig=True),
+        DSArtImage('d5_un_sleep', orig=True),
+        DSArtImage('d5_us_ghost', orig=True, add_img=['d5_us_ghost_2']),
+        DSArtImage('d5_us_kiss', orig=True),
+        DSArtImage('d5_us_sit', orig=True),
+        DSArtImage('ds_day4_uv_appear1', orig=True, add_img=['ds_day4_uv_appear2']),
+        DSArtImage('d6_dv_fight', orig=True, add_img=['d6_dv_fight_2', 'd6_dv_fight_3']),
+        DSArtImage('d6_pioneer', orig=True),
+        DSArtImage('d6_sl_forest_2', orig=True, add_img=['d6_sl_forest']),
+        DSArtImage('d6_sl_swim', orig=True),
+        DSArtImage('d6_sl_hentai_2', orig=True, hent=True, add_img=['d6_sl_hentai_1']),
+        DSArtImage('d6_un_evening_2', orig=True, add_img=['d6_un_evening_1']),
+        DSArtImage('d6_un_punch', orig=True),
+        DSArtImage('d6_us_film', orig=True),
+        DSArtImage('d6_us_night_2', orig=True),
+        DSArtImage('d6_uv', orig=True, add_img=['d6_uv_2']),
+        DSArtImage('d7_dv', orig=True, add_img=['d7_dv_2']),
+        DSArtImage('d7_pioneers_leaving', orig=True),
+        DSArtImage('d7_pioneers_leaving_without_us', orig=True),
+        DSArtImage('ds_dayx_sl_morning1', add_img=['ds_dayx_sl_morning2']),
+        DSArtImage('ds_dayx_un_sex1', hent=True, add_img=['ds_dayx_un_sex2']),
+        DSArtImage('d7_un_suicide', orig=True),
+        DSArtImage('d7_uv', orig=True),
+        DSArtImage('ds_dayx_mi_sex1', hent=True, add_img=['ds_dayx_mi_sex2']),
+        DSArtImage('uvao_h_cenz', hent=True),
+        DSArtImage('ds_day9_dv_sex1', hent=True, add_img=['ds_day9_dv_sex2', 'ds_day9_dv_sex3']),
+        DSArtImage('epilogue_dv_2', orig=True),
+        DSArtImage('epilogue_dv_3', orig=True),
+        DSArtImage('epilogue_mi_1', orig=True),
+        DSArtImage('epilogue_mi_2', orig=True),
+        DSArtImage('epilogue_mi_3', orig=True),
+        DSArtImage('epilogue_mi_4', orig=True),
+        DSArtImage('epilogue_mi_5', orig=True),
+        DSArtImage('epilogue_mi_6', orig=True),
+        DSArtImage('epilogue_mi_7', orig=True),
+        DSArtImage('epilogue_mi_8', orig=True),
+        DSArtImage('epilogue_mi_9', orig=True),
+        DSArtImage('epilogue_sl', orig=True),
+        DSArtImage('epilogue_sl_2', orig=True),
+        DSArtImage('epilogue_un', orig=True),
+        DSArtImage('epilogue_un_bad', orig=True),
+        DSArtImage('epilogue_un_good', orig=True),
+        DSArtImage('epilogue_us', orig=True, add_img=['epilogue_us_alone', 'epilogue_us_3_a']),
+        DSArtImage('epilogue_uv', orig=True),
+        DSArtImage('epilogue_uv_2', orig=True, add_img=['epilogue_uv_3']),
+        DSArtImage('final_all_2', orig=True),
+    ]
+
+    renpy.start_predict_screen('ds_gallery')
 
 init:
     $ mods["disco_sovenok"] = u"Disco Sovenok"
@@ -323,6 +762,47 @@ label _show_small_map_ds:
     $ store.small_map_enabled_ds = True
     $ ui.interact()
     jump _show_small_map_ds
+
+style ds_check_res_style:
+    color "#b5b5b5"
+
+style ds_history_style_ch:
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    size 24
+    rest_indent 30
+    textalign 0.0
+    hover_color "#86cd4d"
+    idle_color "#ffdd7d"
+    outlines [(absolute(0), "#000", absolute(1), absolute(1))]
+
+style ds_history_style_noch:
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    size 24
+    first_indent 30
+    rest_indent 30
+    textalign 0.0
+    hover_color "#86cd4d"
+    idle_color "#ffdd7d"
+    outlines [(absolute(0), "#000", absolute(1), absolute(1))]
+
+style ds_history_style_ch_prolog:
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    size 24
+    rest_indent 30
+    textalign 0.0
+    idle_color "#115bc0"
+    hover_color "#ffdd7d"
+    outlines [(absolute(0), "#000", absolute(1), absolute(1))]
+
+style ds_history_style_noch_prolog:
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    size 24
+    first_indent 30
+    rest_indent 30
+    textalign 0.0
+    idle_color "#115bc0"
+    hover_color "#ffdd7d"
+    outlines [(absolute(0), "#000", absolute(1), absolute(1))]
 
 transform out_up(new_widget=None, old_widget=None):
     delay 0.1
@@ -384,83 +864,559 @@ transform in_left(new_widget=None, old_widget=None):
     xpos 0.0
     linear 0.1 xanchor 0.0 xpos 0.0
 
-screen ds_main_menu():
+screen ds_game_menu_selector():
     tag menu
     modal True
-    add "bg ext_road_day":
-        xalign 0.5
-        yalign 0.5
-    add "mods/disco_sovenok/gui/menu/main_menu.png":
-        xanchor 0.5
-        yanchor 0.5
-        xpos 0.2
-        ypos 0.5
-    text "DISCO SOVENOK" size 150 font "mods/disco_sovenok/gui/fonts/KosugiMaru.ttf" xalign 0.95 yalign 0.95
-    imagebutton: # Начать игру
-        auto "mods/disco_sovenok/gui/menu/start_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.25
-        action [SetVariable('ds_game_started', False), Show("ds_choose_type"), Hide("ds_main_menu")]
-    imagebutton: # Загрузить
-        auto "mods/disco_sovenok/gui/menu/load_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.30
-        action [Hide('ds_settings', transition=moveoutright), Hide('ds_achievements', transition=moveoutright), Hide('ds_gallery', transition=moveoutright), Show('ds_load', transition=moveinright)]
-    imagebutton: # Настройки
-        auto "mods/disco_sovenok/gui/menu/settings_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.35
-        action [Hide('ds_load', transition=moveoutright), Hide('ds_achievements', transition=moveoutright), Hide('ds_gallery', transition=moveoutright), Show('ds_settings', transition=moveinright)]
-    imagebutton: # Достижения
-        auto "mods/disco_sovenok/gui/menu/achieve_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.40
-        action [Hide('ds_settings', transition=moveoutright), Hide('ds_load', transition=moveoutright), Hide('ds_gallery', transition=moveoutright), Show('ds_achievements', transition=moveinright)]
-    imagebutton: # Галерея
-        auto "mods/disco_sovenok/gui/menu/gallery_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.45
-        action [Hide('ds_settings', transition=moveoutright), Hide('ds_achievements', transition=moveoutright), Hide('ds_load', transition=moveoutright), Show('ds_gallery', transition=moveinright)]
-    imagebutton: # Выход
-        auto "mods/disco_sovenok/gui/menu/quit_%s.png"
-        xanchor 0.0
-        yanchor 0.5
-        xpos 0.1
-        ypos 0.50
-        action Confirm(u"Вы действительно хотите выйти в главное меню?", [(Function(ds_screens_diact)), ShowMenu("main_menu")], confirm_selected=True)
+    window:
+        at transform:
+            on show:
+                xoffset -1920
+                linear 0.1 xoffset 0
+            on hide:
+                xoffset 0
+                linear 0.1 xoffset -1920
+        add "mods/disco_sovenok/gui/menu/main_menu.png":
+            xanchor 0.5
+            yanchor 0.5
+            xpos 0.2
+            ypos 0.5
+        imagebutton: # Продолжить
+            auto "mods/disco_sovenok/gui/menu/continue_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.25
+            action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_gallery', transition=moveouttop), Hide('ds_load'), Hide("ds_game_menu_selector", transition=moveoutleft), Return()]
+        showif not renpy.get_screen('ds_save'):
+            imagebutton: # Сохранить
+                auto "mods/disco_sovenok/gui/menu/save_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.30
+                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_gallery', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_save', transition=moveintop)]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.30
+            add "mods/disco_sovenok/gui/menu/save_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.30
+        showif not renpy.get_screen('ds_load'):
+            imagebutton: # Загрузить
+                auto "mods/disco_sovenok/gui/menu/load_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.35
+                action [Hide('ds_settings'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save'), With(moveouttop), Show('ds_load'), With(moveintop)]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.35
+            add "mods/disco_sovenok/gui/menu/load_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.35
+        showif not renpy.get_screen('ds_settings'):
+            imagebutton: # Настройки
+                auto "mods/disco_sovenok/gui/menu/settings_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.40
+                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save', transition=moveouttop), Show('ds_settings')]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.40
+            add "mods/disco_sovenok/gui/menu/settings_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.40
+        showif not renpy.get_screen('ds_achievements'):
+            imagebutton: # Достижения
+                auto "mods/disco_sovenok/gui/menu/achieve_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.45
+                action [Hide('ds_settings'), Hide('ds_load'), Hide('ds_gallery'), Hide('ds_save', transition=moveouttop), Show('ds_achievements')]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.45
+            add "mods/disco_sovenok/gui/menu/achieve_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.45
+        showif not renpy.get_screen('ds_gallery'):
+            imagebutton: # Галерея
+                auto "mods/disco_sovenok/gui/menu/gallery_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.50
+                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Hide('ds_save', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.50
+            add "mods/disco_sovenok/gui/menu/gallery_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.50
+        imagebutton: # В меню
+            auto "mods/disco_sovenok/gui/menu/menu_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.55
+            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), MainMenu()]
+        imagebutton: # Выход
+            auto "mods/disco_sovenok/gui/menu/exit_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.60
+            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), ShowMenu('quit')]
+
+screen ds_main_menu():
+    python:
+        from time import localtime, strftime
+        t = strftime("%H:%M:%S", localtime())
+        hour, min, sec = t.split(":")
+        hour = int(hour)
+    tag menu
+    modal True
+    if hour in [22,23,24,0,1,2,3,4,5,6]:
+        add "bg ext_road_night":
+            xalign 0.5
+            yalign 0.5
+    elif hour in [20,21,7,8]:
+        add "bg ext_road_sunset":
+            xalign 0.5
+            yalign 0.5
+    else:
+        add "bg ext_road_day":
+            xalign 0.5
+            yalign 0.5
+    fixed:
+        at transform:
+            on show:
+                xoffset -1920
+                linear 0.1 xoffset 0
+            on hide:
+                xoffset 0
+                linear 0.1 xoffset -1920
+        add "mods/disco_sovenok/gui/menu/main_menu.png":
+            xanchor 0.5
+            yanchor 0.5
+            xpos 0.2
+            ypos 0.5
+        text "DISCO SOVENOK" size 150 font "mods/disco_sovenok/gui/fonts/KosugiMaru.ttf" xalign 0.95 yalign 0.95
+        imagebutton: # Начать игру
+            auto "mods/disco_sovenok/gui/menu/start_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.25
+            action [Hide('ds_settings'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_load'), SetVariable('ds_game_started', False), Show("ds_choose_type"), Hide("ds_main_menu", transition=moveoutleft)]
+        showif not renpy.get_screen('ds_load'):
+            imagebutton: # Загрузить
+                auto "mods/disco_sovenok/gui/menu/load_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.30
+                action [Hide('ds_settings'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_load')]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.30
+            add "mods/disco_sovenok/gui/menu/load_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.30
+        showif not renpy.get_screen('ds_settings'):
+            imagebutton: # Настройки
+                auto "mods/disco_sovenok/gui/menu/settings_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.35
+                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_settings')]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.35
+            add "mods/disco_sovenok/gui/menu/settings_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.35
+        showif not renpy.get_screen('ds_achievements'):
+            imagebutton: # Достижения
+                auto "mods/disco_sovenok/gui/menu/achieve_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.40
+                action [Hide('ds_settings'), Hide('ds_load'), Hide('ds_gallery'), Show('ds_achievements')]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.40
+            add "mods/disco_sovenok/gui/menu/achieve_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.40
+        showif not renpy.get_screen('ds_gallery'):
+            imagebutton: # Галерея
+                auto "mods/disco_sovenok/gui/menu/gallery_%s.png"
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.45
+                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
+        else:
+            add "mods/disco_sovenok/gui/menu/selected_base.png":
+                xanchor 0.5
+                yanchor 0.5
+                xpos 0.2
+                ypos 0.45
+            add "mods/disco_sovenok/gui/menu/gallery_selected.png":
+                xanchor 0.0
+                yanchor 0.5
+                xpos 0.1
+                ypos 0.45
+        imagebutton: # В меню БЛ
+            auto "mods/disco_sovenok/gui/menu/quit_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.50
+            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), Confirm(u"Вы действительно хотите выйти в главное меню?", [(Function(ds_screens_diact)), ShowMenu("main_menu")], confirm_selected=True)]
+        imagebutton: # Выход
+            auto "mods/disco_sovenok/gui/menu/exit_%s.png"
+            xanchor 0.0
+            yanchor 0.5
+            xpos 0.1
+            ypos 0.55
+            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), ShowMenu('quit')]
     
 screen ds_settings():
     pass
 
 screen ds_load():
-    pass
+    default cur_slot = (0, 0)
+    frame:
+        background "mods/disco_sovenok/gui/loadsave/loadsave_base.png"
+        yfill True
+        xalign 1.0
+        xoffset -100
+        xmaximum 1100
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
+        fixed:
+            if cur_slot != (0, 0):
+                add FileScreenshot(cur_slot[1], page=cur_slot[0]):
+                    xalign 0.5
+                    xysize (640, 360)
+            add "mods/disco_sovenok/gui/loadsave/frame.png":
+                xalign 0.5
+                xysize (640, 360)
+            xalign 0.5
+            yalign 0.0
+            yoffset 30
+        fixed:
+            yalign 0.0
+            yoffset 400
+            ymaximum 600
+            vpgrid:
+                cols 1
+                rows len(renpy.list_saved_games())
+                child_size (1080, None)
+                mousewheel True
+                yinitial 0.0
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                spacing 10
+                for slot in range(119, 11, -1):
+                    if FileSaveName(slot % 12 + 1, page=(slot // 12)).upper().replace('\n', ' ') != '':
+                        fixed:
+                            xmaximum 1080
+                            ymaximum 50
+                            imagebutton:
+                                xalign 0.5
+                                yalign 0.0
+                                auto "mods/disco_sovenok/gui/loadsave/entry_%s.png"
+                                action [SetScreenVariable('cur_slot', (slot // 12, slot % 12 + 1))]
+                            text FileSaveName(slot % 12 + 1, page=(slot // 12)).upper().replace('\n', ' '):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#000000"
+                                xmaximum 900
+                                size 30
+                                xalign 0.0
+                                xoffset 10
+                                yalign 0.5
+                            text FileTime(slot % 12 + 1, page=(slot // 12), format='%d.%m.%y %H:%M'):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                size 24
+                                xalign 1.0
+                                xoffset -10
+                                yalign 0.5
+                                color "#000000"
+        hbox:
+            xalign 0.5
+            yalign 1.0
+            yoffset -10
+            imagebutton:
+                auto "mods/disco_sovenok/gui/loadsave/delete_%s.png"
+                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0)), Show('ds_save')]
+            imagebutton:
+                auto "mods/disco_sovenok/gui/loadsave/load_%s.png"
+                action FileLoad(cur_slot[1], page=cur_slot[0])
+
+screen ds_save():
+    default cur_slot = (0, 0)
+    default empty_slot = (10, 0)
+    python:
+        for slot in range(119, 11, -1):
+            if FileSaveName(slot % 12 + 1, page=(slot // 12)).upper().replace('\n', ' ') == '':
+                empty_slot = (slot // 12, slot % 12 + 1)
+            else:
+                break
+    frame:
+        background "mods/disco_sovenok/gui/loadsave/loadsave_base.png"
+        yfill True
+        xalign 1.0
+        xoffset -100
+        xmaximum 1100
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
+        fixed:
+            if cur_slot != (0, 0):
+                add FileScreenshot(cur_slot[1], page=cur_slot[0]):
+                    xalign 0.5
+                    xysize (640, 360)
+            add "mods/disco_sovenok/gui/loadsave/frame.png":
+                xalign 0.5
+                xysize (640, 360)
+            xalign 0.5
+            yalign 0.0
+            yoffset 30
+        fixed:
+            yalign 0.0
+            yoffset 400
+            ymaximum 600
+            vpgrid:
+                cols 1
+                child_size (1080, None)
+                mousewheel True
+                yinitial 0.0
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                spacing 10
+                if empty_slot[0] < 10:
+                    rows int(len(renpy.list_saved_games()) + 1)
+                    fixed:
+                        xmaximum 1080
+                        ymaximum 50
+                        imagebutton:
+                            xalign 0.5
+                            yalign 0.0
+                            auto "mods/disco_sovenok/gui/loadsave/newentry_%s.png"
+                            action FileSave(empty_slot[1], page=empty_slot[0])
+                else:
+                    rows len(renpy.list_saved_games())
+                for slot in range(119, 11, -1):
+                    if FileSaveName(slot % 12 + 1, page=(slot // 12)).upper().replace('\n', ' ') != '':
+                        fixed:
+                            xmaximum 1080
+                            ymaximum 50
+                            imagebutton:
+                                xalign 0.5
+                                yalign 0.0
+                                auto "mods/disco_sovenok/gui/loadsave/entry_%s.png"
+                                action [SetScreenVariable('cur_slot', (slot // 12, slot % 12 + 1))]
+                            text FileSaveName(slot % 12 + 1, page=(slot // 12)).upper().replace('\n', ' '):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#000000"
+                                xmaximum 900
+                                size 30
+                                xalign 0.0
+                                xoffset 10
+                                yalign 0.5
+                            text FileTime(slot % 12 + 1, page=(slot // 12), format='%d.%m.%y %H:%M'):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                size 24
+                                xalign 1.0
+                                xoffset -10
+                                yalign 0.5
+                                color "#000000"
+        hbox:
+            xalign 0.5
+            yalign 1.0
+            yoffset -10
+            imagebutton:
+                auto "mods/disco_sovenok/gui/loadsave/delete_%s.png"
+                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0)), Show('ds_save')]
+            imagebutton:
+                auto "mods/disco_sovenok/gui/loadsave/save_%s.png"
+                action Confirm(u"Вы действительно хотите перезаписать это сохранение?", FileSave(cur_slot[1], page=cur_slot[0]), confirm_selected=True)
+
+screen ds_gallery():
+    default gallery_table = {'bg': ds_bg_list, 'cg': ds_cg_list}
+    default gallery_mode = 'bg'
+    frame:
+        background "mods/disco_sovenok/gui/gallery/gallery_base.png"
+        yfill True
+        xalign 1.0
+        xoffset -200
+        xmaximum 1000
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
+        hbox:
+            xalign 0.5
+            yalign 0.0
+            yoffset 20
+            xoffset 100
+            showif gallery_mode == 'bg':
+                add "mods/disco_sovenok/gui/gallery/bg_selected.png"
+                label "|":
+                    text_font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    text_size 36
+                    text_color "#ffffff"
+                imagebutton:
+                    auto "mods/disco_sovenok/gui/gallery/cg_%s.png"
+                    action SetScreenVariable('gallery_mode', 'cg')
+            else:
+                imagebutton:
+                    auto "mods/disco_sovenok/gui/gallery/bg_%s.png"
+                    action SetScreenVariable('gallery_mode', 'bg')
+                label "|":
+                    text_font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    text_size 36
+                    text_color "#ffffff"
+                add "mods/disco_sovenok/gui/gallery/cg_selected.png"
+        fixed:
+            yalign 1.0
+            ymaximum 980
+            vpgrid:
+                cols 3
+                rows int(len(gallery_table[gallery_mode]) // 3 + 1)
+                child_size (1000, None)
+                mousewheel True
+                yinitial 0.0
+                xoffset 100
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                spacing 10
+                for i in range(0, (len(gallery_table[gallery_mode]) // 3 + 1) * 3):
+                    fixed:
+                        xmaximum 300
+                        ymaximum 170
+                        if i < len(gallery_table[gallery_mode]):
+                            if gallery_table[gallery_mode][i].is_seen():
+                                add gallery_table[gallery_mode][i].get_full_name():
+                                    xalign 0.5
+                                    yalign 0.0
+                                    zoom 0.15625
+                                    crop (0, 0, 1920, 1080)
+                                imagebutton:
+                                    auto "mods/disco_sovenok/gui/gallery/frame_%s.png"
+                                    xalign 0.5
+                                    yalign 0.0
+                                    action Function(renpy.call_in_new_context, 'ds_gallery_show_images', imglist=gallery_table[gallery_mode][i].get_all_img())
+                            else:
+                                add "mods/disco_sovenok/gui/gallery/locked.png":
+                                    xalign 0.5
+                                    yalign 0.0
+                                imagebutton:
+                                    auto "mods/disco_sovenok/gui/gallery/frame_%s.png"
+                                    xalign 0.5
+                                    yalign 0.0
+                                    action NullAction()
+
+label ds_gallery_show_images(imglist=[]):
+    python:
+        for img in imglist:
+            renpy.show(img)
+            renpy.with_statement(fade)
+            renpy.pause()
+            renpy.hide(img)
+    return
 
 screen ds_achievements():
     pass
-
-screen ds_gallery():
-    pass
     
 screen ds_choose_type():
-    modal True
+    python:
+        from time import localtime, strftime
+        t = strftime("%H:%M:%S", localtime())
+        hour, min, sec = t.split(":")
+        hour = int(hour)
     tag menu
-    add "bg ext_road_day":
-        xalign 0.5
-        yalign 0.5
+    modal True
+    if hour in [22,23,24,0,1,2,3,4,5,6]:
+        add "bg ext_road_night":
+            xalign 0.5
+            yalign 0.5
+    elif hour in [20,21,7,8]:
+        add "bg ext_road_sunset":
+            xalign 0.5
+            yalign 0.5
+    else:
+        add "bg ext_road_day":
+            xalign 0.5
+            yalign 0.5
     add "mods/disco_sovenok/gui/menu/type_title.png":
         xalign 0.0
         yalign 0.0
-        xoffset 20
+        xoffset 15
     hbox:
         xalign 0.5
         yalign 1.0
@@ -562,9 +1518,14 @@ screen ds_skill_table():
         background "mods/disco_sovenok/gui/skills/attr_lines.png"
         yalign 0.0
         at transform:
-            xanchor 1.0
-            xpos 0.0
-            linear 0.1 xanchor 0.0 xpos 0.0
+            on show:
+                xanchor 1.0
+                xpos 0.0
+                linear 0.1 xanchor 0.0 xpos 0.0
+            on hide:
+                xanchor 0.0
+                xpos 0.0
+                linear 0.1 xanchor 1.0 xpos 0.0
         fixed:
             xalign 0.5
             yalign 1.0
@@ -788,6 +1749,13 @@ screen ds_skill_info():
         xalign 1.0
         xoffset -20
         add "mods/disco_sovenok/gui/skills/skill_info.png"
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
         for skill in SKILLS:
             vbox:
                 showif (ds_chosen_skill == None):
@@ -916,9 +1884,14 @@ screen ds_lp_points():
         add "mods/disco_sovenok/gui/lp/lp_base.png"
         yalign 0.0
         at transform:
-            xanchor 0.0
-            xpos 1.0
-            linear 0.1 xanchor 1.0 xpos 1.0
+            on show:
+                xanchor 0.0
+                xpos 1.0
+                linear 0.1 xanchor 1.0 xpos 1.0
+            on hide:
+                xanchor 1.0
+                xpos 1.0
+                linear 0.1 xanchor 0.0 xpos 1.0
         grid 2 4:
             xspacing 30
             yspacing 50
@@ -970,3 +1943,332 @@ screen ds_lp_points():
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         color "#000000"
 
+screen ds_say:
+    window:
+        background None
+        id "window"           
+        add ("mods/disco_sovenok/gui/say/dialogue_box.png"):
+            xalign 0.5
+            yalign 1.0 
+        imagebutton:
+            auto ("mods/disco_sovenok/gui/say/backward_%s.png") 
+            xalign 0.0
+            yalign 1.0
+            xoffset 20
+            yoffset -50
+            action ShowMenu("text_history")         
+        imagebutton:
+            auto ("mods/disco_sovenok/gui/say/hide_%s.png")
+            xalign 0.0
+            yalign 1.0
+            xoffset 20
+            yoffset -200
+            action HideInterface()
+        imagebutton:
+            auto ("mods/disco_sovenok/gui/say/forward_%s.png")
+            xalign 1.0
+            yalign 1.0
+            xoffset -20
+            yoffset -50
+            action Skip()
+        text what:
+            id "what"
+            xalign 0.0
+            yalign 0.0
+            xoffset 170
+            yoffset 900
+            xmaximum 1580
+            size 24
+            color "#ffdd7d"
+            drop_shadow [ (-1, -1), (1, -1), (-1, 1), (1, 1) ]
+            drop_shadow_color "#000001"
+            font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+            line_spacing 2
+        if 'result}' in what:
+            mousearea:
+                area (170, 900, 1580, 280)
+                hovered Show('ds_check_result')
+                unhovered Hide('ds_check_result')
+        if who:
+            text who.upper():
+                id "who"
+                xalign 0.0
+                yalign 1.0
+                xoffset 170
+                yoffset -190
+                size 35
+                drop_shadow [ (-1, -1), (1, -1), (-1, 1), (1, 1) ]
+                drop_shadow_color "#000"
+                font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                line_spacing 2
+
+screen ds_text_history_screen:
+    window:
+        background None
+        at transform:
+            on show:
+                xoffset 1920
+                linear 0.2 xoffset -35
+                linear 0.1 xoffset 0
+            on hide:
+                xoffset -115
+                linear 0.1 xoffset 1920
+        yfill True
+        frame:
+            xalign 1.0
+            xoffset -115
+            background "mods/disco_sovenok/gui/history/text_history.png"
+            xmaximum 500
+            viewport:
+                child_size (500, None)
+                mousewheel True
+                yinitial 1.0
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                vbox:
+                    xmaximum 450
+                    yalign 1.0
+                    xalign 0.0
+                    xoffset 10
+                    for entry in _history_list:
+                        if entry.who is not None:
+                            textbutton ("{color="+Color(color=entry.who_args['color']).hexcode+"}"+entry.who.upper()+"{/color} — "+entry.what):
+                                background None
+                                action RollbackToIdentifier(entry.rollback_identifier)
+                                if persistent.timeofday == 'prologue':
+                                    text_style 'ds_history_style_ch_prolog'
+                                else:
+                                    text_style 'ds_history_style_ch'
+                        else:
+                            textbutton entry.what:
+                                background None
+                                action RollbackToIdentifier(entry.rollback_identifier)
+                                if persistent.timeofday == 'prologue':
+                                    text_style 'ds_history_style_noch_prolog'
+                                else:
+                                    text_style 'ds_history_style_noch'
+                        null height 20
+                    null height 200
+
+screen ds_choice:
+    window:
+        background None
+        at transform:
+            on show:
+                xoffset 1920
+                linear 0.2 xoffset -35
+                linear 0.1 xoffset 0
+            on hide:
+                xoffset -115
+                linear 0.1 xoffset 1920
+        yfill True
+        frame:
+            xalign 1.0
+            xoffset -115
+            background "mods/disco_sovenok/gui/history/text_history.png"
+            xmaximum 500
+            viewport:
+                child_size (500, None)
+                mousewheel True
+                yinitial 1.0
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                vbox:
+                    xmaximum 450
+                    yalign 1.0
+                    xalign 0.0
+                    xoffset 10
+                    for entry in _history_list:
+                        if entry.who is not None:
+                            textbutton ("{color="+Color(color=entry.who_args['color']).hexcode+"}"+entry.who.upper()+"{/color} — "+entry.what):
+                                background None
+                                action NullAction()
+                                if persistent.timeofday == 'prologue':
+                                    text_style 'ds_history_style_ch_prolog'
+                                else:
+                                    text_style 'ds_history_style_ch'
+                        else:
+                            textbutton entry.what:
+                                background None
+                                action NullAction()
+                                if persistent.timeofday == 'prologue':
+                                    text_style 'ds_history_style_noch_prolog'
+                                else:
+                                    text_style 'ds_history_style_noch'
+                        null height 20
+                    null height 50
+                    for i in range(0, len(items)):
+                        if items[i][1]:
+                            button:
+                                background None
+                                action items[i][1]
+                                text str(i + 1) + ". " + items[i][0]:
+                                    idle_color "#ffffff"
+                                    hover_color "#86cd4d"
+                                    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                                    size 24
+                                if i < 9:
+                                    keysym str(i + 1)
+                    null height 200
+
+
+screen ds_guitar_game():
+    imagemap:
+        ground "mods/disco_sovenok/gui/guitar/guitar.jpg"
+        idle "mods/disco_sovenok/gui/guitar/guitar.jpg"
+        hover "mods/disco_sovenok/gui/guitar/guitar.jpg"
+        hotspot (62, 325, 53, 67) action Call('ds_check_sound', 1) keysym '1'
+        hotspot (120, 325, 47, 68) action Call('ds_check_sound', 2) keysym '2'
+        hotspot (173, 323, 43, 70) action Call('ds_check_sound', 3) keysym '3'
+        hotspot (222, 323, 42, 72) action Call('ds_check_sound', 4) keysym '4'
+        hotspot (268, 322, 40, 73) action Call('ds_check_sound', 5) keysym '5'
+        hotspot (313, 322, 36, 75) action Call('ds_check_sound', 6) keysym '6'
+        hotspot (355, 321, 34, 77) action Call('ds_check_sound', 7) keysym '7'
+        hotspot (395, 320, 32, 78) action Call('ds_check_sound', 8) keysym '8'
+        hotspot (432, 319, 30, 80) action Call('ds_check_sound', 9) keysym '9'
+        hotspot (467, 318, 28, 81) action Call('ds_check_sound', 10) keysym '0'
+        hotspot (500, 318, 26, 82) action Call('ds_check_sound', 11) keysym 'q'
+        hotspot (531, 318, 26, 82) action Call('ds_check_sound', 12) keysym 'w'
+        hotspot (562, 317, 23, 83) action Call('ds_check_sound', 13) keysym 'e'
+        hotspot (590, 317, 21, 84) action Call('ds_check_sound', 14) keysym 'r'
+        hotspot (616, 316, 21, 85) action Call('ds_check_sound', 15) keysym 't'
+        hotspot (642, 315, 19, 86) action Call('ds_check_sound', 16) keysym 'y'
+        hotspot (665, 315, 18, 87) action Call('ds_check_sound', 17) keysym 'u'
+        hotspot (688, 315, 16, 87) action Call('ds_check_sound', 18) keysym 'i'
+        hotspot (708, 314, 16, 88) action Call('ds_check_sound', 19) keysym 'o'
+        hotspot (729, 314, 14, 89) action Call('ds_check_sound', 20) keysym 'p'
+        hotspot (747, 314, 13, 91) action Call('ds_check_sound', 21) keysym '['
+        hotspot (765, 314, 13, 91) action Call('ds_check_sound', 22) keysym ']'
+        hotspot (823, 305, 189, 105) action Call('ds_check_sound', 0) keysym 'K_SPACE'
+
+screen ds_check_result():
+    frame:
+        background "mods/disco_sovenok/gui/check/check_base.png"
+        xmaximum 600
+        ymaximum 390
+        yalign 0.0
+        yoffset 20
+        xalign 1.0
+        at transform:
+            on show:
+                xoffset 600
+                linear 0.2 xoffset -20
+            on hide:
+                xoffset -20
+                linear 0.2 xoffset 600
+        add ("mods/disco_sovenok/gui/skills/%s_large.png" % ds_last_skillcheck.skill):
+            xalign 0.0
+            yalign 0.5
+            xoffset -5
+        vbox:
+            xalign 1.0
+            yalign 0.0
+            add ("mods/disco_sovenok/gui/check/%s_caption.png" % ds_last_skillcheck.skill)
+            fixed:
+                xmaximum 310
+                ymaximum 30
+                text "Уровень:":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 0.0
+                text str(ds_last_skillcheck.level):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 1.0
+            fixed:
+                xmaximum 320
+                ymaximum 30 
+
+                text "Кубики:":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 0.0
+                text str(ds_last_skillcheck.dices[0]) + "+" + str(ds_last_skillcheck.dices[1]) + "=" + str(ds_last_skillcheck.dices[0] + ds_last_skillcheck.dices[1]):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 1.0
+            if len(ds_last_skillcheck.applied_modifiers) != 0:
+                for modifier in ds_last_skillcheck.applied_modifiers:
+                    fixed:
+                        xmaximum 320
+                        ymaximum 30
+                        text modifier[2]:
+                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                            color "#ffffff"
+                            size 24
+                            xalign 0.0
+                        if modifier[1] > 0:
+                            text "+" + str(modifier[1]):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#008000"
+                                size 24
+                                xalign 1.0
+                        else:
+                            text str(modifier[1]):
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ff0000"
+                                size 24
+                                xalign 1.0
+        vbox:
+            xalign 1.0
+            yalign 1.0
+            fixed:
+                xmaximum 320
+                ymaximum 30
+                text "Всего:":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 0.0
+                text str(ds_last_skillcheck.total_points()):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 1.0
+            add "mods/disco_sovenok/gui/check/separator.png"
+            fixed:
+                xmaximum 320
+                ymaximum 30
+                text "Порог:":
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 0.0
+                text str(ds_last_skillcheck.threshold):
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    color "#ffffff"
+                    size 24
+                    xalign 1.0
+            fixed:
+                xmaximum 320
+                ymaximum 30
+                if ds_last_skillcheck.dices == (6, 6):
+                    text "КРИТ. УСПЕХ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#008000"
+                        size 24
+                        xalign 0.5
+                elif ds_last_skillcheck.dices == (1, 1):
+                    text "КРИТ. НЕУДАЧА":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ff0000"
+                        size 24
+                        xalign 0.5
+                elif ds_last_skillcheck.result:
+                    text "УСПЕХ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#008000"
+                        size 24
+                        xalign 0.5
+                else:
+                    text "НЕУДАЧА":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ff0000"
+                        size 24
+                        xalign 0.5
