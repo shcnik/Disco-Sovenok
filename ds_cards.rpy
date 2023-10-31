@@ -4189,7 +4189,7 @@ label ds_cards_tournament:
 # ----------------------------------------------------------------------------------- ADD Показываем правила игры
     if skillcheck('encyclopedia', lvl_up_medium, passive=True):
         play sound ds_sfx_int
-        enc "Ты прекрасно знаешь комбинации и так."
+        enc "{result}Ты прекрасно знаешь комбинации и так."
         window hide
         menu:
             "Показать комбинации":
@@ -4634,17 +4634,17 @@ label ds_cards_tour_1:
         "Усмехается она, садясь на противоположное место."
         window hide
         menu:
-            "Съязвить":
+            "{check=authority:8}Съязвить":
                 if skillcheck('authority', lvl_easy):
                     window show
                     play sound ds_sfx_psy
-                    aut "Не давай себя запугать!"
+                    aut "{result}Не давай себя запугать!"
                     me "А как же. {w}Я принесу на твою могилку два гладиолуса."
                     $ ds_semtype += 1
                 else:
                     window show
                     play sound ds_sfx_psy
-                    aut "Она, похоже, настроена воинственно - не то, что ты."
+                    aut "{result}Она, похоже, настроена воинственно - не то, что ты."
                     me "Всенепременно..."
                 $ ds_skill_points['authority'] += 1
             "Разжалобить":
@@ -5049,10 +5049,9 @@ label ds_cards_1_tour_fail_end:
                 "С этими словами ты выходишь из столовой, оставляя Лену беззвучно хватать ртом воздух."
         if skillcheck('drama', lvl_medium, passive=True):
             play sound ds_sfx_int
-            dra "Вам не кажется, мессир, что с Леной было что-то не так?"
+            dra "{result}Вам не кажется, мессир, что с Леной было что-то не так?"
             th "И то верно... какая-то она слишком агрессивной оказалась."
             dra "Будьте с ней осторожны: возможно, она что-то скрывает."
-            $ ds_skill_points['drama'] += 1
         play music music_list["my_daily_life"] fadein 5
 
 
@@ -5127,8 +5126,8 @@ label ds_cards_1_tour_fail_end:
                     me "И удачи в полуфинале."
                     "Разворачиваешься и уходишь к болельщикам."
                     th "Может быть, удастся затеряться в толпе?"
-                "Устроить скандал":
-                    if skillcheck('drama', lvl_challenging, passive=True, [('ds_karma >= 20', 1)]):
+                "{check=drama:12}Устроить скандал":
+                    if skillcheck('drama', lvl_challenging, passive=True, [('ds_karma >= 20', 1, 'Хорошая репутация')]):
                         window show
                         play sound ds_sfx_psy
                         dra "Начинай скандалить, напугай её."
@@ -5340,7 +5339,7 @@ label ds_cards_1_tour_win_end:
                     show un shy pioneer with dspr
                     un "Ну…"
                     if skillcheck('empathy', lvl_easy, passive=True):
-                        emp "Ей не очень хочется об этом говорить. Может, не стоит?"
+                        emp "{result}Ей не очень хочется об этом говорить. Может, не стоит?"
                     pause(0.5)
                     window hide
                     menu:
@@ -5399,7 +5398,7 @@ label ds_cards_1_tour_win_end:
                     th "У меня цель — не ободрить каждого сирого, а утереть нос одной рыжей зазнайке!"
                     if skillcheck('inland_empire', lvl_trivial, passive=True):
                         play sound ds_sfx_psy
-                        ine "Хотя, честно сказать, искушение слить партию просто для того, чтобы посмотреть, как она выполнит свои угрозы, достаточно велико. {w}Нет, ну серьезно!"
+                        ine "{result}Хотя, честно сказать, искушение слить партию просто для того, чтобы посмотреть, как она выполнит свои угрозы, достаточно велико. {w}Нет, ну серьезно!"
                         scene bg ext_square_sunset
                         show prologue_dream
                         with fade
@@ -5411,7 +5410,6 @@ label ds_cards_1_tour_win_end:
                         ins "В духе «Сёма едет! Прячьте девок!»."
                         hide dv with dissolve
                         show blinking with dissolve
-                        $ ds_skill_points['inland_empire'] += 1
                 "Цель - защитить себя от угроз":
                     window show
                     th "Даже если девочки внезапно начнут строить мне глазки, я не собираюсь кому-либо из них сливать партию."
@@ -5421,28 +5419,25 @@ label ds_cards_1_tour_win_end:
                         show prologue_dream
                         with fade
                         play sound ds_sfx_psy
-                        ine "Например, на утренней линейке."
+                        ine "{result}Например, на утренней линейке."
                         show dv grin pioneer behind prologue_dream with dissolve
                         ine "Выйдет вперёд, самодовольно подмигнёт мне и скажет во всеуслышанье:"
                         dv "{i}Ольга Дмитриевна, разрешите доложить!{/i}"
                         ine "И далее по тексту."
                         play sound ds_sfx_fys
                         hfl "Коллективный суд, а вместе с ним и позор, тебе обеспечен."
-                        $ ds_skill_points['inland_empire'] += 1
                     else:
                         play sound ds_sfx_psy
                         ine "Нет, ты не хочешь себе это представлять."
                     if skillcheck('authority', lvl_easy, passive=True):
                         play sound ds_sfx_psy
-                        aut "А вот правильный перевод твоего словоблудия: «я трясусь за свою шкуру»."
+                        aut "{result}А вот правильный перевод твоего словоблудия: «я трясусь за свою шкуру»."
                         aut "Волков бояться - в лес не ходить, в курсе?"
                         aut "И да - поддаваясь на шантаж, ты лишь поощряешь шантажистов применять подобные методы и дальше."
-                        $ ds_skill_points['authority'] += 1
                     if skillcheck('suggestion', lvl_medium, passive=True):
                         play sound ds_sfx_psy
-                        sug "А ты думаешь, у Алисы тут такая безупречная репутация, что ей сразу поверят?"
+                        sug "{result}А ты думаешь, у Алисы тут такая безупречная репутация, что ей сразу поверят?"
                         sug "Сомнительно. Тем более, в Советском Союзе теме домогательств уделяли не столь пристальное внимание, нежели в нашем XXI веке."
-                        $ ds_skill_points['suggestion'] += 1
                 "Признать себя неправым":
                     window show
                     th "Да, наверное, не стоило так делать..."
@@ -5507,7 +5502,7 @@ label ds_cards_1_tour_win_end:
             th "Что ж, это была трудная схватка, но я победил."
             th "Идеальное же противостояние — игра, в которой вы оба ничего не понимаете."
             if not skillcheck('volition', lvl_challenging, passive=True):
-                vol "Ну да, ну да."
+                vol "{result}Ну да, ну да."
                 vol "Носкиллер рандомный."
                 th "Помолчи. Ты ничего не понимаешь."
                 th "Это вопрос индивидуального престижа. Я буду двигаться к финалу."
@@ -5554,7 +5549,6 @@ label ds_cards_1_tour_win_end:
                     vol "И даже Алису ты победишь!"
                 else:
                     vol "Уж если Алиса слетела - то ты точно всех остальных раскатаешь!"
-                $ ds_skill_points['volition'] += 1
 
     elif ds_my_rival_1_tour.take == 'dv':
         show dv sad pioneer2 with dspr
@@ -5567,10 +5561,10 @@ label ds_cards_1_tour_win_end:
         if not ds_cards_detour_semifinal:
             window hide
             menu:
-                "Посмеяться":
+                "{check=authority:8}Посмеяться":
                     if skillcheck('authority', lvl_easy):
                         play sound ds_sfx_psy
-                        aut "Начинай на неё давить!"
+                        aut "{result}Начинай на неё давить!"
                         me "Ну что, как я тебя?"
                         $ ds_lp['dv'] += 1
                         $ ds_skill_points['authority'] += 1
@@ -5589,10 +5583,9 @@ label ds_cards_1_tour_win_end:
                         th "Уффф."
                         if skillcheck('composure', lvl_medium, passive=True):
                             play sound ds_sfx_mot
-                            com "Ты подавляешь желание облегчённо вытереть лоб."
-                            $ ds_skill_points['composure'] += 1
+                            com "{result}Ты подавляешь желание облегчённо вытереть лоб."
                         else:
-                            "Ты вытираешь свой лоб от выступившего пота."
+                            com "{result}Ты вытираешь свой лоб от выступившего пота."
                         show dv grin pioneer2 with dspr
                         dv "А то если хочешь, можем ещё на что-нибудь поспорить?"
                         com "Ты отшатываешься."
@@ -5600,7 +5593,7 @@ label ds_cards_1_tour_win_end:
                         me "Нет. {w}Свою натюрель ты уже поставила на кон."
                         if skillcheck('instinct', lvl_medium, passive=True):
                             play sound ds_sfx_fys
-                            ins "Дальше только честь девичья! {w}Ну-ка, скажешь это вслух?"
+                            ins "{result}Дальше только честь девичья! {w}Ну-ка, скажешь это вслух?"
                             window hide
                             menu:
                                 "Сказать":
@@ -5620,7 +5613,7 @@ label ds_cards_1_tour_win_end:
                     else:
                         window show
                         play sound ds_sfx_psy
-                        aut "У тебя не хватает запала, так что ты не находишь, что сказать эффектного."
+                        aut "{result}У тебя не хватает запала, так что ты не находишь, что сказать эффектного."
                         me "Кажется, я победил."
                         $ ds_skill_points['authority'] += 1
                         dv "Угу."
@@ -5693,8 +5686,7 @@ label ds_cards_1_tour_win_end:
                     $ ds_lp['mi'] -= 1
                     if skillcheck('encyclopedia', lvl_trivial, passive=True):
                         play sound ds_sfx_int
-                        enc "«Бака» по-японски - что-то вроде «дурачок»."
-                        $ ds_skill_points['encyclopedia'] += 1
+                        enc "{result}«Бака» по-японски - что-то вроде «дурачок»."
                         play sound ds_sfx_psy
                         aut "Она тебя тут оскорбляет?!"
                     me "Да ладно тебе! В следующий раз разберёшься... наверное."
@@ -5719,8 +5711,7 @@ label ds_cards_1_tour_win_end:
             th "Я — ходячее олицетворение закона Мэрфи."
             if skillcheck('volition', lvl_easy, passive=True):
                 play sound ds_sfx_psy
-                vol "Ну да, ну да. {w}А то, что ты вытянул билет даже не на миллион, а на новую жизнь, это мы в расчёт как бы не берём, да?"
-                $ ds_skill_points['volition'] += 1
+                vol "{result}Ну да, ну да. {w}А то, что ты вытянул билет даже не на миллион, а на новую жизнь, это мы в расчёт как бы не берём, да?"
                 th "Ты о попадании в лагерь?"
                 th "Я не могу назвать это везением в прямом смысле этого слова."
                 vol "А как это ещё назвать?"
@@ -5736,8 +5727,7 @@ label ds_cards_1_tour_win_end:
                 vol "Да ну вас!"
                 if ds_bet_dv:
                     if skillcheck('instinct', lvl_medium, passive=True):
-                        ins "К тому же у тебя тут эротическое пари, помнишь?"
-                        $ ds_skill_points['instinct'] += 1
+                        ins "{result}К тому же у тебя тут эротическое пари, помнишь?"
                     else:
                         vol "Так-то у тебя ешё пари!"
                     if ds_result_dv_1_tour == 4:                                                                   # Дваче в другом полуфинале
@@ -5748,7 +5738,7 @@ label ds_cards_1_tour_win_end:
                         vol "В твоём случае именно надежды."
                         if not skillcheck('authority', lvl_medium, passive=True):
                             play sound ds_sfx_psy
-                            aut "Будь уверен, она доберётся до тебя и порвёт на мелкие клочки, а потом исполнит свою угрозу."
+                            aut "{result}Будь уверен, она доберётся до тебя и порвёт на мелкие клочки, а потом исполнит свою угрозу."
                             th "О, спасибо тебе, мрачный зануда."
                     elif ds_result_dv_1_tour == 3:                                                                 # Дваче в 1/2 к Семёну
                         th "Забудешь тут."
@@ -5789,10 +5779,10 @@ label ds_cards_1_tour_win_end:
             us "Ах так! Тогда я всем расскажу про тебя и Двачевскую!"
             window hide
             menu:
-                "Остановить" if ds_bet_dv:
+                "{check=authority:8}Остановить" if ds_bet_dv:
                     if skillcheck('authority', lvl_easy):
                         window show
-                        aut "Это же ребёнок. Надавить на неё легче лёкого."
+                        aut "{result}Это же ребёнок. Надавить на неё легче лёкого."
                         me "Мелкая нахалка, не смей! Это только наш с ней спор, ты только разрубала!"
                         show us grin pioneer with dspr
                         "Ульяна только улыбнулась."
@@ -5800,14 +5790,14 @@ label ds_cards_1_tour_win_end:
                         $ ds_skill_points['authority'] += 1
                     else:
                         window show
-                        aut "Увы, тебе не хватает твёрдости."
+                        aut "{result}Увы, тебе не хватает твёрдости."
                         me "Ты всем расскажешь то, что она обещала рассказать? В случае моего проигрыша?"
                         "Она кивает."
-                "Отказать":
+                "{check=suggestion:10}Отказать":
                     if skillcheck('suggestion', lvl_medium):
                         window show
                         play sound ds_sfx_psy
-                        sug "Многого хочет. И вообще, карточный долг - это святое!"
+                        sug "{result}Многого хочет. И вообще, карточный долг - это святое!"
                         me "А тебе не надо горячего шоколада?"
                         show us surp1 pioneer with dspr
                         us "Что?"
@@ -5817,7 +5807,7 @@ label ds_cards_1_tour_win_end:
                     else:
                         window show
                         play sound ds_sfx_psy
-                        sug "И всё-таки ты не хочешь огласки ваших с Алисой тёрок."
+                        sug "{result}И всё-таки ты не хочешь огласки ваших с Алисой тёрок."
                         me "Нет, ты проиграла... поэтому уйди."
                         show us surp1 pioneer with dspr
                         us "Что?"
@@ -6118,7 +6108,7 @@ label ds_cards_semifinal:
             com "Ты аж поперхнулся воздухом."
             if skillcheck('instinct', lvl_easy, passive=True):
                 play sound ds_sfx_fys
-                ins "Ну, не стесняйся ты так! Девочка {b}хочет{/b} знать!"
+                ins "{result}Ну, не стесняйся ты так! Девочка {b}хочет{/b} знать!"
                 play sound ds_sfx_psy
                 vol "Это не те вещи, которые следует обсуждать на людях."
                 ins "А где же ещё? Пионерке одиноко и тоскливо, она хочет тепла и ласки."
@@ -6145,7 +6135,7 @@ label ds_cards_semifinal:
             mi "Если нет, я тебя научу!"
             if skillcheck('instinct', lvl_easy, passive=True):
                 play sound ds_sfx_fys
-                ins "Тебе однозначно понравится, соглашайся!"
+                ins "{result}Тебе однозначно понравится, соглашайся!"
                 ins "Она аккуратно возьмёт в одну руку твой гриф, в другую каподастр…"
                 ins "И поднимет голоску тональность!"
                 show mi shocked pioneer with dspr
@@ -6200,7 +6190,7 @@ label ds_cards_semifinal:
         us "Я хочу всех победить!"
         if skillcheck('authority', lvl_easy, passive=True, modifiers=[('ds_bet_dv', 2)]):
             play sound ds_sfx_psy
-            aut "А вот и не будешь!"
+            aut "{result}А вот и не будешь!"
             me "Не буду."
             if ds_bet_dv:
                 me "У нас же спор, помнишь?"
@@ -6234,11 +6224,10 @@ label ds_cards_semifinal:
         us "кунсекасу…"
         if skillcheck('rhetoric', lvl_trivial, passive=True):
             play sound ds_sfx_int
-            rhe "Ей с трудом даётся слово «консенсус»."
-            $ ds_skill_points['rhetoric'] += 1
+            rhe "{result}Ей с трудом даётся слово «консенсус»."
         window hide
         menu:
-            "Посмеяться":
+            "{check=half_light:8}Посмеяться":
                 window show
                 us "Что ты ржёшь?!"
                 me "Тебе лучше не знать."
@@ -6250,7 +6239,7 @@ label ds_cards_semifinal:
                 if skillcheck('half_light', lvl_easy):
                     window show
                     play sound ds_sfx_fys
-                    hfl "Внушительная угроза. Но мы можем ответить"
+                    hfl "{result}Внушительная угроза. Но мы можем ответить"
                     me "Ладно, давай на ушко."
                     show us grin pioneer close with dissolve
                     us "То-то же!"
@@ -6278,7 +6267,7 @@ label ds_cards_semifinal:
                 else:
                     window show
                     play sound ds_sfx_fys
-                    hfl "Cерьёзная угроза. Лучше не лезь."
+                    hfl "{result}Cерьёзная угроза. Лучше не лезь."
                     $ ds_skill_points['half_light'] += 1
                     me "Давай играть уже!"
             "Поправить":
@@ -6698,7 +6687,7 @@ label ds_cards_semifinal_win_end:
         aut "То есть, в случае чего, её можно взять на слаб{b}о{/b}?"
         if skillcheck('inland_empire', lvl_medium, passive=True):
             play sound ds_sfx_psy
-            ine "Кого-то она тебе напомнила этой своей импульсивностью."
+            ine "{result}Кого-то она тебе напомнила этой своей импульсивностью."
             th "И кого же?"
             ine "Ты и без меня прекрасно понимаешь, кого."
             play sound ds_sfx_mot
@@ -6708,7 +6697,6 @@ label ds_cards_semifinal_win_end:
             th "Да нет, быть не может."
             show un shocked pioneer with dspr
             me "Двачевскую!"
-            $ ds_skill_points['inland_empire'] += 1
             play sound ds_sfx_psy
             sug "Если что - ты произнёс это вслух."
             "Алиса косится на тебя — мол, «кто поминает имя моё всуе» — но молчит."
@@ -7262,10 +7250,9 @@ label ds_cards_final_fail_end:
         show un cry_smile pioneer with dspr
         "Лена смотрит на тебя долго, неотрывно, и у неё трясутся руки."
         if skillcheck('conceptualization', lvl_easy, passive=True):
-            con "Ты молчишь, она молчит, а вокруг как будто выросла некая отталкивающая стенка, защищающая вас — но лишь пока мы вместе."
+            con "{result}Ты молчишь, она молчит, а вокруг как будто выросла некая отталкивающая стенка, защищающая вас — но лишь пока вы вместе."
             con "Как будто два человека, каждый из которых неполон в одиночестве, вместе намного сильнее, чем если просто сложить их характеристики."
             con "Ты не можешь сказать сейчас, поддавался ли я или играл в полную силу, но просто прийти сюда уже было хорошей идеей, сторицей окупившейся этими мгновениями."
-            $ ds_skill_points['conceptualization'] += 1
         play sound ds_sfx_psy
         vol "Не влюбись в неё, барин, вы знакомы меньше суток."
         "Ты пожимаешь плечами."
@@ -7358,7 +7345,7 @@ label ds_cards_final_fail_end:
         stop music fadeout 2
         if skillcheck('authority', lvl_legendary, passive=True):
             play sound ds_sfx_psy
-            aut "Проиграть было забавно."
+            aut "{result}Проиграть было забавно."
             play music music_list["you_lost_me"]
             aut "С любой из сторон, как ни крути, ты оказываешься в выигрыше — в случае победы тебе удастся немного заткнуть Двачевскую."
             play sound ds_sfx_psy
@@ -7366,18 +7353,17 @@ label ds_cards_final_fail_end:
             aut "Этого достаточно."
             aut "А в случае поражения она устроит тебе пиар-акцию в духе «Сёма едет, прячьте тёлок.»"
             aut "Так что от всей души пожелай удачи сопернице, и наслаждайся шоу."
-            $ ds_skill_points['authority'] += 1
             if ds_bet_dv:
                 th "Я проиграл пари..."
                 aut "Теперь ждём завтрашнего дня и наслаждаемся бесплатной рекламой?"
         else:
             play sound ds_sfx_psy
-            aut "Ты слил."
+            aut "{result}Ты слил."
             aut "Ты облажался."
             play music music_list["you_lost_me"]
             aut "Как всегда…"
             play sound ds_sfx_psy
-            vol "Появилось это противное чувство, что сейчас на меня начнут показывать пальцем и шептаться «Смотрите, это он! Да, он! Он облажался.»"
+            vol "Появилось это противное чувство, что сейчас на тебя начнут показывать пальцем и шептаться «Смотрите, это он! Да, он! Он облажался.»"
             "Ты двигаешься прочь от стола, не поднимая ни на кого глаз."
             "Особенно — на Алису."
             play sound ds_sfx_mot
@@ -7405,8 +7391,7 @@ label ds_cards_final_fail_end:
         if ds_bet_dv:
             "Алиса встаёт из-за стола и…"
             if skillcheck('empathy', lvl_medium, passive=True):
-                emp "Ощущается, что она заставляет себя..."
-                $ ds_skill_points['empathy'] += 1
+                emp "{result}Ощущается, что она заставляет себя..."
             show mt normal pioneer at fright with dissolve
             th "Направилась к вожатой! Да! Момент истины!"
             show dv normal pioneer2 at fleft with moveinleft
@@ -7466,11 +7451,11 @@ label ds_cards_final_fail_end:
                     window show
                     "Ты бросаешься вслед за ней…"
                     "Но было уже поздно…"
-                "Cидеть и ждать":
+                "{check=composure:14}Cидеть и ждать":
                     if skillcheck('composure', lvl_legendary):
                         window show
                         play sound ds_sfx_mot
-                        com "Не дрейфь. Вожатая вряд ли поверит... если только ты не начнёшь дёргаться."
+                        com "{result}Не дрейфь. Вожатая вряд ли поверит... если только ты не начнёшь дёргаться."
                         "Ты усаживаешься поудобнее и ждёшь развязки развязки."
                         play sound ds_sfx_psy
                         vol "Не боишься?"
@@ -7480,7 +7465,7 @@ label ds_cards_final_fail_end:
                     else:
                         window show
                         play sound ds_sfx_mot
-                        com "В тебе всё словно перевернулось."
+                        com "{result}В тебе всё словно перевернулось."
                         com "Ты не можешь удержаться от того, чтобы остановить Алису."
                         "И ты бросаешься вслед за ней, но оказывается уже поздно."
                     $ ds_skill_points['composure'] += 1
@@ -7560,8 +7545,7 @@ label ds_cards_final_fail_end:
         mi "У меня не было никаких сомнений в том, что я приду и всех победю!"
         if skillcheck('rhetoric', lvl_trivial, passive=True):
             play sound ds_sfx_int
-            rhe "«Одержу победу», а не «победю»... что за безграмотность..."
-            $ ds_skill_points['rhetoric'] += 1
+            rhe "{result}«Одержу победу», а не «победю»... что за безграмотность..."
         mi "И я пришла и победила."
         mi "Да я, да я… Я супер-Мику!"
         me "Очаровательное чудовище."
@@ -7600,10 +7584,10 @@ label ds_cards_final_fail_end:
         "Вопит она, бегая по столам, стульям и демонстрируя вам не только высокий уровень игры в карты, но и недюжинную подготовку по части паркура."
         window hide
         menu:
-            "Начать догонять Мику":
-                if skillcheck('savoir_faire', lvl_godly):
+            "{check=savoir_faire:15}Начать догонять Мику":
+                if skillcheck('savoir_faire', lvl_heroic):
                     window show
-                    svf "Ты подбегаешь к столу. Попробуй запрыгнуть на него - так будет проще."
+                    svf "{result}Ты подбегаешь к столу. Попробуй запрыгнуть на него - так будет проще."
                     $ ds_skill_points['savoir_faire'] += 1
                     "Ты так и делаешь и хватаешь Мику."
                     show mi shocked pioneer at center with dspr
@@ -7614,7 +7598,7 @@ label ds_cards_final_fail_end:
                     $ ds_lp['mi'] -= 1
                 else:
                     window show
-                    svf "Ты присоединяешься к Алисе и вожатой в догонялках."
+                    svf "{result}Ты присоединяешься к Алисе и вожатой в догонялках."
                     svf "Но, естественно, безуспешно."
                     svf "Оно и логично - у неё вся жизнь суетная, многочасовые выступления на сцене."
                     hide mt
@@ -7656,11 +7640,11 @@ label ds_cards_final_fail_end:
                     "Проигнорировать":
                         window show
                         "Мику с лёгкостью пушинки спрыгивает со стола."
-            "Успокоить преследовательниц":
+            "{check=suggestion:15}Успокоить преследовательниц":
                 if skillcheck('suggestion', lvl_heroic):
                     window show
                     play sound ds_sfx_psy
-                    sug "Да кому в самом деле это пение мешает? Напротив, красивое завершение программы!"
+                    sug "{result}Да кому в самом деле это пение мешает? Напротив, красивое завершение программы!"
                     me "Успокойтесь и дайте ей спеть! Красиво же! И никому не мешает."
                     sug "Ты говоришь это настолько громко, чтобы тебя точно услышали."
                     me "Да и догнать вы её явно не сможете..."
@@ -7674,7 +7658,7 @@ label ds_cards_final_fail_end:
                 else:
                     window show
                     play sound ds_sfx_psy
-                    sug "Cлишком много шума и гама. Никто тебя не воспримет."
+                    sug "{result}Cлишком много шума и гама. Никто тебя не воспримет."
                     me "Успокойтесь, пожалуйста..."
                     "Никто не реагирует. Ольга Дмитриевна и Алиса продолжают бегать за Мику."
                     "Но ещё минут пять — и обе ловчих сваливаются рядом со столами, а она всё продолжает и продолжает петь, делая в воздухе странные, стригущие движения пальцами."
@@ -7928,13 +7912,12 @@ label ds_cards_final_win_end:
             "Поймав твой взгляд, она краснеет как маков цвет."
             if skillcheck('drama', lvl_easy, passive=True):
                 play sound ds_sfx_int
-                dra "А вы, склонив голову набок, изображаете пантомиму под названием «натягиваю резиновую перчатку»."
+                dra "{result}А вы, склонив голову набок, изображаете пантомиму под названием «натягиваю резиновую перчатку»."
                 show dv shocked pioneer2 with dspr
                 dra "И красноречиво так шевелите пальцами."
                 dra "Алисе аж плохо стало."
                 play sound ds_sfx_fys
                 ins "Или это она подумала, что я не перчатку надеваю, а… Фу, какая она испорченная."
-                $ ds_skill_points['drama'] += 1
         else:
             "Лена теряется где-то на заднем плане"
             play sound ds_sfx_fys
@@ -8112,7 +8095,7 @@ label ds_cards_final_win_end:
                 with dissolve
                 if skillcheck('suggestion', lvl_medium, passive=True):
                     play sound ds_sfx_psy
-                    sug "Не спеши. Девушку нужно обнимать за талию."
+                    sug "{result}Не спеши. Девушку нужно обнимать за талию."
                     $ ds_skill_points['suggestion'] += 1
                     window hide
                     menu:
@@ -8214,7 +8197,7 @@ label ds_cards_final_win_end:
         show sh serious pioneer with dspr
         if skillcheck('inland_empire', lvl_medium, passive=True):
             play sound ds_sfx_psy
-            ine "Да и сама его поза…"
+            ine "{result}Да и сама его поза…"
             ine "Почему-то вдруг вспомнинается тебе персонаж Элайджи Вуда из «Города Грехов»."
             ine "Вроде бы, ничего такого сверхъестественного не делает, но тревогу внушает примерно так же — одним появлением на экране."
         play sound ds_sfx_fys

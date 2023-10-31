@@ -10,25 +10,32 @@ init python:
     from abc import ABCMeta, abstractmethod
 
     ds_level_names = {
-        6: u'Элементарно',
-        8: u'Просто',
-        10: u'Средне',
-        11: u'Средне',
-        12: u'Сложно',
-        13: u'Опасно',
-        14: u'Рискованно',
-        15: u'Легендарно',
-        16: u'Невероятно',
-        18: u'Немыслимо',
-        20: u'Невозможно'
+        '6': u'Элементарно',
+        '8': u'Просто',
+        '10': u'Средне',
+        '11': u'Средне',
+        '12': u'Сложно',
+        '13': u'Опасно',
+        '14': u'Рискованно',
+        '15': u'Легендарно',
+        '16': u'Невероятно',
+        '18': u'Немыслимо',
+        '20': u'Невозможно'
     }
 
     def ds_result_tag(tag, argument):
         global ds_last_skillcheck
         global ds_level_names
-        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_level_names[ds_last_skillcheck.threshold]),  (renpy.TEXT_TEXT, ': '), (renpy.TEXT_TEXT, 'Успех' if ds_last_skillcheck.result else 'Неудача'), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
+        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_level_names[str(ds_last_skillcheck.threshold)]),  (renpy.TEXT_TEXT, ': '), (renpy.TEXT_TEXT, 'Успех' if ds_last_skillcheck.result else 'Неудача'), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
+
+    def ds_check_tag(tag, argument):
+        global ds_level_names
+        global ds_skill_list
+        skill, threshold = argument.split(':')
+        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_skill_list[skill]),  (renpy.TEXT_TEXT, ' — '), (renpy.TEXT_TEXT, ds_level_names[threshold]), (renpy.TEXT_TEXT, ' '),  (renpy.TEXT_TEXT, str(threshold)), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
 
     config.self_closing_custom_text_tags['result'] = ds_result_tag
+    config.self_closing_custom_text_tags['check'] = ds_check_tag
 
     def ds_get_check_res_style(*args):
         return ds_check_res_style
@@ -56,8 +63,8 @@ init python:
         # "quit",
         "say",
         # "preferences",
-        # "save",
-        # "load",
+        "save",
+        "load",
         # "nvl",
         "choice",
         "text_history_screen",
@@ -755,7 +762,7 @@ init:
     $ init_small_map_zones_ds()
 
     $ ds_chosen_skill = None
-    $ ds_available_points = 8
+    $ ds_available_points = 1
 
 label _show_small_map_ds:
     show widget small_map_ds
@@ -768,7 +775,6 @@ style ds_check_res_style:
 
 style ds_history_style_ch:
     font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-    size 24
     rest_indent 30
     textalign 0.0
     hover_color "#86cd4d"
@@ -777,7 +783,6 @@ style ds_history_style_ch:
 
 style ds_history_style_noch:
     font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-    size 24
     first_indent 30
     rest_indent 30
     textalign 0.0
@@ -787,22 +792,36 @@ style ds_history_style_noch:
 
 style ds_history_style_ch_prolog:
     font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-    size 24
     rest_indent 30
     textalign 0.0
-    idle_color "#115bc0"
+    idle_color "#afdafc"
     hover_color "#ffdd7d"
     outlines [(absolute(0), "#000", absolute(1), absolute(1))]
 
 style ds_history_style_noch_prolog:
     font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-    size 24
     first_indent 30
     rest_indent 30
     textalign 0.0
-    idle_color "#115bc0"
+    idle_color "#afdafc"
     hover_color "#ffdd7d"
     outlines [(absolute(0), "#000", absolute(1), absolute(1))]
+
+style ds_say_style_prolog:
+    size 24
+    color "#00bfff"
+    drop_shadow [ (-1, -1), (1, -1), (-1, 1), (1, 1) ]
+    drop_shadow_color "#000001"
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    line_spacing 2
+
+style ds_say_style:
+    size 24
+    color "#ffdd7d"
+    drop_shadow [ (-1, -1), (1, -1), (-1, 1), (1, 1) ]
+    drop_shadow_color "#000001"
+    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+    line_spacing 2
 
 transform out_up(new_widget=None, old_widget=None):
     delay 0.1
@@ -868,6 +887,7 @@ screen ds_game_menu_selector():
     tag menu
     modal True
     window:
+        background None
         at transform:
             on show:
                 xoffset -1920
@@ -1129,8 +1149,9 @@ screen ds_main_menu():
             ypos 0.55
             action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), ShowMenu('quit')]
     
-screen ds_settings():
+screen ds_preferences():
     pass
+
 
 screen ds_load():
     default cur_slot = (0, 0)
@@ -1203,7 +1224,7 @@ screen ds_load():
             yoffset -10
             imagebutton:
                 auto "mods/disco_sovenok/gui/loadsave/delete_%s.png"
-                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0)), Show('ds_save')]
+                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0))]
             imagebutton:
                 auto "mods/disco_sovenok/gui/loadsave/load_%s.png"
                 action FileLoad(cur_slot[1], page=cur_slot[0])
@@ -1297,7 +1318,7 @@ screen ds_save():
             yoffset -10
             imagebutton:
                 auto "mods/disco_sovenok/gui/loadsave/delete_%s.png"
-                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0)), Show('ds_save')]
+                action [FileDelete(cur_slot[1], page=cur_slot[0]), SetScreenVariable('cur_slot', (0,0))]
             imagebutton:
                 auto "mods/disco_sovenok/gui/loadsave/save_%s.png"
                 action Confirm(u"Вы действительно хотите перезаписать это сохранение?", FileSave(cur_slot[1], page=cur_slot[0]), confirm_selected=True)
@@ -1422,7 +1443,7 @@ screen ds_choose_type():
         yalign 1.0
         spacing 20
         imagebutton:
-            auto "mods/disco_sovenok/gui/menu/incel_type_%s.png"
+            auto "mods/disco_sovenok/gui/menu/int_type_%s.png"
             yanchor 1.0
             at transform:
                 ypos 2.0
@@ -1431,7 +1452,7 @@ screen ds_choose_type():
             activate_sound ds_selection
                 
         imagebutton:
-            auto "mods/disco_sovenok/gui/menu/normic_type_%s.png"
+            auto "mods/disco_sovenok/gui/menu/psy_type_%s.png"
             yanchor 1.0
             at transform:
                 ypos 0.0
@@ -1440,7 +1461,7 @@ screen ds_choose_type():
             activate_sound ds_selection
             
         imagebutton:
-            auto "mods/disco_sovenok/gui/menu/chad_type_%s.png"
+            auto "mods/disco_sovenok/gui/menu/fys_type_%s.png"
             yanchor 1.0
             at transform:
                 ypos 2.0
@@ -1469,9 +1490,18 @@ screen ds_skills(setup, change):
     modal True
     tag menu
     if setup:
-        add "bg ext_road_day":
-            xalign 0.5
-            yalign 0.5
+        if hour in [22,23,24,0,1,2,3,4,5,6]:
+            add "bg ext_road_night":
+                xalign 0.5
+                yalign 0.5
+        elif hour in [20,21,7,8]:
+            add "bg ext_road_sunset":
+                xalign 0.5
+                yalign 0.5
+        else:
+            add "bg ext_road_day":
+                xalign 0.5
+                yalign 0.5
 
     imagebutton:
         xalign 0.0
@@ -1855,7 +1885,7 @@ screen ds_skill_info():
     
 screen ds_lp_points():
     python:
-        CHARS = ['dv', 'un', 'sl', 'us', 'mi', 'el', 'mt', 'mz']
+        CHARS = ['dv', 'un', 'sl', 'us', 'mi', 'ya', 'el', 'mt', 'mz', 'cs']
 
         CHAR_COLORS = {
             'dv': "#ffaa00",
@@ -1863,9 +1893,11 @@ screen ds_lp_points():
             'sl': "#ffd200",
             'us': "#ff3200",
             'mi': "#00deff",
+            'ya': "#74b05f",
             'el': "#ffff00",
             'mt': "#00ea32",
-            'mz': "#5481db"
+            'mz': "#5481db",
+            'cs': "#a5a5ff"
         }
 
         CHAR_NAMES = {
@@ -1874,9 +1906,11 @@ screen ds_lp_points():
             'sl': "СЛАВЯ",
             'us': "УЛЬЯНА",
             'mi': "МИКУ",
+            'ya': "ЯНА",
             'el': "ЭЛЕКТРОНИК",
             'mt': "ОЛЬГА",
-            'mz': "ЖЕНЯ"
+            'mz': "ЖЕНЯ",
+            'cs': "ВИОЛА"
         }
     fixed:
         xmaximum 1810
@@ -1892,11 +1926,9 @@ screen ds_lp_points():
                 xanchor 1.0
                 xpos 1.0
                 linear 0.1 xanchor 0.0 xpos 1.0
-        grid 2 4:
+        grid 2 5:
             xspacing 30
-            yspacing 50
             xoffset 34
-            yoffset 55
             transpose True
             for char in CHARS:
                 fixed:
@@ -1978,12 +2010,18 @@ screen ds_say:
             xoffset 170
             yoffset 900
             xmaximum 1580
-            size 24
-            color "#ffdd7d"
             drop_shadow [ (-1, -1), (1, -1), (-1, 1), (1, 1) ]
             drop_shadow_color "#000001"
             font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
             line_spacing 2
+            if persistent.font_size == 'small':
+                size 24
+            else:
+                size 30
+            if persistent.timeofday == 'prologue':
+                color "#afdafc"
+            else:
+                color "#ffdd7d"
         if 'result}' in what:
             mousearea:
                 area (170, 900, 1580, 280)
@@ -2036,6 +2074,10 @@ screen ds_text_history_screen:
                             textbutton ("{color="+Color(color=entry.who_args['color']).hexcode+"}"+entry.who.upper()+"{/color} — "+entry.what):
                                 background None
                                 action RollbackToIdentifier(entry.rollback_identifier)
+                                if persistent.font_size == 'small':
+                                    text_size 24
+                                else:
+                                    text_size 30
                                 if persistent.timeofday == 'prologue':
                                     text_style 'ds_history_style_ch_prolog'
                                 else:
@@ -2044,6 +2086,10 @@ screen ds_text_history_screen:
                             textbutton entry.what:
                                 background None
                                 action RollbackToIdentifier(entry.rollback_identifier)
+                                if persistent.font_size == 'small':
+                                    text_size 24
+                                else:
+                                    text_size 30
                                 if persistent.timeofday == 'prologue':
                                     text_style 'ds_history_style_noch_prolog'
                                 else:
@@ -2085,6 +2131,10 @@ screen ds_choice:
                             textbutton ("{color="+Color(color=entry.who_args['color']).hexcode+"}"+entry.who.upper()+"{/color} — "+entry.what):
                                 background None
                                 action NullAction()
+                                if persistent.font_size == 'small':
+                                    text_size 24
+                                else:
+                                    text_size 30
                                 if persistent.timeofday == 'prologue':
                                     text_style 'ds_history_style_ch_prolog'
                                 else:
@@ -2093,6 +2143,10 @@ screen ds_choice:
                             textbutton entry.what:
                                 background None
                                 action NullAction()
+                                if persistent.font_size == 'small':
+                                    text_size 24
+                                else:
+                                    text_size 30
                                 if persistent.timeofday == 'prologue':
                                     text_style 'ds_history_style_noch_prolog'
                                 else:
@@ -2108,7 +2162,10 @@ screen ds_choice:
                                     idle_color "#ffffff"
                                     hover_color "#86cd4d"
                                     font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-                                    size 24
+                                    if persistent.font_size == 'small':
+                                        size 24
+                                    else:
+                                        size 30
                                 if i < 9:
                                     keysym str(i + 1)
                     null height 200
@@ -2165,6 +2222,8 @@ screen ds_check_result():
         vbox:
             xalign 1.0
             yalign 0.0
+            xoffset 5
+            yoffset -5
             add ("mods/disco_sovenok/gui/check/%s_caption.png" % ds_last_skillcheck.skill)
             fixed:
                 xmaximum 310
@@ -2272,3 +2331,62 @@ screen ds_check_result():
                         color "#ff0000"
                         size 24
                         xalign 0.5
+
+screen ds_check_info(skill, threshold, level):
+    python:
+        POSSIB = [97, 97, 97, 97, 92, 83, 72, 58, 42, 28, 17, 8, 3, 3]
+        chance = POSSIB[max(min(threshold - level, 13), 0)]
+    frame:
+        background "mods/disco_sovenok/gui/check/check_base.png"
+        xmaximum 600
+        ymaximum 390
+        yalign 0.0
+        yoffset 20
+        xalign 1.0
+        at transform:
+            on show:
+                xoffset 600
+                linear 0.2 xoffset -20
+            on hide:
+                xoffset -20
+                linear 0.2 xoffset 600
+        add ("mods/disco_sovenok/gui/skills/%s_large.png" % skill):
+            xalign 0.0
+            yalign 0.5
+            xoffset -5
+        vbox:
+            xalign 1.0
+            yalign 0.0
+            add ("mods/disco_sovenok/gui/check/%s_caption.png" % skill)
+            fixed:
+                xmaximum 310
+                if chance < 30:
+                    text "НИЗКИЕ ШАНСЫ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ff0000"
+                        size 30
+                        xalign 0.5
+                elif chance > 70:
+                    text "ВЫСОКИЕ ШАНСЫ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#008000"
+                        size 30
+                        xalign 0.5
+                else:
+                    text "РАВНЫЕ ШАНСЫ":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffff00"
+                        size 30
+                        xalign 0.5
+            fixed:
+                xmaximum 320
+                text '{size=72}[chance]{/size}{color=#ffffff}%%{/color}':
+                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    if chance < 30:
+                        color "#ff0000"
+                    elif chance > 70:
+                        color "#008000"
+                    else:
+                        color "#ffff00"
+                    size 60
+                    xalign 0.0

@@ -63,10 +63,10 @@ init python:
         second_dice = renpy.random.choice(dices)
         points = ds_get_total_skill(skill)
         applied_modifiers = []
-        for variable, label, bonus in modifiers:
+        for variable, bonus, label in modifiers:
             if eval(variable):
                 points += bonus
-                applied_modifiers.append((variable, label, bonus))
+                applied_modifiers.append((variable, bonus, label))
         result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
         if not passive:
             # renpy.show('roll')
@@ -455,6 +455,9 @@ init:
     $ ya = Character (u'Яна', color="74b05f", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fzp = Character (u'Физрук', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+
+    $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 # Изображения
 
@@ -569,6 +572,8 @@ init:
 
     image bg ds_int_toilet_day = "mods/disco_sovenok/bg/int_toilet_day.png"
     image bg ds_int_toilet_night = "mods/disco_sovenok/bg/int_toilet_night.jpg"
+
+    image bg ds_ext_camp_entrance_sunset = "mods/disco_sovenok/bg/ext_camp_entrance_sunset.jpg"
 
 ## Новые CG
 
@@ -2262,6 +2267,10 @@ init:
     image dvw rage = "mods/disco_sovenok/sprite/normal/dvw/dv_rage.png"
 
     image piw normal = "mods/disco_sovenok/sprite/normal/piw/qq.png"
+
+    image sub arb = ds_define_sprite('undv', '', body_num=5)
+    image sub lim = ds_define_sprite('undv', '', body_num=1)
+    image sub trs = ds_define_sprite('undv', '', body_num=4)
 
 # Эффекты
 

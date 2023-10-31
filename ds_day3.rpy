@@ -7,6 +7,7 @@ init:
     $ ds_accept_mz = False
     $ ds_understood_mz_reason = False
     $ ds_promise_un = False
+    $ ds_whom_helped = None
     $ ds_dance_dv = False
     $ ds_dv_invite = False
     $ ds_el_mz_relation = False
@@ -18,6 +19,7 @@ init:
     $ ds_promise_sl = False
     $ ds_framed_dv = False
     $ ds_punished = False
+    $ ds_after_lunch_who = None
     $ ds_mi_accept_dv = False
     $ ds_concert_part = False
     $ ds_composition_type = 0
@@ -69,7 +71,7 @@ label ds_day3_morning:
         th "Чего ей надо от меня так рано?.."
         if skillcheck('reaction_speed', lvl_easy, passive=True):
             play sound ds_sfx_mot
-            res "Вообще-то, ты самолично вчера предложил по утрам заниматься!"
+            res "{result}Вообще-то, ты самолично вчера предложил по утрам заниматься!"
             $ ds_skill_points['reaction_speed'] += 1
             window hide
             menu:
@@ -120,10 +122,10 @@ label ds_day3_morning:
                 hide sl with dissolve
                 "Она выходит."
                 $ ds_lp['sl'] -= 1
-            "Притвориться, что не можешь":
+            "{check=drama:12}Притвориться, что не можешь":
                 if skillcheck('drama', lvl_challenging):
                     window show
-                    dra "У вас болит... скажем, живот, мессир."
+                    dra "{result}У вас болит... скажем, живот, мессир."
                     me "Ох... слушай, давай не в этот раз... у меня живот разболелся..."
                     dra "Вы достаточно правдоподобно показываете боль в животе."
                     show sl scared sport at center with dspr
@@ -134,7 +136,7 @@ label ds_day3_morning:
                     dra "Кажется, она поверила."
                 else:
                     window show
-                    dra "Вы и пытаетесь изобразить, что у вас что-то болит, мессир, но ничего внятного не получается."
+                    dra "{result}Вы и пытаетесь изобразить, что у вас что-то болит, мессир, но ничего внятного не получается."
                     me "Ах... у меня всё болит..."
                     show sl angry sport at center with dspr
                     sl "Врать нехорошо, Семён! Сказал бы, что просто не хочешь!"
@@ -349,15 +351,15 @@ label ds_day3_sl_workout:
                 inf "Кстати, может, и себе ключик заберёшь?"
                 window hide
                 menu:
-                    "Отцепить ключ":
+                    "{check=interfacing:8}Отцепить ключ":
                         if skillcheck('interfacing', lvl_easy):
                             window show
-                            inf "Это легче лёгкого, благо тебе и скрываться не надо!"
+                            inf "{result}Это легче лёгкого, благо тебе и скрываться не надо!"
                             $ ds_some_key = True
                             "Ты кладёшь в карман отцепленный ключ."
                         else:
                             window show
-                            inf "Ты пытаешься отсоединить ключ от кольца, но ничего не выходит!"
+                            inf "{result}Ты пытаешься отсоединить ключ от кольца, но ничего не выходит!"
                             inf "Ключи просто падают на землю..."
                             th "Ладно, не в этот раз..."
                         $ ds_skill_points['interfacing'] += 1
@@ -395,10 +397,10 @@ label ds_day3_sl_workout:
                         window show
                         me "Вот, держи."
                         play sound sfx_keys_rattle
-                    "Отцепить ключ себе":
+                    "{check=interfacing:16}Отцепить ключ себе":
                         if skillcheck('interfacing', lvl_godly):
                             window show
-                            inf "Ты ловко двигаешь пальцами у себя в кармане... "
+                            inf "{result}Ты ловко двигаешь пальцами у себя в кармане... "
                             window hide
                             $ renpy.pause(0.5)
                             window show
@@ -412,7 +414,7 @@ label ds_day3_sl_workout:
                             play sound sfx_keys_rattle
                             $ renpy.pause(0.5)
                             play sound ds_sfx_mot
-                            inf "Но ключи слишком громко шумят, и Славя обращает внимание."
+                            inf "{result}Но ключи слишком громко шумят, и Славя обращает внимание."
                             $ ds_skill_points['interfacing'] += 1
                             show sl serious pioneer at center with dspr
                             sl "Так, Семён, отдавай ключи!"
@@ -540,10 +542,10 @@ label ds_day3_sl_workout:
     aut "Однако, Славя продолжает бежать как ни в чём не бывало."
     window hide
     menu:
-        "Продолжить бежать":
+        "{check=endurance:12}Продолжить бежать":
             if skillcheck('endurance', lvl_challenging):
                 window show
-                edr "У тебя открывается второе дыхание! Беги дальше!"
+                edr "{result}У тебя открывается второе дыхание! Беги дальше!"
                 $ ds_skill_points['endurance'] += 1
                 window hide
 
@@ -639,7 +641,7 @@ label ds_day3_sl_workout:
                 "И она убегает."
             else:
                 window show
-                edr "Ты пытаешься побежать... но от усталости падаешь."
+                edr "{result}Ты пытаешься побежать... но от усталости падаешь."
                 scene bg ext_house_of_mt_day
                 play sound sfx_body_bump
                 with vpunch
@@ -718,15 +720,15 @@ label ds_day3_sl_workout:
     play ambience ds_ambience_shower
     if skillcheck('instinct', lvl_trivial, passive=True):
         play sound ds_sfx_fys
-        ins "Тебе очень хочется посмотреть на её девичью красу..."
+        ins "{result}Тебе очень хочется посмотреть на её девичью красу..."
         play sound ds_sfx_psy
         vol "Но стоит ли? Только испортишь отношения с ней."
         window hide
         menu:
-            "Подглянуть":
+            "{check=savoir_faire:14}Подглянуть":
                 if skillcheck('savoir_faire', lvl_legendary):
                     window show
-                    svf "Тебе удаётся воспользоваться тем, что дверцы закрываются неплотно."
+                    svf "{result}Тебе удаётся воспользоваться тем, что дверцы закрываются неплотно."
                     svf "Ты подсматриваешь в щель так, что Славя тебя не видит."
                     $ ds_skill_points['savoir_faire'] += 1
                     ins "Однако, и ты толком ничего разглядеть не можешь!"
@@ -739,7 +741,7 @@ label ds_day3_sl_workout:
                     svf "Когда Славя выключает воду, ты быстро отбегаешь."
                 else:
                     window show
-                    svf "Ты начинаешь смотреть сверху дверцы, и Славя предсказуемо тебя замечает."
+                    svf "{result}Ты начинаешь смотреть сверху дверцы, и Славя предсказуемо тебя замечает."
                     sl "Cемён! Дай мне помыться, пожалуйста."
                     $ ds_lp['sl'] -= 1
                     "Она легонько тебя отталкивает."
@@ -857,21 +859,27 @@ label ds_day3_meet_mt:
     window show
     "Когда ты возвращаешься в домик вожатой, Ольга Дмитриевна уже проснулась."
     "Она стоит перед зеркалом и расчёсывает волосы."
-    play sound ds_sfx_psy
-    sug "Похвали волосы! Ей будет приятно, и это улучшит её отношение к тебе."
-    show mt smile pioneer at center   with dspr
-    mt "Доброе утро, Семён!"
-    window hide
-    menu:
-        "Похвалить волосы":
-            window show
-            me "Доброе утро. У вас, кстати, прекрасные волосы!"
-            show mt laugh pioneer at center with dspr
-            mt "Cпасибо, Семён!"
-            $ ds_lp['mt'] += 1
-        "Просто поздороваться":
-            window show
-            me "Доброе."
+    if skillcheck('suggestion', lvl_easy, passive=True):
+        play sound ds_sfx_psy
+        sug "{result}Похвали волосы! Ей будет приятно, и это улучшит её отношение к тебе."
+        show mt smile pioneer at center   with dspr
+        mt "Доброе утро, Семён!"
+        window hide
+        menu:
+            "Похвалить волосы":
+                window show
+                me "Доброе утро. У вас, кстати, прекрасные волосы!"
+                show mt laugh pioneer at center with dspr
+                mt "Cпасибо, Семён!"
+                $ ds_lp['mt'] += 1
+                $ ds_skill_points['suggestion'] += 1
+            "Просто поздороваться":
+                window show
+                me "Доброе."
+    else:
+        show mt smile pioneer at center   with dspr
+        mt "Доброе утро, Семён!"
+        me "Доброе."
     play sound ds_sfx_psy
     vol "От недосыпа ещё немного гудит голова и путаются мысли, но это лучше, что ты всё-таки вылез из кровати, а не остался, как обычно, досыпать дежурные пару-тройку часов."
     show mt normal pioneer at center   with dspr
@@ -915,11 +923,11 @@ label ds_day3_meet_mt:
             mt "Так, идём!"
             $ ds_karma += 5
             jump ds_day3_lineup
-        "Попытаться избежать":
+        "{check=drama:15}Попытаться избежать":
             if skillcheck('drama', lvl_heroic):
                 window show
                 play sound ds_sfx_int
-                dra "Изобразите, что у вас болит живот."
+                dra "{result}Изобразите, что у вас болит живот."
                 $ ds_skill_points['drama'] += 1
                 me "Ольга Дмитриевна, знаете, у меня что-то живот разболелся – мне бы…"
                 me "Ну, вы понимаете…"
@@ -969,7 +977,8 @@ label ds_day3_meet_mt:
             else:
                 window show
                 play sound ds_sfx_int
-                dra "У вас не хватает фантазии придумать и изобразить, что вы {i}не можете{/i} пойти на линейку."
+                dra "{result}У вас не хватает фантазии придумать и изобразить, что вы {i}не можете{/i} пойти на линейку."
+                $ ds_skill_points['drama'] += 1
                 me "Ну Ольга Дмитриевна, давайте я сегодня..."
                 show mt angry pioneer at center with dspr
                 mt "Нет, Семён, посещение линейки обязательно!"
@@ -978,11 +987,11 @@ label ds_day3_meet_mt:
                 show mt normal pioneer at center with dspr
                 mt "Так, идём!"
                 jump ds_day3_lineup
-        "Протестовать":
+        "{check=authority:16}Протестовать":
             if skillcheck('authority', lvl_godly):
                 window show
                 play sound ds_sfx_psy
-                aut "Ты свободная личность! И никуда ты не пойдёшь!"
+                aut "{result}Ты свободная личность! И никуда ты не пойдёшь!"
                 aut "Покажи своим лицом и телом, что тут ты главный."
                 me "Не пойду я никуда, и вообще у меня дела! Важнее, чем ваша линейка!"
                 show mt surprise pioneer at center with dspr
@@ -999,7 +1008,7 @@ label ds_day3_meet_mt:
             else:
                 window show
                 play sound ds_sfx_psy
-                aut "У тебя не хватит решимости пойти против вожатой."
+                aut "{result}У тебя не хватит решимости пойти против вожатой."
                 $ ds_skill_points['authority'] += 1
                 me "Ну Ольга Дмитриевна, давайте я сегодня..."
                 show mt angry pioneer at center with dspr
@@ -1009,11 +1018,11 @@ label ds_day3_meet_mt:
                 show mt normal pioneer at center with dspr
                 mt "Так, идём!"
                 jump ds_day3_lineup
-        "Улизнуть":
+        "{check=savoir_faire:15}Улизнуть":
             if skillcheck('savoir_faire', lvl_heroic):
                 window show
                 play sound ds_sfx_mot
-                svf "Ты резко срываешься с места и бросаешься в дверь."
+                svf "{result}Ты резко срываешься с места и бросаешься в дверь."
                 scene bg ext_house_of_mt_day
                 with dissolve
                 mt "CЕМЁН!"
@@ -1032,7 +1041,7 @@ label ds_day3_meet_mt:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты пытаешься сбежать, бросаешься в дверь..."
+                svf "{result}Ты пытаешься сбежать, бросаешься в дверь..."
                 svf "Но тут лестница! Ты запинаешься о неё и падаешь!"
                 window hide
                 scene bg ext_house_of_mt_day
@@ -1128,7 +1137,7 @@ label ds_day3_lineup:
     res "Непохоже, что обязательная явка хоть кого-то расстроила..."
     if skillcheck('empathy', lvl_easy, passive=True):
         play sound ds_sfx_psy
-        emp "Разве что Алиса, похоже, не очень-то горит желанием танцевать."
+        emp "{result}Разве что Алиса, похоже, не очень-то горит желанием танцевать."
     mt "Однако, как известно, делу время, а потехе час! Поэтому сегодня мы должны поработать на славу!"
     play sound ds_sfx_int
     rhe "Говоря «мы», она подразумевает «вы», то есть пионеры."
@@ -1141,8 +1150,7 @@ label ds_day3_lineup:
     mt "Г - наведение порядка на сцене... под ответственность Алисы Двачевской..."
     if skillcheck('perception', lvl_challenging, passive=True):
         play sound ds_sfx_mot
-        per_hea "Ты можешь услышать, как вожатая говорит шёпотом: «прости господи»."
-        $ ds_skill_points['perception'] += 1
+        per_hea "{result}Ты можешь услышать, как вожатая говорит шёпотом: «прости господи»."
         play sound ds_sfx_psy
         emp "Видимо, она назначила Алису скрепя сердце."
     mt "Д - сортировка книг в библиотеке. За это отвечает наша уважаемая библиотекарша Евгения Мицгол."
@@ -1195,11 +1203,11 @@ label ds_day3_breakfast:
     sug "Ну, или хотя бы попытаться."
     window hide
     menu:
-        "Позавтракать с Леной":
+        "{check=volition:8}Позавтракать с Леной":
             if skillcheck('volition', lvl_easy):
                 window show
                 play sound ds_sfx_psy
-                vol "Ты решительно направляешься в её сторону."
+                vol "{result}Ты решительно направляешься в её сторону."
                 $ ds_skill_points['volition'] += 1
                 play sound ds_sfx_mot
                 svf "Но тут тебя хватают за руку!"
@@ -1208,11 +1216,9 @@ label ds_day3_breakfast:
                 mz "Бери завтрак и садись, есть разговор."
                 if not skillcheck('composure', lvl_medium, passive=True):
                     play sound ds_sfx_mot
-                    com "Ты несколько растерялся и молчишь."
+                    com "{result}Ты несколько растерялся и молчишь."
                     show mz bukal glasses pioneer at center   with dspr
                     mz "Чего стоишь?"
-                else:
-                    $ ds_skill_points['composure'] += 1
                 me "Извини, но не слишком ли это… резко?"
                 show mz normal glasses pioneer at center   with dspr
                 mz "А что такого-то? Бери завтрак и садись."
@@ -1220,11 +1226,11 @@ label ds_day3_breakfast:
                 aut "Похоже, для неё такое поведение совершенно нормально."
                 window hide
                 menu:
-                    "Пойти к Лене":
+                    "{check=volition:10}Пойти к Лене":
                         if skillcheck('volition', lvl_medium):
                             window show
                             play sound ds_sfx_psy
-                            vol "Ты уверен, что Лена будет не против твоей компании."
+                            vol "{result}Ты уверен, что Лена будет не против твоей компании."
                             vol "А Женя... вряд ли у неё что-то срочное."
                             $ ds_lp['un'] += 1
                             $ ds_skill_points['volition'] += 1
@@ -1232,7 +1238,7 @@ label ds_day3_breakfast:
                         else:
                             window show
                             play sound ds_sfx_psy
-                            vol "Нет, у тебя не хватает воли уйти от Жени к Лене."
+                            vol "{result}Нет, у тебя не хватает воли уйти от Жени к Лене."
                             $ ds_skill_points['volition'] += 1
                     "Остаться с Женей":
                         $ ds_lp['mz'] += 1
@@ -1248,11 +1254,9 @@ label ds_day3_breakfast:
     mz "Есть разговор!"
     if not skillcheck('composure', lvl_medium, passive=True):
         play sound ds_sfx_mot
-        com "Ты несколько растерялся и молчишь."
+        com "{result}Ты несколько растерялся и молчишь."
         show mz bukal glasses pioneer at center   with dspr
         mz "Чего расселся?"
-    else:
-        $ ds_skill_points['composure'] += 1
     window hide
     menu:
         "Сделать замечание":
@@ -1261,17 +1265,17 @@ label ds_day3_breakfast:
             mz "А что такого-то?"
             play sound ds_sfx_psy
             aut "Похоже, для неё такое поведение совершенно нормально."
-        "Сделать комплимент":
+        "{check=suggestion:12}Сделать комплимент":
             if skillcheck('suggestion', lvl_challenging):
                 window show
-                sug "Скажи ей про её волосы. Или про лицо."
+                sug "{result}Скажи ей про её волосы. Или про лицо."
                 me "А у тебя прекрасные волосы. Такие густые, и цвет красивый!"
                 $ ds_lp['mz'] += 1
                 show mz shy glasses pioneer at center with dspr
                 mz "Это хорошо, что ты так считаешь... но разговор не ждёт!"
             else:
                 window show
-                sug "Тебе не приходит в голову хороших комплиментов."
+                sug "{result}Тебе не приходит в голову хороших комплиментов."
                 me "Прекрасно выглядишь!"
                 $ ds_lp['mz'] += 1
                 show mz shy glasses pioneer at center with dspr
@@ -1344,41 +1348,46 @@ label ds_day3_breakfast_mz:
                     me "Не пойду я в библиотеку! У меня уже есть другие задачи!"
                     show mz bukal glasses pioneer at center with dspr
                     mz "Да как скажешь! Найду другого кого-нибудь!"
-            rhe "Спроси её про год! Про что-нибудь!"
-            window hide
-            menu:
-                "Cпросить":
-                    window show
-                    me "Слушай, а какой сейчас год, что-то совсем со счёта сбился?"
-                    show zh sceptic glasses pioneer at center  with dspr
-                    mz "Как будто ты не знаешь, какой сейчас год. Что ты мне глупые вопросы задаёшь."
-                    me "Я бы не спрашивал, если бы знал."
-                    show zh bukal glasses pioneer at center with dspr
-                    mz "А ты не знаешь?"
-                    me "Нет. У меня память плохая. Так какой сейчас год?"
-                    "Ты мило улыбаешься."
-                    show zh normal glasses pioneer at center  with dspr
-                    mz "Не понимаю, куда ты клонишь."
-                    mz "Можешь просто прибавить количество прожитых лет к году рождения. Если у тебя в этом году дня рождения ещё не было, то отними один."
-                    th "Разве тебе не было бы проще ответить, какой год, чем всю эту тираду проговаривать?"
-                    "Но ответила она правильно, так что перефразировать вопрос я не мог. Ладно, придумаем что-нибудь другое."
-                    me "А ты случайно не знаешь, что у нас тут за речка протекает? Или это и не речка вовсе?"
-                    "Градус недоумения накалялся."
-                    $ renpy.pause(1)
-                    show zh fun glasses pioneer at center with dspr
-                    mz "Ты разговор так что ли хочешь поддержать?"
-                    show zh bukal glasses pioneer at center  with dspr
-                    mz "Обычно в такой ситуации задают другие вопросы. \"Как дела\", там, \"как настроение\",..."
-                    "Бесполезно."
-                    me "Ладно, тогда как у тебя дела?"
-                    show zh sceptic glasses pioneer at center  with dspr
-                    $ renpy.pause(2)
-                    hide zh with dissolve
-                    "Женя лишь покачала головой, допила компот и ушла."
-                "Не спрашивать":
-                    window show
-                    "Женя быстро доедает завтрак и уходит без комментариев."
-                    th "Вот же... даже не попрощалась..."
+            if skillcheck('rhetoric', lvl_trivial, passive=True):
+                rhe "{result}Спроси её про год! Про что-нибудь!"
+                window hide
+                menu:
+                    "Cпросить":
+                        window show
+                        $ ds_skill_points['rhetoric'] += 1
+                        me "Слушай, а какой сейчас год, что-то совсем со счёта сбился?"
+                        show zh sceptic glasses pioneer at center  with dspr
+                        mz "Как будто ты не знаешь, какой сейчас год. Что ты мне глупые вопросы задаёшь."
+                        me "Я бы не спрашивал, если бы знал."
+                        show zh bukal glasses pioneer at center with dspr
+                        mz "А ты не знаешь?"
+                        me "Нет. У меня память плохая. Так какой сейчас год?"
+                        "Ты мило улыбаешься."
+                        show zh normal glasses pioneer at center  with dspr
+                        mz "Не понимаю, куда ты клонишь."
+                        mz "Можешь просто прибавить количество прожитых лет к году рождения. Если у тебя в этом году дня рождения ещё не было, то отними один."
+                        th "Разве тебе не было бы проще ответить, какой год, чем всю эту тираду проговаривать?"
+                        "Но ответила она правильно, так что перефразировать вопрос я не мог. Ладно, придумаем что-нибудь другое."
+                        me "А ты случайно не знаешь, что у нас тут за речка протекает? Или это и не речка вовсе?"
+                        "Градус недоумения накалялся."
+                        $ renpy.pause(1)
+                        show zh fun glasses pioneer at center with dspr
+                        mz "Ты разговор так что ли хочешь поддержать?"
+                        show zh bukal glasses pioneer at center  with dspr
+                        mz "Обычно в такой ситуации задают другие вопросы. \"Как дела\", там, \"как настроение\",..."
+                        "Бесполезно."
+                        me "Ладно, тогда как у тебя дела?"
+                        show zh sceptic glasses pioneer at center  with dspr
+                        $ renpy.pause(2)
+                        hide zh with dissolve
+                        "Женя лишь покачала головой, допила компот и ушла."
+                    "Не спрашивать":
+                        window show
+                        "Женя быстро доедает завтрак и уходит без комментариев."
+                        th "Вот же... даже не попрощалась..."
+            else:
+                "Женя быстро доедает завтрак и уходит без комментариев."
+                th "Вот же... даже не попрощалась..."
             window hide
 
             stop music fadeout 3
@@ -1397,11 +1406,11 @@ label ds_day3_breakfast_mz:
         "Переспросить":
             window show
             me "А? Чего?"
-        "Восстановить просьбу Жени":
-            if skillcheck('logic', lvl_medium, modifiers=[('ds_was_on_lineup', 2)]):
+        "{check=logic:10}Восстановить просьбу Жени":
+            if skillcheck('logic', lvl_medium, modifiers=[('ds_was_on_lineup', 2, 'Знаешь задачу Жени')]):
                 window show
                 play sound ds_sfx_int
-                lgc "Она, скорее всего, хочет, чтобы ты ей помог. В библиотеке. В рамках общественно-полезного труда, упомянутого вожатой утром."
+                lgc "{result}Она, скорее всего, хочет, чтобы ты ей помог. В библиотеке. В рамках общественно-полезного труда, упомянутого вожатой утром."
                 me "Да, я понял: нужно помочь тебе в библиотеке."
                 show mz normal glasses pioneer at center with dspr
                 mz "Отлично, тогда до встречи!"
@@ -1411,8 +1420,7 @@ label ds_day3_breakfast_mz:
                 "Женя встаёт и направляется к выходу."
                 if skillcheck('reaction_speed', lvl_trivial, passive=True):
                     play sound ds_sfx_mot
-                    res "Она же не доела!"
-                    $ ds_skill_points['reaction_speed'] += 1
+                    res "{result}Она же не доела!"
                     window hide
                     menu:
                         "Окликнуть":
@@ -1427,17 +1435,17 @@ label ds_day3_breakfast_mz:
             else:
                 window show
                 play sound ds_sfx_int
-                lgc "Однако, у тебя не получается ничего подходящего придумать."
+                lgc "{result}Однако, у тебя не получается ничего подходящего придумать."
                 $ ds_skill_points['logic'] += 1
                 play sound ds_sfx_int
                 dra "Более того, ваше выражение лица выдаёт, что вы не понимаете происходящего."
                 show mz angry glasses pioneer at center with dspr
                 mz "Ты не слушаешь!"
-        "Притвориться, что понял":
+        "{check=drama:11}Притвориться, что понял":
             if skillcheck('drama', lvl_up_medium):
                 window show
                 play sound ds_sfx_int
-                dra "Вы, мессир, прекрасно всё поняли и уж точно ничего не забыли!"
+                dra "{result}Вы, мессир, прекрасно всё поняли и уж точно ничего не забыли!"
                 $ ds_skill_points['drama'] += 1
                 me "Хорошо, я тебя понял."
                 $ ds_accept_mz = True
@@ -1447,8 +1455,7 @@ label ds_day3_breakfast_mz:
                 "Женя встаёт и направляется к выходу."
                 if skillcheck('reaction_speed', lvl_trivial, passive=True):
                     play sound ds_sfx_mot
-                    res "Она же не доела!"
-                    $ ds_skill_points['reaction_speed'] += 1
+                    res "{result}Она же не доела!"
                     window hide
                     menu:
                         "Окликнуть":
@@ -1464,7 +1471,7 @@ label ds_day3_breakfast_mz:
             else:
                 window show
                 play sound ds_sfx_int
-                dra "На вашем лице, мессир, всё написано, как в книге."
+                dra "{result}На вашем лице, мессир, всё написано, как в книге."
                 $ ds_skill_points['drama'] += 1
                 show mz angry glasses pioneer at center with dspr
                 mz "Ты не слушаешь!"
@@ -1483,7 +1490,7 @@ label ds_day3_breakfast_mz:
     rhe "Пионер же не ругается, как ты мог забыть!"
     if skillcheck('encyclopedia', lvl_medium, passive=True):
         play sound ds_sfx_int
-        enc "Вообще, «хунта» - это группировка, обычно военная, захватившая власть насильственно."
+        enc "{result}Вообще, «хунта» - это группировка, обычно военная, захватившая власть насильственно."
         enc "Но на имиджбордах недовольство постом нередко выражали словом «х***а», записанном именно что в виде «XYNTA», читаемом «хунта». Мем ещё был такой, с Номадом."
         $ ds_skill_points['encyclopedia'] += 1
         play sound ds_sfx_psy
@@ -1530,7 +1537,7 @@ label ds_day3_breakfast_mz:
         "Спросить про год" if ds_knowing == 0:
             window show
             if skillcheck('rhetoric', lvl_easy, passive=True):
-                rhe "Согласись с ней, а затем спроси"
+                rhe "{result}Согласись с ней, а затем спроси"
                 me "Ах, да, конечно! Извини! Обязательно приду!"
                 $ ds_skill_points['rhetoric'] += 1
             me "Слушай, а какой сейчас год, что-то совсем со счёта сбился?"
@@ -1551,8 +1558,7 @@ label ds_day3_breakfast_mz:
     "Женя встаёт и направляется к выходу."
     if skillcheck('reaction_speed', lvl_trivial, passive=True):
         play sound ds_sfx_mot
-        res "Она же не доела!"
-        $ ds_skill_points['reaction_speed'] += 1
+        res "{result}Она же не доела!"
         window hide
         menu:
             "Окликнуть":
@@ -1623,14 +1629,14 @@ label ds_day3_breakfast_un:
     rhe "Лена, как обычно, молчит, а значит, начинать разговор придётся тебе."
     window hide
     menu:
-        "Заговорить с Леной":
-            if skillcheck('rhetoric', lvl_easy, modifiers=[('ds_was_on_lineup', 1)]):
+        "{check=rhetoric:8}Заговорить с Леной":
+            if skillcheck('rhetoric', lvl_easy, modifiers=[('ds_was_on_lineup', 1, 'Знаешь о танцах')]):
                 window show
-                rhe "Танцы! Сегодня танцы! Поговори о них."
+                rhe "{result}Танцы! Сегодня танцы! Поговори о них."
                 $ ds_skill_points['rhetoric'] += 1
             else:
                 window show
-                rhe "Тебе не приходит в голову никаких тем для разговора."
+                rhe "{result}Тебе не приходит в голову никаких тем для разговора."
                 $ ds_skill_points['rhetoric'] += 1
                 "Поэтому вы молча доедаете завтрак и расходитесь."
                 hide un with dissolve
@@ -1656,7 +1662,7 @@ label ds_day3_breakfast_un:
     un "А ты?"
     if skillcheck('suggestion', lvl_easy, passive=True):
         play sound ds_sfx_psy
-        sug "Ты склонишь её к себе (ещё больше), если скажешь, что пойдёшь только с ней."
+        sug "{result}Ты склонишь её к себе (ещё больше), если скажешь, что пойдёшь только с ней."
     window hide
     menu:
         "Иду на танцы":
@@ -1666,11 +1672,11 @@ label ds_day3_breakfast_un:
             un "Хорошо."
             window hide
             menu:
-                "Пригласить Лену":
+                "{check=suggestion:12}Пригласить Лену":
                     if skillcheck('suggestion', lvl_challenging):
                         window show
                         play sound ds_sfx_psy
-                        sug "Скажи, что она выглядит прекрасно, и что ты хочешь видеть её на танцах."
+                        sug "{result}Скажи, что она выглядит прекрасно, и что ты хочешь видеть её на танцах."
                         me "Ты так прекрасно выглядишь, кстати... тебе обязательно нужно прийти на танцы!"
                         show un shy pioneer at center with dspr
                         un "Хорошо... спасибо..."
@@ -1679,7 +1685,7 @@ label ds_day3_breakfast_un:
                     else:
                         window show
                         play sound ds_sfx_psy
-                        sug "Вперёд, приглашай!"
+                        sug "{result}Вперёд, приглашай!"
                         me "Тебе обязательно нужно прийти! И потанцевать! Со мной!"
                         show un scared pioneer at center with dspr
                         un "Э... а... наверное..."
@@ -1699,7 +1705,7 @@ label ds_day3_breakfast_un:
                 th "Или вообще к тому времени сбегу!"
             show un normal pioneer at center with dspr
             un "Ну, как скажешь..."
-        "Пойду только с тобой" if ds_last_skillcheck and (ds_last_skillcheck.result):
+        "Пойду только с тобой" if ds_last_skillcheck.result:
             window show
             me "Ну не знаю..."
             me "Если, конечно, ты меня приглашаешь..."
@@ -1993,10 +1999,10 @@ label ds_day3_after_breakfast:
             stop music fadeout 3
 
             "Она направляется куда-то в сторону кружков, а ты ещё некоторое время просто стоишь на площади."
-        "Сослаться на помощь Ольге Дмитриевне":
+        "{check=drama:12}Сослаться на помощь Ольге Дмитриевне":
             if skillcheck('drama', lvl_challenging):
                 play sound ds_sfx_int
-                dra "Ты выполняешь очень ответственное поручение для Ольги Дмитриевны! Помогаешь ей разобрать документы пионеров, скажем."
+                dra "{result}Ты выполняешь очень ответственное поручение для Ольги Дмитриевны! Помогаешь ей разобрать документы пионеров, скажем."
                 me "Знаете, мне надо с Ольгой Дмитриевной документы разбирать."
                 me "Ну, типа в ком..."
                 play sound ds_sfx_int
@@ -2035,7 +2041,7 @@ label ds_day3_after_breakfast:
 
                 window show
                 play sound ds_sfx_int
-                dra "Врать тут вряд ли стоит."
+                dra "{result}Врать тут вряд ли стоит."
                 dra "И вообще, чем ты можешь помочь Ольге Дмитриевне вечером?"
                 me "Знаете, меня тут Ольга Дмитриевна просила помочь..."
                 show cs normal at center   with dspr
@@ -2138,10 +2144,9 @@ label ds_day3_after_breakfast:
     res "Хотя откуда тут такая роскошь?"
     per_hea "Звуки доносятся, очевидно, со стороны сцены."
     th "Интересно, кто бы это мог быть?"
-    if skillcheck('logic', lvl_up_medium, passive=True, modifiers=[('ds_was_on_lineup', 1)]):
+    if skillcheck('logic', lvl_up_medium, passive=True, modifiers=[('ds_was_on_lineup', 1, 'Знаешь, что Алиса на сцене')]):
         play sound ds_sfx_int
-        lgc "Так ведь Алиса вроде как играет на гитаре... скорее всего, это она."
-        $ ds_skill_points['logic'] += 1
+        lgc "{result}Так ведь Алиса вроде как играет на гитаре... скорее всего, это она."
     window hide
 
     stop ambience fadeout 2
@@ -2158,6 +2163,7 @@ label ds_day3_after_breakfast:
             jump ds_day3_house_mt
 
 label ds_day3_escape:
+    $ ds_whom_helped = 'esc'
     $ persistent.sprite_time = 'day'
     scene bg ds_ext_backdoor_day
     with dissolve
@@ -2200,11 +2206,11 @@ label ds_day3_escape:
     "Она прыгает и зацепляется за очередной проходящий вагон."
     window hide
     menu:
-        "Запрыгнуть":
+        "{check=savoir_faire:13}Запрыгнуть":
             if skillcheck('savoir_faire', lvl_formidable):
                 window show
                 play sound ds_sfx_mot
-                svf "Ты с лёгкостью прыгаешь и цепляешься за тот же вагон, что и Ульяна."
+                svf "{result}Ты с лёгкостью прыгаешь и цепляешься за тот же вагон, что и Ульяна."
                 svf "После этого вы забираетесь внутрь."
                 $ ds_skill_points['savoir_faire'] += 1
                 $ ds_lp['us'] += 1
@@ -2212,7 +2218,7 @@ label ds_day3_escape:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты пытаешься зацепиться за вагон... но срываешься и падаешь!"
+                svf "{result}Ты пытаешься зацепиться за вагон... но срываешься и падаешь!"
                 play sound ds_fall
                 $ ds_damage_health()
 
@@ -2247,11 +2253,11 @@ label ds_day3_escape:
                 "И вы идёте в сторону лагеря."
                 scene black with dissolve2
                 jump ds_end_us_gone
-        "Снять Ульяну":
+        "{check=reaction_speed:14}Снять Ульяну":
             if skillcheck('reaction_speed', lvl_legendary):
                 window show
                 play sound ds_sfx_mot
-                res "Ты успеваешь метнуться к вагону как раз вовремя и сорвать с него Ульяну."
+                res "{result}Ты успеваешь метнуться к вагону как раз вовремя и сорвать с него Ульяну."
                 play sound ds_fall
                 $ ds_skill_points['reaction_speed'] += 1
 
@@ -2317,7 +2323,7 @@ label ds_day3_escape:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты пытаешься схватить Ульяну... но поезд оказывается быстрее, и он увозит её."
+                svf "{result}Ты пытаешься схватить Ульяну... но поезд оказывается быстрее, и он увозит её."
 
                 scene bg ds_ext_railroad_day
                 with dissolve
@@ -2480,6 +2486,7 @@ label ds_day3_us_escaped:
     mt "В общем, сегодня без дискотеки! А теперь выходите!"
 
 label ds_day3_stage_dv:
+    $ ds_whom_helped = 'dv'
     $ persistent.sprite_time = "day"
     scene bg ext_stage_normal_day 
     with dissolve
@@ -2501,8 +2508,7 @@ label ds_day3_stage_dv:
     con "Девочка вся отдаётся музыке – глаза закрыты, одну ногу она поставила на колонку и всем телом покачивается в такт."
     if skillcheck('encyclopedia', lvl_easy, passive=True):
         play sound ds_sfx_int
-        enc "Она играет «Взвейтесь кострами». Гимн пионеров."
-        $ ds_skill_points['encyclopedia'] += 1
+        enc "{result}Она играет «Взвейтесь кострами». Гимн пионеров."
         window hide
         menu:
             "Начать подпевать":
@@ -2527,9 +2533,10 @@ label ds_day3_stage_dv:
     lgc "Интересно, где Алиса научилась играть?"
     lgc "В советское время подобная музыка не пользовалась всенародным уважением."
     "Будущая рок-звезда же тебя не замечает."
-    con "Она словно пытается слиться с музыкой, стать каждой нотой, каждым квадратом, каждой триолью."
-    con "Сразу вспоминаются рок-герои восьмидесятых – многие из них так же сильно отдавались музыке."
-    con  "Одень её вместо пионерской формы во что-нибудь более подходящее веяниям тогдашней эпохи, никто и не заметит подмены."
+    if skillcheck('conceptualization', lvl_easy, passive=True):
+        con "{result}Она словно пытается слиться с музыкой, стать каждой нотой, каждым квадратом, каждой триолью."
+        con "Сразу вспоминаются рок-герои восьмидесятых – многие из них так же сильно отдавались музыке."
+        con  "Одень её вместо пионерской формы во что-нибудь более подходящее веяниям тогдашней эпохи, никто и не заметит подмены."
     stop music fadeout 5
     "Выступление подходит к концу."
     "Взяв несколько последних аккордов, Алиса наконец смотрит в твою сторону."
@@ -2568,7 +2575,7 @@ label ds_day3_stage_dv:
     "Алиса хитро улыбается."
     if skillcheck('authority', lvl_easy, passive=True):
         play sound ds_sfx_psy
-        aut "Она пытается тебя зацепить! Не позволяй ей этого!"
+        aut "{result}Она пытается тебя зацепить! Не позволяй ей этого!"
         window hide
         menu:
             "Согласиться":
@@ -2604,7 +2611,7 @@ label ds_day3_stage_dv:
         "Бросив эти слова, она отворачивается."
         if skillcheck('empathy', lvl_medium, passive=True):
             play sound ds_sfx_psy
-            emp "Похоже, у неё {i}свои{/i} планы на тебя."
+            emp "{result}Похоже, у неё {i}свои{/i} планы на тебя."
         window hide
         menu:
             "Иду":
@@ -2756,11 +2763,11 @@ label ds_day3_stage_dv:
                         dv "Да и надо больно!"
                         $ ds_lp['dv'] -= 1
                         "Она обиженно фыркает и отворачивается."
-                    "Пригласить на танцы":
-                        if skillcheck('suggestion', lvl_godly):
+                    "{check=suggestion:15}Пригласить на танцы":
+                        if skillcheck('suggestion', lvl_heroic):
                             window show
                             play sound ds_sfx_psy
-                            sug "Есть идея лучше. Ты хотел бы видеть её на танцах. Не в качестве танцорши - в качестве музыкального сопровождения."
+                            sug "{result}Есть идея лучше. Ты хотел бы видеть её на танцах. Не в качестве танцорши - в качестве музыкального сопровождения."
                             $ ds_skill_points['suggestion'] += 1
                             me "Слушай. Есть идея получше. Ты можешь показать свои навыки всем. Столь классное исполнение услышать должны обязательно!"
                             show dv surprise pioneer at center with dspr
@@ -2776,7 +2783,7 @@ label ds_day3_stage_dv:
                         else:
                             window show
                             play sound ds_sfx_psy
-                            sug "Давай. Пригласи её на танцы. Любой девушке понравится, когда парень приглашает её на танцы."
+                            sug "{result}Давай. Пригласи её на танцы. Любой девушке понравится, когда парень приглашает её на танцы."
                             $ ds_skill_points['suggestion'] += 1
                             me "Может, лучше на танцы со мной сходишь?"
                             show dv angry pioneer at center with dspr
@@ -2801,11 +2808,12 @@ label ds_day3_stage_dv:
                                     dv "Да и надо больно!"
                                     $ ds_lp['dv'] -= 1
                                     "Она обиженно фыркает и отворачивается."
-            "Пригласить на танцы":
-                if skillcheck('suggestion', lvl_godly):
+            "{check=suggestion:15}Пригласить на танцы":
+                if skillcheck('suggestion', lvl_heroic):
                     window show
                     play sound ds_sfx_psy
-                    sug "Есть идея лучше. Ты хотел бы видеть её на танцах. Не в качестве танцорши - в качестве музыкального сопровождения."
+                    sug "{result}Есть идея лучше. Ты хотел бы видеть её на танцах. Не в качестве танцорши - в качестве музыкального сопровождения."
+                    $ ds_skill_points['suggestion'] += 1
                     me "Слушай. Есть идея получше. Ты можешь показать свои навыки всем. Столь классное исполнение услышать должны обязательно!"
                     show dv surprise pioneer at center with dspr
                     dv "В плане? Ты о чём?"
@@ -2820,7 +2828,8 @@ label ds_day3_stage_dv:
                 else:
                     window show
                     play sound ds_sfx_psy
-                    sug "Давай. Пригласи её на танцы. Любой девушке понравится, когда парень приглашает её на танцы."
+                    sug "{result}Давай. Пригласи её на танцы. Любой девушке понравится, когда парень приглашает её на танцы."
+                    $ ds_skill_points['suggestion'] += 1
                     me "Может, лучше на танцы со мной сходишь?"
                     show dv angry pioneer at center with dspr
                     dv "Ты издеваешься?! Я же сказала - НЕ ХОЧУ Я НА ТАНЦЫ!"
@@ -2973,6 +2982,7 @@ label ds_day3_house_mt:
 
 label ds_day3_help_sl:
     window show
+    $ ds_whom_helped = 'sl'
     $ ds_lp['sl'] += 1
     th "Из двух – ну или из пяти – зол надо выбрать меньшее."
     th "Славя злом в принципе не являлась – поэтому и выбор очевиден."
@@ -3141,6 +3151,7 @@ label ds_day3_help_sl:
     jump ds_day3_lunch
 
 label ds_day3_help_cyber:
+    $ ds_whom_helped = 'el'
     $ persistent.sprite_time = "day"
     scene bg ext_clubs_day 
     with dissolve
@@ -3198,7 +3209,7 @@ label ds_day3_help_cyber:
             th "Так, где тут у них инструменты?.."
             if skillcheck('shivers', lvl_easy, passive=True):
                 play sound ds_sfx_fys
-                shi "Не спрятано ли тут ничего? Такое ощущение, что да, скрыто..."
+                shi "{result}Не спрятано ли тут ничего? Такое ощущение, что да, скрыто..."
                 window hide
                 menu:
                     "Обыскать":
@@ -3288,16 +3299,16 @@ label ds_day3_help_cyber:
             me "Да нет, просто…"
             window hide
             menu:
-                "Придумать историю":
+                "{check=conceptualization:6}Придумать историю":
                     if skillcheck('conceptualization', lvl_trivial):
                         window show
                         play sound ds_sfx_int
-                        con "Взял книжку в библиотеке и прочитал. Прям такая есть - «Машина времени», Герберт Уэллс."
+                        con "{result}Взял книжку в библиотеке и прочитал. Прям такая есть - «Машина времени», Герберт Уэллс."
                         me "Я вчера книжку взял в библиотеке – «Машина времени» Уэллса. Читали, наверное? Вот, собственно, и заинтересовался."
                     else:
                         window show
                         play sound ds_sfx_int
-                        con "Сложно придумать правдоподобный повод..."
+                        con "{result}Сложно придумать правдоподобный повод..."
                         me "Да просто так, пришла мысль в голову!"
                     $ ds_skill_points['conceptualization'] += 1
                     show sh serious pioneer at cright   with dspr
@@ -3428,6 +3439,7 @@ label ds_day3_help_cyber:
     window hide
 
 label ds_day3_help_sport:
+    $ ds_whom_helped = 'us'
     window show
     play sound ds_sfx_psy
     vol "Под предлогом помощи спортивному клубу, возможно, получится улизнуть от работы."
@@ -3484,7 +3496,7 @@ label ds_day3_help_sport:
     us "Эй! Давай с нами! У них одного человека не хватает."
     window hide
     menu:
-        "Cогласиться":
+        "{check=savoir_faire:6}Cогласиться":
             window show
             me "Давайте!"
             if not ds_play_football:
@@ -3528,11 +3540,11 @@ label ds_day3_help_sport:
     if skillcheck('savoir_faire', lvl_trivial):
         play sound sfx_soccer_ball_kick
         play sound2 ds_sfx_mot
-        svf "Ты первым же касанием аккуратным ударом кладёшь мяч в девятку ворот соперника."
+        svf "{result}Ты первым же касанием аккуратным ударом кладёшь мяч в девятку ворот соперника."
         svf "На самом деле, это не составляет особого труда – поле в длину от силы метров пятьдесят, а вратарь чужой команды даже не достаёт до перекладины."
     else:
         play sound ds_sfx_mot
-        svf "Ты замахиваешься, но умудряешься промахнуться по мячу."
+        svf "{result}Ты замахиваешься, но умудряешься промахнуться по мячу."
         "Ульянка пользуется твоим во всех смыслах промахом и отбирает мяч, легко забивая его в ворота."
         $ ds_damage_morale()
     window hide
@@ -3552,11 +3564,11 @@ label ds_day3_help_sport:
             play sound ds_sfx_psy
             vol "Победой команды Ульяны."
             jump ds_day3_lunch
-        "Организовать игру команды":
+        "{check=esprit:10}Организовать игру команды":
             if skillcheck('esprit', lvl_medium):
                 window show
                 play sound ds_sfx_psy
-                esp "Так, давай. Собери свою команду воедино. И у вас всё получится."
+                esp "{result}Так, давай. Собери свою команду воедино. И у вас всё получится."
                 me "Так, перерыв! Нам надо обсудить тактику."
                 "Ульяна, явно уверенная в себе, даже не возражает."
                 esp "Ты собираешь возле себя своих и объясняешь им свой тактический замысел."
@@ -3576,7 +3588,7 @@ label ds_day3_help_sport:
             else:
                 window show
                 play sound ds_sfx_psy
-                esp "Ты пытаешься привести к порядку свою команду по ходу игры, но безуспешно."
+                esp "{result}Ты пытаешься привести к порядку свою команду по ходу игры, но безуспешно."
                 esp "Тебе приходится вытягивать игру одному."
                 $ ds_skill_points['esprit'] += 1
                 play sound ds_sfx_fys
@@ -3607,10 +3619,10 @@ label ds_day3_help_sport:
             us "И ничего не выиграла! Я же сказала - пенальти!"
             window hide
             menu:
-                "Настоять":
+                "{check=authority:8}Настоять":
                     if skillcheck('authority', lvl_easy):
                         play sound ds_sfx_psy
-                        aut "Ты всем своим видом показываешь, что лучше с тобой не спорить."
+                        aut "{result}Ты всем своим видом показываешь, что лучше с тобой не спорить."
                         show us fear sport at center with dspr
                         us "Ладно-ладно, выиграли вы..."
                         $ ds_lp['us'] -= 1
@@ -3627,7 +3639,7 @@ label ds_day3_help_sport:
                         "Она рассмеялась, помахала мне рукой и побежала в сторону столовой."
                     else:
                         play sound ds_sfx_psy
-                        aut "Ты пытаешься настоять на своём."
+                        aut "{result}Ты пытаешься настоять на своём."
                         me "Я сказал - мы выиграли."
                         show us laugh sport at center with dspr
                         us "Да какая разница, что ты сказал! Давай пенальти!"
@@ -3673,7 +3685,7 @@ label ds_day3_help_sport:
 
         play sound sfx_soccer_ball_kick
         play sound2 ds_sfx_mot
-        cor "Аккуратным ударом ты кладёшь мяч в правую от неё шестерку."
+        cor "{result}Аккуратным ударом ты кладёшь мяч в правую от неё шестерку."
         "Ульяна даже не дёргается."
         play sound ds_sfx_mot
         svf "Впрочем, незачем – такие пенальти не берутся."
@@ -3696,7 +3708,7 @@ label ds_day3_help_sport:
         play sound sfx_soccer_ball_kick
         play sound2 ds_sfx_mot
 
-        cor "Впрочем, ты, как и она ранее, тоже бьёшь не туда."
+        cor "{result}Впрочем, ты, как и она ранее, тоже бьёшь не туда."
         show us laugh sport at center with dissolve
         us "Ладно, соглашусь на ничью, так уж и быть!"
         me "Но..."
@@ -3721,6 +3733,7 @@ label ds_day3_help_sport:
     jump ds_day3_lunch
 
 label ds_day3_help_un:
+    $ ds_whom_helped = 'un'
     $ persistent.sprite_time = 'day'
     scene bg ext_clubs_day
     with dissolve
@@ -3955,27 +3968,27 @@ label ds_day3_help_un:
     mt "Привет, ребята. Вы что-то хотели?"
     window hide
     menu:
-        "Рассказать самому":
+        "{check=rhetoric:8}Рассказать самому":
             if skillcheck('rhetoric', lvl_easy):
                 window show
                 play sound ds_sfx_int
-                rhe "Говори. Акцентируй внимание на необходимости поддерживать юные дарования."
+                rhe "{result}Говори. Акцентируй внимание на необходимости поддерживать юные дарования."
                 me "Ольга Дмитриевна! Тут Лена, оказывается, очень хорошо рисует."
                 me "И мы считаем, что нужно её поддержать в этом!"
                 me "Для чего предлагаем использовать пустующее здание напротив клуба кибернетиков."
             else:
                 window show
                 play sound ds_sfx_int
-                rhe "Тебе трудно подобрать слова, чтобы начать... Извечная проблема..."
+                rhe "{result}Тебе трудно подобрать слова, чтобы начать... Извечная проблема..."
                 me "Понимаете... тут Лена хочет открыть место для рисования..."
                 me "В неиспользуемом домике напротив клуба кибернетиков..."
             $ ds_lp['un'] += 1
             $ ds_skill_points['rhetoric'] += 1
-        "Заставить Лену рассказать":
+        "{check=suggestion:12}Заставить Лену рассказать":
             if skillcheck('suggestion', lvl_challenging):
                 window show
                 play sound ds_sfx_psy
-                sug "Подбодри Лену. Всё хорошо. Возьми её за руку."
+                sug "{result}Подбодри Лену. Всё хорошо. Возьми её за руку."
                 "Ты шепчешь Лене на ухо."
                 me "Расскажи ей сама. Твоя же идея. Всё будет хорошо - вожатая любит, когда пионеры при деле."
                 show un shy pioneer at left
@@ -3989,7 +4002,7 @@ label ds_day3_help_un:
             else:
                 window show
                 play sound ds_sfx_psy
-                sug "Пусть она говорит, вот и всё!"
+                sug "{result}Пусть она говорит, вот и всё!"
                 me "Расскажи ей, Лена."
                 show un shy pioneer at left
                 un "Ладно..."
@@ -4019,6 +4032,7 @@ label ds_day3_help_un:
     jump ds_day3_lunch
 
 label ds_day3_help_sugar:
+    $ ds_whom_helped = 'fz'
     $ persistent.sprite_time = 'day'
     scene bg ds_ext_storage_day
     with dissolve
@@ -4034,11 +4048,11 @@ label ds_day3_help_sugar:
         "Выслушать":
             window show
             $ ds_karma += 5
-        "Сбежать":
+        "{check=savoir_faire:12}Сбежать":
             if skillcheck('savoir_faire', lvl_challenging):
                 window show
                 play sound ds_sfx_mot
-                svf "Беги!"
+                svf "{result}Беги!"
                 scene bg ext_square_day:
                     zoom 1.05 anchor (48,27)
                     ease 0.20 pos (0, 0)
@@ -4070,15 +4084,15 @@ label ds_day3_help_sugar:
                 play sound ds_sfx_mot
                 show fz angry uniform at center
                 with dspr
-                svf "Ты пытаешься сбежать, но он своим громадным телом перекрывает тебе путь."
+                svf "{result}Ты пытаешься сбежать, но он своим громадным телом перекрывает тебе путь."
                 $ ds_skill_points['savoir_faire'] += 1
                 fzp "И куда это ты собрался?!"
                 $ ds_karma -= 10
-        "Предъявить претензии":
+        "{check=authority:12}Предъявить претензии":
             if skillcheck('authority', lvl_challenging):
                 window show
                 play sound ds_sfx_psy
-                aut "Он же физрук? А почему это он свои обязанности не исполняет? Зарядку там не проводит..."
+                aut "{result}Он же физрук? А почему это он свои обязанности не исполняет? Зарядку там не проводит..."
                 me "Что вам надо? Вы свои обязанности-то выполнили?"
                 show fz angry uniform at center
                 with dspr
@@ -4104,7 +4118,7 @@ label ds_day3_help_sugar:
             else:
                 window show
                 play sound ds_sfx_psy
-                aut "Вообще, ты свободная личность."
+                aut "{result}Вообще, ты свободная личность."
                 me "А вот не буду стоять! Делайте свою работу сами!"
                 show fz rage uniform at center
                 with dspr
@@ -4136,14 +4150,14 @@ label ds_day3_help_sugar:
             play sound sfx_dinner_jingle_normal
             "Как раз когда ты подходишь к столовой, звучит горн к обеду."
             jump ds_day3_lunch
-        "Потаскать мешки":
+        "{check=physical_instrument:14}Потаскать мешки":
             window show
             th "Ладно, потаскаем мешки..."
     window hide
     if skillcheck('physical_instrument', lvl_legendary):
         window show
         play sound ds_sfx_fys
-        phi "Не без труда, но ты поднимаешь мешок и грузишь его себе на спину."
+        phi "{result}Не без труда, но ты поднимаешь мешок и грузишь его себе на спину."
         $ ds_skill_points['physical_instrument'] += 1
         me "Дааа! Я самый сильный!"
         $ ds_up_morale()
@@ -4181,16 +4195,14 @@ label ds_day3_help_sugar:
     else:
         window show
         play sound ds_sfx_fys
-        phi "Ты изо всех сил пытаешься поднять мешок."
+        phi "{result}Ты изо всех сил пытаешься поднять мешок."
         me "Рааааз!"
         phi "Но как бы ты ни надрывался, мешок даже не думает оторваться от земли."
         $ ds_skill_points['physical_instrument'] += 1
         if not skillcheck('pain_threshold', lvl_heroic, passive=True):
             play sound ds_sfx_fys
-            pat "Максимум, чего ты добился - это того, что у тебя заболела спина."
+            pat "{result}Максимум, чего ты добился - это того, что у тебя заболела спина."
             $ ds_damage_health()
-        else:
-            $ ds_skill_points['pain_threshold'] += 1
         play sound ds_sfx_psy
         vol "Оставь эту гиблую затею. Пусть силач-физрук сам таскает мешки. Ты не потянешь."
         play sound sfx_dinner_horn_processed
@@ -4200,6 +4212,7 @@ label ds_day3_help_sugar:
     jump ds_day3_lunch
 
 label ds_day3_help_mt:
+    $ ds_whom_helped = 'mt'
     show mt smile pioneer at center
     with dissolve
     mt "Идём в административный корпус."
@@ -4242,11 +4255,11 @@ label ds_day3_help_mt:
             window show
             me "А вы?"
             mt "А я... а у меня дела другие есть! В соседнем кабинете!"
-        "Начать протестовать":
+        "{check=authority:10}Начать протестовать":
             if skillcheck('authority', lvl_medium):
                 window show
                 play sound ds_sfx_psy
-                aut "Чего это она вздумала тебя впрягать и в таскание коробок? Ты на это не подписывался!"
+                aut "{result}Чего это она вздумала тебя впрягать и в таскание коробок? Ты на это не подписывался!"
                 me "Ольга Дмитриевна, вы же говорили только про документы, не про коробки..."
                 show mt smile pioneer at center
                 with dspr
@@ -4273,7 +4286,7 @@ label ds_day3_help_mt:
             else:
                 window show
                 play sound ds_sfx_psy
-                aut "Не высовывайся. Она тут главная. И ты сам согласился."
+                aut "{result}Не высовывайся. Она тут главная. И ты сам согласился."
                 me "Ладно, как скажете..."
         "Приступить молча":
             window show
@@ -4305,7 +4318,7 @@ label ds_day3_help_mt:
     "Ты садишься за компьютер."
     if skillcheck('encyclopedia', lvl_up_medium, passive=True):
         play sound ds_sfx_int
-        enc "Местные компьютеры напоминают тебе первые «Макинтоши». Такие же слитные системный блок и монитор, причём монитор сверху. Естественно, плоских экранов здесь не наблюдается."
+        enc "{result}Местные компьютеры напоминают тебе первые «Макинтоши». Такие же слитные системный блок и монитор, причём монитор сверху. Естественно, плоских экранов здесь не наблюдается."
         $ ds_skill_points['encyclopedia'] += 1
     me "Приступим..."
     "Ты открываешь первую папку, и одновременно с этим файл «Список пионеров.БД»"
@@ -4348,6 +4361,7 @@ label ds_day3_help_mt:
     jump ds_day3_lunch
 
 label ds_day3_help_sugar_mt:
+    $ ds_whom_helped = 'fz'
     $ persistent.sprite_time = 'day'
     scene bg ds_ext_storage_day
     show mt normal pioneer at right
@@ -4364,11 +4378,11 @@ label ds_day3_help_sugar_mt:
     menu:
         "Выслушать":
             window show
-        "Сбежать":
-            if skillcheck('savoir_faire', lvl_challenging, modifiers=[('True', -2)]):
+        "{check=savoir_faire:12}Сбежать":
+            if skillcheck('savoir_faire', lvl_challenging, modifiers=[('True', -2, 'Ольга Дмитриевна видит')]):
                 window show
                 play sound ds_sfx_mot
-                svf "Беги!"
+                svf "{result}Беги!"
                 scene bg ext_square_day:
                     zoom 1.05 anchor (48,27)
                     ease 0.20 pos (0, 0)
@@ -4401,15 +4415,15 @@ label ds_day3_help_sugar_mt:
                 show fz angry uniform at center
                 show mt angry pioneer at right
                 with dspr
-                svf "Ты пытаешься сбежать, но он своим громадным телом перекрывает тебе путь. И Ольга Дмитриевна мешает"
+                svf "{result}Ты пытаешься сбежать, но он своим громадным телом перекрывает тебе путь. И Ольга Дмитриевна мешает"
                 $ ds_skill_points['savoir_faire'] += 1
                 fzp "И куда это ты собрался?!"
                 $ ds_karma -= 10
-        "Предъявить претензии":
+        "{check=authority:12}Предъявить претензии":
             if skillcheck('authority', lvl_challenging):
                 window show
                 play sound ds_sfx_psy
-                aut "Он же физрук? А почему это он свои обязанности не исполняет? Зарядку там не проводит..."
+                aut "{result}Он же физрук? А почему это он свои обязанности не исполняет? Зарядку там не проводит..."
                 me "Что вам надо? Вы свои обязанности-то выполнили?"
                 show fz angry uniform at center
                 show mt surprise pioneer at center
@@ -4432,7 +4446,7 @@ label ds_day3_help_sugar_mt:
             else:
                 window show
                 play sound ds_sfx_psy
-                aut "Вообще, ты свободная личность."
+                aut "{result}Вообще, ты свободная личность."
                 me "А вот не буду стоять! Делайте свою работу сами!"
                 show fz rage uniform at center
                 show mt angry pioneer at right
@@ -4469,14 +4483,14 @@ label ds_day3_help_sugar_mt:
             play sound sfx_dinner_jingle_normal
             "Как раз когда ты подходишь к столовой, звучит горн к обеду."
             jump ds_day3_lunch
-        "Потаскать мешки":
+        "{check=physical_instrument:14}Потаскать мешки":
             window show
             th "Ладно, потаскаем мешки..."
     window hide
     if skillcheck('physical_instrument', lvl_legendary):
         window show
         play sound ds_sfx_fys
-        phi "Не без труда, но ты поднимаешь мешок и грузишь его себе на спину."
+        phi "{result}Не без труда, но ты поднимаешь мешок и грузишь его себе на спину."
         $ ds_skill_points['physical_instrument'] += 1
         me "Дааа! Я самый сильный!"
         $ ds_up_morale()
@@ -4514,16 +4528,14 @@ label ds_day3_help_sugar_mt:
     else:
         window show
         play sound ds_sfx_fys
-        phi "Ты изо всех сил пытаешься поднять мешок."
+        phi "{result}Ты изо всех сил пытаешься поднять мешок."
         me "Рааааз!"
         phi "Но как бы ты ни надрывался, мешок даже не думает оторваться от земли."
         $ ds_skill_points['physical_instrument'] += 1
         if not skillcheck('pain_threshold', lvl_heroic, passive=True):
             play sound ds_sfx_fys
-            pat "Максимум, чего ты добился - это того, что у тебя заболела спина."
+            pat "{result}Максимум, чего ты добился - это того, что у тебя заболела спина."
             $ ds_damage_health()
-        else:
-            $ ds_skill_points['pain_threshold'] += 1
         play sound ds_sfx_psy
         vol "Оставь эту гиблую затею. Пусть силач-физрук сам таскает мешки. Ты не потянешь."
         play sound sfx_dinner_horn_processed
@@ -4533,6 +4545,7 @@ label ds_day3_help_sugar_mt:
     jump ds_day3_lunch
 
 label ds_day3_help_mi:
+    $ ds_whom_helped = 'mi'
     $ persistent.sprite_time = 'day'
     scene bg ext_musclub_day
     with dissolve
@@ -4573,7 +4586,7 @@ label ds_day3_help_mi:
     per_eye "Здесь царит полутьма. Ты с трудом различаешь даже Мику, стоящую в двух шагах от тебя."
     if skillcheck('instinct', lvl_easy, passive=True):
         play sound ds_sfx_fys
-        ins "Отличный шанс! Возьми эту тяночку! Если потребуется - силой!"
+        ins "{result}Отличный шанс! Возьми эту тяночку! Если потребуется - силой!"
         play sound ds_sfx_psy
         vol "Лучше не надо! Насильников не любят нигде!"
         window hide
@@ -4594,11 +4607,11 @@ label ds_day3_help_mi:
                 show mi normal pioneer at center
                 with dspr
                 mi "А теперь давай приступим!"
-            "Изнасиловать Мику":
+            "{check=physical_instrument:8}Изнасиловать Мику":
                 if skillcheck('physical_instrument', lvl_easy):
                     window show
                     play sound ds_sfx_fys
-                    phi "Жребий брошен. Ты поваливаешь её на пол, срываешь с неё одежду..."
+                    phi "{result}Жребий брошен. Ты поваливаешь её на пол, срываешь с неё одежду..."
                     show mi scared pioneer at center
                     with dspr
                     mi "Что... что ты делаешь, Семён?"
@@ -4612,7 +4625,7 @@ label ds_day3_help_mi:
                 else:
                     window show
                     play sound ds_sfx_fys
-                    phi "Ты пытаешься свалить Мику на пол..."
+                    phi "{result}Ты пытаешься свалить Мику на пол..."
                     with hpunch
                     phi "Но она даёт тебе отпор и даёт пощёчину! Ногой!"
                     play sound ds_sfx_fys
@@ -4701,7 +4714,7 @@ label ds_day3_help_mi:
             mi "Приятного аппетита и удачи тебе, Семён-кун!"
             if skillcheck('empathy', lvl_trivial, passive=True):
                 play sound ds_sfx_psy
-                emp "Ты её обидел. Она пытается не подать виду, но безуспешно."
+                emp "{result}Ты её обидел. Она пытается не подать виду, но безуспешно."
             me "Пока..."
             scene bg ext_musclub_day
             with dissolve
@@ -4782,6 +4795,7 @@ label ds_day3_help_mi:
     jump ds_day3_lunch
 
 label ds_day3_help_mz:
+    $ ds_whom_helped = 'mz'
     $ persistent.sprite_time = 'day'
     scene bg ext_library_day
     with dissolve
@@ -4813,16 +4827,16 @@ label ds_day3_mz_dialogue:
     $ ds_said_compl = False
     window hide
     menu:
-        "Cказать комплимент" if not ds_said_compl:
+        "{check=rhetoric:10}Cказать комплимент" if not ds_said_compl:
             if skillcheck('rhetoric', lvl_medium):
-                rhe "Волосы - беспроигрышный вариант. Тем более, тут они цветные!"
+                rhe "{result}Волосы - беспроигрышный вариант. Тем более, тут они цветные!"
                 me "Кстати, Жень, красивые волосы у тебя! Такие насыщенно-синие... обожаю синий цвет!"
                 show mz bukal glasses pioneer far at right
                 with dspr
                 mz "Ты там книги протирай, а не сочиняй похвалы!"
                 $ ds_lp['mz'] += 1
             else:
-                rhe "У тебя не получается придумать ничего красивого."
+                rhe "{result}У тебя не получается придумать ничего красивого."
                 me "Хорошо выглядишь!"
                 show mz bukal glasses pioneer far at right
                 with dspr
@@ -4877,10 +4891,9 @@ label ds_day3_mz_dialogue:
                     mz "Притом! Вам, носителям болтов между ног, этого понять не дано!"
                     if skillcheck('logic', lvl_challenging, passive=True):
                         play sound ds_sfx_int
-                        lgc "Как будто тема с изнасилованием для неё {i}личная{/i}."
+                        lgc "{result}Как будто тема с изнасилованием для неё {i}личная{/i}."
                         th "То есть, либо её знакомую изнасиловали, либо..."
                         lgc "Да. Именно."
-                        $ ds_skill_points['logic'] += 1
                         emp "Поэтому отставить! Сейчас тебе, мужику, в подобные вещи лучше не лезть."
                     show mz normal glasses pioneer far at right
                     with dspr
@@ -4911,7 +4924,7 @@ label ds_day3_mz_dialogue:
             mz "Это. Не. Твоё. Дело."
             if skillcheck('drama', lvl_medium, passive=True):
                 play sound ds_sfx_int
-                dra "Cкажи ей про то, что Электроник влюблён в неё. И боится идти на контакт. Кажется, у неё есть чувства к нему."
+                dra "{result}Cкажи ей про то, что Электроник влюблён в неё. И боится идти на контакт. Кажется, у неё есть чувства к нему."
                 play sound ds_sfx_psy
                 emp "А если нет? Тогда ты жестоко обманешь её!"
             window hide
@@ -4984,6 +4997,7 @@ label ds_day3_mz_dialogue:
     jump ds_day3_lunch
 
 label ds_day3_help_ya:
+    $ ds_whom_helped = 'ya'
     $ persistent.sprite_time = 'day'
     scene bg ext_beach_day
     with dissolve
@@ -5004,11 +5018,11 @@ label ds_day3_help_ya:
     per_hea "Голос Яны слишком тихий - даже тебе непросто расслышать её слова."
     window hide
     menu:
-        "Потребовать успокоиться":
+        "{check=authority:6}Потребовать успокоиться":
             if skillcheck('authority', lvl_trivial):
                 window show
                 play sound ds_sfx_psy
-                aut "Ты набираешь воздуха в грудь и громко, чётко произносить."
+                aut "{result}Ты набираешь воздуха в грудь и громко, чётко произносить."
                 me "ТИШИНА!"
                 "Все оборачиваются на тебя."
                 $ ds_lp['ya'] += 1
@@ -5017,7 +5031,7 @@ label ds_day3_help_ya:
             else:
                 window show
                 play sound ds_sfx_psy
-                aut "Тебе даже на детей не хватает смелости прикрикнуть..."
+                aut "{result}Тебе даже на детей не хватает смелости прикрикнуть..."
                 me "Успокойтесь, пожалуйста..."
                 "Но шум и гам продолжаются."
                 $ ds_skill_points['authority'] += 1
@@ -5026,9 +5040,9 @@ label ds_day3_help_ya:
                 "Но через некоторое время она наконец выходит из воды."
                 show ya normal pioneer at center with dissolve
                 ya "Cпасибо..."
-        "Разнять детей":
+        "{check=savoir_faire:10}Разнять детей":
                 play sound ds_sfx_mot
-                svf "Сделаем по-другому. Забегай в воду и растащи их."
+                svf "{result}Сделаем по-другому. Забегай в воду и растащи их."
                 "Ты вбегаешь в воду (благо дети не заходят далеко) и пытаешься их разнять."
                 if skillcheck('savoir_faire', lvl_medium):
                     svf "Это не вызывает у тебя затруднений - это же маленькие дети."
@@ -5037,7 +5051,7 @@ label ds_day3_help_ya:
                     $ ds_skill_points['savoir_faire'] += 1
                     $ ds_lp['ya'] += 1
                 else:
-                    svf "Мальчики оказываются проворными, а их кулаки летают хаотично - тебе сложно их поймать."
+                    svf "{result}Мальчики оказываются проворными, а их кулаки летают хаотично - тебе сложно их поймать."
                     with red_flash
                     play sound ds_sfx_fys
                     pat "В итоге тебе прилетает удар."
@@ -5268,8 +5282,7 @@ label ds_day3_lunch:
     $ ds_damage_morale()
     if skillcheck('composure', lvl_medium, passive=True):
         play sound ds_sfx_mot
-        com "Не подавай виду. Переведи внимание, например, на Лену."
-        $ ds_skill_points['composure'] += 1
+        com "{result}Не подавай виду. Переведи внимание, например, на Лену."
     else:
         me "Ах ты... Да как ты смеешь?!"
         show sl serious pioneer at right
@@ -5307,11 +5320,11 @@ label ds_day3_lunch:
             with dspr
             us "Ну я же говорю - фрак наденешь!"
             us "Цилиндр ещё не забудь!"
-        "Подцепить в ответ":
+        "{check=rhetoric:8}Подцепить в ответ":
             if skillcheck('rhetoric', lvl_easy):
                 window show
                 play sound ds_sfx_int
-                rhe "Нет ничего проще - спроси про {i}её{/i} одежду."
+                rhe "{result}Нет ничего проще - спроси про {i}её{/i} одежду."
                 me "Ты-то в чём придёшь, массовик-затейник?"
                 show us laugh2 sport at center   with dspr
                 us "Се-к-рет!"
@@ -5321,7 +5334,7 @@ label ds_day3_lunch:
             else:
                 window show
                 play sound ds_sfx_int
-                rhe "Но ты не находишь, что ответить."
+                rhe "{result}Но ты не находишь, что ответить."
                 me "И ничего не во фраке я пойду! В нормальной одежде!"
                 me "Как будто тебе до этого есть дело."
                 show us laugh2 sport at center
@@ -5344,14 +5357,14 @@ label ds_day3_lunch:
             us "Или - о нет! - тебе вообще нечего надеть?"
             if skillcheck('composure', lvl_up_medium):
                 window show
-                com "Держись дальше."
+                com "{result}Держись дальше."
                 show us dontlike pioneer at center
                 with dspr
                 us "Приём-приём! Ну не молчи!"
                 $ ds_lp['us'] -= 1
             else:
                 window show
-                com "Это оказывается последней каплей для тебя."
+                com "{result}Это оказывается последней каплей для тебя."
                 me "Ах ты!"
                 "Ты дёргаешься в её сторону."
     show sl serious pioneer at right   with dspr
@@ -5417,11 +5430,11 @@ label ds_day3_lunch:
     menu:
         "Побежать за ней":
             window show
-        "Не реагировать":
+        "{check=composure:13}Не реагировать":
             if skillcheck('composure', lvl_formidable):
                 window show
                 play sound ds_sfx_mot
-                com "Держись спокойно. Будь умнее. Погнавшись за ней, только навлечёшь на себя проблем."
+                com "{result}Держись спокойно. Будь умнее. Погнавшись за ней, только навлечёшь на себя проблем."
                 "Ты встаёшь и идёшь к раковинам, чтобы умыться."
                 hide sl
                 hide un with dissolve
@@ -5437,14 +5450,14 @@ label ds_day3_lunch:
             else:
                 window show
                 play sound ds_sfx_mot
-                com "Ты ну никак не можешь стерпеть подобного оскорбления!"
+                com "{result}Ты ну никак не можешь стерпеть подобного оскорбления!"
 
     if skillcheck('savoir_faire', lvl_easy, passive=True):
         scene cg d3_us_dinner 
         with dissolve
         window show
         play sound ds_sfx_mot
-        svf "Но в этот раз у неё ничего не вышло – ты хватаешь её за руку."
+        svf "{result}Но в этот раз у неё ничего не вышло – ты хватаешь её за руку."
         play sound ds_sfx_psy
         vol "Ну а дальше что? Не головой же её об стол!"
         "Немая сцена продолжается несколько секунд."
@@ -5526,6 +5539,8 @@ label ds_day3_lunch:
         "Свалить вину на Ульяну":
             window show
             if skillcheck('authority', lvl_challenging, passive=True):
+                play sound ds_sfx_psy
+                aut "{result}Будь уверенным. Тогда ты будешь более убедительным."
                 me "Это всё она!"
                 "Уверенно заявляешь ты."
                 $ ds_skill_points['authority'] += 1
@@ -5537,11 +5552,11 @@ label ds_day3_lunch:
             "Ставит жирную точку в не успевшем начаться споре вожатая."
             window hide
             menu:
-                "Убедить вожатую":
-                    if skillcheck('suggestion', lvl_heroic, modifiers=[('ds_last_skillcheck and (ds_last_skillcheck.result)', 1), ('ds_karma >= 50', 3), ('ds_karma <= -50', -4)]):
+                "{check=suggestion:15}Убедить вожатую":
+                    if skillcheck('suggestion', lvl_heroic, modifiers=[('ds_last_skillcheck and (ds_last_skillcheck.result)', 1, 'Держишься уверенно'), ('ds_karma >= 50', 3, 'Вожатая доверяет тебе'), ('ds_karma <= -50', -4, 'Вожатая не доверяет тебе')]):
                         window show
                         play sound ds_sfx_psy
-                        sug "Говори чётко. Уверенно."
+                        sug "{result}Говори чётко. Уверенно."
                         me "Ещё раз повторяю: я тут не причём. Это Ульяна меня спровоцировала. Я не хотел, так случайно вышло."
                         show mt normal pioneer at right
                         with dspr
@@ -5571,7 +5586,7 @@ label ds_day3_lunch:
                     else:
                         window show
                         play sound ds_sfx_psy
-                        sug "Ну что ж, попробуй. Но вряд ли вожатая изменит свою позицию."
+                        sug "{result}Ну что ж, попробуй. Но вряд ли вожатая изменит свою позицию."
                         me "Ещё раз повторяю: это всё она! Это не я!"
                         show mt angry pioneer at right
                         with dspr
@@ -5655,11 +5670,11 @@ label ds_day3_punishment1:
 
     window hide
     menu:
-        "Сбежать одному":
-            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2)]):
+        "{check=savoir_faire:14}Сбежать одному":
+            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2, 'Ульяна палит')]):
                 window show
                 play sound ds_sfx_mot
-                svf "Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                svf "{result}Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
                 scene bg ext_dining_hall_near_day
                 with dissolve
                 th "Получается, всё? Я свободен?"
@@ -5671,7 +5686,7 @@ label ds_day3_punishment1:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты рвёшься в сторону двери..."
+                svf "{result}Ты рвёшься в сторону двери..."
                 show us angry sport at center
                 with dissolve
                 us "Куда собрался? А помогать мне кто будет?"
@@ -5689,7 +5704,7 @@ label ds_day3_punishment1:
                 hide ck
                 with dissolve
                 th "Не прокатило..."
-        "Сбежать с Ульяной":
+        "{check=savoir_faire:16}Сбежать с Ульяной":
             window show
             me "Ульян! Пс!"
             "Ты говоришь максимально тихо."
@@ -5705,7 +5720,7 @@ label ds_day3_punishment1:
             if skillcheck('savoir_faire', lvl_godly):
                 window show
                 play sound ds_sfx_mot
-                svf "Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                svf "{result}Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
                 scene bg ext_dining_hall_near_day
                 show us laugh sport at center
                 with dissolve
@@ -5724,7 +5739,7 @@ label ds_day3_punishment1:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты рвёшься в сторону двери..."
+                svf "{result}Ты рвёшься в сторону двери..."
                 show ck serious far at left
                 with dissolve
                 ck "Куда это вы собрались?!"
@@ -5806,6 +5821,7 @@ label ds_day3_punishment1:
             me "Неплохо ты придумала!"
             "Молчание становится ответом тебе."
             th "Обиделась..."
+    $ ds_after_lunch_who = 'us'
     us "Слушай…"
     "Кричит тебе Ульяна."
     "Ты подходишь к ней поближе."
@@ -5906,11 +5922,11 @@ label ds_day3_punishment2:
 
     window hide
     menu:
-        "Сбежать одному":
-            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2)]):
+        "{check=savoir_faire:14}Сбежать одному":
+            if skillcheck('savoir_faire', lvl_legendary, modifiers=[("ds_lp[['us'] < 0", -2, 'Ульяна палит')]):
                 window show
                 play sound ds_sfx_mot
-                svf "Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                svf "{result}Тебе удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
                 scene bg ext_dining_hall_near_day
                 with dissolve
                 th "Получается, всё? Я свободен?"
@@ -5922,7 +5938,7 @@ label ds_day3_punishment2:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты рвёшься в сторону двери..."
+                svf "{result}Ты рвёшься в сторону двери..."
                 show us angry sport at center
                 with dissolve
                 us "Куда собрался? А помогать мне кто будет?"
@@ -5940,7 +5956,7 @@ label ds_day3_punishment2:
                 hide ck
                 with dissolve
                 th "Не прокатило..."
-        "Сбежать с Ульяной":
+        "{check=savoir_faire:16}Сбежать с Ульяной":
             window show
             me "Ульян! Пс!"
             "Ты говоришь максимально тихо."
@@ -5956,7 +5972,7 @@ label ds_day3_punishment2:
             if skillcheck('savoir_faire', lvl_godly):
                 window show
                 play sound ds_sfx_mot
-                svf "Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
+                svf "{result}Вам удаётся незаметно прошмыгнуть в дверь, даже не хлопнув ею."
                 scene bg ext_dining_hall_near_day
                 show us laugh sport at center
                 with dissolve
@@ -5975,7 +5991,7 @@ label ds_day3_punishment2:
             else:
                 window show
                 play sound ds_sfx_mot
-                svf "Ты рвёшься в сторону двери..."
+                svf "{result}Ты рвёшься в сторону двери..."
                 show ck serious far at left
                 with dissolve
                 ck "Куда это вы собрались?!"
@@ -5994,6 +6010,7 @@ label ds_day3_punishment2:
             th "Лучше всё же останусь и помогу Ульяне."
             play sound ds_sfx_psy
             emp "Тем более, что и твоя вина есть."
+    $ ds_after_lunch_who = 'us'
     scene bg ds_int_kitchen_day
     show us upset sport at center
     with dissolve
@@ -6156,6 +6173,7 @@ label ds_day3_punishment_return:
 
 label ds_day3_punishment:
     window show
+    $ ds_after_lunch_who = 'us'
     "Вам потребовалось несколько часов, чтобы навести в столовой марафет."
     "И вот наконец вся битая посуда собрана, столы и стулья расставлены, пол вымыт."
     show us normal sport at center   with dissolve
@@ -6196,7 +6214,7 @@ label ds_day3_punishment:
     us "Сейчас как раз повариха пойдёт мусор выбрасывать, так что нас никто не заметит!"
     window hide
     menu:
-        "Согласиться":
+        "{check=interfacing:10}Согласиться":
             window show
             me "А давай! Только потом поделим поровну?"
             show us grin sport at center
@@ -6208,13 +6226,13 @@ label ds_day3_punishment:
             window hide
             if skillcheck('interfacing', lvl_medium):
                 window show
-                inf "И резкими чёткими движениями распахиваешь шкаф, хватаешь конфеты, кладёшь их себе в карман и закрывааешь дверь, будто всё так и было."
+                inf "{result}И резкими чёткими движениями распахиваешь шкаф, хватаешь конфеты, кладёшь их себе в карман и закрывааешь дверь, будто всё так и было."
                 $ ds_skill_points['interfacing'] += 1
                 $ ds_lp['us'] += 1
                 "Ты подходишь к Ульяне."
             else:
                 window show
-                inf "Ты открываешь дверцу и начинешь искать конфеты... но безуспешно."
+                inf "{result}Ты открываешь дверцу и начинешь искать конфеты... но безуспешно."
                 us "Быстрее давай! Сюда идут!"
                 me "Да не могу я найти."
                 show us dontlike sport at center
@@ -6276,10 +6294,10 @@ label ds_day3_punishment:
                     ck "Пионер, а ты не видел конфеты? Лежали в шкафу, а теперь их нет."
                     window hide
                     menu:
-                        "Изобразить непонимание":
+                        "{check=drama:10}Изобразить непонимание":
                             if skillcheck('drama', lvl_medium):
                                 window show
-                                dra "У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
+                                dra "{result}У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
                                 me "Понятия не имею, о каких вы конфетах."
                                 $ ds_skill_points['drama'] += 1
                                 show ck normal at center
@@ -6290,7 +6308,7 @@ label ds_day3_punishment:
                                 res "Так это приз был?"
                             else:
                                 window show
-                                dra "Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
+                                dra "{result}Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
                                 me "Я не знаю..."
                                 ck "Ага, как же... Наверное, ты и украл."
                                 $ ds_skill_points['drama'] += 1
@@ -6329,11 +6347,11 @@ label ds_day3_punishment:
                             ck "Вожатая разберётся, в общем."
                             $ ds_framed_dv = True
                             $ ds_lp['dv'] -= 2
-                        "Назвать фантастичную причину":
+                        "{check=conceptualization:11}Назвать фантастичную причину":
                             if skillcheck('conceptualization', lvl_up_medium):
                                 window show
                                 play sound ds_sfx_int
-                                con "Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
+                                con "{result}Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
                                 $ ds_skill_points['conceptualization'] += 1
                                 me "Вы не поверите, что тут произошло!"
                                 me "Вот убираемся мы тут с Ульяной. И тут - бац!"
@@ -6352,7 +6370,7 @@ label ds_day3_punishment:
                             else:
                                 window show
                                 play sound ds_sfx_int
-                                con "Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
+                                con "{result}Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
                                 me "Да так, знаете... инопланетяне сюда зашли и украли конфеты... мы ничего не смогли поделать..."
                                 show ck laugh at center
                                 with dspr
@@ -6474,10 +6492,10 @@ label ds_day3_punishment:
                     ck "Пионер, а ты не видел конфеты? Лежали в шкафу, а теперь их нет."
                     window hide
                     menu:
-                        "Изобразить непонимание":
+                        "{check=drama:10}Изобразить непонимание":
                             if skillcheck('drama', lvl_medium):
                                 window show
-                                dra "У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
+                                dra "{result}У вас получается убедительно изобразить, будто вы впервые об этих конфетах слышите."
                                 me "Понятия не имею, о каких вы конфетах."
                                 $ ds_skill_points['drama'] += 1
                                 show ck normal at center
@@ -6488,7 +6506,7 @@ label ds_day3_punishment:
                                 res "Так это приз был?"
                             else:
                                 window show
-                                dra "Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
+                                dra "{result}Ваше лицо, мессир, - оно как открытая книга. Вся ваша ложь отчётливо видна."
                                 me "Я не знаю..."
                                 ck "Ага, как же... Наверное, ты и украл."
                                 $ ds_skill_points['drama'] += 1
@@ -6527,11 +6545,11 @@ label ds_day3_punishment:
                             ck "Вожатая разберётся, в общем."
                             $ ds_framed_dv = True
                             $ ds_lp['dv'] -= 2
-                        "Назвать фантастичную причину":
+                        "{check=conceptualization:11}Назвать фантастичную причину":
                             if skillcheck('conceptualization', lvl_up_medium):
                                 window show
                                 play sound ds_sfx_int
-                                con "Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
+                                con "{result}Нашествие инопланетян! Вторжение империалистов! У тебя столько идей!"
                                 $ ds_skill_points['conceptualization'] += 1
                                 me "Вы не поверите, что тут произошло!"
                                 me "Вот убираемся мы тут с Ульяной. И тут - бац!"
@@ -6550,7 +6568,7 @@ label ds_day3_punishment:
                             else:
                                 window show
                                 play sound ds_sfx_int
-                                con "Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
+                                con "{result}Ничего складного в голову не приходит... не выйдет захватывающей истории, увы."
                                 me "Да так, знаете... инопланетяне сюда зашли и украли конфеты... мы ничего не смогли поделать..."
                                 show ck laugh at center
                                 with dspr
@@ -6617,9 +6635,8 @@ label ds_day3_punishment:
     "Ты уже почти догнал Ульянку, как вдруг она останавливается…"
     if skillcheck('reaction_speed', lvl_legendary, passive=True):
         play sound ds_sfx_mot
-        res "Тормози!"
+        res "{result}Тормози!"
         "У тебя получается остановиться так, чтобы её не зацепить."
-        $ ds_skill_points['reaction_speed'] += 1
         show us laugh sport at center
         with dissolve
         us "Не догнал! Не догнал! Я победила!"
@@ -6648,8 +6665,7 @@ label ds_day3_punishment:
             aut "Снова поражение от этой девчонки..."
     else:
         play sound ds_sfx_mot
-        res "У тебя же так резко затормозить не получилось, и ты сбиваешь её с ног."
-        $ ds_skill_points['reaction_speed'] += 1
+        res "{result}У тебя же так резко затормозить не получилось, и ты сбиваешь её с ног."
         window hide
 
         stop music fadeout 3
@@ -6890,6 +6906,7 @@ label ds_day3_after_lunch:
     $ show_small_map_ds()
 
 label ds_day3_music:
+    $ ds_after_lunch_who = 'mi'
     $ persistent.sprite_time = 'day'
     scene bg ext_musclub_day
     with dissolve
@@ -6931,11 +6948,11 @@ label ds_day3_music:
             hide dv with dissolve
             "И ты даже не заметил, как Алиса вышла."
             $ ds_lp['dv'] -= 1
-        "Сделать комплимент Алисе":
+        "{check=suggestion:12}Сделать комплимент Алисе":
             if skillcheck('suggestion', lvl_challenging):
                 window show
                 play sound ds_sfx_psy
-                sug "Внешность - этап пройденный. Лучше скажи что-нибудь про её музыкальные умения."
+                sug "{result}Внешность - этап пройденный. Лучше скажи что-нибудь про её музыкальные умения."
                 me "Почему-то я уверен, что ты классно играешь, Алиса! Сыграешь что-нибудь?"
                 show dv smile pioneer2 far at fright
                 with dspr
@@ -6944,7 +6961,7 @@ label ds_day3_music:
             else:
                 window show
                 play sound ds_sfx_psy
-                sug "Ты впечатлён её фигурой. Так ей и скажи."
+                sug "{result}Ты впечатлён её фигурой. Так ей и скажи."
                 me "Какая... восхитительная фигура. Так бы и прижал тебя к себе, Алиса..."
                 show dv angry pioneer2 far at fright
                 with dspr
@@ -7131,7 +7148,7 @@ label ds_day3_music_mi_dialogue:
             mi "Что-нибудь ещё, Семён-кун? Можешь и ты поиграть. Не умеешь - я покажу!"
             $ ds_d3_mi_dial_opt1 = True
             jump ds_day3_music_mi_dialogue
-        "Сыграть самому" if not ds_d3_mi_dial_opt2:
+        "{check=interfacing:15}Сыграть самому" if not ds_d3_mi_dial_opt2:
             window show
             me "А давай лучше я сыграю? Для тебя!"
             show mi shy pioneer at center
@@ -7147,7 +7164,7 @@ label ds_day3_music_mi_dialogue:
             if skillcheck('interfacing', lvl_heroic):
                 window show
                 play sound ds_sfx_mot
-                inf "Твои пальцы сами помнят, как играть. И начинают играть. Тебе даже не приходится осознанно ими управлять."
+                inf "{result}Твои пальцы сами помнят, как играть. И начинают играть. Тебе даже не приходится осознанно ими управлять."
                 # TODO: CG: игра Семёна в присутствии Мику
                 # TODO: подобрать мелодию
                 show mi surprise pioneer at center
@@ -7198,13 +7215,13 @@ label ds_day3_music_mi_dialogue:
                         mi "Да так, ничего особого..."
                         if skillcheck('empathy', lvl_easy, passive=True):
                             play sound ds_sfx_psy
-                            emp "Как раз таки {i}особо{/i}... похоже, ты задел что-то очень личное для неё. Переживание."
+                            emp "{result}Как раз таки {i}особо{/i}... похоже, ты задел что-то очень личное для неё. Переживание."
                             if skillcheck('logic', lvl_up_medium, passive=True):
                                 play sound ds_sfx_int
-                                lgc "А если учесть английские слова (а английский ты знаешь), то из них явно следует, что это имеет отношение к любви. Возможно, даже неразделённой."
+                                lgc "{result}А если учесть английские слова (а английский ты знаешь), то из них явно следует, что это имеет отношение к любви. Возможно, даже неразделённой."
                                 if skillcheck('encyclopedia', lvl_medium, passive=True):
                                     play sound ds_sfx_int
-                                    enc "Да и песня... В ней речь идёт о неразделённой любви. По крайней мере, кажущейся неразделённой."
+                                    enc "{result}Да и песня... В ней речь идёт о неразделённой любви. По крайней мере, кажущейся неразделённой."
                                     th "Наверное, и я её выбрал поэтому..."
                         show mi smile pioneer at center
                         with dspr
@@ -7228,7 +7245,7 @@ label ds_day3_music_mi_dialogue:
                         jump ds_day3_music_mi_dialogue
             else:
                 play sound ds_sfx_mot
-                inf "А ты вообще держал в руках гитару когда-нибудь? Похоже, что нет - потому что ты вообще ничего не можешь сыграть."
+                inf "{result}А ты вообще держал в руках гитару когда-нибудь? Похоже, что нет - потому что ты вообще ничего не можешь сыграть."
                 "Ты пытаешься взять хотя бы один аккорд - но безуспешно. Получается форменная какофония."
                 show mi dontlike pioneer at center
                 with dspr
@@ -7238,7 +7255,7 @@ label ds_day3_music_mi_dialogue:
                 mi "Классненько играешь... но давай я тебе покажу, как улучшить твою игру!"
                 if skillcheck('rhetoric', lvl_easy, passive=True):
                     play sound ds_sfx_int
-                    rhe "На самом деле она хочет сказать, что ты играл отвратительно. Лишь японское воспитание мешает ей озвучить это прямо."
+                    rhe "{result}На самом деле она хочет сказать, что ты играл отвратительно. Лишь японское воспитание мешает ей озвучить это прямо."
                     $ ds_skill_points['rhetoric'] += 1
                 window hide
                 menu:
@@ -7500,7 +7517,7 @@ label ds_day3_forest:
             window show
     if skillcheck('conceptualization', lvl_medium, passive=True):
         play sound ds_sfx_int
-        con "Скажи красиво. Удиви его!"
+        con "{result}Скажи красиво. Удиви его!"
         me "Я?..{w} Мой шаттл отбывает через десять минут."
         $ ds_skill_points['conceptualization'] += 1
         show el shocked pioneer at center   with dspr
@@ -7616,6 +7633,7 @@ label ds_day3_forest:
     jump ds_day3_library
 
 label ds_day3_library:
+    $ ds_after_lunch_who = 'mz'
     $ persistent.sprite_time = "day"
     scene bg ext_library_day 
     with dissolve
@@ -7711,7 +7729,7 @@ label ds_day3_library:
     "Ты встаёшь на стул, снимаешь книги и передаёшь их Славе, которая складывает их на полу."
     "Через некоторое время остаётся всего десяток-другой в дальнем конце полки."
     if skillcheck('visual_calculus', lvl_challenging, passive=True):
-        vic "Не пытайся дотянуться. Упадёшь!"
+        vic "{result}Не пытайся дотянуться. Упадёшь!"
         window hide
         menu:
             "Переставить стул":
@@ -7790,7 +7808,7 @@ label ds_day3_library:
     $ ds_lay_on_sl = True
     if skillcheck('reaction_speed', lvl_challenging, passive=True):
         play sound ds_sfx_mot
-        res "Быстрее вскакивай! Иначе проблем не оберёшься, если кто увидит!"
+        res "{result}Быстрее вскакивай! Иначе проблем не оберёшься, если кто увидит!"
     window hide
     menu:
         "Поинтересоваться самочувствием":
@@ -7935,6 +7953,7 @@ label ds_day3_library:
         jump ds_day3_dinner
 
 label ds_day3_clubs:
+    $ ds_after_lunch_who = 'el'
     $ persistent.sprite_time = 'day'
     scene bg ext_clubs_day
     with dissolve
@@ -8066,11 +8085,11 @@ label ds_day3_clubs:
                     "Ты же думаешь, куда тебе двигаться дальше."
                     $ disable_current_zone_ds_small()
                     jump ds_day3_after_lunch
-        "Отключить электричество":
+        "{check=visual_calculus:8}Отключить электричество":
             if skillcheck('visual_calculus', lvl_easy):
                 window show
                 play sound ds_sfx_int
-                vic "Видишь кабель? Теперь видишь розетку? Вытащи кабель из розетки - и дело с концом."
+                vic "{result}Видишь кабель? Теперь видишь розетку? Вытащи кабель из розетки - и дело с концом."
                 "Ты хладнокровно вытаскиваешь провод питания из розетки. Теперь можно безопасно работать с роботом."
                 scene bg int_clubs_male_day
                 show el smile pioneer at left
@@ -8084,7 +8103,7 @@ label ds_day3_clubs:
             else:
                 window show
                 play sound ds_sfx_int
-                vic "Ты не можешь разобраться в куче проводов и совершенно не понимаешь, что делать."
+                vic "{result}Ты не можешь разобраться в куче проводов и совершенно не понимаешь, что делать."
                 scene bg int_clubs_male_day
                 show el normal pioneer at left
                 show sh normal pioneer at right
@@ -8223,6 +8242,7 @@ label ds_day3_clubs:
         jump ds_day3_dinner
 
 label ds_day3_medic:
+    $ ds_after_lunch_who = 'cs'
     $ persistent.sprite_time = 'day'
     scene bg ext_aidpost_day
     with dissolve
@@ -8330,11 +8350,11 @@ label ds_day3_medic:
     vol "Ситуация, мягко говоря, некомфортная. Лучше всего будет продолжать пить чай как ни в чём не бывало."
     window hide
     menu:
-        "Ответить взаимностью":
+        "{check=coordination:12}Ответить взаимностью":
             if skillcheck('coordination', lvl_challenging):
                 window show
                 play sound ds_sfx_mot
-                cor "Ты, скинув обувь, естественно, тоже попадаешь своей ногой в точку."
+                cor "{result}Ты, скинув обувь, естественно, тоже попадаешь своей ногой в точку."
                 $ ds_skill_points['coordination'] += 1
                 ins "Хотелось бы сказать «в точку G», но до неё не дошло - пока."
                 "На лице Виолы отражается точное попадание."
@@ -8344,7 +8364,7 @@ label ds_day3_medic:
             else:
                 window show
                 play sound ds_sfx_mot
-                cor "Сняв обувь с ноги, ты пытаешься сделать ей то же самое."
+                cor "{result}Сняв обувь с ноги, ты пытаешься сделать ей то же самое."
                 cor "Но вместо этого ты попадаешь по ноге."
                 $ ds_skill_points['coordination'] += 1
                 cs "Ой... немного не туда, пионер."
@@ -8474,10 +8494,11 @@ label ds_day3_medic:
     show un shocked pioneer at center
     with dspr
     un "Ты прям тут... в лагере... {i}этим{/i} занимаешься?"
-    play sound ds_sfx_int
-    rhe "Она имеет ввиду мастурбацию."
-    play sound ds_sfx_fys
-    ins "А у нас было кое-что покруче!"
+    if skillcheck('rhetoric', lvl_trivial, passive=True):
+        play sound ds_sfx_int
+        rhe "{result}Она имеет ввиду мастурбацию."
+        play sound ds_sfx_fys
+        ins "А у нас было кое-что покруче!"
     me "Нет, ты не так всё поняла!"
     show un serious pioneer at center
     with dspr
@@ -8516,6 +8537,7 @@ label ds_day3_medic:
         jump ds_day3_dinner
 
 label ds_day3_home:
+    $ ds_after_lunch_who = 'me'
     $ persistent.sprite_time = 'day'
     scene bg ext_house_of_mt_day
     with dissolve
@@ -8547,15 +8569,13 @@ label ds_day3_home:
     $ ds_num_faults_pp = 0
     play sound ds_sfx_psy
     vol "Перед тобой инструкция. Прочти её."
-    $ set_mode_nvl()
-    "Добро пожаловать на ваше место работы, инспектор."
-    "Вы должны тщательно проверить все документы согласно инструкции."
-    "Вы можете пропустить въезжающего только при полном соответствии всех документов, во всех остальных случаях отказ."
-    "Если имеются признаки подделки документов, или человек находится в розыске, он должен быть арестован."
-    "В случае нарушения вы будете оштрафованы."
-    "Хорошо вам потрудиться, инспектор."
-    "Слава Арстотцке!"
-    $ set_mode_adv()
+    moa "Добро пожаловать на ваше место работы, инспектор."
+    moa "Вы должны тщательно проверить все документы согласно инструкции."
+    moa "Вы можете пропустить въезжающего только при полном соответствии всех документов, во всех остальных случаях отказ."
+    moa "Если имеются признаки подделки документов, или человек находится в розыске, он должен быть арестован."
+    moa "В случае нарушения вы будете оштрафованы."
+    moa "Хорошо вам потрудиться, инспектор."
+    moa "Слава Арстотцке!"
     th "Значит, теперь я угодил на пограничный пункт... ясно..."
     show dv normal modern at center
     with dissolve
@@ -8584,7 +8604,7 @@ label ds_day3_home:
             dvg "Cпасибо и до свидания!"
             hide dv with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Право на въезд истекло{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Право на въезд истекло{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
             $ ds_approved_pp['dv'] = True
         "Отказать":
             window show
@@ -8639,7 +8659,7 @@ label ds_day3_home:
             slg "До свидания!"
             hide sl with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
     show mi normal modern at center
     with dissolve
     mig "Доброго дня вам, инспектор-сан!"
@@ -8664,7 +8684,7 @@ label ds_day3_home:
             mig "Ой, спасибочки, инспектор-сан!"
             hide mi with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует дипломатический статус в Арстотцке{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует дипломатический статус в Арстотцке{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
             $ ds_approved_pp['mi'] = True
         "Отказать":
             play sound ds_stamp
@@ -8673,7 +8693,7 @@ label ds_day3_home:
             with dspr
             mig "Вот же бака!"
             hide mi with dissolve
-    dreamgirl "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Для приезжающих из Объединённой Федерации обязательно наличие прививки от ВИЧ.{nw}Вакцина должна быть действительна. В случае отсутствия - отказ.{nw}Cлава Арстотцке!"
+    moa "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Для приезжающих из Объединённой Федерации обязательно наличие прививки от ВИЧ.{nw}Вакцина должна быть действительна. В случае отсутствия - отказ.{nw}Cлава Арстотцке!"
     show el normal modern at center
     with dissolve
     elg "Здравствуйте, товарищ инспектор!"
@@ -8695,7 +8715,7 @@ label ds_day3_home:
             elg "Обязательно, товарищ инспектор!"
             hide el with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Срок действия вакцины от ВИЧ истёк{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Срок действия вакцины от ВИЧ истёк{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
             $ ds_approved_pp['el'] = True
         "Отказать":
             window show
@@ -8744,7 +8764,7 @@ label ds_day3_home:
             mtg "Я пожалуюсь в вышестоящие инстанции! Счастливо оставаться!"
             hide mt with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Въезд разрешён{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
     show us normal sport at center
     with dissolve
     usg "Здасьте!"
@@ -8767,7 +8787,7 @@ label ds_day3_home:
             usg "Как скажете, гражданин начальник!"
             hide us with dissolve
             $ ds_num_faults_pp += 1
-            dreamgirl "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует право на въезд{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
+            moa "МВ: ЗАМЕЧАНИЕ{nw}Отсутствует право на въезд{nw}НАЛОЖЕН ШТРАФ - [5 * ds_num_faults_pp] КРЕДИТОВ"
             $ ds_approved_pp['us'] = True
         "Отказать":
             window show
@@ -8783,7 +8803,7 @@ label ds_day3_home:
     "Она отдаёт тебе паспорт."
     play sound ds_sfx_int
     enc "Колечия. Враждебная Арстотцке страна. Оттуда постоянно пытаются проникнуть террористы."
-    dreamgirl "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Досматривать всех граждан Колечии. Без исключений.{nw}Cлава Арстотцке!"
+    moa "ОБНОВЛЕНИЕ ПРОТОКОЛА{nw}Досматривать всех граждан Колечии. Без исключений.{nw}Cлава Арстотцке!"
     me "Цель визита?"
     ung "Мимо проезжаю..."
     me "Время пребывания?"
@@ -8841,7 +8861,7 @@ label ds_day3_home:
             hide un with dissolve
     th "Кажется, Лена из Колечии более агрессивная, чем Лена из СССР..."
     if ds_approved_pp['un']:
-        dreamgirl "МВ: ЗАМЕЧАНИЕ"
+        moa "МВ: ЗАМЕЧАНИЕ"
         with hpunch
         stop music
         play sound2 ds_bombing
@@ -8942,7 +8962,7 @@ label ds_day3_home:
         mt "В общем, останешься без ужина!"
         if skillcheck('rhetoric', lvl_up_medium, passive=True):
             play sound ds_sfx_int
-            rhe "Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
+            rhe "{result}Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
         window hide
         menu:
             "Протестовать":
@@ -9049,7 +9069,7 @@ label ds_day3_mt_interrogate:
         mt "В общем, останешься без ужина!"
         if skillcheck('rhetoric', lvl_up_medium, passive=True):
             play sound ds_sfx_int
-            rhe "Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
+            rhe "{result}Это неправомерно. А если пригрозить ей вышестоящими инстанциями?"
         window hide
         menu:
             "Протестовать":
@@ -9104,3 +9124,651 @@ label ds_day3_mt_interrogate:
     play sound ds_sfx_psy
     vol "Рядом со Славей свободных мест не нашлось, да и её подружек ты не знаешь."
     jump ds_day3_dinner
+
+label ds_day3_dinner:
+    $ persistent.sprite_time = 'day'
+    show int_dining_hall_people_day
+    with dissolve
+    play sound ds_sfx_int
+    vic "Похоже, тебе предстоит ужинать с Электроником и Шуриком."
+    vic "Сесть всё равно больше негде."
+    show el normal pioneer at cleft 
+    show sh normal pioneer at cright 
+    with dissolve
+    if skillcheck('authority', lvl_trivial, passive=True):
+        play sound ds_sfx_psy
+        aut "{result}Когда ты общаешься с ними, у тебя то и дело возникает желание подколоть или просто сказать что-нибудь забавное и смешное."
+        me "Приветствую, господа!"
+        play sound ds_sfx_fys
+        hfl "Может быть, в твоём положении вести себя так несколько рискованно."
+        play sound ds_sfx_psy
+        vol "Но {i}братья-электроники{/i} служат для тебя источником позитива."
+    else:
+        me "Добрый вечер."
+    window hide
+    menu:
+        "Спросить, как дела":
+            window show
+            me "Как ваши дела?"
+            el "Неплохо, а твои?"
+            me "С переменным успехом."
+            sh "Что-то случилось?"
+            me "Да много всего случилось."
+            el "Расскажешь?"
+            if (ds_whom_helped == 'el') and (ds_after_lunch_who == 'el'):
+                me "Да вы и так знаете, я же с вами весь день провёл..."
+                show el smile pioneer at cleft
+                with dspr
+                el "И то правда!"
+                sh "Спасибо за помощь, кстати."
+                el "Да, спасибо!"
+            else:
+                window hide
+                menu:
+                    "Рассказать":
+                        window show
+                        if ds_whom_helped == 'dv':
+                            me "Сначала я пришёл на сцену. Оказывается, Алиса превосходно играет на гитаре!"
+                            el "Ну, это мы знаем!"
+                            sh "При всех её недостатках музыкального таланта у неё не отнять."
+                        elif ds_whom_helped == 'un':
+                            me "Когда я вышел от вас, я встретил Лену."
+                            if ds_un_club:
+                                me "Как итог - у нас теперь будет художественный клуб!"
+                                show el smile pioneer at cleft
+                                with dspr
+                                el "Ух ты как классно!"
+                            else:
+                                me "Она хотела открыть клуб, но не сложилось..."
+                                show el surprise pioneer at cleft
+                                with dspr
+                                el "Почему?"
+                                me "Она испугалась предлагать это Ольге Дмитриевне."
+                                show el normal pioneer at cleft
+                                with dspr
+                                el "Вот как..."
+                        elif ds_whom_helped == 'sl':
+                            me "Сначала со Славей подметал..."
+                        elif ds_whom_helped == 'mz':
+                            me "Помог нашей библиотекарше Жене с уборкой..."
+                            show el smile pioneer at cleft
+                            with dspr
+                            el "Молодец!"
+                            if skillcheck('empathy', lvl_trivial, passive=True):
+                                play sound ds_sfx_psy
+                                emp "{result}Он не может скрыть своих чувств к ней - всё как на ладони."
+                                $ ds_skill_points['empathy'] += 1
+                        elif ds_whom_helped == 'us':
+                            me "Поиграли в футбол с Ульянкой..."
+                        elif ds_whom_helped == 'esc':
+                            me "А мы с Ульяной сегодня сбежать попытались! Правда, безуспешно..."
+                            show el surprise pioneer at cleft
+                            show sh surprise pioneer at cright
+                            with dspr
+                            el "Ничего себе, а как ты потом от Ольги Дмитриевны живой ушёл?"
+                            me "Это следующая часть моей истории..."
+                        elif ds_whom_helped == 'mt':
+                            me "Сперва в администрации бумажки перебирал..."
+                        elif ds_whom_helped == 'ya':
+                            me "Вы знаете вожатую младшего отряда, Яну?"
+                            el "Не-а!"
+                            me "Ну, я ей помогал с детьми."
+                            el "Вот это да..."
+                        elif ds_whom_helped == 'mi':
+                            me "Сперва помог Мику в музклубе."
+                            if ds_mi_costume:
+                                me "Она ещё такой костюм мне дала на вечер!"
+                                el "Классно, везёт!"
+                                if skillcheck('empathy', lvl_trivial, passive=True):
+                                    play sound ds_sfx_psy
+                                    emp "{result}А у него с отношениями немного не складывается."
+                                    $ ds_skill_points['empathy'] += 1
+                        if ds_punished:
+                            if ds_whom_helped == 'esc':
+                                me "В общем, заставили нас с Ульяной чистить картошку..."
+                            else:
+                                me "Потом Ульяна во время обеда меня спровоцировала, а Ольга Дмитриевна возьми и накажи нас обоих!"
+                                el "Да, несправедливо..."
+                            if ds_after_lunch_who != 'us':
+                                me "Но я сбежал!"
+                                sh "Да ты прям нарушитель..."
+                        if ds_after_lunch_who == 'mi':
+                            me "После обеда мы играли с Мику."
+                            el "Ого, и ты тоже умеешь играть музыку?"
+                            me "Ну... не особо на самом деле..."
+                        elif ds_after_lunch_who == 'cs':
+                            me "Зашёл к медсестре за таблетками... а она оказалась..."
+                            if skillcheck('volition', lvl_legendary, passive=True):
+                                me "В общем, она начала домогаться меня!"
+                                sh "Ну, что сказать... это Виола. Мы все прошли через это."
+                                $ ds_skill_points['volition'] += 1
+                            else:
+                                play sound ds_sfx_psy
+                                vol "{result}Ты не находишь сил рассказать о произошедшем - слишком стыдно. Да и не надо."
+                                me "В общем, неважно."
+                                el "Ну ладно, не хочешь - не рассказывай."
+                        elif ds_after_lunch_who == 'mz':
+                            me "После обеда помогал Славе и Жене сортировать книги в библиотеке."
+                            show el serious pioneer at cleft
+                            with dspr
+                            el "Ты там аккуратнее с Женей..."
+                            if skillcheck('half_light', lvl_trivial, passive=True):
+                                play sound ds_sfx_fys
+                                hfl "{result}Он увидел в тебе угрозу. Угрозу его счастью с Женей. Аккуратней с этой темой."
+                                $ ds_skill_points['half_light'] += 1
+                        elif ds_after_lunch_who == 'me':
+                            me "После обеда я вздремнул... и мне сон приснился, где вы все были."
+                            show el smile pioneer at cleft
+                            with dspr
+                            el "Ну, бывает! Видимо, настолько лагерь понравился!"
+                            me "Ага..."
+                    "Отказаться":
+                        window show
+                        me "Как-нибудь в другой раз."
+                        sh "Как хочешь."
+                        "Он разводит руками."
+        "Промолчать":
+            window show
+    show el smile pioneer at cleft   with dspr
+    el "После ужина танцы!"
+    "Электроник хихикает."
+    me "Я в курсе."
+    show el normal pioneer at cleft   with dspr
+    el "Кого хотел бы пригласить?"
+    window hide
+    menu:
+        "Алису" if ds_dance_dv:
+            window show
+            me "Алису Двачевскую!"
+            show el upset pioneer at cleft
+            show sh surprise pioneer at cright
+            with dspr
+            "Электроник поперхнулся чаем от твоих слов. Шурик тоже впечатлён."
+            el "Чего?! Я не ослышался?"
+            me "Нет вроде, Алису я пригласить хочу."
+            el "Ты уверен?"
+            me "Аб-со-лют-но! Она сыграет для нас всех на танцах!"
+            show sh normal pioneer at cright
+            with dspr
+            sh "Неплохо."
+        "Лену":
+            window show
+            me "Лену..."
+            el "Ну давай, успехов с ней."
+        "Славю":
+            window show
+            me "Славю хочу пригласить."
+            sh "Хороший выбор, мне кажется."
+        "Ульяну":
+            window show
+            me "А чего бы и не Ульянку?"
+            show el laugh pioneer at cleft
+            with dspr
+            el "И как это будет выглядеть с вашей разницей в росте?"
+            sh "Лучше подумай ещё. А то другие подумают не того."
+            play sound ds_sfx_int
+            rhe "Он беспокоится, что тебя в педофилии обвинят."
+        "{check=half_light:10}Женю":
+            window show
+            me "Женю приглашу."
+            show el angry pioneer at cleft
+            with dspr
+            if skillcheck('half_light', lvl_medium):
+                play sound ds_sfx_fys
+                hfl "{result}Берегись Электроника!"
+                "Ты уворачиваешься от летящей в тебя пощёчины."
+            else:
+                play sound ds_sfx_fys
+                with hpunch
+                hfl "{result}Прежде чем ты успеваешь как-либо отреагировать, Электроник бьёт тебе по лицу."
+                $ ds_damage_health()
+            $ ds_skill_points['half_light'] += 1
+            el "НЕ СМЕЙ!"
+            hfl "Он не на шутку взбесился от твоей реплики. Ты и не мог подумать, что он может быть настолько злым."
+            $ ds_lp['el'] -= 2
+            me "Ладно-ладно, успокойся."
+        "Яну":
+            window show
+            me "Да вон, думаю с вожатой младшего отряда потанцевать."
+            el "Интересный выбор..."
+        "Мику":
+            window show
+            me "Мику позову!"
+            show el surprise pioneer at cleft
+            with dspr
+            el "Так она же занята... В смысле, музыку обеспечивает."
+            me "Ну... разберёмся!"
+            el "Как скажешь..."
+        "Не решил":
+            window show
+            me "Я ещё не думал над этим."
+        "Это секрет":
+            window show
+            me "А это, друзья, большой-большой секрет!"
+            show el laugh pioneer at cleft
+            show sh smile pioneer at cright
+            with dspr
+            el "Ну ладно, как скажешь!"
+    window hide
+    menu:
+        "Спросить в ответ":
+            window show
+            me "А ты?"
+            show el shocked pioneer at cleft   with dspr
+            el "Я… Ну я…"
+            rhe "Он не ожидал такого вопроса."
+            window hide
+            menu:
+                "{check=conceptualization:11}Предложить свои варианты":
+                    if skillcheck('conceptualization', lvl_up_medium):
+                        window show
+                        play sound ds_sfx_int
+                        con "{result}Всё логично. Электронику - Ульяну, Шурику - Алису."
+                        me "Ульянку. Она обрадуется."
+                        show el serious pioneer at cleft   with dspr
+                        el "Ну уж нет!"
+                        "Электроник неистово замахал руками."
+                        me "А ты, Шурик, пригласи Алису."
+                        show sh serious pioneer at cright   with dspr
+                        sh "Я, пожалуй, воздержусь."
+                        play sound ds_sfx_mot
+                        com "Он выглядит спокойнее своего товарища."
+                    else:
+                        window show
+                        play sound ds_sfx_int
+                        con "{result}А чего бы им друг с другом не танцевать. Лето в пионерском галстуке, так сказать."
+                        me "А давайте вы друг с другом!"
+                        show el serious pioneer at cleft
+                        show sh seerious pioneer at cright
+                        with dspr
+                        el "Чего?"
+                        sh "Так, нет, там допустимы лишь пара М плюс Ж."
+            me "Да ладно вам, ребята, весело будет!"
+            el "И вообще!{w} У нас ещё дела!{w} Нам нужно робота доделывать!"
+            window hide
+            menu:
+                "Предложить пригласить робота":
+                    window show
+                    me "Отличная идея!{w} Пригласите робота! Он у вас умеет танцевать?"
+                    sh "Он ещё даже не ходит."
+                    play sound ds_sfx_int
+                    rhe "Шурик, кажется, не понял прикола."
+                    show el smile pioneer at cleft   with dspr
+                    el "А что! Будет прекрасная демонстрация наших достижений перед всем лагерем!"
+                    show sh normal pioneer at cright   with dspr
+                    sh "И что мы покажем?"
+                    show el normal pioneer at cleft   with dspr
+                    el "Тут ты прав."
+                    "Они оба расстроенно утыкаются в тарелки."
+                "Отступить":
+                    window show
+                    me "Ну ладно..."
+                    "Вы все утыкаетесь в тарелки и молча ужинаете."
+            hide el 
+            hide sh 
+            with dissolve
+            window hide
+
+            with fade2
+        "Молча доесть ужин":
+            window show
+            "Ты решаешь не развивать разговор дальше, и вы утыкаетесь в тарелки."
+
+    stop ambience fadeout 2
+    window hide
+
+    $ persistent.sprite_time = "sunset"
+    scene bg int_dining_hall_sunset 
+    with dissolve2
+
+    play ambience ambience_dining_hall_empty fadein 2
+
+    window show
+    "Ужин заканчивается, и пионеры начинают расходиться."
+    show el normal pioneer at cleft 
+    show sh normal pioneer at cright 
+    with dissolve
+    window hide
+    menu:
+        "Спросить про одежду":
+            window show
+            me "А вы как на бал оденетесь?"
+            el "А нам особо нечего – так и пойдём."
+            "Он показывает на свою пионерскую форму."
+            play sound ds_sfx_int
+            con "Кажется, их совсем не волнует внешний вид."
+            if not ds_mi_costume:
+                play sound ds_sfx_psy
+                vol "Что же ты тогда беспокоишься!"
+                vol "В зимней одежде всё равно идти не вариант, так что пойдёшь как есть."
+            else:
+                con "А у тебя есть костюм, да не простой, а от Мику!"
+            me "И во сколько начало?"
+            el "После девяти."
+
+            stop ambience fadeout 2
+
+            me "Ясно."
+            window hide
+        "Спросить про робота":
+            window show
+            me "Так как, вы роботом заниматься будете?"
+            show el upset pioneer at cleft
+            with dspr
+            el "Эх, если бы... явка на танцы обязательна."
+            me "Вот как..."
+            me "И во сколько начало?"
+            el "После девяти."
+
+            stop ambience fadeout 2
+
+            me "Ясно."
+            window hide
+        "Спросить про время":
+            window show
+            me "И во сколько начало?"
+            el "После девяти."
+
+            stop ambience fadeout 2
+
+            me "Ясно."
+            window hide
+        "Молча уйти":
+            pass
+    $ sunset_time()
+
+    $ persistent.sprite_time = "sunset"
+    scene bg ext_dining_hall_away_sunset 
+    with dissolve
+
+    play ambience ambience_camp_center_evening
+
+    window show
+    "Ты выходишь из столовой и полной грудью вдыхаешь вечерний воздух."
+    play sound ds_sfx_psy
+    ine "Тебе сразу вспоминаются те редкие дискотеки, на которых приходилось бывать ещё в школе."
+    ine "Неуверенность, стеснение и даже страх…"
+    ine "Ты не умел танцевать, не знал, как правильно реагировать, если пригласят тебя, а сам кого-то приглашать не осмеливался."
+    ine "В общем, чувствовал себя там крайне неуютно."
+    ine "Тем неприятнее было тебе смотреть на чужое веселье."
+    ine "Нет, это не зависть.{w} Скорее удивление от того, что люди могут получать удовольствие от чего-то совершенно мне непонятного."
+    play sound ds_sfx_psy
+    "До начала дискотеки ещё порядком времени, так что ты идёшь прогуляться."
+    window hide
+    jump ds_day3_bus
+
+label ds_day3_no_dinner:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_square_day
+    with dissolve
+    th "Ну и ладно, без ужина обойдусь!"
+    play sound ds_sfx_psy
+    vol "Ты настолько зол, что даже не разбираешь, куда идёшь. Просто идёшь."
+    jump ds_day3_bus
+    
+label ds_day3_bus:
+    $ persistent.sprite_time = "sunset"
+    scene bg ext_bus_sunset 
+    with dissolve
+
+    play music music_list["no_tresspassing"] fadein 3
+
+    window show
+    play sound ds_sfx_psy
+    ine "Перед тобой стоит автобус.{w} Точно такой же, как и в первый день."
+    play sound ds_sfx_mot
+    com "Ты застыл в ступоре."
+    me "Как, что, как, почему?.."
+    ine "Мгновенно всплывают все теории о попадании в этот лагерь."
+    play sound ds_sfx_fys
+    hfl "Тут же, как ножом, режет мысль: за эти несколько дней ты слишком привык к местной жизни и уже стал забывать – всё, что здесь происходит, ой как далеко от нормального!"
+    "Несколько минут ты просто стоял и смотрел на Икарус, затем пару раз хлопаешь себя по щекам, чтобы убедиться, что это не мираж, но автобус никуда не исчезает."
+    window hide
+    menu:
+        "Забежать в автобус":
+            window show
+            th "Раз он здесь, то мне пора домой!"
+            me "{i}Сайонара{/i}, пионеры!"
+        "Отступить":
+            window show
+            play sound ds_sfx_psy
+            vol "Что-то тебя держит. Ты не можешь уйти."
+    "И ты бросаешься к двери…"
+    window hide
+
+    play sound sfx_energy_door_bus
+
+    with vpunch
+
+    with flash
+
+    window show
+    "И ты оказываешься за земле."
+    play sound ds_sfx_fys
+    pat "С больным носом."
+    play sound ds_sfx_int
+    lgc "Что же произошло?"
+    th "Видимо, во что-то врезался..."
+    play sound ds_sfx_mot
+    per_toc "На ощупь автобус более чем реальный."
+    "Ты пытаешься просунуть руку в дверь…{w} Но там словно стоит невидимая преграда."
+    play sound ds_sfx_fys
+    hfl "И тут меня обуял практически животный страх."
+    hfl "Страх всего – лагеря, его обитателей, этого автобуса."
+    th "Как я вообще сюда попал?"
+    th "Что это за чёртов Икарус, в который не войти?{w} Почему всё это происходит именно со мной?!"
+
+    play sound sfx_wind_gust
+
+    "Вдруг дует настолько сильный ветер, что кажется, собьёт с ног."
+    "Ты отворачиваешься и увидел под колесом автобуса маленький клочок бумаги."
+    window hide
+    menu:
+        "Подобрать":
+            window show
+            ine "Там написано несколько слов."
+            window hide
+
+            scene white 
+            with dissolve
+
+            show urhere1 "Ты здесь не просто так" :
+                xpos -0.5
+                ypos 0.3
+                linear 4.0 xpos 1.5
+                repeat
+
+            show urhere2 "Ты здесь не просто так" :
+                xpos -0.5
+                ypos 0.1
+                linear 3.0 xpos 1.5
+                repeat
+
+            show urhere3 "Ты здесь не просто так" :
+                xpos -0.5
+                ypos 0.7
+                linear 5.0 xpos 1.5
+                repeat
+
+            show urhere4 "Ты здесь не просто так" :
+                xpos -0.5
+                ypos 0.5
+                linear 4.0 xpos 1.5
+                repeat
+
+            show urhere5 "Ты здесь не просто так" :
+                xpos -0.5
+                ypos 0.8
+                linear 3.0 xpos 1.5
+                repeat
+
+            show urhere6 "Ты здесь не просто так" :
+                ypos 0.1
+                xpos 1.0
+                linear 4.0 xpos -1.0
+                repeat
+
+            show urhere7 "Ты здесь не просто так" :
+                ypos 0.3
+                xpos 1.0
+                linear 3.0 xpos -1.0
+                repeat
+
+            show urhere8 "Ты здесь не просто так" :
+                ypos 0.8
+                xpos 1.0
+                linear 5.0 xpos -1.0
+                repeat
+
+            show urhere9 "Ты здесь не просто так" :
+                ypos 0.6
+                xpos 1.0
+                linear 4.0 xpos -1.0
+                repeat
+
+            show urhere10 "Ты здесь не просто так" :
+                ypos 0.4
+                xpos 1.0
+                linear 3.5 xpos -1.0
+                repeat
+
+            $ renpy.pause(5.0)
+
+            window show
+            "{i}Ты здесь не просто так{/i}."
+            if skillcheck('visual_calculus', lvl_easy, passive=True):
+                play sound ds_sfx_int
+                vic "Это твой почерк!"
+                th "Я послал себе записку из будущего! Точно!"
+                th "Нет.{w} Или из прошлого…"
+                th "Чёрт! Всё равно не понимаю!"
+                play sound ds_sfx_int
+                lgc "Но как бы там ни было, почерк явно твой."
+                lgc "Конечно, подделать его – не большая проблема, но ты полностью уверен, что эту записку написал сам."
+            else:
+                play sound ds_sfx_int
+                vic "Корявый почерк кажется знакомым. Но чей он - непонятно."
+            window hide
+        "Отложить":
+            window show
+
+    $ persistent.sprite_time = "sunset"
+    scene bg ext_bus_sunset
+    with dissolve
+
+    window show
+    "Покрутив листок в руках, ты откладываешь его."
+    window hide
+
+    with fade
+
+    menu:
+        "Зайти в автобус снова":
+            window show
+            "Ты пытаешься зайти в автобус."
+            "Но невидимый барьер по-прежнему не пускал меня внутрь."
+            "Ты обходишь Икарус со всех сторон, стучишь по колёсам, заглядываешь внутрь через окно."
+            play sound ds_sfx_int
+            vic "Всё кажется абсолютно нормальным.{w} Но таковым не является."
+        "Ударить по автобусу":
+            window show
+            play sound sfx_bus_window_hit
+            "Ты подбираешь камень и бросаешь его в окно."
+            "Увесистый камень с глухим стуком отскочил от стекла, не нанеся видимых повреждений."
+            play sound ds_sfx_mot
+            per_eye "Никакого эффекта, даже царапинки!"
+        "Ничего не делать":
+            window show
+    scene bg ds_ext_camp_entrance_sunset
+    with dissolve
+    "Ты садишься на бордюр и обессиленно вздыхаешь."
+    play sound ds_sfx_psy
+    ine "Если вдуматься, то листок тебе намекает на что-то…"
+    play sound ds_sfx_psy
+    vol "Обернись!"
+
+    scene bg ext_no_bus_sunset
+    with dissolve
+
+    window show
+    "Автобус исчез…{w} Исчез так же внезапно, как и появился."
+    play sound ds_sfx_mot
+    com "Победный клич застревает в горле."
+    th "ЧТО ЗА ЧЕРТОВЩИНА?!"
+    sb "И снова здравствуй, Семён."
+    th "Что вам надо от меня?"
+    sb "Обернись."
+
+    scene bg ds_camp_entrance_subset
+    show sub lim at center
+    with dissolve
+
+    me "Ты кто?!"
+    sb "Твоё подсознание."
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    sb "Видишь?"
+    me "Моё подсознание... женского пола?"
+    play sound ds_sfx_psy
+    sb "Нет, конечно. Этот образ - порождение твоего мозга."
+    sb "Я - это ты!"
+    me "Почему ты продолжаешь меня мучать?"
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sb "Это ты себя мучаешь, Семён. Это ты не можешь выкинуть из головы отравляющие твою жизнь воспоминания."
+    me "Твой образ как-то связан с воспоминаниями?!"
+    sb "Безусловно."
+    play sound ds_sfx_int
+    vic "Эта девушка по внешности тебе немного напоминает Лену..."
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    vic "...а теперь Алису."
+    me "Да что такое происходит?! Почему я тут?!"
+    sb "Сейчас ты спишь. Надеялся найти забвение."
+    me "То есть, я проснусь... у себя?"
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sb "Кто знает, кто знает..."
+    me "Почему вы раньше не показывались мне так?!"
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    sb "Многие тайны подсознания неведомы человеку."
+    sb "Сегодня мы такие... завтра будем другими."
+    sb "Всё от тебя зависит - о чём больше всего думаешь, то и вылезает."
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sm "Тебе пора, Семён. Пора выбрать дальнейший путь."
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    sb "Да. Тебе надо выяснить, почему же ты попал в лагерь."
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sb "Или же забить и наслаждаться жизнью. Двигаться вперёд, так сказать."
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    sb "Но ты должен найти ответы. Кто знает, может это ловушка?"
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sb "Ну какая ловушка? Скорее {i}шанс{/i}. На счастье."
+    show sub trs at center with dspr
+    show sun arb at center with dspr
+    sb "Никто не говорит, что это всё обязательно ловушка. Но разве тебе не интересно знать, как ты сюда попал?"
+    show sub trs at center with dspr
+    show sub lim at center with dspr
+    sb "Короче. Решать тебе. Главное - не забывай..."
+    hide sub with dissolve
+    me "О ком?!"
+    "Тишина тебе ответ."
+    $ persistent.sprite_time = 'night'
+    stop music fadeout 2
+    scene black with dissolve
+    scene bg ext_square_night_party 
+    show unblink
+    "Ты просыпаешься. Уже ночь."
+    play sound ds_sfx_mot
+    res "Пока ты спал, площадь уже подготовили к дискотеке!"
+    th "Что это было?"
+    play sound ds_sfx_int
+    lgc "Похоже, ты уснул на скамейке. И тебе приснился такой вот сон."
+    play sound ds_sfx_psy
+    ine "И лучше тебе бы прислушаться к ней."
