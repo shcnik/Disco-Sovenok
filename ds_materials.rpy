@@ -186,14 +186,10 @@ init python:
             result += ds_morale
         if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
             return result
-        if ds_semtype > 4:
-            result += 2
-        elif ds_semtype >= 2:
+        if ds_semtype >= 3:
             result += 1
-        elif ds_semtype <= -2:
+        elif ds_semtype <= -3:
             result -= 1
-        elif ds_semtype < -4:
-            result -= 2
         return result
 
     def ds_define_sprite(char, emo, dist='normal', body_num=1, cloth=None, acc=None, acc2=None, body_name='body'):
@@ -262,6 +258,14 @@ init python:
 
         def visit(self):
             return [self.child, self.mask, self.curtain]
+    
+    def ds_reset_achievements():
+        for ach in persistent.ds_achievements:
+            persistent.ds_achievements[ach] = False
+    
+    def ds_set_all_achievements():
+        for ach in persistent.ds_achievements:
+            persistent.ds_achievements[ach] = True
 
 init:
     $ mods["disco_sovenok"] = u"Disco Sovenok"
@@ -439,12 +443,12 @@ init:
 
 ## Голоса девушек
     $ dvv = Character (u'Девушка', color="ffaa00", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ miv = Character (u'Девушка', color="00deff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ mtv = Character (u'Девушка', color="00ea32", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ mig = Character (u'Девушка', color="00deff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ mtg = Character (u'Девушка', color="00ea32", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ slv = Character (u'Девушка', color="ffd200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ unv = Character (u'Девушка', color="b956ff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ usv = Character (u'Девушка', color="ff3200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ elv = Character (u'Парень', color="ffff00", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ elg = Character (u'Парень', color="ffff00", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 ## Иные персонажи
 
@@ -463,6 +467,16 @@ init:
 
     image ds_epigraph = "mods/disco_sovenok/cg/epigraph.png"
     image ds_tournament = "mods/disco_sovenok/gui/cards/table/alt_tournament_bg.png"
+
+    image ds_bus_crash = "mods/disco_sovenok/gui/ach/gen/bus_crash.png"
+    image ds_beat_girls = "mods/disco_sovenok/gui/ach/gen/beat_girls.png"
+    image ds_know_history = "mods/disco_sovenok/gui/ach/gen/know_history.png"
+    # image ds_had_sex = "mods/disco_sovenok/gui/ach/gen/had_sex.png"
+    image ds_us_gone = "mods/disco_sovenok/gui/ach/gen/us_gone.png"
+    # image ds_mi_rape = "mods/disco_sovenok/gui/ach/gen/mi_rape.png"
+    image ds_arstotzka = "mods/disco_sovenok/gui/ach/gen/arztotzka.png"
+    image ds_electrocution = "mods/disco_sovenok/gui/ach/gen/electrocution.png"
+    # image ds_us_escape = "mods/disco_sovenok/gui/ach/us/us_escape.png"image ds_bus_crash = "mods/disco_sovenok/gui/ach/gen/bus_crash.png"
 
 ## BG
 
@@ -575,6 +589,11 @@ init:
 
     image bg ds_ext_camp_entrance_sunset = "mods/disco_sovenok/bg/ext_camp_entrance_sunset.jpg"
 
+    image bg ds_papers_please_back = "mods/disco_sovenok/bg/papers_please.png"
+    image ds_papers_please_front = "mods/disco_sovenok/bg/papers_please_front.png"
+    image bg ds_papers_please_teract = "mods/disco_sovenok/bg/battle_tracers_2.png"
+
+    image bg ds_ext_bus_sunset = "mods/disco_sovenok/bg/ext_bus_sunset.png"
 ## Новые CG
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
@@ -1552,6 +1571,126 @@ init:
 
     image dv heart = ds_define_sprite('dv', 'grin', dist='far', body_num=2, body_name='heart')
 
+    # Электроник
+
+    image el angry modern = ds_define_sprite('el', 'angry', body_num=3, cloth='shirt_black')
+    image el angry modern close = ds_define_sprite('el', 'angry', dist='close', body_num=3, cloth='shirt_black')
+    image el angry modern far = ds_define_sprite('el', 'angry', dist='far', body_num=3, cloth='shirt_black')
+
+    image el fingal modern = ds_define_sprite('el', 'fingal', body_num=2, cloth='shirt_black')
+    image el fingal modern close = ds_define_sprite('el', 'fingal', dist='close', body_num=2, cloth='shirt_black')
+    image el fingal modern far = ds_define_sprite('el', 'fingal', dist='far', body_num=2, cloth='shirt_black')
+
+    image el grin modern = ds_define_sprite('el', 'grin', body_num=1, cloth='shirt_black')
+    image el grin modern close = ds_define_sprite('el', 'grin', dist='close', body_num=1, cloth='shirt_black')
+    image el grin modern far = ds_define_sprite('el', 'grin', dist='far', body_num=1, cloth='shirt_black')
+
+    image el laugh modern = ds_define_sprite('el', 'laugh', body_num=3, cloth='shirt_black')
+    image el laugh modern close = ds_define_sprite('el', 'laugh', dist='close', body_num=3, cloth='shirt_black')
+    image el laugh modern far = ds_define_sprite('el', 'laugh', dist='far', body_num=3, cloth='shirt_black')
+
+    image el normal modern = ds_define_sprite('el', 'normal', body_num=1, cloth='shirt_black')
+    image el normal modern close = ds_define_sprite('el', 'normal', dist='close', body_num=1, cloth='shirt_black')
+    image el normal modern far = ds_define_sprite('el', 'normal', dist='far', body_num=1, cloth='shirt_black')
+
+    image el sad modern = ds_define_sprite('el', 'sad', body_num=2, cloth='shirt_black')
+    image el sad modern close = ds_define_sprite('el', 'sad', dist='close', body_num=2, cloth='shirt_black')
+    image el sad modern far = ds_define_sprite('el', 'sad', dist='far', body_num=2, cloth='shirt_black')
+
+    image el scared modern = ds_define_sprite('el', 'scared', body_num=2, cloth='shirt_black')
+    image el scared modern close = ds_define_sprite('el', 'scared', dist='close', body_num=2, cloth='shirt_black')
+    image el scared modern far = ds_define_sprite('el', 'scared', dist='far', body_num=2, cloth='shirt_black')
+
+    image el serious modern = ds_define_sprite('el', 'serious', body_num=3, cloth='shirt_black')
+    image el serious modern close = ds_define_sprite('el', 'serious', dist='close', body_num=3, cloth='shirt_black')
+    image el serious modern far = ds_define_sprite('el', 'serious', dist='far', body_num=3, cloth='shirt_black')
+
+    image el shocked modern = ds_define_sprite('el', 'shocked', body_num=2, cloth='shirt_black')
+    image el shocked modern close = ds_define_sprite('el', 'shocked', dist='close', body_num=2, cloth='shirt_black')
+    image el shocked modern far = ds_define_sprite('el', 'shocked', dist='far', body_num=2, cloth='shirt_black')
+
+    image el smile modern = ds_define_sprite('el', 'smile', body_num=1, cloth='shirt_black')
+    image el smile modern close = ds_define_sprite('el', 'smile', dist='close', body_num=1, cloth='shirt_black')
+    image el smile modern far = ds_define_sprite('el', 'smile', dist='far', body_num=1, cloth='shirt_black')
+
+    image el surprise modern = ds_define_sprite('el', 'surprise', body_num=2, cloth='shirt_black')
+    image el surprise modern close = ds_define_sprite('el', 'surprise', dist='close', body_num=2, cloth='shirt_black')
+    image el surprise modern far = ds_define_sprite('el', 'surprise', dist='far', body_num=2, cloth='shirt_black')
+
+    image el upset modern = ds_define_sprite('el', 'upset', body_num=2, cloth='shirt_black')
+    image el upset modern close = ds_define_sprite('el', 'upset', dist='close', body_num=2, cloth='shirt_black')
+    image el upset modern far = ds_define_sprite('el', 'upset', dist='far', body_num=2, cloth='shirt_black')
+
+    # Мику
+
+    image mi angry modern = ds_define_sprite('mi', 'angry', body_num=3, cloth='civil')
+    image mi angry modern close = ds_define_sprite('mi', 'angry', dist='close', body_num=3, cloth='civil')
+    image mi angry modern far = ds_define_sprite('mi', 'angry', dist='far', body_num=3, cloth='civil')
+
+    image mi cry modern = ds_define_sprite('mi', 'cry', body_num=1, cloth='civil')
+    image mi cry modern close = ds_define_sprite('mi', 'cry', dist='close', body_num=1, cloth='civil')
+    image mi cry modern far = ds_define_sprite('mi', 'cry', dist='far', body_num=1, cloth='civil')
+
+    image mi cry_smile modern = ds_define_sprite('mi', 'cry_smile', body_num=2, cloth='civil')
+    image mi cry_smile modern close = ds_define_sprite('mi', 'cry_smile', dist='close', body_num=2, cloth='civil')
+    image mi cry_smile modern far = ds_define_sprite('mi', 'cry_smile', dist='far', body_num=2, cloth='civil')
+
+    image mi dontlike modern = ds_define_sprite('mi', 'dontlike', body_num=1, cloth='civil')
+    image mi dontlike modern close = ds_define_sprite('mi', 'dontlike', dist='close', body_num=1, cloth='civil')
+    image mi dontlike modern far = ds_define_sprite('mi', 'dontlike', dist='far', body_num=1, cloth='civil')
+
+    image mi grin modern = ds_define_sprite('mi', 'grin', body_num=2, cloth='civil')
+    image mi grin modern close = ds_define_sprite('mi', 'grin', dist='close', body_num=2, cloth='civil')
+    image mi grin modern far = ds_define_sprite('mi', 'grin', dist='far', body_num=2, cloth='civil')
+
+    image mi happy modern = ds_define_sprite('mi', 'happy', body_num=2, cloth='civil')
+    image mi happy modern close = ds_define_sprite('mi', 'happy', dist='close', body_num=2, cloth='civil')
+    image mi happy modern far = ds_define_sprite('mi', 'happy', dist='far', body_num=2, cloth='civil')
+
+    image mi laugh modern = ds_define_sprite('mi', 'laugh', body_num=1, cloth='civil')
+    image mi laugh modern close = ds_define_sprite('mi', 'laugh', dist='close', body_num=1, cloth='civil')
+    image mi laugh modern far = ds_define_sprite('mi', 'laugh', dist='far', body_num=1, cloth='civil')
+
+    image mi normal modern = ds_define_sprite('mi', 'normal', body_num=3, cloth='civil')
+    image mi normal modern close = ds_define_sprite('mi', 'normal', dist='close', body_num=3, cloth='civil')
+    image mi normal modern far = ds_define_sprite('mi', 'normal', dist='far', body_num=3, cloth='civil')
+
+    image mi rage modern = ds_define_sprite('mi', 'rage', body_num=3, cloth='civil')
+    image mi rage modern close = ds_define_sprite('mi', 'rage', dist='close', body_num=3, cloth='civil')
+    image mi rage modern far = ds_define_sprite('mi', 'rage', dist='far', body_num=3, cloth='civil')
+
+    image mi sad modern = ds_define_sprite('mi', 'sad', body_num=2, cloth='civil')
+    image mi sad modern close = ds_define_sprite('mi', 'sad', dist='close', body_num=2, cloth='civil')
+    image mi sad modern far = ds_define_sprite('mi', 'sad', dist='far', body_num=2, cloth='civil')
+
+    image mi scared modern = ds_define_sprite('mi', 'scared', body_num=1, cloth='civil')
+    image mi scared modern close = ds_define_sprite('mi', 'scared', dist='close', body_num=1, cloth='civil')
+    image mi scared modern far = ds_define_sprite('mi', 'scared', dist='far', body_num=1, cloth='civil')
+
+    image mi serious modern = ds_define_sprite('mi', 'serious', body_num=3, cloth='civil')
+    image mi serious modern close = ds_define_sprite('mi', 'serious', dist='close', body_num=3, cloth='civil')
+    image mi serious modern far = ds_define_sprite('mi', 'serious', dist='far', body_num=3, cloth='civil')
+
+    image mi shocked modern = ds_define_sprite('mi', 'shocked', body_num=1, cloth='civil')
+    image mi shocked modern close = ds_define_sprite('mi', 'shocked', dist='close', body_num=1, cloth='civil')
+    image mi shocked modern far = ds_define_sprite('mi', 'shocked', dist='far', body_num=1, cloth='civil')
+
+    image mi shy modern = ds_define_sprite('mi', 'shy', body_num=1, cloth='civil')
+    image mi shy modern close = ds_define_sprite('mi', 'shy', dist='close', body_num=1, cloth='civil')
+    image mi shy modern far = ds_define_sprite('mi', 'shy', dist='far', body_num=1, cloth='civil')
+
+    image mi smile modern = ds_define_sprite('mi', 'smile', body_num=2, cloth='civil')
+    image mi smile modern close = ds_define_sprite('mi', 'smile', dist='close', body_num=2, cloth='civil')
+    image mi smile modern far = ds_define_sprite('mi', 'smile', dist='far', body_num=2, cloth='civil')
+
+    image mi surprise modern = ds_define_sprite('mi', 'surprise', body_num=1, cloth='civil')
+    image mi surprise modern close = ds_define_sprite('mi', 'surprise', dist='close', body_num=1, cloth='civil')
+    image mi surprise modern far = ds_define_sprite('mi', 'surprise', dist='far', body_num=1, cloth='civil')
+
+    image mi upset modern = ds_define_sprite('mi', 'upset', body_num=3, cloth='civil')
+    image mi upset modern close = ds_define_sprite('mi', 'upset', dist='close', body_num=3, cloth='civil')
+    image mi upset modern far = ds_define_sprite('mi', 'upset', dist='far', body_num=3, cloth='civil')
+
     # ОД
     image mt angry night = ds_define_sprite('mt', 'angry', body_num=2, cloth='nightdress')
     image mt angry night close = ds_define_sprite('mt', 'angry', dist='close', body_num=2, cloth='nightdress')
@@ -1602,7 +1741,7 @@ init:
     image mz amazed naked close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close')
     image mz amazed glasses naked close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', acc='glasses')
     
-    image mz amazed pioneer  = ds_define_sprite('mz', 'amazed', body_num=1, dist='', cloth='pioneer')
+    image mz amazed pioneer  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pioneer')
     image mz amazed glasses pioneer = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pioneer', acc='glasses')
     image mz amazed pioneer far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pioneer')
     image mz amazed glasses pioneer far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pioneer', acc='glasses')
@@ -1616,7 +1755,7 @@ init:
     image mz amazed swimsuit close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='swimsuit')
     image mz amazed glasses swimsuit close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz amazed pullover  = ds_define_sprite('mz', 'amazed', body_num=1, dist='', cloth='pullover')
+    image mz amazed pullover  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pullover')
     image mz amazed glasses pullover = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pullover', acc='glasses')
     image mz amazed pullover far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pullover')
     image mz amazed glasses pullover far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1630,21 +1769,21 @@ init:
     image mz bukal naked close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close')
     image mz bukal glasses naked close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', acc='glasses')
     
-    image mz bukal pioneer  = ds_define_sprite('mz', 'bukal', body_num=1, dist='', cloth='pioneer')
+    image mz bukal pioneer  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pioneer')
     image mz bukal glasses pioneer = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pioneer', acc='glasses')
     image mz bukal pioneer far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pioneer')
     image mz bukal glasses pioneer far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz bukal pioneer close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pioneer')
     image mz bukal glasses pioneer close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz bukal swimsuit  = ds_define_sprite('mz', 'bukal', body_num=1, dist='', cloth='swimsuit')
+    image mz bukal swimsuit  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='swimsuit')
     image mz bukal glasses swimsuit = ds_define_sprite('mz', 'bukal', body_num=1, cloth='swimsuit', acc='glasses')
     image mz bukal swimsuit far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='swimsuit')
     image mz bukal glasses swimsuit far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz bukal swimsuit close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='swimsuit')
     image mz bukal glasses swimsuit close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz bukal pullover  = ds_define_sprite('mz', 'bukal', body_num=1, dist='', cloth='pullover')
+    image mz bukal pullover  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pullover')
     image mz bukal glasses pullover = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pullover', acc='glasses')
     image mz bukal pullover far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pullover')
     image mz bukal glasses pullover far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1658,21 +1797,21 @@ init:
     image mz laugh naked close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close')
     image mz laugh glasses naked close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', acc='glasses')
     
-    image mz laugh pioneer  = ds_define_sprite('mz', 'laugh', body_num=1, dist='', cloth='pioneer')
+    image mz laugh pioneer  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pioneer')
     image mz laugh glasses pioneer = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pioneer', acc='glasses')
     image mz laugh pioneer far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pioneer')
     image mz laugh glasses pioneer far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz laugh pioneer close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pioneer')
     image mz laugh glasses pioneer close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz laugh swimsuit  = ds_define_sprite('mz', 'laugh', body_num=1, dist='', cloth='swimsuit')
+    image mz laugh swimsuit  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='swimsuit')
     image mz laugh glasses swimsuit = ds_define_sprite('mz', 'laugh', body_num=1, cloth='swimsuit', acc='glasses')
     image mz laugh swimsuit far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='swimsuit')
     image mz laugh glasses swimsuit far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz laugh swimsuit close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='swimsuit')
     image mz laugh glasses swimsuit close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz laugh pullover  = ds_define_sprite('mz', 'laugh', body_num=1, dist='', cloth='pullover')
+    image mz laugh pullover  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pullover')
     image mz laugh glasses pullover = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pullover', acc='glasses')
     image mz laugh pullover far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pullover')
     image mz laugh glasses pullover far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1686,21 +1825,21 @@ init:
     image mz normal naked close = ds_define_sprite('mz', 'normal', body_num=1, dist='close')
     image mz normal glasses naked close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', acc='glasses')
     
-    image mz normal pioneer  = ds_define_sprite('mz', 'normal', body_num=1, dist='', cloth='pioneer')
+    image mz normal pioneer  = ds_define_sprite('mz', 'normal', body_num=1, cloth='pioneer')
     image mz normal glasses pioneer = ds_define_sprite('mz', 'normal', body_num=1, cloth='pioneer', acc='glasses')
     image mz normal pioneer far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pioneer')
     image mz normal glasses pioneer far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz normal pioneer close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pioneer')
     image mz normal glasses pioneer close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz normal swimsuit  = ds_define_sprite('mz', 'normal', body_num=1, dist='', cloth='swimsuit')
+    image mz normal swimsuit  = ds_define_sprite('mz', 'normal', body_num=1, cloth='swimsuit')
     image mz normal glasses swimsuit = ds_define_sprite('mz', 'normal', body_num=1, cloth='swimsuit', acc='glasses')
     image mz normal swimsuit far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='swimsuit')
     image mz normal glasses swimsuit far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz normal swimsuit close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='swimsuit')
     image mz normal glasses swimsuit close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz normal pullover  = ds_define_sprite('mz', 'normal', body_num=1, dist='', cloth='pullover')
+    image mz normal pullover  = ds_define_sprite('mz', 'normal', body_num=1, cloth='pullover')
     image mz normal glasses pullover = ds_define_sprite('mz', 'normal', body_num=1, cloth='pullover', acc='glasses')
     image mz normal pullover far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pullover')
     image mz normal glasses pullover far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1714,21 +1853,21 @@ init:
     image mz fun naked close = ds_define_sprite('mz', 'fun', body_num=1, dist='close')
     image mz fun glasses naked close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', acc='glasses')
     
-    image mz fun pioneer  = ds_define_sprite('mz', 'fun', body_num=1, dist='', cloth='pioneer')
+    image mz fun pioneer  = ds_define_sprite('mz', 'fun', body_num=1, cloth='pioneer')
     image mz fun glasses pioneer = ds_define_sprite('mz', 'fun', body_num=1, cloth='pioneer', acc='glasses')
     image mz fun pioneer far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pioneer')
     image mz fun glasses pioneer far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz fun pioneer close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pioneer')
     image mz fun glasses pioneer close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz fun swimsuit  = ds_define_sprite('mz', 'fun', body_num=1, dist='', cloth='swimsuit')
+    image mz fun swimsuit  = ds_define_sprite('mz', 'fun', body_num=1, cloth='swimsuit')
     image mz fun glasses swimsuit = ds_define_sprite('mz', 'fun', body_num=1, cloth='swimsuit', acc='glasses')
     image mz fun swimsuit far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='swimsuit')
     image mz fun glasses swimsuit far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz fun swimsuit close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='swimsuit')
     image mz fun glasses swimsuit close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz fun pullover  = ds_define_sprite('mz', 'fun', body_num=1, dist='', cloth='pullover')
+    image mz fun pullover  = ds_define_sprite('mz', 'fun', body_num=1, cloth='pullover')
     image mz fun glasses pullover = ds_define_sprite('mz', 'fun', body_num=1, cloth='pullover', acc='glasses')
     image mz fun pullover far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pullover')
     image mz fun glasses pullover far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1742,21 +1881,21 @@ init:
     image mz sad naked close = ds_define_sprite('mz', 'sad', body_num=1, dist='close')
     image mz sad glasses naked close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', acc='glasses')
     
-    image mz sad pioneer  = ds_define_sprite('mz', 'sad', body_num=1, dist='', cloth='pioneer')
+    image mz sad pioneer  = ds_define_sprite('mz', 'sad', body_num=1, cloth='pioneer')
     image mz sad glasses pioneer = ds_define_sprite('mz', 'sad', body_num=1, cloth='pioneer', acc='glasses')
     image mz sad pioneer far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pioneer')
     image mz sad glasses pioneer far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz sad pioneer close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pioneer')
     image mz sad glasses pioneer close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz sad swimsuit  = ds_define_sprite('mz', 'sad', body_num=1, dist='', cloth='swimsuit')
+    image mz sad swimsuit  = ds_define_sprite('mz', 'sad', body_num=1, cloth='swimsuit')
     image mz sad glasses swimsuit = ds_define_sprite('mz', 'sad', body_num=1, cloth='swimsuit', acc='glasses')
     image mz sad swimsuit far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='swimsuit')
     image mz sad glasses swimsuit far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz sad swimsuit close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='swimsuit')
     image mz sad glasses swimsuit close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz sad pullover  = ds_define_sprite('mz', 'sad', body_num=1, dist='', cloth='pullover')
+    image mz sad pullover  = ds_define_sprite('mz', 'sad', body_num=1, cloth='pullover')
     image mz sad glasses pullover = ds_define_sprite('mz', 'sad', body_num=1, cloth='pullover', acc='glasses')
     image mz sad pullover far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pullover')
     image mz sad glasses pullover far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1770,21 +1909,21 @@ init:
     image mz hope naked close = ds_define_sprite('mz', 'hope', body_num=1, dist='close')
     image mz hope glasses naked close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', acc='glasses')
     
-    image mz hope pioneer  = ds_define_sprite('mz', 'hope', body_num=1, dist='', cloth='pioneer')
+    image mz hope pioneer  = ds_define_sprite('mz', 'hope', body_num=1, cloth='pioneer')
     image mz hope glasses pioneer = ds_define_sprite('mz', 'hope', body_num=1, cloth='pioneer', acc='glasses')
     image mz hope pioneer far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pioneer')
     image mz hope glasses pioneer far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz hope pioneer close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pioneer')
     image mz hope glasses pioneer close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz hope swimsuit  = ds_define_sprite('mz', 'hope', body_num=1, dist='', cloth='swimsuit')
+    image mz hope swimsuit  = ds_define_sprite('mz', 'hope', body_num=1, cloth='swimsuit')
     image mz hope glasses swimsuit = ds_define_sprite('mz', 'hope', body_num=1, cloth='swimsuit', acc='glasses')
     image mz hope swimsuit far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='swimsuit')
     image mz hope glasses swimsuit far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz hope swimsuit close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='swimsuit')
     image mz hope glasses swimsuit close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz hope pullover  = ds_define_sprite('mz', 'hope', body_num=1, dist='', cloth='pullover')
+    image mz hope pullover  = ds_define_sprite('mz', 'hope', body_num=1, cloth='pullover')
     image mz hope glasses pullover = ds_define_sprite('mz', 'hope', body_num=1, cloth='pullover', acc='glasses')
     image mz hope pullover far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pullover')
     image mz hope glasses pullover far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1798,21 +1937,21 @@ init:
     image mz sceptic naked close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close')
     image mz sceptic glasses naked close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', acc='glasses')
     
-    image mz sceptic pioneer  = ds_define_sprite('mz', 'sceptic', body_num=1, dist='', cloth='pioneer')
+    image mz sceptic pioneer  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pioneer')
     image mz sceptic glasses pioneer = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pioneer', acc='glasses')
     image mz sceptic pioneer far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pioneer')
     image mz sceptic glasses pioneer far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pioneer', acc='glasses')
     image mz sceptic pioneer close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pioneer')
     image mz sceptic glasses pioneer close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz sceptic swimsuit  = ds_define_sprite('mz', 'sceptic', body_num=1, dist='', cloth='swimsuit')
+    image mz sceptic swimsuit  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='swimsuit')
     image mz sceptic glasses swimsuit = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='swimsuit', acc='glasses')
     image mz sceptic swimsuit far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='swimsuit')
     image mz sceptic glasses swimsuit far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
     image mz sceptic swimsuit close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='swimsuit')
     image mz sceptic glasses swimsuit close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz sceptic pullover  = ds_define_sprite('mz', 'sceptic', body_num=1, dist='', cloth='pullover')
+    image mz sceptic pullover  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pullover')
     image mz sceptic glasses pullover = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pullover', acc='glasses')
     image mz sceptic pullover far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pullover')
     image mz sceptic glasses pullover far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pullover', acc='glasses')
@@ -1826,21 +1965,21 @@ init:
     image mz angry naked close = ds_define_sprite('mz', 'angry', body_num=2, dist='close')
     image mz angry glasses naked close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', acc='glasses')
     
-    image mz angry pioneer  = ds_define_sprite('mz', 'angry', body_num=2, dist='', cloth='pioneer')
+    image mz angry pioneer  = ds_define_sprite('mz', 'angry', body_num=2, cloth='pioneer')
     image mz angry glasses pioneer = ds_define_sprite('mz', 'angry', body_num=2, cloth='pioneer', acc='glasses')
     image mz angry pioneer far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pioneer')
     image mz angry glasses pioneer far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
     image mz angry pioneer close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pioneer')
     image mz angry glasses pioneer close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz angry swimsuit  = ds_define_sprite('mz', 'angry', body_num=2, dist='', cloth='swimsuit')
+    image mz angry swimsuit  = ds_define_sprite('mz', 'angry', body_num=2, cloth='swimsuit')
     image mz angry glasses swimsuit = ds_define_sprite('mz', 'angry', body_num=2, cloth='swimsuit', acc='glasses')
     image mz angry swimsuit far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='swimsuit')
     image mz angry glasses swimsuit far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
     image mz angry swimsuit close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='swimsuit')
     image mz angry glasses swimsuit close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz angry pullover  = ds_define_sprite('mz', 'angry', body_num=2, dist='', cloth='pullover')
+    image mz angry pullover  = ds_define_sprite('mz', 'angry', body_num=2, cloth='pullover')
     image mz angry glasses pullover = ds_define_sprite('mz', 'angry', body_num=2, cloth='pullover', acc='glasses')
     image mz angry pullover far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pullover')
     image mz angry glasses pullover far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pullover', acc='glasses')
@@ -1854,21 +1993,21 @@ init:
     image mz cry naked close = ds_define_sprite('mz', 'cry', body_num=2, dist='close')
     image mz cry glasses naked close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', acc='glasses')
     
-    image mz cry pioneer  = ds_define_sprite('mz', 'cry', body_num=2, dist='', cloth='pioneer')
+    image mz cry pioneer  = ds_define_sprite('mz', 'cry', body_num=2, cloth='pioneer')
     image mz cry glasses pioneer = ds_define_sprite('mz', 'cry', body_num=2, cloth='pioneer', acc='glasses')
     image mz cry pioneer far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pioneer')
     image mz cry glasses pioneer far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
     image mz cry pioneer close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pioneer')
     image mz cry glasses pioneer close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz cry swimsuit  = ds_define_sprite('mz', 'cry', body_num=2, dist='', cloth='swimsuit')
+    image mz cry swimsuit  = ds_define_sprite('mz', 'cry', body_num=2, cloth='swimsuit')
     image mz cry glasses swimsuit = ds_define_sprite('mz', 'cry', body_num=2, cloth='swimsuit', acc='glasses')
     image mz cry swimsuit far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='swimsuit')
     image mz cry glasses swimsuit far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
     image mz cry swimsuit close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='swimsuit')
     image mz cry glasses swimsuit close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz cry pullover  = ds_define_sprite('mz', 'cry', body_num=2, dist='', cloth='pullover')
+    image mz cry pullover  = ds_define_sprite('mz', 'cry', body_num=2, cloth='pullover')
     image mz cry glasses pullover = ds_define_sprite('mz', 'cry', body_num=2, cloth='pullover', acc='glasses')
     image mz cry pullover far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pullover')
     image mz cry glasses pullover far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pullover', acc='glasses')
@@ -1882,21 +2021,21 @@ init:
     image mz shyangry naked close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close')
     image mz shyangry glasses naked close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', acc='glasses')
     
-    image mz shyangry pioneer  = ds_define_sprite('mz', 'shyangry', body_num=2, dist='', cloth='pioneer')
+    image mz shyangry pioneer  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pioneer')
     image mz shyangry glasses pioneer = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pioneer', acc='glasses')
     image mz shyangry pioneer far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pioneer')
     image mz shyangry glasses pioneer far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
     image mz shyangry pioneer close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pioneer')
     image mz shyangry glasses pioneer close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz shyangry swimsuit  = ds_define_sprite('mz', 'shyangry', body_num=2, dist='', cloth='swimsuit')
+    image mz shyangry swimsuit  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='swimsuit')
     image mz shyangry glasses swimsuit = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='swimsuit', acc='glasses')
     image mz shyangry swimsuit far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='swimsuit')
     image mz shyangry glasses swimsuit far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
     image mz shyangry swimsuit close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='swimsuit')
     image mz shyangry glasses swimsuit close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz shyangry pullover  = ds_define_sprite('mz', 'shyangry', body_num=2, dist='', cloth='pullover')
+    image mz shyangry pullover  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pullover')
     image mz shyangry glasses pullover = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pullover', acc='glasses')
     image mz shyangry pullover far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pullover')
     image mz shyangry glasses pullover far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pullover', acc='glasses')
@@ -1910,21 +2049,21 @@ init:
     image mz rage naked close = ds_define_sprite('mz', 'rage', body_num=2, dist='close')
     image mz rage glasses naked close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', acc='glasses')
     
-    image mz rage pioneer  = ds_define_sprite('mz', 'rage', body_num=2, dist='', cloth='pioneer')
+    image mz rage pioneer  = ds_define_sprite('mz', 'rage', body_num=2, cloth='pioneer')
     image mz rage glasses pioneer = ds_define_sprite('mz', 'rage', body_num=2, cloth='pioneer', acc='glasses')
     image mz rage pioneer far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pioneer')
     image mz rage glasses pioneer far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pioneer', acc='glasses')
     image mz rage pioneer close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pioneer')
     image mz rage glasses pioneer close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz rage swimsuit  = ds_define_sprite('mz', 'rage', body_num=2, dist='', cloth='swimsuit')
+    image mz rage swimsuit  = ds_define_sprite('mz', 'rage', body_num=2, cloth='swimsuit')
     image mz rage glasses swimsuit = ds_define_sprite('mz', 'rage', body_num=2, cloth='swimsuit', acc='glasses')
     image mz rage swimsuit far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='swimsuit')
     image mz rage glasses swimsuit far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
     image mz rage swimsuit close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='swimsuit')
     image mz rage glasses swimsuit close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz rage pullover  = ds_define_sprite('mz', 'rage', body_num=2, dist='', cloth='pullover')
+    image mz rage pullover  = ds_define_sprite('mz', 'rage', body_num=2, cloth='pullover')
     image mz rage glasses pullover = ds_define_sprite('mz', 'rage', body_num=2, cloth='pullover', acc='glasses')
     image mz rage pullover far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pullover')
     image mz rage glasses pullover far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pullover', acc='glasses')
@@ -1938,21 +2077,21 @@ init:
     image mz smile naked close = ds_define_sprite('mz', 'smile', body_num=2, dist='close')
     image mz smile glasses naked close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', acc='glasses')
     
-    image mz smile pioneer  = ds_define_sprite('mz', 'smile', body_num=2, dist='', cloth='pioneer')
+    image mz smile pioneer  = ds_define_sprite('mz', 'smile', body_num=2, cloth='pioneer')
     image mz smile glasses pioneer = ds_define_sprite('mz', 'smile', body_num=2, cloth='pioneer', acc='glasses')
     image mz smile pioneer far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pioneer')
     image mz smile glasses pioneer far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pioneer', acc='glasses')
     image mz smile pioneer close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pioneer')
     image mz smile glasses pioneer close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz smile swimsuit  = ds_define_sprite('mz', 'smile', body_num=2, dist='', cloth='swimsuit')
+    image mz smile swimsuit  = ds_define_sprite('mz', 'smile', body_num=2, cloth='swimsuit')
     image mz smile glasses swimsuit = ds_define_sprite('mz', 'smile', body_num=2, cloth='swimsuit', acc='glasses')
     image mz smile swimsuit far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='swimsuit')
     image mz smile glasses swimsuit far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
     image mz smile swimsuit close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='swimsuit')
     image mz smile glasses swimsuit close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz smile pullover  = ds_define_sprite('mz', 'smile', body_num=2, dist='', cloth='pullover')
+    image mz smile pullover  = ds_define_sprite('mz', 'smile', body_num=2, cloth='pullover')
     image mz smile glasses pullover = ds_define_sprite('mz', 'smile', body_num=2, cloth='pullover', acc='glasses')
     image mz smile pullover far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pullover')
     image mz smile glasses pullover far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pullover', acc='glasses')
@@ -1966,21 +2105,21 @@ init:
     image mz confused naked close = ds_define_sprite('mz', 'confused', body_num=3, dist='close')
     image mz confused glasses naked close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', acc='glasses')
     
-    image mz confused pioneer  = ds_define_sprite('mz', 'confused', body_num=3, dist='', cloth='pioneer')
+    image mz confused pioneer  = ds_define_sprite('mz', 'confused', body_num=3, cloth='pioneer')
     image mz confused glasses pioneer = ds_define_sprite('mz', 'confused', body_num=3, cloth='pioneer', acc='glasses')
     image mz confused pioneer far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pioneer')
     image mz confused glasses pioneer far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pioneer', acc='glasses')
     image mz confused pioneer close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pioneer')
     image mz confused glasses pioneer close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz confused swimsuit  = ds_define_sprite('mz', 'confused', body_num=3, dist='', cloth='swimsuit')
+    image mz confused swimsuit  = ds_define_sprite('mz', 'confused', body_num=3, cloth='swimsuit')
     image mz confused glasses swimsuit = ds_define_sprite('mz', 'confused', body_num=3, cloth='swimsuit', acc='glasses')
     image mz confused swimsuit far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='swimsuit')
     image mz confused glasses swimsuit far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
     image mz confused swimsuit close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='swimsuit')
     image mz confused glasses swimsuit close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz confused pullover  = ds_define_sprite('mz', 'confused', body_num=3, dist='', cloth='pullover')
+    image mz confused pullover  = ds_define_sprite('mz', 'confused', body_num=3, cloth='pullover')
     image mz confused glasses pullover = ds_define_sprite('mz', 'confused', body_num=3, cloth='pullover', acc='glasses')
     image mz confused pullover far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pullover')
     image mz confused glasses pullover far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pullover', acc='glasses')
@@ -1994,21 +2133,21 @@ init:
     image mz shy naked close = ds_define_sprite('mz', 'shy', body_num=3, dist='close')
     image mz shy glasses naked close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', acc='glasses')
     
-    image mz shy pioneer  = ds_define_sprite('mz', 'shy', body_num=3, dist='', cloth='pioneer')
+    image mz shy pioneer  = ds_define_sprite('mz', 'shy', body_num=3, cloth='pioneer')
     image mz shy glasses pioneer = ds_define_sprite('mz', 'shy', body_num=3, cloth='pioneer', acc='glasses')
     image mz shy pioneer far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pioneer')
     image mz shy glasses pioneer far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pioneer', acc='glasses')
     image mz shy pioneer close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pioneer')
     image mz shy glasses pioneer close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz shy swimsuit  = ds_define_sprite('mz', 'shy', body_num=3, dist='', cloth='swimsuit')
+    image mz shy swimsuit  = ds_define_sprite('mz', 'shy', body_num=3, cloth='swimsuit')
     image mz shy glasses swimsuit = ds_define_sprite('mz', 'shy', body_num=3, cloth='swimsuit', acc='glasses')
     image mz shy swimsuit far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='swimsuit')
     image mz shy glasses swimsuit far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
     image mz shy swimsuit close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='swimsuit')
     image mz shy glasses swimsuit close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz shy pullover  = ds_define_sprite('mz', 'shy', body_num=3, dist='', cloth='pullover')
+    image mz shy pullover  = ds_define_sprite('mz', 'shy', body_num=3, cloth='pullover')
     image mz shy glasses pullover = ds_define_sprite('mz', 'shy', body_num=3, cloth='pullover', acc='glasses')
     image mz shy pullover far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pullover')
     image mz shy glasses pullover far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pullover', acc='glasses')
@@ -2022,31 +2161,203 @@ init:
     image mz excitement naked close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close')
     image mz excitement glasses naked close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', acc='glasses')
     
-    image mz excitement pioneer  = ds_define_sprite('mz', 'excitement', body_num=3, dist='', cloth='pioneer')
+    image mz excitement pioneer  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pioneer')
     image mz excitement glasses pioneer = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pioneer', acc='glasses')
     image mz excitement pioneer far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pioneer')
     image mz excitement glasses pioneer far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pioneer', acc='glasses')
     image mz excitement pioneer close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pioneer')
     image mz excitement glasses pioneer close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pioneer', acc='glasses')
     
-    image mz excitement swimsuit  = ds_define_sprite('mz', 'excitement', body_num=3, dist='', cloth='swimsuit')
+    image mz excitement swimsuit  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='swimsuit')
     image mz excitement glasses swimsuit = ds_define_sprite('mz', 'excitement', body_num=3, cloth='swimsuit', acc='glasses')
     image mz excitement swimsuit far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='swimsuit')
     image mz excitement glasses swimsuit far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
     image mz excitement swimsuit close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='swimsuit')
     image mz excitement glasses swimsuit close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
     
-    image mz excitement pullover  = ds_define_sprite('mz', 'excitement', body_num=3, dist='', cloth='pullover')
+    image mz excitement pullover  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pullover')
     image mz excitement glasses pullover = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pullover', acc='glasses')
     image mz excitement pullover far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pullover')
     image mz excitement glasses pullover far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pullover', acc='glasses')
     image mz excitement pullover close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pullover')
     image mz excitement glasses pullover close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pullover', acc='glasses')
     
-    image mz amazed casual  = ds_define_sprite('mz', 'amazed', body_num=1, dist='', cloth='casual')
-    image mz bukal casual  = ds_define_sprite('mz', 'bukal', body_num=1, dist='', cloth='casual')
-    image mz normal casual  = ds_define_sprite('mz', 'normal', body_num=1, dist='', cloth='casual')
-    image mz fun casual  = ds_define_sprite('mz', 'fun', body_num=1, dist='', cloth='casual')
+    image mz amazed casual  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='casual')
+    image mz bukal casual  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='casual')
+    image mz normal casual  = ds_define_sprite('mz', 'normal', body_num=1, cloth='casual')
+    image mz fun casual  = ds_define_sprite('mz', 'fun', body_num=1, cloth='casual')
+
+    # Шурик
+
+    image sh laugh towel = ds_define_sprite('sh', 'laugh', body_num=1)
+    image sh laugh towel far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far')
+    image sh laugh towel close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close')
+
+    image sh scared towel = ds_define_sprite('sh', 'scared', body_num=1)
+    image sh scared towel far = ds_define_sprite('sh', 'scared', body_num=1, dist='far')
+    image sh scared towel close = ds_define_sprite('sh', 'scared', body_num=1, dist='close')
+
+    image sh smile towel = ds_define_sprite('sh', 'smile', body_num=1)
+    image sh smile towel far = ds_define_sprite('sh', 'smile', body_num=1, dist='far')
+    image sh smile towel close = ds_define_sprite('sh', 'smile', body_num=1, dist='close')
+
+    image sh upset towel = ds_define_sprite('sh', 'upset', body_num=1)
+    image sh upset towel far = ds_define_sprite('sh', 'upset', body_num=1, dist='far')
+    image sh upset towel close = ds_define_sprite('sh', 'upset', body_num=1, dist='close')
+
+    image sh cry towel = ds_define_sprite('sh', 'cry', body_num=2)
+    image sh cry towel far = ds_define_sprite('sh', 'cry', body_num=2, dist='far')
+    image sh cry towel close = ds_define_sprite('sh', 'cry', body_num=2, dist='close')
+
+    image sh mad_smile towel = ds_define_sprite('sh', 'normal_smile', body_num=2)
+    image sh mad_smile towel far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far')
+    image sh mad_smile towel close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close')
+
+    image sh rage towel = ds_define_sprite('sh', 'rage', body_num=2)
+    image sh rage towel far = ds_define_sprite('sh', 'rage', body_num=2, dist='far')
+    image sh rage towel close = ds_define_sprite('sh', 'rage', body_num=2, dist='close')
+
+    image sh normal towel = ds_define_sprite('sh', 'normal', body_num=3)
+    image sh normal towel far = ds_define_sprite('sh', 'normal', body_num=3, dist='far')
+    image sh normal towel close = ds_define_sprite('sh', 'normal', body_num=3, dist='close')
+
+    image sh serious towel = ds_define_sprite('sh', 'serious', body_num=3)
+    image sh serious towel far = ds_define_sprite('sh', 'serious', body_num=3, dist='far')
+    image sh serious towel close = ds_define_sprite('sh', 'serious', body_num=3, dist='close')
+
+    image sh surprise towel = ds_define_sprite('sh', 'surprise', body_num=3)
+    image sh surprise towel far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far')
+    image sh surprise towel close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close')
+
+    image sh laugh bathrobe = ds_define_sprite('sh', 'laugh', body_num=1, cloth='bathrobe')
+    image sh laugh bathrobe far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far', cloth='bathrobe')
+    image sh laugh bathrobe close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close', cloth='bathrobe')
+
+    image sh scared bathrobe = ds_define_sprite('sh', 'scared', body_num=1, cloth='bathrobe')
+    image sh scared bathrobe far = ds_define_sprite('sh', 'scared', body_num=1, dist='far', cloth='bathrobe')
+    image sh scared bathrobe close = ds_define_sprite('sh', 'scared', body_num=1, dist='close', cloth='bathrobe')
+
+    image sh smile bathrobe = ds_define_sprite('sh', 'smile', body_num=1, cloth='bathrobe')
+    image sh smile bathrobe far = ds_define_sprite('sh', 'smile', body_num=1, dist='far', cloth='bathrobe')
+    image sh smile bathrobe close = ds_define_sprite('sh', 'smile', body_num=1, dist='close', cloth='bathrobe')
+
+    image sh upset bathrobe = ds_define_sprite('sh', 'upset', body_num=1, cloth='bathrobe')
+    image sh upset bathrobe far = ds_define_sprite('sh', 'upset', body_num=1, dist='far', cloth='bathrobe')
+    image sh upset bathrobe close = ds_define_sprite('sh', 'upset', body_num=1, dist='close', cloth='bathrobe')
+
+    image sh cry bathrobe = ds_define_sprite('sh', 'cry', body_num=2, cloth='bathrobe')
+    image sh cry bathrobe far = ds_define_sprite('sh', 'cry', body_num=2, dist='far', cloth='bathrobe')
+    image sh cry bathrobe close = ds_define_sprite('sh', 'cry', body_num=2, dist='close', cloth='bathrobe')
+
+    image sh mad_smile bathrobe = ds_define_sprite('sh', 'normal_smile', body_num=2, cloth='bathrobe')
+    image sh mad_smile bathrobe far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far', cloth='bathrobe')
+    image sh mad_smile bathrobe close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close', cloth='bathrobe')
+
+    image sh rage bathrobe = ds_define_sprite('sh', 'rage', body_num=2, cloth='bathrobe')
+    image sh rage bathrobe far = ds_define_sprite('sh', 'rage', body_num=2, dist='far', cloth='bathrobe')
+    image sh rage bathrobe close = ds_define_sprite('sh', 'rage', body_num=2, dist='close', cloth='bathrobe')
+
+    image sh normal bathrobe = ds_define_sprite('sh', 'normal', body_num=3, cloth='bathrobe')
+    image sh normal bathrobe far = ds_define_sprite('sh', 'normal', body_num=3, dist='far', cloth='bathrobe')
+    image sh normal bathrobe close = ds_define_sprite('sh', 'normal', body_num=3, dist='close', cloth='bathrobe')
+
+    image sh serious bathrobe = ds_define_sprite('sh', 'serious', body_num=3, cloth='bathrobe')
+    image sh serious bathrobe far = ds_define_sprite('sh', 'serious', body_num=3, dist='far', cloth='bathrobe')
+    image sh serious bathrobe close = ds_define_sprite('sh', 'serious', body_num=3, dist='close', cloth='bathrobe')
+
+    image sh surprise bathrobe = ds_define_sprite('sh', 'surprise', body_num=3, cloth='bathrobe')
+    image sh surprise bathrobe far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far', cloth='bathrobe')
+    image sh surprise bathrobe close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close', cloth='bathrobe')
+
+    image sh laugh sport = ds_define_sprite('sh', 'laugh', body_num=1, cloth='shirt')
+    image sh laugh sport far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far', cloth='shirt')
+    image sh laugh sport close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close', cloth='shirt')
+
+    image sh scared sport = ds_define_sprite('sh', 'scared', body_num=1, cloth='shirt')
+    image sh scared sport far = ds_define_sprite('sh', 'scared', body_num=1, dist='far', cloth='shirt')
+    image sh scared sport close = ds_define_sprite('sh', 'scared', body_num=1, dist='close', cloth='shirt')
+
+    image sh smile sport = ds_define_sprite('sh', 'smile', body_num=1, cloth='shirt')
+    image sh smile sport far = ds_define_sprite('sh', 'smile', body_num=1, dist='far', cloth='shirt')
+    image sh smile sport close = ds_define_sprite('sh', 'smile', body_num=1, dist='close', cloth='shirt')
+
+    image sh upset sport = ds_define_sprite('sh', 'upset', body_num=1, cloth='shirt')
+    image sh upset sport far = ds_define_sprite('sh', 'upset', body_num=1, dist='far', cloth='shirt')
+    image sh upset sport close = ds_define_sprite('sh', 'upset', body_num=1, dist='close', cloth='shirt')
+
+    image sh cry sport = ds_define_sprite('sh', 'cry', body_num=2, cloth='shirt')
+    image sh cry sport far = ds_define_sprite('sh', 'cry', body_num=2, dist='far', cloth='shirt')
+    image sh cry sport close = ds_define_sprite('sh', 'cry', body_num=2, dist='close', cloth='shirt')
+
+    image sh mad_smile sport = ds_define_sprite('sh', 'normal_smile', body_num=2, cloth='shirt')
+    image sh mad_smile sport far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far', cloth='shirt')
+    image sh mad_smile sport close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close', cloth='shirt')
+
+    image sh rage sport = ds_define_sprite('sh', 'rage', body_num=2, cloth='shirt')
+    image sh rage sport far = ds_define_sprite('sh', 'rage', body_num=2, dist='far', cloth='shirt')
+    image sh rage sport close = ds_define_sprite('sh', 'rage', body_num=2, dist='close', cloth='shirt')
+
+    image sh normal sport = ds_define_sprite('sh', 'normal', body_num=3, cloth='shirt')
+    image sh normal sport far = ds_define_sprite('sh', 'normal', body_num=3, dist='far', cloth='shirt')
+    image sh normal sport close = ds_define_sprite('sh', 'normal', body_num=3, dist='close', cloth='shirt')
+
+    image sh serious sport = ds_define_sprite('sh', 'serious', body_num=3, cloth='shirt')
+    image sh serious sport far = ds_define_sprite('sh', 'serious', body_num=3, dist='far', cloth='shirt')
+    image sh serious sport close = ds_define_sprite('sh', 'serious', body_num=3, dist='close', cloth='shirt')
+
+    image sh surprise sport = ds_define_sprite('sh', 'surprise', body_num=3, cloth='shirt')
+    image sh surprise sport far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far', cloth='shirt')
+    image sh surprise sport close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close', cloth='shirt')
+
+    # Славя
+
+    image sl angry modern = ds_define_sprite('sl', 'angry', body_num=3, cloth='casual')
+    image sl angry modern close = ds_define_sprite('sl', 'angry', dist='close', body_num=3, cloth='casual')
+    image sl angry modern far = ds_define_sprite('sl', 'angry', dist='far', body_num=3, cloth='casual')
+
+    image sl happy modern = ds_define_sprite('sl', 'happy', body_num=2, cloth='casual')
+    image sl happy modern close = ds_define_sprite('sl', 'happy', dist='close', body_num=2, cloth='casual')
+    image sl happy modern far = ds_define_sprite('sl', 'happy', dist='far', body_num=2, cloth='casual')
+    
+    image sl laugh modern = ds_define_sprite('sl', 'laugh', body_num=2, cloth='casual')
+    image sl laugh modern close = ds_define_sprite('sl', 'laugh', dist='close', body_num=2, cloth='casual')
+    image sl laugh modern far = ds_define_sprite('sl', 'laugh', dist='far', body_num=2, cloth='casual')
+
+    image sl normal modern = ds_define_sprite('sl', 'normal', body_num=1, cloth='casual')
+    image sl normal modern close = ds_define_sprite('sl', 'normal', dist='close', body_num=1, cloth='casual')
+    image sl normal modern far = ds_define_sprite('sl', 'normal', dist='far', body_num=1, cloth='casual')
+
+    image sl sad modern = ds_define_sprite('sl', 'sad', body_num=3, cloth='casual')
+    image sl sad modern close = ds_define_sprite('sl', 'sad', dist='close', body_num=3, cloth='casual')
+    image sl sad modern far = ds_define_sprite('sl', 'sad', dist='far', body_num=3, cloth='casual')
+
+    image sl scared modern = ds_define_sprite('sl', 'scared', body_num=4, cloth='casual')
+    image sl scared modern close = ds_define_sprite('sl', 'scared', dist='close', body_num=4, cloth='casual')
+    image sl scared modern far = ds_define_sprite('sl', 'scared', dist='far', body_num=4, cloth='casual')
+
+    image sl serious modern = ds_define_sprite('sl', 'serious', body_num=1, cloth='casual')
+    image sl serious modern close = ds_define_sprite('sl', 'serious', dist='close', body_num=1, cloth='casual')
+    image sl serious modern far = ds_define_sprite('sl', 'serious', dist='far', body_num=1, cloth='casual')
+
+    image sl shy modern = ds_define_sprite('sl', 'shy', body_num=2, cloth='casual')
+    image sl shy modern close = ds_define_sprite('sl', 'shy', dist='close', body_num=2, cloth='casual')
+    image sl shy modern far = ds_define_sprite('sl', 'shy', dist='far', body_num=2, cloth='casual')
+
+    image sl smile modern = ds_define_sprite('sl', 'smile', body_num=1, cloth='casual')
+    image sl smile modern close = ds_define_sprite('sl', 'smile', dist='close', body_num=1, cloth='casual')
+    image sl smile modern far = ds_define_sprite('sl', 'smile', dist='far', body_num=1, cloth='casual')
+
+    image sl smile2 modern = ds_define_sprite('sl', 'smile2', body_num=2, cloth='casual')
+    image sl smile2 modern close = ds_define_sprite('sl', 'smile2', dist='close', body_num=2, cloth='casual')
+    image sl smile2 modern far = ds_define_sprite('sl', 'smile2', dist='far', body_num=2, cloth='casual')
+
+    image sl surprise modern = ds_define_sprite('sl', 'surprise', body_num=3, cloth='casual')
+    image sl surprise modern close = ds_define_sprite('sl', 'surprise', dist='close', body_num=3, cloth='casual')
+    image sl surprise modern far = ds_define_sprite('sl', 'surprise', dist='far', body_num=3, cloth='casual')
+
+    image sl tender modern = ds_define_sprite('sl', 'tender', body_num=4, cloth='casual')
+    image sl tender modern close = ds_define_sprite('sl', 'tender', dist='close', body_num=4, cloth='casual')
+    image sl tender modern far = ds_define_sprite('sl', 'tender', dist='far', body_num=4, cloth='casual')
 
     # Лена
 
@@ -2284,3 +2595,94 @@ init:
     image morale up = "mods/disco_sovenok/bg/morale_up.png"
     image health restore = "mods/disco_sovenok/bg/health_restore.png"
     image morale restore = "mods/disco_sovenok/bg/morale_restore.png"
+    
+## Документы
+'''
+    image passport dv = im.Composite(
+        (520, 648),
+        (0, 0), "mods/disco_sovenok/sprite/papers/PassportInnerObristan.png",
+        (30, 390), Text("ДВАЧЕВСКАЯ АЛИСА", size=30, color="#000000"),
+        (115, 435), Text("03.04.1972", size=30, color="#000000"),
+        (115, 470), Text("Ж", size=30, color="#000000"),
+        (115, 505), Text("СКАЛ", size=30, color="#000000"),
+        (115, 505), Text("19.01.2009", size=30, color="#000000"),
+        (40, 580), Text("ZUN2C-DER07", size=30, color="#000000"),
+        (335, 430), Image("mods/disco_sovenok/sprite/papers/dv_photo.png")
+    )
+    image passport dv approved = im.Composite(
+        (520, 648),
+        (0, 0), "passport dv",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryGranted.png")
+    )
+    image passport dv denied = im.Composite(
+        (520, 648),
+        (0, 0), "passport dv",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryDenied.png")
+    )
+
+    image passport un = im.Composite(
+        (520, 648),
+        (0, 0), "mods/disco_sovenok/sprite/papers/PassportInnerKolechia.png",
+        (40, 380), Text("УНЫЛОВА ЛЕНА", size=30, color="#000000"),
+        (270, 435), Text("25.09.1972", size=30, color="#000000"),
+        (115, 470), Text("Ж", size=30, color="#000000"),
+        (115, 505), Text("ЗАП. ГРЕШТИН", size=30, color="#000000"),
+        (115, 505), Text("21.12.2013", size=30, color="#000000"),
+        (200, 585), Text("YAN22-IICH0", size=30, color="#000000"),
+        (30, 430), Image("mods/disco_sovenok/sprite/papers/un_photo.png")
+    )
+    image passport un approved = im.Composite(
+        (520, 648),
+        (0, 0), "passport un",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryGranted.png")
+    )
+    image passport un denied = im.Composite(
+        (520, 648),
+        (0, 0), "passport un",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryDenied.png")
+    )
+
+    image passport sl = im.Composite(
+        (520, 648),
+        (0, 0), "mods/disco_sovenok/sprite/papers/PassportInnerRepublia.png",
+        (30, 340), Text("ФЕОКТИСТОВА СЛАВЯНА", size=30, color="#000000"),
+        (100, 395), Text("12.05.1972", size=30, color="#000000"),
+        (100, 430), Text("Ж", size=30, color="#000000"),
+        (100, 460), Text("СТ. ГЛОРИАН", size=30, color="#000000"),
+        (100, 495), Text("29.12.1989", size=30, color="#000000"),
+        (30, 585), Text("B2C07-NAKAA", size=30, color="#000000"),
+        (340, 385), Image("mods/disco_sovenok/sprite/papers/sl_photo.png")
+    )
+    image passport sl approved = im.Composite(
+        (520, 648),
+        (0, 0), "passport sl",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryGranted.png")
+    )
+    image passport sl denied = im.Composite(
+        (520, 648),
+        (0, 0), "passport sl",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryDenied.png")
+    )
+
+    image passport mi = im.Composite(
+        (520, 648),
+        (0, 0), "mods/disco_sovenok/sprite/papers/PassportInnerImpor.png",
+        (30, 335), Text("ХАЦУНЕ МИКУ", size=30, color="#000000"),
+        (270, 390), Text("31.08.1972", size=30, color="#000000"),
+        (270, 430), Text("Ж", size=30, color="#000000"),
+        (270, 460), Text("ЦУНКЕЙДО", size=30, color="#000000"),
+        (270, 495), Text("20.05.2010", size=30, color="#000000"),
+        (195, 580), Text("VOCAL-OID01", size=30, color="#000000"),
+        (40, 385), Image("mods/disco_sovenok/sprite/papers/mi_photo.png")
+    )
+    image passport mi approved = im.Composite(
+        (520, 648),
+        (0, 0), "passport mi",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryGranted.png")
+    )
+    image passport mi denied = im.Composite(
+        (520, 648),
+        (0, 0), "passport mi",
+        (115, 90), Image("mods/disco_sovenok/sprite/papers/EntryDenied.png")
+    )
+'''

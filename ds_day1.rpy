@@ -846,6 +846,8 @@ label ds_day1_inside_camp:
     menu:
         "{check=physical_instrument:11}Ударить в ответ":
             $ ds_beat_dv = True
+            if ds_beat_sl:
+                call ds_achievement('beat_girls')
             $ ds_lp['dv'] -= 3
             if skillcheck('physical_instrument', lvl_up_medium):
                 window show
@@ -1763,6 +1765,8 @@ label ds_day1_inside_camp:
                         hide dv with dissolve
                         "И всё-таки она убегает."
                         $ ds_beat_dv = True
+                        if ds_beat_sl:
+                            call ds_achievement('beat_girls')
                         $ ds_lp['sl'] -= 1
                         $ ds_lp['us'] -= 1
                         $ ds_lp['mi'] -= 1
@@ -3402,6 +3406,8 @@ label ds_day1_caught_dv:
                 $ ds_lp['mt'] -= 1
                 $ ds_karma -= 20
                 $ ds_beat_sl = True
+                if ds_beat_dv:
+                    call ds_achievement('beat_girls')
                 show dv rage pioneer at center with dspr
                 dv "А то тебя сейчас изобью до смерти!"
                 "Алиса бросается к Славе, чтобы помочь ей."
@@ -3535,6 +3541,8 @@ label ds_day1_caught_alone:
                 $ ds_lp['sl'] -= 3
                 $ ds_lp['mt'] -= 1
                 $ ds_beat_sl = True
+                if ds_beat_dv:
+                    call ds_achievement('beat_girls')
                 window hide
                 menu:
                     "Помочь Славе":

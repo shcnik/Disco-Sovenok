@@ -770,6 +770,9 @@ label _show_small_map_ds:
     $ ui.interact()
     jump _show_small_map_ds
 
+label start:
+        show screen dropdown_menu(selectedOption="Foo", btnTexts=["foo", "bar", "baz"])
+
 style ds_check_res_style:
     color "#b5b5b5"
 
@@ -914,7 +917,7 @@ screen ds_game_menu_selector():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.30
-                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_gallery', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_save', transition=moveintop)]
+                action [Hide('ds_preferences', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_gallery', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_save', transition=moveintop)]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -933,7 +936,7 @@ screen ds_game_menu_selector():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.35
-                action [Hide('ds_settings'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save'), With(moveouttop), Show('ds_load'), With(moveintop)]
+                action [Hide('ds_preferences'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save'), With(moveouttop), Show('ds_load'), With(moveintop)]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -952,7 +955,7 @@ screen ds_game_menu_selector():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.40
-                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save', transition=moveouttop), Show('ds_settings')]
+                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Hide('ds_save', transition=moveouttop), Show('ds_preferences')]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -990,7 +993,7 @@ screen ds_game_menu_selector():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.50
-                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Hide('ds_save', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
+                action [Hide('ds_preferences', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Hide('ds_save', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -1065,7 +1068,7 @@ screen ds_main_menu():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.30
-                action [Hide('ds_settings'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_load')]
+                action [Hide('ds_preferences'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_load')]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -1077,14 +1080,14 @@ screen ds_main_menu():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.30
-        showif not renpy.get_screen('ds_settings'):
+        showif not renpy.get_screen('ds_preferences'):
             imagebutton: # Настройки
                 auto "mods/disco_sovenok/gui/menu/settings_%s.png"
                 xanchor 0.0
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.35
-                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_settings')]
+                action [Hide('ds_load'), Hide('ds_achievements'), Hide('ds_gallery'), Show('ds_preferences')]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -1103,7 +1106,7 @@ screen ds_main_menu():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.40
-                action [Hide('ds_settings'), Hide('ds_load'), Hide('ds_gallery'), Show('ds_achievements')]
+                action [Hide('ds_preferences'), Hide('ds_load'), Hide('ds_gallery'), Show('ds_achievements')]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -1122,7 +1125,7 @@ screen ds_main_menu():
                 yanchor 0.5
                 xpos 0.1
                 ypos 0.45
-                action [Hide('ds_settings', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
+                action [Hide('ds_preferences', transition=moveouttop), Hide('ds_achievements', transition=moveouttop), Hide('ds_load', transition=moveouttop), Show('ds_gallery', transition=moveintop)]
         else:
             add "mods/disco_sovenok/gui/menu/selected_base.png":
                 xanchor 0.5
@@ -1140,18 +1143,302 @@ screen ds_main_menu():
             yanchor 0.5
             xpos 0.1
             ypos 0.50
-            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), Confirm(u"Вы действительно хотите выйти в главное меню?", [(Function(ds_screens_diact)), ShowMenu("main_menu")], confirm_selected=True)]
+            action [Hide('ds_preferences'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), Confirm(u"Вы действительно хотите выйти в главное меню?", [(Function(ds_screens_diact)), ShowMenu("main_menu")], confirm_selected=True)]
         imagebutton: # Выход
             auto "mods/disco_sovenok/gui/menu/exit_%s.png"
             xanchor 0.0
             yanchor 0.5
             xpos 0.1
             ypos 0.55
-            action [Hide('ds_settings'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), ShowMenu('quit')]
+            action [Hide('ds_preferences'), Hide('ds_gallery'), Hide('ds_achievements'), Hide('ds_load'), Hide('ds_save'), ShowMenu('quit')]
     
 screen ds_preferences():
-    pass
-
+    frame:
+        background "mods/disco_sovenok/gui/loadsave/loadsave_base.png"
+        yfill True
+        xalign 1.0
+        xoffset -100
+        xmaximum 1100
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
+        fixed:
+            yalign 0.0
+            ymaximum 1000
+            xsize 1100
+            vbox:
+                xminimum 1100
+                fixed:
+                    ymaximum 50
+                    text "Режим экрана":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/decrease_%s.png"
+                            action Preference('display', 'toggle')
+                        if preferences.fullscreen:
+                            text "На весь экран":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                        else:
+                            text "В окне":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/increase_%s.png"
+                            action Preference('display', 'toggle')
+                fixed:
+                    ymaximum 50
+                    text "Размер шрифта":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/decrease_%s.png"
+                            action ToggleField(persistent, 'font_size', true_value='large', false_value='small')
+                        if persistent.font_size == 'large':
+                            text "Большой":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 30
+                        else:
+                            text "Обычный":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/increase_%s.png"
+                            action ToggleField(persistent, 'font_size', true_value='large', false_value='small')
+                fixed:
+                    ymaximum 50
+                    text "Пропускать":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/decrease_%s.png"
+                            action Preference("skip", "toggle")
+                        if preferences.skip_unseen:
+                            text "Всё":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                        else:
+                            text "Виденное":
+                                ysize 50
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                        imagebutton:
+                            auto "mods/disco_sovenok/gui/settings/increase_%s.png"
+                            action Preference("skip", "toggle")
+                fixed:
+                    ymaximum 50
+                    text "Продолжать пропуск после выбора":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected (preferences.skip_after_choices)
+                        action SelectedIf(Preference('after choices', 'toggle'))
+                fixed:
+                    ymaximum 50
+                    text "Автопереход":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected (preferences.text_cps != 0)
+                        action SelectedIf(Preference('auto-forward', 'toggle'))
+                fixed:
+                    ymaximum 50
+                    text "Время автоперехода":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    showif preferences.afm_enable :
+                        hbox:
+                            ysize 50
+                            xanchor 0.5
+                            xpos 0.75
+                            bar:
+                                xmaximum 250
+                                value Preference('auto-forward time')
+                                base_bar "mods/disco_sovenok/gui/settings/bar_base.png"
+                                thumb "mods/disco_sovenok/gui/settings/bar_thumb.png"
+                fixed:
+                    ymaximum 50
+                    text "Cкорость показа текста":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        bar:
+                            xmaximum 250
+                            value Preference('text speed')
+                            base_bar "mods/disco_sovenok/gui/settings/bar_base.png"
+                            thumb "mods/disco_sovenok/gui/settings/bar_thumb.png"
+                            thumb_offset 10
+                null height 50
+                fixed:
+                    ymaximum 50
+                    text "Громкость музыки":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        bar:
+                            xmaximum 250
+                            value Preference('music volume')
+                            base_bar "mods/disco_sovenok/gui/settings/bar_base.png"
+                            thumb "mods/disco_sovenok/gui/settings/bar_thumb.png"
+                            thumb_offset 10
+                fixed:
+                    ymaximum 50
+                    text "Громкость звуков":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        bar:
+                            xmaximum 250
+                            value Preference('sound volume')
+                            base_bar "mods/disco_sovenok/gui/settings/bar_base.png"
+                            thumb "mods/disco_sovenok/gui/settings/bar_thumb.png"
+                            thumb_offset 10
+                fixed:
+                    ymaximum 50
+                    text "Громкость эмбиента":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    hbox:
+                        ysize 50
+                        xanchor 0.5
+                        xpos 0.75
+                        bar:
+                            xmaximum 250
+                            value Preference('voice volume')
+                            base_bar "mods/disco_sovenok/gui/settings/bar_base.png"
+                            thumb "mods/disco_sovenok/gui/settings/bar_thumb.png"
+                            thumb_offset 10
+                null height 50
+                fixed:
+                    ymaximum 50
+                    text "Заменять интерфейс при запуске":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected persistent.ds_settings['replace_interface']
+                        action SelectedIf(ToggleDict('persistent.ds_settings', 'replace_interface'))
+                fixed:
+                    ymaximum 50
+                    text "Показывать другие сохранения":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected persistent.ds_settings['show_other_saves']
+                        action SelectedIf(ToggleDict('persistent.ds_settings', 'show_other_saves'))
+                null height 50
+                fixed:
+                    ymaximum 50
+                    text "Хентай-содержимое":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected persistent.ds_settings['hentai']
+                        action SelectedIf(ToggleDict('persistent.ds_settings', 'hentai'))
+                fixed:
+                    ymaximum 50
+                    text "Нецензурная лексика":
+                        font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        color "#ffffff"
+                        size 30
+                        xalign 0.0
+                        xoffset 20
+                    imagebutton:
+                        auto "mods/disco_sovenok/gui/settings/checkbox_%s.png"
+                        xanchor 0.5
+                        xpos 0.75
+                        selected persistent.ds_settings['obscene']
+                        action SelectedIf(ToggleDict('persistent.ds_settings', 'obscene'))
 
 screen ds_load():
     default cur_slot = (0, 0)
@@ -1412,7 +1699,63 @@ label ds_gallery_show_images(imglist=[]):
     return
 
 screen ds_achievements():
-    pass
+    python:
+        ACHIEVEMENTS = {
+            'gen': ['preterm', 'bus_crash', 'beat_girls', 'know_history', 'had_sex', 'us_gone', 'mi_rape', 'arstotzka', 'electrocution'],
+            'dv': [],
+            'un': [],
+            'sl': [],
+            'us': ['us_escape'],
+            'mi': [],
+            'mt': [],
+            'el': [],
+            'mz': [],
+            'ya': [],
+            'cs': [],
+            'oth': []
+        }
+        ACH_CLASSES = ['gen', 'dv', 'un', 'sl', 'us', 'mi', 'mt', 'el', 'mz', 'ya', 'cs', 'oth']
+    default cur_class = None
+    frame:
+        background "mods/disco_sovenok/gui/gallery/gallery_base.png"
+        yfill True
+        xalign 1.0
+        xoffset -200
+        xmaximum 1000
+        at transform:
+            on show:
+                yoffset -1080
+                linear 0.1 yoffset 0
+            on hide:
+                yoffset 0
+                linear 0.1 yoffset -1080
+        vbox:
+            xalign 0.0
+            xoffset 10
+            for cl in ACH_CLASSES:
+                imagebutton:
+                    auto "mods/disco_sovenok/gui/ach/"+cl+"_%s.png"
+                    xalign 0.0
+                    action SelectedIf(SetScreenVariable('cur_class', cl))
+        if cur_class != None:
+            vbox:
+                xalign 1.0
+                for ach in ACHIEVEMENTS[cur_class]:
+                    if persistent.ds_achievements[ach]:
+                        add "mods/disco_sovenok/gui/ach/"+cur_class+"/"+ach+".png":
+                            xalign 1.0
+                            xoffset -100
+                    else:
+                        add "mods/disco_sovenok/gui/ach/locked.png":
+                            xalign 1.0
+                            xoffset -100
+        imagebutton:
+            auto "mods/disco_sovenok/gui/ach/reset_%s.png"
+            xalign 1.0
+            yalign 1.0
+            xoffset -10
+            action Confirm("Вы уверены, что хотите сбросить достижения?", Function(ds_reset_achievements), confirm_selected=True)
+
     
 screen ds_choose_type():
     python:
@@ -1847,14 +2190,10 @@ screen ds_skill_info():
                                 if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
                                     text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                 else:
-                                    if ds_semtype > 4:
-                                        text "+2" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    elif ds_semtype >= 2:
+                                    if ds_semtype >= 3:
                                         text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    elif ds_semtype <= -2:
+                                    elif ds_semtype <= -3:
                                         text "-1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    elif ds_semtype < -4:
-                                        text "-2" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                     else:
                                         text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                 text "Бонус от кружка: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
@@ -1880,8 +2219,8 @@ screen ds_skill_info():
                                         text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                 text "Всего:" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                                 text str(ds_get_total_skill(skill)) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                    text SKILL_NAMES[skill] xalign 0.5 xoffset 10 yoffset 10 size 48
-                    text SKILL_DESCR[skill] yalign 1.0 yoffset 10 xoffset 10 size 24 xfill True
+                    text SKILL_NAMES[skill] xalign 0.5 xoffset 10 yoffset 10 size 48 font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                    text SKILL_DESCR[skill] yalign 1.0 yoffset 10 xoffset 10 size 24 xfill True font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
     
 screen ds_lp_points():
     python:
@@ -1928,6 +2267,7 @@ screen ds_lp_points():
                 linear 0.1 xanchor 0.0 xpos 1.0
         grid 2 5:
             xspacing 30
+            yspacing 5
             xoffset 34
             transpose True
             for char in CHARS:
@@ -2390,3 +2730,21 @@ screen ds_check_info(skill, threshold, level):
                         color "#ffff00"
                     size 60
                     xalign 0.0
+
+screen ds_start_game:
+    modal True
+    imagebutton:
+        auto "mods/disco_sovenok/gui/start_game_%s.png"
+        xalign 0.5
+        yalign 0.8
+        action [Return(True), Hide('ds_start_screen')]
+
+label ds_achievement(ach):
+    play sound sfx_achievement
+    python:
+        if not persistent.ds_achievements[ach]:
+            renpy.show('ds_'+ach, at_list=[achievement_trans])
+            renpy.pause(3, hard=True)
+            renpy.hide('ds_'+ach)
+            persistent.ds_achievements[ach] = True
+    return

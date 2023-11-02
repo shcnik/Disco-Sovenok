@@ -1,3 +1,37 @@
+init python:
+    if persistent.ds_achievements == None:
+        persistent.ds_achievements = {
+            'preterm': False,
+            'bus_crash': False,
+            'beat_girls': False,
+            'know_history': False,
+            'had_sex': False,
+            'us_gone': False,
+            'mi_rape': False,
+            'arstotzka': False,
+            'electrocution': False,
+            'us_escape': False,
+        }
+        persistent.ds_achievements['preterm'] = False
+        persistent.ds_achievements['bus_crash'] = False
+        persistent.ds_achievements['beat_girls'] = False
+        persistent.ds_achievements['know_history'] = False
+        persistent.ds_achievements['had_sex'] = False
+        persistent.ds_achievements['us_gone'] = False
+        persistent.ds_achievements['mi_rape'] = False
+        persistent.ds_achievements['arstotzka'] = False
+        persistent.ds_achievements['electrocution'] = False
+        persistent.ds_achievements['us_escape'] = False
+    
+    if persistent.ds_settings == None:
+        persistent.ds_settings = {}
+
+        persistent.ds_settings['hentai'] = True
+        persistent.ds_settings['obscene'] = True
+        persistent.ds_settings['replace_interface'] = False
+        persistent.ds_settings['show_other_saves'] = True
+        persistent.ds_settings['cheat_codes'] = 0
+
 init:
     $ mods["disco_sovenok"] = u"{font=mods/disco_sovenok/gui/fonts/VtcBadvision.otf}DISCO SOVENOK{/font}"
 
@@ -62,8 +96,8 @@ label ds_start:
     $ renpy.pause(3.0, hard=True)
     hide ds_epigraph with dissolve2
 
-    menu:
-        "Начать":
-            pass
+    show screen ds_start_game with dissolve2
+    $ ui.interact()
+    hide screen ds_start_game
 
     jump ds_prologue

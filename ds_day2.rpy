@@ -1633,6 +1633,8 @@ label ds_day2_pass_alone_library:
                     lgc "Что касается Генды - тут он один из величайших генсеков. Что немудрено - по сути перейти к строительству уже коммунизма."
                     play sound ds_sfx_int
                     enc "Cогласно идеям Маркса - высшей формы общественного устройства."
+
+                    call ds_achievement('know_history')
                 "Просто посидеть":
                     window show
                     "Ты садишься и просто ждёшь."
@@ -7843,6 +7845,7 @@ label ds_day2_medic:
     scene bg int_aidpost_night
     with dissolve
     show cs shy at center with dissolve
+    call ds_achievement('had_sex')
     cs "Как хорошо... А теперь тебе пора идти."
     play sound ds_sfx_psy
     aut "Стоп. Чего это тебе пора?"

@@ -45,12 +45,6 @@ label ds_end_out_of_morale:
             return
 
 label ds_end_bus_crash:
-    # play sound sfx_achievement
-    # show ds_ach_fail3 at achievement_trans
-    # with dspr
-    # $ renpy.pause(3, hard=True)
-    # hide ds_ach_fail3
-
     scene black with dissolve2
     play music ds_endgame
     $ set_mode_nvl()
@@ -64,6 +58,8 @@ label ds_end_bus_crash:
     define menu = nvl_menu
     menu:
         "Завершить":
+            window hide
+            call ds_achievement('bus_crash')
             return
 
 label ds_end_us_gone:
@@ -89,6 +85,8 @@ label ds_end_us_gone:
     define menu = nvl_menu
     menu:
         "Завершить":
+            window hide
+            call ds_achievement('us_gone')
             return
 
 label ds_end_mi_rape:
@@ -104,6 +102,8 @@ label ds_end_mi_rape:
     define menu = nvl_menu
     menu:
         "Завершить":
+            window hide
+            call ds_achievement('mi_rape')
             return
 
 label ds_end_electrocution:
@@ -117,6 +117,8 @@ label ds_end_electrocution:
     define menu = nvl_menu
     menu:
         "Завершить":
+            window hide
+            call ds_achievement('electrocution')
             return
 
 ## АЛИСА
@@ -238,7 +240,9 @@ label ds_end_escape_with_us:
     "И с этими словами ты направляешься в деревню, ведя Ульянку за собой."
     "Что готовит вам грядущее? Неясно. Но вы уверены, что справитесь со всем - вместе."
     scene black with dissolve2
+    window hide
     $ renpy.movie_cutscene('mods/disco_sovenok/video/titles_us_escape.ogv')
+    call ds_achievement('us_escape')
     return
 
 ## МИКУ
