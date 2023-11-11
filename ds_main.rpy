@@ -39,6 +39,7 @@ label disco_sovenok:
     window hide
     scene black with fade
     $ ds_screens_save_act()
+    $ meet('me', u"Ты")
     return
 
 label ds_quit:

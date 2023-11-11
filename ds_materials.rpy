@@ -388,6 +388,36 @@ init:
         pause 1.0
         linear 0.1 alpha 0.0
 
+    image fx ds_rain:
+        "mods/disco_sovenok/bg/rain/rain1.png"
+        pause 0.1
+        "mods/disco_sovenok/bg/rain/rain2.png"
+        pause 0.1
+        "mods/disco_sovenok/bg/rain/rain3.png"
+        pause 0.1
+        "mods/disco_sovenok/bg/rain/rain4.png"
+        pause 0.1
+        "mods/disco_sovenok/bg/rain/rain5.png"
+        pause 0.1
+        repeat
+
+    transform ds_thunder(child):
+        child
+        choice:
+            pause 5.0
+        choice:
+            pause 10.0
+        choice:
+            pause 20.0
+        choice:
+            pause 25.0
+        choice:
+            pause 50.0
+        child with Fade(0.05, 0.1, 0.05, color="#fff")
+        pause 0.05
+        child with Fade(0.05, 0.1, 0.05, color="#fff")
+        repeat
+
 # Персонажи
 
 ## Оригинальные обозначения
@@ -460,7 +490,7 @@ init:
     $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fzp = Character (u'Физрук', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-
+    $ ag = Character (u'Мужчина', color="999999", ctc="ctc_animation", ctc_position="fixed", drop_shadow=[ (2, 2) ], drop_shadow_color="#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 # Изображения
@@ -594,6 +624,15 @@ init:
     image bg ds_papers_please_teract = "mods/disco_sovenok/bg/battle_tracers_2.png"
 
     image bg ds_ext_bus_sunset = "mods/disco_sovenok/bg/ext_bus_sunset.png"
+
+    image bg ds_int_aidpost_night_nolight = "mods/disco_sovenok/bg/int_aidpost_no_light_night_7dl.jpg"
+
+    image bg ds_ext_abyss_night = "mods/disco_sovenok/bg/ext_abyss_night.jpg"
+
+    image bg ds_spb_dream1 = "mods/disco_sovenok/bg/ext_city_night2_7dl.jpg"
+    image bg ds_spb_dream2 = "mods/disco_sovenok/bg/ext_city_night_7dl.jpg"
+    image bg ds_spb_dream3 = "mods/disco_sovenok/bg/ext_gostinka_night_7dl.jpg"
+
 ## Новые CG
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
@@ -645,6 +684,14 @@ init:
     image cg ds_dayx_hatch_open = "mods/disco_sovenok/cg/d4_hatch_night_open_7dl.jpg"
 
     image cg ds_day3_cs_waiting = "mods/disco_sovenok/cg/ViCG1.jpg"
+
+    image cg ds_day3_disco_with_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"
+
+    image cg ds_day3_dance_dv_shy = "mods/disco_sovenok/cg/d3_dv_dance_shy_ll.png"
+    image cg ds_day3_dance_dv_normal = "mods/disco_sovenok/cg/d3_dv_dance_normal_ll.png"
+    image cg ds_day3_dance_dv_grin = "mods/disco_sovenok/cg/d3_dv_dance_grin_ll.png"
+
+    image cg ds_day3_dance_ya = "mods/disco_sovenok/cg/d3_dance_ya.png"
 
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
@@ -705,6 +752,7 @@ init:
 
     $ ds_death_bell = "mods/disco_sovenok/music/Heroes of Might and Magic III Necropolis theme by Paul Romero.ogg"
     $ ds_dream = "mods/disco_sovenok/music/british-sea-power-tiger-king.ogg"
+    $ ds_dream2 = "mods/disco_sovenok/music/jack-wall-enter-spire.mp3"
     $ ds_cs_theme = "mods/disco_sovenok/music/violatheme.ogg"
     $ ds_sl_theme = "mods/disco_sovenok/music/newslavyatheme.ogg"
     $ ds_chase = "mods/disco_sovenok/music/benny_hill.mp3"
@@ -748,6 +796,7 @@ init:
 
     $ ds_ambience_train = "mods/disco_sovenok/ambience/train_depart_7dl.ogg"
     $ ds_ambience_shower = "mods/disco_sovenok/ambience/ambience_showers_7dl.ogg"
+    $ ds_ambience_spb_weather = "mods/disco_sovenok/ambience/spb_weather.mp3"
 
     $ ds_electrocution = "mods/disco_sovenok/sound/electrocution.mp3"
 
@@ -1316,6 +1365,20 @@ init:
     image dv shy casual = ds_define_sprite('dv', 'shy', body_num=3, cloth='casual')
     image dv smile casual = ds_define_sprite('dv', 'smile', body_num=4, cloth='casual')
     image dv surprise casual = ds_define_sprite('dv', 'surprise', body_num=1, cloth='casual')
+
+    image dv angry dress = ds_define_sprite('dv', 'angry', body_num=5, cloth='dress')
+    image dv cry dress = ds_define_sprite('dv', 'cry', body_num=1, cloth='dress')
+    image dv grin dress = ds_define_sprite('dv', 'grin', body_num=2, cloth='dress')
+    image dv guilty dress = ds_define_sprite('dv', 'guilty', body_num=3, cloth='dress')
+    image dv laugh dress = ds_define_sprite('dv', 'laugh', body_num=4, cloth='dress')
+    image dv normal dress = ds_define_sprite('dv', 'normal', body_num=4, cloth='dress')
+    image dv rage dress = ds_define_sprite('dv', 'rage', body_num=5, cloth='dress')
+    image dv sad dress = ds_define_sprite('dv', 'sad', body_num=3, cloth='dress')
+    image dv scared dress = ds_define_sprite('dv', 'scared', body_num=1, cloth='dress')
+    image dv shocked dress = ds_define_sprite('dv', 'shocked', body_num=1, cloth='dress')
+    image dv shy dress = ds_define_sprite('dv', 'shy', body_num=3, cloth='dress')
+    image dv smile dress = ds_define_sprite('dv', 'smile', body_num=4, cloth='dress')
+    image dv surprise dress = ds_define_sprite('dv', 'surprise', body_num=1, cloth='dress')
 
     image dv angry modern = ds_define_sprite('dv', 'angry', body_num=5, cloth='modern')
     image dv angry modern close = ds_define_sprite('dv', 'angry', dist='close', body_num=5, cloth='modern')
@@ -2582,6 +2645,27 @@ init:
     image sub arb = ds_define_sprite('undv', '', body_num=5)
     image sub lim = ds_define_sprite('undv', '', body_num=1)
     image sub trs = ds_define_sprite('undv', '', body_num=4)
+
+    image ag grin = ds_define_sprite('ag', 'grin', body_num=1, cloth='casual')
+    image ag happy = ds_define_sprite('ag', 'happy', body_num=1, cloth='casual')
+    image ag normal = ds_define_sprite('ag', 'norm', body_num=1, cloth='casual')
+    image ag ok = ds_define_sprite('ag', 'allisok', body_num=1, cloth='casual')
+    image ag surprise = ds_define_sprite('ag', 'surprise', body_num=1, cloth='casual')
+    image ag angry = ds_define_sprite('ag', 'angry', body_num=2, cloth='casual')
+    image ag rage = ds_define_sprite('ag', 'furious', body_num=2, cloth='casual')
+    image ag shocked = ds_define_sprite('ag', 'shock', body_num=2, cloth='casual')
+    image ag tired = ds_define_sprite('ag', 'tired', body_num=2, cloth='casual')
+    image ag confused = ds_define_sprite('ag', 'normal_hand', body_num=3, cloth='casual')
+    image ag grin far = ds_define_sprite('ag', 'grin', body_num=1, cloth='casual', dist='far')
+    image ag happy far = ds_define_sprite('ag', 'happy', body_num=1, cloth='casual', dist='far')
+    image ag normal far = ds_define_sprite('ag', 'norm', body_num=1, cloth='casual', dist='far')
+    image ag ok far = ds_define_sprite('ag', 'allisok', body_num=1, cloth='casual', dist='far')
+    image ag surprise far = ds_define_sprite('ag', 'surprise', body_num=1, cloth='casual', dist='far')
+    image ag angry far = ds_define_sprite('ag', 'angry', body_num=2, cloth='casual', dist='far')
+    image ag rage far = ds_define_sprite('ag', 'furious', body_num=2, cloth='casual', dist='far')
+    image ag shocked far = ds_define_sprite('ag', 'shock', body_num=2, cloth='casual', dist='far')
+    image ag tired far = ds_define_sprite('ag', 'tired', body_num=2, cloth='casual', dist='far')
+    image ag confused far = ds_define_sprite('ag', 'normal_hand', body_num=3, cloth='casual', dist='far')
 
 # Эффекты
 

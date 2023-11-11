@@ -42,6 +42,7 @@ init:
     $ ds_know_mz_el = False
     $ ds_us_betray = False
     $ ds_support_dv = 0
+    $ ds_after_tour_who = None
  
 label ds_day2_morning:
     $ ds_restore_health()
@@ -410,6 +411,7 @@ label ds_day2_morning:
                         window show
                         play sound ds_sfx_mot
                         svf "{result}Ты тихонько вылезаешь из домика и прикрываешь дверь."
+                        stop music fadeout 3
                         scene bg ext_house_of_mt_day
                         with dissolve
                         svf "Кажется, вожатая ничего не заметила."
@@ -493,6 +495,7 @@ label ds_day2_mt_out:
     "Но твоё внимание полностью сосредоточено на еде."
     show mt normal panama pioneer at center   with dissolve
     mt "Ты меня понял?"
+    window hide
     menu:
         "{check=drama:10}Притвориться, что слушал":
             if skillcheck('drama', lvl_medium):
@@ -875,6 +878,7 @@ label ds_day2_pass_dv_main:
     elif ds_passed_places == 0:
         dv "И куда мы пойдём сначала? Выбирай!"
         dv "Слушай, а может ну его? Давай я подделаю тебе подписи, и мы займёмся чем-нибудь поинтереснее."
+        window hide
         menu:
             "Подделать подписи":
                 me "Давай."
@@ -1121,6 +1125,7 @@ label ds_day2_pass_alone_music:
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
     play sound ds_sfx_mot
     res "Она говорит с такой скоростью, что половину слов ты не успеваешь разбирать."
+    window hide
     menu:
         "Сделать комплимент":
             me "Да... а ты прекрасно выглядишь, кстати."
@@ -1145,6 +1150,7 @@ label ds_day2_pass_alone_music:
     th "Уже в период моего «отшельничества» я купил себе гитару и по самоучителям выучил пару аккордов, но потом забросил это дело, как и любое другое, которое требовало больше нескольких часов."
     play sound ds_sfx_int
     con "А тут ты наверняка сможешь подтянуть свои навыки и сыграть что-нибудь прекрасное!"
+    window hide
     menu:
         "Записаться":
             me "Да, давай!"
@@ -1331,6 +1337,7 @@ label ds_day2_pass_alone_clubs:
     enc "Он сказал это так, что в голове у тебя невольно заиграл гимн Советского Союза."
     enc "Удивительно, но ты еще помнишь слова – в первом классе у тебя была тетрадка, на обратной стороне которой они были напечатаны."
     stop music fadeout 2
+    window hide
     menu:
         "Записаться":
             th "Впрочем, новые знакомства мне точно не помешают."
@@ -1673,6 +1680,7 @@ label ds_day2_pass_alone_library:
     queue sound ds_stamp
     "Она быстро расписывается, ставит печать и протягивает тебе его обратно."
     mz "Получать читательский билет будем?"
+    window hide
     menu:
         "Согласиться":
             me "Да, давай...те."
@@ -2327,7 +2335,7 @@ label ds_day2_pass_dv_clubs:
     shp "Алиса, успокойся... Электроник больше не будет..."
     dv "Да он уже кучу раз так меня называл!"
     dv "Его нужно хорошенько поколотить, чтобы до него что-нибудь дошло!"
-
+    window hide
     menu:
         "{check=savoir_faire:14}Остановить Алису":
             window show
@@ -2440,7 +2448,7 @@ label ds_day2_pass_dv_clubs:
     stop ambience
     show dv normal pioneer2 at center with dspr
     "Вы с Алисой выходите молча. У неё какое-то странное выражение лица."
-
+    window hide
     menu:
         "{check=empathy:11}Обратить внимание на Алису":
             if skillcheck('empathy', lvl_up_medium):
@@ -2452,6 +2460,7 @@ label ds_day2_pass_dv_clubs:
                 dv "Слушай, он правда уже задолбал меня так называть..."
                 dv "Я ему столько раз говорила, а он... ну не нравится мне это прозвище!"
                 dv "А ведь теперь он наверняка меня виноватой и сделает..."
+                window hide
                 menu:
                     "Поддержать Алису":
                         me "Не переживай... я-то знаю, что права ты."
@@ -2512,6 +2521,7 @@ label ds_day2_pass_dv_medic:
     ine "Что она имеет ввиду?"
     play sound ds_sfx_psy
     aut "В любом случае, лучше не подавать виду."
+    window hide
     menu:
         "Пойти самому":
             th "Да чего там бояться, скорее всего меня опять разыграть пытаются!"
@@ -2853,6 +2863,7 @@ label ds_day2_pass_dv_sport:
     us "Я тут спортклубом руковожу!"
     play sound ds_sfx_mot
     res "Так ей же не более 14 лет! И уже руководит чем-то?"
+    window hide
     menu:
         "Принять":
             me "А... хорошо."
@@ -2869,6 +2880,7 @@ label ds_day2_pass_dv_sport:
     if not ds_caught_us:
         show us laugh2 sport at center with dspr
         us "Может, и сможешь меня тогда догнать!"
+    window hide
     menu:
         "Записаться":
             me "Давай!"
@@ -3349,6 +3361,7 @@ label ds_day2_pass_sl_music:
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
     play sound ds_sfx_mot
     res "Она говорит с такой скоростью, что половину слов ты не успеваешь разбирать."
+    window hide
     menu:
         "Сделать комплимент":
             me "Да... а ты прекрасно выглядишь, кстати."
@@ -3686,6 +3699,7 @@ label ds_day2_pass_sl_clubs:
     enc "Он сказал это так, что в голове у тебя невольно заиграл гимн Советского Союза."
     enc "Удивительно, но ты еще помнишь слова – в первом классе у тебя была тетрадка, на обратной стороне которой они были напечатаны."
     stop music fadeout 2
+    window hide
     menu:
         "Записаться":
             th "Впрочем, новые знакомства мне точно не помешают."
@@ -4469,6 +4483,7 @@ label ds_day2_pass_sl_sport:
     us "Я тут спортклубом руковожу!"
     play sound ds_sfx_mot
     res "Так ей же не более 14 лет! И уже руководит чем-то?"
+    window hide
     menu:
         "Принять":
             me "А... хорошо."
@@ -4484,6 +4499,7 @@ label ds_day2_pass_sl_sport:
     if not ds_caught_us:
         show us laugh2 sport at center with dspr
         us "Может, и сможешь меня тогда догнать!"
+    window hide
     menu:
         "Записаться":
             me "Давай!"
@@ -4592,6 +4608,7 @@ label ds_day2_pass_un_music:
     "Ты наклоняешься и видишь девочку, которая, кажется, что-то искала."
     play sound ds_sfx_fys
     ins "Она стоит на четвереньках в такой пикантной позе..."
+    window hide
     menu:
         "Сдержать порывы":
             window show
@@ -4662,6 +4679,7 @@ label ds_day2_pass_un_music:
     mi "Короче, атомную станцию! Или плотину… Или мост… Ну, неважно!"
     play sound ds_sfx_mot
     res "Она говорит с такой скоростью, что половину слов ты не успеваешь разбирать."
+    window hide
     menu:
         "Сделать комплимент":
             me "Да... а ты прекрасно выглядишь, кстати."
@@ -4742,7 +4760,7 @@ label ds_day2_pass_un_music:
     stop ambience fadeout 2
 
     stop music fadeout 3
-
+    window hide
     menu:
         "Дослушать":
             window show
@@ -4935,6 +4953,7 @@ label ds_day2_pass_un_clubs:
     enc "Он сказал это так, что в голове у тебя невольно заиграл гимн Советского Союза."
     enc "Удивительно, но ты еще помнишь слова – в первом классе у тебя была тетрадка, на обратной стороне которой они были напечатаны."
     stop music fadeout 2
+    window hide
     menu:
         "Записаться":
             th "Впрочем, новые знакомства мне точно не помешают."
@@ -5346,6 +5365,7 @@ label ds_day2_pass_un_library:
     queue sound ds_stamp
     "Она быстро расписывается, ставит печать и протягивает тебе его обратно."
     mz "Получать читательский билет будем?"
+    window hide
     menu:
         "Согласиться":
             me "Да, давай...те."
@@ -5642,6 +5662,7 @@ label ds_day2_pass_un_sport:
     us "Я тут спортклубом руковожу!"
     play sound ds_sfx_mot
     res "Так ей же не более 14 лет! И уже руководит чем-то?"
+    window hide
     menu:
         "Принять":
             me "А... хорошо."
@@ -7786,6 +7807,7 @@ label ds_day2_medic:
     if ds_health < 0:
         play sound ds_sfx_fys
         edr "Ты чувствуешь себя плоховато, так что медпункт - то, что надо!"
+    $ ds_after_tour_who = 'cs'
     scene bg int_aidpost_night
     with dissolve
     show cs normal far at center with dissolve
@@ -9163,7 +9185,7 @@ label ds_day2_beach:
     if (not ds_bet_dv) or (ds_tour_result < 3):
         "Наконец, ты заканчиваешь плавать, выходишь из воды, одеваешься и идёшь к себе."
         jump ds_day2_night
-
+    $ ds_after_tour_who = 'dv'
     play music music_list["that_s_our_madhouse"] fadein 3
 
     scene bg ext_beach_night :
@@ -9621,6 +9643,7 @@ label ds_day2_entrance:
     window hide
 
     play ambience ambience_forest_night fadein 3
+    $ ds_after_tour_who = 'sl'
 
     $ persistent.sprite_time = "night"
     scene bg ext_path_night 
@@ -9909,6 +9932,7 @@ label ds_day2_badminton:
             th "Да нет, не буду ей мешать..."
             $ ds_semtype -= 1
             jump ds_day2_after_tour
+    $ ds_after_tour_who = 'un'
     "Обойдя волейбольную площадку, ты заходишь внутрь так, чтобы она меня видела."
     play sound ds_sfx_psy
     sug "С учётом её привычки пугаться даже малейшего шороха, не стоит повторять прошлых ошибок."
@@ -10243,7 +10267,7 @@ label ds_day2_scene:
     stop ambience fadeout 2
 
     play music music_list["glimmering_coals"] fadein 5
-
+    $ ds_after_tour_who = 'us'
     us "Ого!"
     play sound ds_sfx_mot
     per_hea "Голос доносится откуда-то сверху."
@@ -10519,6 +10543,7 @@ label ds_day2_forest:
         me "А как тебя зовут?"
         yap "Яна... Имерай Яна..."
         $ ds_met['ya'] = 2
+    $ ds_after_tour_who = 'ya'
     show ya shy pioneer at center with dspr
     ya "А тебя как зовут?"
     me "Семён."
@@ -10648,7 +10673,7 @@ label ds_day2_library:
             th "Да нет тут никого!"
             "И ты уходишь к себе."
             jump ds_day2_night
-
+    $ ds_after_tour_who = 'mz'
     play sound ds_sfx_mot
     per_eye "{result}Когда твои глаза адаптируются к тьме, ты можешь разглядеть дверцу в полу."
     window hide
@@ -10809,6 +10834,7 @@ label ds_day2_home:
     with dissolve
 
     "Ты идёшь к себе в домик."
+    $ ds_after_tour_who = 'mt'
 
     scene bg int_house_of_mt_night
 
