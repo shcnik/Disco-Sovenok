@@ -2267,7 +2267,6 @@ screen ds_lp_points():
                 linear 0.1 xanchor 0.0 xpos 1.0
         grid 2 5:
             xspacing 30
-            yspacing 5
             xoffset 34
             transpose True
             for char in CHARS:

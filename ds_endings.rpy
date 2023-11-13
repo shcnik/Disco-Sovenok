@@ -60,6 +60,7 @@ label ds_end_bus_crash:
         "Завершить":
             window hide
             call ds_achievement('bus_crash')
+            window show
             return
 
 label ds_end_us_gone:
@@ -87,6 +88,7 @@ label ds_end_us_gone:
         "Завершить":
             window hide
             call ds_achievement('us_gone')
+            window show
             return
 
 label ds_end_mi_rape:
@@ -104,6 +106,7 @@ label ds_end_mi_rape:
         "Завершить":
             window hide
             call ds_achievement('rape')
+            window show
             return
 
 label ds_end_dv_rape:
@@ -134,6 +137,7 @@ label ds_end_dv_rape2:
         "Завершить":
             window hide
             call ds_achievement('rape')
+            window show
             return
 
 label ds_end_sl_rape:
@@ -163,6 +167,7 @@ label ds_end_un_rape:
         "Завершить":
             window hide
             call ds_achievement('rape')
+            window show
             return
 
 label ds_end_electrocution:
@@ -178,6 +183,7 @@ label ds_end_electrocution:
         "Завершить":
             window hide
             call ds_achievement('electrocution')
+            window show
             return
 
 ## АЛИСА

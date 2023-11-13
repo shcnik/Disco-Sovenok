@@ -1797,7 +1797,7 @@ label ds_day3_after_breakfast:
 
     if ds_us_escape:
         $ persistent.sprite_time = "day"
-        scene bg ext_dining_hall_day
+        scene bg ext_dining_hall_near_day
         show us laugh2 sport at center
         with dissolve
 
@@ -3450,6 +3450,7 @@ label ds_day3_help_cyber:
 
     "Вскоре по лагерю заиграла музыка, призывающая на обед, и ты направляешься в столовую."
     window hide
+    jump ds_day3_lunch
 
 label ds_day3_help_sport:
     $ ds_whom_helped = 'us'
@@ -3535,11 +3536,15 @@ label ds_day3_help_sport:
                     window show
                     me "Нет уж, спасибо!"
                     "И ты уходишь."
+                    stop music fadeout 3
+                    stop ambience fadeout 3
                     jump ds_day3_help_sugar
         "Отказаться":
             window show
             me "Нет уж, спасибо!"
             "И ты уходишь."
+            stop music fadeout 3
+            stop ambience fadeout 3
             jump ds_day3_help_sugar
     $ ds_lp['us'] += 1
     hide us  with dissolve
@@ -3667,10 +3672,10 @@ label ds_day3_help_sport:
     play sound sfx_soccer_ball_catch
 
     "Она разбежалась и…{w} ударила прямо по центру мне в руки."
-    show us sad pioneer at center   with dspr
+    show us sad sport at center   with dspr
     us "Так нечестно!"
     me "Что нечестно?"
-    show us angry pioneer at center   with dspr
+    show us angry sport at center   with dspr
     us "Я перебью."
     window hide
     menu:
@@ -3688,7 +3693,7 @@ label ds_day3_help_sport:
     "Второй удар у неё вышел совсем в молоко."
     me "Ещё хочешь?"
     nvl clear
-    show us dontlike pioneer at center   with dspr
+    show us dontlike sport at center   with dspr
     us "Нет уж!"
     us "Но ты мне точно не забьёшь!"
     me "Посмотрим…"
@@ -3733,7 +3738,7 @@ label ds_day3_help_sport:
 
     window show
     "И тут заиграла музыка, призывающая пионеров на обед."
-    show us laugh2 pioneer at center   with dissolve
+    show us laugh2 sport  at center   with dissolve
     us "Ладно, ещё отыграюсь!"
     hide us  with dissolve
 
@@ -3966,7 +3971,7 @@ label ds_day3_help_un:
     show un shy pioneer at center
     with dissolve
     $ renpy.pause(0.5)
-    scene bg ds_ext_admin_night
+    scene bg ds_ext_admin_day
     show un scared pioneer at center
     with dissolve
     
@@ -4049,6 +4054,7 @@ label ds_day3_help_sugar:
     $ persistent.sprite_time = 'day'
     scene bg ds_ext_storage_day
     with dissolve
+    play ambience ambience_camp_center_day
 
     "Ты уходишь со спортплощадки в сторону площади."
     show fz normal uniform at center
@@ -4336,22 +4342,22 @@ label ds_day3_help_mt:
     me "Приступим..."
     "Ты открываешь первую папку, и одновременно с этим файл «Список пионеров.БД»"
     play sound ds_sfx_mot
-    per_eye "Ф.И.: ДВАЧЕВСКАЯ АЛИСА{n}Д.Р.: 03/IV/1972{n}Н.П.: пгт. Работино{n}ОТР.: I"
+    per_eye "Ф.И.: ДВАЧЕВСКАЯ АЛИСА\nД.Р.: 03/IV/1972\nН.П.: пгт. Работино\nОТР.: I"
     play sound ds_sfx_int
     lgc "Ф.И. - фамилия, имя. Д.Р. - дата рождения. Н.П. - населённый пункт. ОТР. - отряд."
     "Ты вносишь данные в нужные столбики таблицы."
-    per_eye "Ф.И.: УНЫЛОВА ЕЛЕНА{n}Д.Р.: 25/IX/1972{n}Н.П.: пгт. Работино{n}ОТР.: I"
-    per_eye "Ф.И.: ФЕОКТИСТОВА СЛАВЯНА{n}Д.Р.: 12/V/1972{n}Н.П.: дер. Мятусово{n}ОТР.: I"
-    per_eye "Ф.И.: СОВЕТОВА УЛЬЯНА{n}Д.Р.: 08/XII/1975{n}Н.П.: г. Ленинград{n}ОТР.: I"
-    per_eye "Ф.И.: ХАЦУНЕ МИКУ{n}Д.Р.: 31/VIII/1972{n}Н.П.: г. Токио (Япония){n}ОТР.: I"
-    per_eye "Ф.И.: СЫРОЕЖКИН СЕРГЕЙ{n}Д.Р.: 23/III/1972{n}Н.П.: г. Москва{n}ОТР.: I"
-    per_eye "Ф.И.: МИЦГОЛ ЕВГЕНИЯ{n}Д.Р.: .../.../1972{n}Н.П.: г. Одесса{n}ОТР.: I"
-    per_eye "Ф.И.: ДЕМЬЯНЕНКО АЛЕКСАНДР{n}Д.Р.: .../.../1972{n}Н.П.: г. Москва{n}ОТР.: I"
-    per_eye "Ф.И.: ПЁРСУНОВ СЕМЁН{n}Д.Р.: .../.../1972{n}Н.П.: г. Ленинград{n}ОТР.: I"
+    per_eye "Ф.И.: УНЫЛОВА ЕЛЕНА\nД.Р.: 25/IX/1972\nН.П.: пгт. Работино\nОТР.: I"
+    per_eye "Ф.И.: ФЕОКТИСТОВА СЛАВЯНА\nД.Р.: 12/V/1972\nН.П.: дер. Мятусово\nОТР.: I"
+    per_eye "Ф.И.: СОВЕТОВА УЛЬЯНА\nД.Р.: 08/XII/1975\nН.П.: г. Ленинград\nОТР.: I"
+    per_eye "Ф.И.: ХАЦУНЕ МИКУ\nД.Р.: 31/VIII/1972\nН.П.: г. Токио (Япония)\nОТР.: I"
+    per_eye "Ф.И.: СЫРОЕЖКИН СЕРГЕЙ\nД.Р.: 23/III/1972\nН.П.: г. Москва\nОТР.: I"
+    per_eye "Ф.И.: МИЦГОЛ ЕВГЕНИЯ\nД.Р.: .../.../1972\nН.П.: г. Одесса\nОТР.: I"
+    per_eye "Ф.И.: ДЕМЬЯНЕНКО АЛЕКСАНДР\nД.Р.: .../.../1972\nН.П.: г. Москва\nОТР.: I"
+    per_eye "Ф.И.: ПЁРСУНОВ СЕМЁН\nД.Р.: .../.../1972\nН.П.: г. Ленинград\nОТР.: I"
     play sound ds_sfx_mot
     res "О, это ты!"
     "На этом папка заканичвается. Ты переходишь к следующей."
-    per_eye "Ф.И.: УНЫЛОВА АЛЁНА{n}Д.Р.: 25/IX/1974{n}Н.П.: пгт. Работино{n}ОТР.: II"
+    per_eye "Ф.И.: УНЫЛОВА АЛЁНА\nД.Р.: 25/IX/1974\nН.П.: пгт. Работино\nОТР.: II"
     "..."
     scene black with dissolve2
     window hide
@@ -4368,7 +4374,7 @@ label ds_day3_help_mt:
     me "Да, спасибо..."
     play sound ds_sfx_fys
     edr "Ты измотан монотонной работой, так что с радостью воспринимаешь предложение вожатой."
-    scene ds_ext_admin_day
+    scene bg ds_ext_admin_day
     with dissolve
     "И вы идёте на обед."
     jump ds_day3_lunch
@@ -4893,7 +4899,7 @@ label ds_day3_mz_dialogue:
                     me "Как так?"
                     mz "А вот так! Если у тебя такие заботливые родители, то не у всех это так!"
                     mz "Тем более, вам, парням, проще - от вас никто не требует противоречивых вещей."
-                    play sound ds_sfx_enc
+                    play sound ds_sfx_int
                     enc "Похоже на риторику феминисток."
                     me "Ты о чём?"
                     mz "Да знаешь - быть непорочной, но при этом обслуживать мужика по первому зову!"
@@ -5460,6 +5466,7 @@ label ds_day3_lunch:
                 $ ds_skill_points['composure'] += 1
                 "Умывшись, ты выходишь из столовой."
                 stop ambience fadeout 2
+                stop music fadeout 2
                 jump ds_day3_after_lunch
             else:
                 window show
@@ -7424,7 +7431,8 @@ label ds_day3_music_mi_compose:
             me "Не совсем. Я хочу драмы! Трагедии! Давай сочиним что-нибудь разрывающее сердце!"
             show mi shocked pioneer at center
             with dspr
-            mi "Сомневаюсь, что это понравится Алисе-тян, не в её характере подобное... но ладно, как скажешь."
+            mi "Сомневаюсь, что это понравится Алисе-тян, не в её характере подобное..."
+            me "Ну ладно, тогда давай то, что ты скажешь."
             $ ds_composition_type = 2
         "Сочинить весёлую песню":
             window show
@@ -7439,7 +7447,7 @@ label ds_day3_music_mi_compose:
             show mi shocked pioneer at center
             with dspr
             mi "Что тебе Алиса-тян такого сделала? Разве что пошутила пару раз, наверное..."
-            mi "Только марши плохо подходят под гитару, поэтому сочиним просто что-нибудь жёсткое!"
+            mi "Только марши плохо подходят под гитару..."
             $ ds_composition_type = 4
     me "Что ж, попробуем."
     mi "Хорошо."
@@ -7471,8 +7479,6 @@ label ds_day3_music_mi_compose:
     vol "Похоже, ничего сложного."
     mi "Итак, выбери первое слово. Зачин, начало, старт."
     # TODO: игра на выбор слов
-    mi "Отлично! А теперь, когда мы собрали текст, давай выстроим мелодию!"
-    # TODO: игра на гитаре
     show mi happy pioneer at center
     with dspr
     mi "Отлично вышло у нас! Иди, Семён-кун, покоряй Алису-тян! Ей должно понравиться!"
@@ -8475,6 +8481,7 @@ label ds_day3_medic:
     me "Я скоро приду!"
     scene bg ext_aidpost_day
     with dissolve
+    stop music fadeout 3
     "С этими словами ты выбегаешь из медпункта в сторону ближайшего туалета."
     window hide
     $ renpy.pause(1.0)
@@ -9818,7 +9825,7 @@ label ds_day3_bus:
     th "Что вам надо от меня?"
     sb "Обернись."
 
-    scene bg ds_camp_entrance_subset
+    scene bg ds_camp_entrance_sunset
     show sub lim at center
     with dissolve
 
@@ -10019,9 +10026,21 @@ label ds_day3_disco:
         "Подойти к Ульяне":
             window show
             jump ds_day3_evening_us
-        "Пригласить Ольгу Дмитриевну":
-            window show
-            jump ds_day3_dance_mt
+        "{check=volition:11}Пригласить Ольгу Дмитриевну":
+            if skillcheck('volition', lvl_up_medium):
+                window show
+                play sound ds_sfx_psy
+                vol "{result}Всё будет нормально. Ольга Дмитриевна тебе не откажет."
+                "Ты подходишь к Ольге Дмитриевне."
+                show mt smile dress at center
+                with dissolve
+                me "Ольга Дмитриевна... возможно, вам моё предложение покажется странным... но, может, вы станцуете со мной?"
+                mt "Ничего странного, Семён! Давай, конечно!"
+                jump ds_day3_dance_mt
+            else:
+                window show
+                play sound ds_sfx_psy
+                vol "{result}Глупая идея. Ты - пионер, она - вожатая. Вы несовместимы."
         "Пойти к Жене" if not ds_el_mz_relation:
             window show
             jump ds_day3_evening_mz
@@ -10143,7 +10162,7 @@ label ds_day3_disco:
                 stop music fadeout 3
 
                 vol "К тому же никакого желания пускаться в пляс у тебя не было."
-                jump ds_day3_help_un
+                jump ds_day3_un_medic
             "Отказать":
                 window show
                 me "Я никуда сейчас не пойду."
@@ -11809,7 +11828,7 @@ label ds_day3_dance_sl:
             me "Слушай... мне тут надо Лене помочь."
             sl "А... ну ладно, иди."
             "И ты направляешься в сторону медпункта."
-            jump ds_day3_help_un_medic
+            jump ds_day3_un_medic
     sl "О чём думаешь?"
     me "Ни о чём…"
     sl "Нельзя ни о чём не думать!"
@@ -11819,7 +11838,7 @@ label ds_day3_dance_sl:
     sl "Так о чём сейчас?"
     play sound ds_sfx_int
     con "Почему-то из головы не выходят совы."
-    play sound ds_Sfx_psy
+    play sound ds_sfx_psy
     vol "И ты не можешь удержаться от того, чтобы поделиться этим со Славей. Всяко это лучше, чем ничего не отвечать."
     me "О совах."
     sl "А почему о совах?"
@@ -12719,7 +12738,7 @@ label ds_day3_dance_sl:
                     "C этими словами она буквально выпихивает тебя из бани."
                     me "Ну Славя..."
                     sl "Жди тут!"
-
+            stop music fadeout 3
             scene bg ext_bathhouse_night
             with dissolve
             window hide
@@ -13093,7 +13112,7 @@ label ds_day3_dance_un:
         "Согласиться":
             window show
             me "Да, давай."
-            jump ds_day3_help_un
+            jump ds_day3_un_medic
         "{check=suggestion:14}Настоять на танцах":
             if skillcheck('suggestion', lvl_legendary):
                 play sound ds_sfx_psy
@@ -13110,7 +13129,7 @@ label ds_day3_dance_un:
                 me "Точно не будешь танцевать дальше?"
                 un "Не-а."
                 me "Ладно, пойдём с тобой тогда..."
-                jump ds_day3_help_un
+                jump ds_day3_un_medic
         "Отказаться":
             window show
             me "Так, нет, либо танцуем - либо иди сама!"
@@ -13219,7 +13238,7 @@ label ds_day3_dance_un:
 
     jump ds_day3_dream
 
-label ds_day3_help_un:
+label ds_day3_un_medic:
     $ persistent.sprite_time = "night"
     scene bg ext_dining_hall_away_night 
     with dissolve
@@ -13963,7 +13982,7 @@ label ds_day3_dance_un_beach:
             window show
             me "Ты тоже… неплохо танцуешь…"
             un "А я знаю!"
-            if skillcheck|('perception', lvl_easy, passive=True):
+            if skillcheck('perception', lvl_easy, passive=True):
                 play sound ds_sfx_mot
                 per_eye  "На её лице промелькнула лукавая улыбка."
                 th "Но как такое возможно?"
@@ -15298,12 +15317,36 @@ label ds_day3_dance_mt:
                 "Cпросить, с кем танцевал":
                     window show
                     me "А ты с кем-то потанцевал? "
-                    show el sad pioneer with dspr
-                    el "Да... я не танцевал особо... не было с кем..."
-                    th "Что значит «не было с кем»? На площади же было много пионерок или я чего-то не знаю?.."
-                    if ds_know_mz_el:
-                        play sound ds_sfx_int
-                        lgc "Да с Женей он хотел потанцевать. А она не явилась."
+                    if not ds_el_mz_relation:
+                        show el sad pioneer with dspr
+                        el "Да... я не танцевал особо... не было с кем..."
+                        th "Что значит «не было с кем»? На площади же было много пионерок или я чего-то не знаю?.."
+                        if ds_know_mz_el:
+                            play sound ds_sfx_int
+                            lgc "Да с Женей он хотел потанцевать. А она не явилась."
+                    else:
+                        show el smile pioneer with dspr
+                        el "C Женей! У меня всё получилось, представляешь!"
+                        window hide
+                        menu:
+                            "Искренне порадоваться":
+                                window show
+                                "Ты улыбаешься."
+                                me "Это классно!"
+                            "Похвалить":
+                                window show
+                                me "Молодец!"
+                            "Cухо отреагировать":
+                                window show
+                                me "Хорошо..."
+                            "Промолчать":
+                                window show
+                        el "Это благодаря тебе, Семён!"
+                        play sound ds_sfx_psy
+                        vol "Тебе очень приятно. Ты ощущаешь, что {i}нужен{/i} кому-то."
+                        $ ds_up_morale()
+        "Посидеть молча":
+            window show
     show el normal pioneer with dspr
     el "Ладно пойдём, а то нас там заждались, наверное. "
     "Вы направляетесь к остальным."
@@ -15624,8 +15667,8 @@ label ds_day3_dance_mi:
     me "Позвольте вас пригласить."
     show mi shy dress close at center with dspr
     "Она нерешительно протягивает в ответ свою, и вы закружились в танце."
-    hide mi with dissolve
-#CG    
+    scene cg ds_day3_dance_mi
+    with dissolve
     play sound ds_sfx_mot
     com "Не почувствовать её дрожь невозможно, равно как и твою."
     com "Её руки буквально впиваются в тебя, будто спасая её от падения в несуществующую пропасть, её глаза пытаются всеми силами избежать визуального контакта с тсоими, и даже в тусклом свете луны ты замечаешь, что она краснеет."
@@ -15671,7 +15714,7 @@ label ds_day3_dance_mi:
     play sound ds_sfx_psy
     vol "Не хочется никуда уходить, не хочется ничего делать."
     "Мику кладёт голову тебе на плечо."
-    show mi happy pioneer close at center with dspr
+    show mi happy dress close at center with dspr
     mi "Я не знала, что танцевать - это так здорово!.. Спасибо тебе, что пригласил!"
     window hide
     menu:

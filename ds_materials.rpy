@@ -576,7 +576,7 @@ init:
     image bg ds_ext_backroad_day = "mods/disco_sovenok/bg/ext_backroad_day_7dl.jpg"
     image bg ds_ext_backroad_sunset = "mods/disco_sovenok/bg/ext_backroad_sunset_7dl.jpg"
 
-    image bg ds_ext_railroad_day = "mods/disco_sovenok/bg/ext_railroad_day.jpg"
+    image bg ds_ext_railroad_day = "mods/disco_sovenok/bg/ext_railroad_day.png"
     image bg ds_ext_railroad_sunset = "mods/disco_sovenok/bg/ext_railroad_sunset.jpg"
 
     image bg ds_int_train = "mods/disco_sovenok/bg/int_train_7dl.jpg"
@@ -599,7 +599,7 @@ init:
     image bg ds_int_admin_night_light = "mods/disco_sovenok/bg/int_admin_night_light.png"
     image bg ds_int_admin_day_boxes1 = "mods/disco_sovenok/bg/int_admin_boxes_day.png"
     image bg ds_int_admin_sunset_boxes1 = "mods/disco_sovenok/bg/int_admin_boxes_sunset.png"
-    image bg ds_int_admin_day_boxes2 = "mods/discos_sovenok/bg/int_admin_halfboxes_day.png"
+    image bg ds_int_admin_day_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_day.png"
     image bg ds_int_admin_sunset_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_sunset.png"
     image bg ds_int_admin_night_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_night.png"
     image bg ds_int_admin_morning_boxes2 = "mods/disco_sovenok/bg/int_admin_halfboxes_morning.png"
@@ -632,6 +632,8 @@ init:
     image bg ds_spb_dream1 = "mods/disco_sovenok/bg/ext_city_night2_7dl.jpg"
     image bg ds_spb_dream2 = "mods/disco_sovenok/bg/ext_city_night_7dl.jpg"
     image bg ds_spb_dream3 = "mods/disco_sovenok/bg/ext_gostinka_night_7dl.jpg"
+
+    image bg ds_int_bus_sunset = "mods/disco_sovenok/bg/int_bus_sunset.jpg"
 
 ## Новые CG
 
@@ -687,9 +689,16 @@ init:
 
     image cg ds_day3_disco_with_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"
 
+    image cg ds_day3_un_fullmoon = "mods/disco_sovenok/cg/d3_beach_fullmoon.png"
+
     image cg ds_day3_dance_dv_shy = "mods/disco_sovenok/cg/d3_dv_dance_shy_ll.png"
     image cg ds_day3_dance_dv_normal = "mods/disco_sovenok/cg/d3_dv_dance_normal_ll.png"
     image cg ds_day3_dance_dv_grin = "mods/disco_sovenok/cg/d3_dv_dance_grin_ll.png"
+
+    image cg ds_day3_dance_mi = "mods/disco_sovenok/cg/d3_mi_dance_afar_7dl.jpg"
+    image cg ds_day3_dance_mi_costume = "mods/disco_sovenok/cg/d3_mi_dance_afar_bordo_7dl.jpg"
+
+    image cg ds_day3_dance_mt = "mods/disco_sovenok/cg/d3_mt_dance.jpg"
 
     image cg ds_day3_dance_ya = "mods/disco_sovenok/cg/d3_dance_ya.png"
 
@@ -1198,81 +1207,157 @@ init:
     image cs tired panties = ds_define_sprite('cs', 'tired', body_name='panties')
     image cs upset panties = ds_define_sprite('cs', 'upset', body_name='panties')
 
-    image cs angry medic1 = ds_define_sprite('cs', 'angry', body_name='medic1', acc='glasses2')
-    image cs badgirl medic1 = ds_define_sprite('cs', 'badgirl', body_name='medic1', acc='glasses2')
-    image cs cry medic1 = ds_define_sprite('cs', 'cry', body_name='medic1', acc='glasses2')
-    image cs dontlike medic1 = ds_define_sprite('cs', 'dontlike', body_name='medic1', acc='glasses2')
-    image cs doubt medic1 = ds_define_sprite('cs', 'doubt', body_name='medic1', acc='glasses2')
-    image cs grin medic1 = ds_define_sprite('cs', 'grin', body_name='medic1', acc='glasses2')
-    image cs irritated medic1 = ds_define_sprite('cs', 'irritated', body_name='medic1', acc='glasses2')
-    image cs laugh medic1 = ds_define_sprite('cs', 'laugh', body_name='medic1', acc='glasses2')
-    image cs normal medic1 = ds_define_sprite('cs', 'normal', body_name='medic1', acc='glasses2')
-    image cs rage medic1 = ds_define_sprite('cs', 'rage', body_name='medic1', acc='glasses2')
-    image cs sad medic1 = ds_define_sprite('cs', 'sad', body_name='medic1', acc='glasses2')
-    image cs scared medic1 = ds_define_sprite('cs', 'scared', body_name='medic1', acc='glasses2')
-    image cs serious medic1 = ds_define_sprite('cs', 'serious', body_name='medic1', acc='glasses2')
-    image cs shy medic1 = ds_define_sprite('cs', 'shy', body_name='medic1', acc='glasses2')
-    image cs smile medic1 = ds_define_sprite('cs', 'smile', body_name='medic1', acc='glasses2')
-    image cs sorrow medic1 = ds_define_sprite('cs', 'sorrow', body_name='medic1', acc='glasses2')
-    image cs tired medic1 = ds_define_sprite('cs', 'tired', body_name='medic1', acc='glasses2')
-    image cs upset medic1 = ds_define_sprite('cs', 'upset', body_name='medic1', acc='glasses2')
+    image cs angry medic1 = ds_define_sprite('cs', 'angry', body_name='medic1')
+    image cs badgirl medic1 = ds_define_sprite('cs', 'badgirl', body_name='medic1')
+    image cs cry medic1 = ds_define_sprite('cs', 'cry', body_name='medic1')
+    image cs dontlike medic1 = ds_define_sprite('cs', 'dontlike', body_name='medic1')
+    image cs doubt medic1 = ds_define_sprite('cs', 'doubt', body_name='medic1')
+    image cs grin medic1 = ds_define_sprite('cs', 'grin', body_name='medic1')
+    image cs irritated medic1 = ds_define_sprite('cs', 'irritated', body_name='medic1')
+    image cs laugh medic1 = ds_define_sprite('cs', 'laugh', body_name='medic1')
+    image cs normal medic1 = ds_define_sprite('cs', 'normal', body_name='medic1')
+    image cs rage medic1 = ds_define_sprite('cs', 'rage', body_name='medic1')
+    image cs sad medic1 = ds_define_sprite('cs', 'sad', body_name='medic1')
+    image cs scared medic1 = ds_define_sprite('cs', 'scared', body_name='medic1')
+    image cs serious medic1 = ds_define_sprite('cs', 'serious', body_name='medic1')
+    image cs shy medic1 = ds_define_sprite('cs', 'shy', body_name='medic1')
+    image cs smile medic1 = ds_define_sprite('cs', 'smile', body_name='medic1')
+    image cs sorrow medic1 = ds_define_sprite('cs', 'sorrow', body_name='medic1')
+    image cs tired medic1 = ds_define_sprite('cs', 'tired', body_name='medic1')
+    image cs upset medic1 = ds_define_sprite('cs', 'upset', body_name='medic1')
 
-    image cs angry medic2 = ds_define_sprite('cs', 'angry', body_name='medic2', acc='glasses')
-    image cs badgirl medic2 = ds_define_sprite('cs', 'badgirl', body_name='medic2', acc='glasses')
-    image cs cry medic2 = ds_define_sprite('cs', 'cry', body_name='medic2', acc='glasses')
-    image cs dontlike medic2 = ds_define_sprite('cs', 'dontlike', body_name='medic2', acc='glasses')
-    image cs doubt medic2 = ds_define_sprite('cs', 'doubt', body_name='medic2', acc='glasses')
-    image cs grin medic2 = ds_define_sprite('cs', 'grin', body_name='medic2', acc='glasses')
-    image cs irritated medic2 = ds_define_sprite('cs', 'irritated', body_name='medic2', acc='glasses')
-    image cs laugh medic2 = ds_define_sprite('cs', 'laugh', body_name='medic2', acc='glasses')
-    image cs normal medic2 = ds_define_sprite('cs', 'normal', body_name='medic2', acc='glasses')
-    image cs rage medic2 = ds_define_sprite('cs', 'rage', body_name='medic2', acc='glasses')
-    image cs sad medic2 = ds_define_sprite('cs', 'sad', body_name='medic2', acc='glasses')
-    image cs scared medic2 = ds_define_sprite('cs', 'scared', body_name='medic2', acc='glasses')
-    image cs serious medic2 = ds_define_sprite('cs', 'serious', body_name='medic2', acc='glasses')
-    image cs shy medic2 = ds_define_sprite('cs', 'shy', body_name='medic2', acc='glasses')
-    image cs smile medic2 = ds_define_sprite('cs', 'smile', body_name='medic2', acc='glasses')
-    image cs sorrow medic2 = ds_define_sprite('cs', 'sorrow', body_name='medic2', acc='glasses')
-    image cs tired medic2 = ds_define_sprite('cs', 'tired', body_name='medic2', acc='glasses')
-    image cs upset medic2 = ds_define_sprite('cs', 'upset', body_name='medic2', acc='glasses')
+    image cs angry medic2 = ds_define_sprite('cs', 'angry', body_name='medic2')
+    image cs badgirl medic2 = ds_define_sprite('cs', 'badgirl', body_name='medic2')
+    image cs cry medic2 = ds_define_sprite('cs', 'cry', body_name='medic2')
+    image cs dontlike medic2 = ds_define_sprite('cs', 'dontlike', body_name='medic2')
+    image cs doubt medic2 = ds_define_sprite('cs', 'doubt', body_name='medic2')
+    image cs grin medic2 = ds_define_sprite('cs', 'grin', body_name='medic2')
+    image cs irritated medic2 = ds_define_sprite('cs', 'irritated', body_name='medic2')
+    image cs laugh medic2 = ds_define_sprite('cs', 'laugh', body_name='medic2')
+    image cs normal medic2 = ds_define_sprite('cs', 'normal', body_name='medic2')
+    image cs rage medic2 = ds_define_sprite('cs', 'rage', body_name='medic2')
+    image cs sad medic2 = ds_define_sprite('cs', 'sad', body_name='medic2')
+    image cs scared medic2 = ds_define_sprite('cs', 'scared', body_name='medic2')
+    image cs serious medic2 = ds_define_sprite('cs', 'serious', body_name='medic2')
+    image cs shy medic2 = ds_define_sprite('cs', 'shy', body_name='medic2')
+    image cs smile medic2 = ds_define_sprite('cs', 'smile', body_name='medic2')
+    image cs sorrow medic2 = ds_define_sprite('cs', 'sorrow', body_name='medic2')
+    image cs tired medic2 = ds_define_sprite('cs', 'tired', body_name='medic2')
+    image cs upset medic2 = ds_define_sprite('cs', 'upset', body_name='medic2')
 
-    image cs angry medic3 = ds_define_sprite('cs', 'angry', body_name='medic3', acc='glasses')
-    image cs badgirl medic3 = ds_define_sprite('cs', 'badgirl', body_name='medic3', acc='glasses')
-    image cs cry medic3 = ds_define_sprite('cs', 'cry', body_name='medic3', acc='glasses')
-    image cs dontlike medic3 = ds_define_sprite('cs', 'dontlike', body_name='medic3', acc='glasses')
-    image cs doubt medic3 = ds_define_sprite('cs', 'doubt', body_name='medic3', acc='glasses')
-    image cs grin medic3 = ds_define_sprite('cs', 'grin', body_name='medic3', acc='glasses')
-    image cs irritated medic3 = ds_define_sprite('cs', 'irritated', body_name='medic3', acc='glasses')
-    image cs laugh medic3 = ds_define_sprite('cs', 'laugh', body_name='medic3', acc='glasses')
-    image cs normal medic3 = ds_define_sprite('cs', 'normal', body_name='medic3', acc='glasses')
-    image cs rage medic3 = ds_define_sprite('cs', 'rage', body_name='medic3', acc='glasses')
-    image cs sad medic3 = ds_define_sprite('cs', 'sad', body_name='medic3', acc='glasses')
-    image cs scared medic3 = ds_define_sprite('cs', 'scared', body_name='medic3', acc='glasses')
-    image cs serious medic3 = ds_define_sprite('cs', 'serious', body_name='medic3', acc='glasses')
-    image cs shy medic3 = ds_define_sprite('cs', 'shy', body_name='medic3', acc='glasses')
-    image cs smile medic3 = ds_define_sprite('cs', 'smile', body_name='medic3', acc='glasses')
-    image cs sorrow medic3 = ds_define_sprite('cs', 'sorrow', body_name='medic3', acc='glasses')
-    image cs tired medic3 = ds_define_sprite('cs', 'tired', body_name='medic3', acc='glasses')
-    image cs upset medic3 = ds_define_sprite('cs', 'upset', body_name='medic3', acc='glasses')
+    image cs angry medic3 = ds_define_sprite('cs', 'angry', body_name='medic3')
+    image cs badgirl medic3 = ds_define_sprite('cs', 'badgirl', body_name='medic3')
+    image cs cry medic3 = ds_define_sprite('cs', 'cry', body_name='medic3')
+    image cs dontlike medic3 = ds_define_sprite('cs', 'dontlike', body_name='medic3')
+    image cs doubt medic3 = ds_define_sprite('cs', 'doubt', body_name='medic3')
+    image cs grin medic3 = ds_define_sprite('cs', 'grin', body_name='medic3')
+    image cs irritated medic3 = ds_define_sprite('cs', 'irritated', body_name='medic3')
+    image cs laugh medic3 = ds_define_sprite('cs', 'laugh', body_name='medic3')
+    image cs normal medic3 = ds_define_sprite('cs', 'normal', body_name='medic3')
+    image cs rage medic3 = ds_define_sprite('cs', 'rage', body_name='medic3')
+    image cs sad medic3 = ds_define_sprite('cs', 'sad', body_name='medic3')
+    image cs scared medic3 = ds_define_sprite('cs', 'scared', body_name='medic3')
+    image cs serious medic3 = ds_define_sprite('cs', 'serious', body_name='medic3')
+    image cs shy medic3 = ds_define_sprite('cs', 'shy', body_name='medic3')
+    image cs smile medic3 = ds_define_sprite('cs', 'smile', body_name='medic3')
+    image cs sorrow medic3 = ds_define_sprite('cs', 'sorrow', body_name='medic3')
+    image cs tired medic3 = ds_define_sprite('cs', 'tired', body_name='medic3')
+    image cs upset medic3 = ds_define_sprite('cs', 'upset', body_name='medic3')
 
-    image cs angry medic4 = ds_define_sprite('cs', 'angry', body_name='medic4', acc='glasses')
-    image cs badgirl medic4 = ds_define_sprite('cs', 'badgirl', body_name='medic4', acc='glasses')
-    image cs cry medic4 = ds_define_sprite('cs', 'cry', body_name='medic4', acc='glasses')
-    image cs dontlike medic4 = ds_define_sprite('cs', 'dontlike', body_name='medic4', acc='glasses')
-    image cs doubt medic4 = ds_define_sprite('cs', 'doubt', body_name='medic4', acc='glasses')
-    image cs grin medic4 = ds_define_sprite('cs', 'grin', body_name='medic4', acc='glasses')
-    image cs irritated medic4 = ds_define_sprite('cs', 'irritated', body_name='medic4', acc='glasses')
-    image cs laugh medic4 = ds_define_sprite('cs', 'laugh', body_name='medic4', acc='glasses')
-    image cs normal medic4 = ds_define_sprite('cs', 'normal', body_name='medic4', acc='glasses')
-    image cs rage medic4 = ds_define_sprite('cs', 'rage', body_name='medic4', acc='glasses')
-    image cs sad medic4 = ds_define_sprite('cs', 'sad', body_name='medic4', acc='glasses')
-    image cs scared medic4 = ds_define_sprite('cs', 'scared', body_name='medic4', acc='glasses')
-    image cs serious medic4 = ds_define_sprite('cs', 'serious', body_name='medic4', acc='glasses')
-    image cs shy medic4 = ds_define_sprite('cs', 'shy', body_name='medic4', acc='glasses')
-    image cs smile medic4 = ds_define_sprite('cs', 'smile', body_name='medic4', acc='glasses')
-    image cs sorrow medic4 = ds_define_sprite('cs', 'sorrow', body_name='medic4', acc='glasses')
-    image cs tired medic4 = ds_define_sprite('cs', 'tired', body_name='medic4', acc='glasses')
-    image cs upset medic4 = ds_define_sprite('cs', 'upset', body_name='medic4', acc='glasses')
+    image cs angry medic4 = ds_define_sprite('cs', 'angry', body_name='medic4')
+    image cs badgirl medic4 = ds_define_sprite('cs', 'badgirl', body_name='medic4')
+    image cs cry medic4 = ds_define_sprite('cs', 'cry', body_name='medic4')
+    image cs dontlike medic4 = ds_define_sprite('cs', 'dontlike', body_name='medic4')
+    image cs doubt medic4 = ds_define_sprite('cs', 'doubt', body_name='medic4')
+    image cs grin medic4 = ds_define_sprite('cs', 'grin', body_name='medic4')
+    image cs irritated medic4 = ds_define_sprite('cs', 'irritated', body_name='medic4')
+    image cs laugh medic4 = ds_define_sprite('cs', 'laugh', body_name='medic4')
+    image cs normal medic4 = ds_define_sprite('cs', 'normal', body_name='medic4')
+    image cs rage medic4 = ds_define_sprite('cs', 'rage', body_name='medic4')
+    image cs sad medic4 = ds_define_sprite('cs', 'sad', body_name='medic4')
+    image cs scared medic4 = ds_define_sprite('cs', 'scared', body_name='medic4')
+    image cs serious medic4 = ds_define_sprite('cs', 'serious', body_name='medic4')
+    image cs shy medic4 = ds_define_sprite('cs', 'shy', body_name='medic4')
+    image cs smile medic4 = ds_define_sprite('cs', 'smile', body_name='medic4')
+    image cs sorrow medic4 = ds_define_sprite('cs', 'sorrow', body_name='medic4')
+    image cs tired medic4 = ds_define_sprite('cs', 'tired', body_name='medic4')
+    image cs upset medic4 = ds_define_sprite('cs', 'upset', body_name='medic4')
+
+    image cs angry medic1 glasses = ds_define_sprite('cs', 'angry', body_name='medic1', acc='glasses2')
+    image cs badgirl medic1 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic1', acc='glasses2')
+    image cs cry medic1 glasses = ds_define_sprite('cs', 'cry', body_name='medic1', acc='glasses2')
+    image cs dontlike medic1 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic1', acc='glasses2')
+    image cs doubt medic1 glasses = ds_define_sprite('cs', 'doubt', body_name='medic1', acc='glasses2')
+    image cs grin medic1 glasses = ds_define_sprite('cs', 'grin', body_name='medic1', acc='glasses2')
+    image cs irritated medic1 glasses = ds_define_sprite('cs', 'irritated', body_name='medic1', acc='glasses2')
+    image cs laugh medic1 glasses = ds_define_sprite('cs', 'laugh', body_name='medic1', acc='glasses2')
+    image cs normal medic1 glasses = ds_define_sprite('cs', 'normal', body_name='medic1', acc='glasses2')
+    image cs rage medic1 glasses = ds_define_sprite('cs', 'rage', body_name='medic1', acc='glasses2')
+    image cs sad medic1 glasses = ds_define_sprite('cs', 'sad', body_name='medic1', acc='glasses2')
+    image cs scared medic1 glasses = ds_define_sprite('cs', 'scared', body_name='medic1', acc='glasses2')
+    image cs serious medic1 glasses = ds_define_sprite('cs', 'serious', body_name='medic1', acc='glasses2')
+    image cs shy medic1 glasses = ds_define_sprite('cs', 'shy', body_name='medic1', acc='glasses2')
+    image cs smile medic1 glasses = ds_define_sprite('cs', 'smile', body_name='medic1', acc='glasses2')
+    image cs sorrow medic1 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic1', acc='glasses2')
+    image cs tired medic1 glasses = ds_define_sprite('cs', 'tired', body_name='medic1', acc='glasses2')
+    image cs upset medic1 glasses = ds_define_sprite('cs', 'upset', body_name='medic1', acc='glasses2')
+
+    image cs angry medic2 glasses = ds_define_sprite('cs', 'angry', body_name='medic2', acc='glasses')
+    image cs badgirl medic2 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic2', acc='glasses')
+    image cs cry medic2 glasses = ds_define_sprite('cs', 'cry', body_name='medic2', acc='glasses')
+    image cs dontlike medic2 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic2', acc='glasses')
+    image cs doubt medic2 glasses = ds_define_sprite('cs', 'doubt', body_name='medic2', acc='glasses')
+    image cs grin medic2 glasses = ds_define_sprite('cs', 'grin', body_name='medic2', acc='glasses')
+    image cs irritated medic2 glasses = ds_define_sprite('cs', 'irritated', body_name='medic2', acc='glasses')
+    image cs laugh medic2 glasses = ds_define_sprite('cs', 'laugh', body_name='medic2', acc='glasses')
+    image cs normal medic2 glasses = ds_define_sprite('cs', 'normal', body_name='medic2', acc='glasses')
+    image cs rage medic2 glasses = ds_define_sprite('cs', 'rage', body_name='medic2', acc='glasses')
+    image cs sad medic2 glasses = ds_define_sprite('cs', 'sad', body_name='medic2', acc='glasses')
+    image cs scared medic2 glasses = ds_define_sprite('cs', 'scared', body_name='medic2', acc='glasses')
+    image cs serious medic2 glasses = ds_define_sprite('cs', 'serious', body_name='medic2', acc='glasses')
+    image cs shy medic2 glasses = ds_define_sprite('cs', 'shy', body_name='medic2', acc='glasses')
+    image cs smile medic2 glasses = ds_define_sprite('cs', 'smile', body_name='medic2', acc='glasses')
+    image cs sorrow medic2 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic2', acc='glasses')
+    image cs tired medic2 glasses = ds_define_sprite('cs', 'tired', body_name='medic2', acc='glasses')
+    image cs upset medic2 glasses = ds_define_sprite('cs', 'upset', body_name='medic2', acc='glasses')
+
+    image cs angry medic3 glasses = ds_define_sprite('cs', 'angry', body_name='medic3', acc='glasses')
+    image cs badgirl medic3 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic3', acc='glasses')
+    image cs cry medic3 glasses = ds_define_sprite('cs', 'cry', body_name='medic3', acc='glasses')
+    image cs dontlike medic3 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic3', acc='glasses')
+    image cs doubt medic3 glasses = ds_define_sprite('cs', 'doubt', body_name='medic3', acc='glasses')
+    image cs grin medic3 glasses = ds_define_sprite('cs', 'grin', body_name='medic3', acc='glasses')
+    image cs irritated medic3 glasses = ds_define_sprite('cs', 'irritated', body_name='medic3', acc='glasses')
+    image cs laugh medic3 glasses = ds_define_sprite('cs', 'laugh', body_name='medic3', acc='glasses')
+    image cs normal medic3 glasses = ds_define_sprite('cs', 'normal', body_name='medic3', acc='glasses')
+    image cs rage medic3 glasses = ds_define_sprite('cs', 'rage', body_name='medic3', acc='glasses')
+    image cs sad medic3 glasses = ds_define_sprite('cs', 'sad', body_name='medic3', acc='glasses')
+    image cs scared medic3 glasses = ds_define_sprite('cs', 'scared', body_name='medic3', acc='glasses')
+    image cs serious medic3 glasses = ds_define_sprite('cs', 'serious', body_name='medic3', acc='glasses')
+    image cs shy medic3 glasses = ds_define_sprite('cs', 'shy', body_name='medic3', acc='glasses')
+    image cs smile medic3 glasses = ds_define_sprite('cs', 'smile', body_name='medic3', acc='glasses')
+    image cs sorrow medic3 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic3', acc='glasses')
+    image cs tired medic3 glasses = ds_define_sprite('cs', 'tired', body_name='medic3', acc='glasses')
+    image cs upset medic3 glasses = ds_define_sprite('cs', 'upset', body_name='medic3', acc='glasses')
+
+    image cs angry medic4 glasses = ds_define_sprite('cs', 'angry', body_name='medic4', acc='glasses')
+    image cs badgirl medic4 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic4', acc='glasses')
+    image cs cry medic4 glasses = ds_define_sprite('cs', 'cry', body_name='medic4', acc='glasses')
+    image cs dontlike medic4 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic4', acc='glasses')
+    image cs doubt medic4 glasses = ds_define_sprite('cs', 'doubt', body_name='medic4', acc='glasses')
+    image cs grin medic4 glasses = ds_define_sprite('cs', 'grin', body_name='medic4', acc='glasses')
+    image cs irritated medic4 glasses = ds_define_sprite('cs', 'irritated', body_name='medic4', acc='glasses')
+    image cs laugh medic4 glasses = ds_define_sprite('cs', 'laugh', body_name='medic4', acc='glasses')
+    image cs normal medic4 glasses = ds_define_sprite('cs', 'normal', body_name='medic4', acc='glasses')
+    image cs rage medic4 glasses = ds_define_sprite('cs', 'rage', body_name='medic4', acc='glasses')
+    image cs sad medic4 glasses = ds_define_sprite('cs', 'sad', body_name='medic4', acc='glasses')
+    image cs scared medic4 glasses = ds_define_sprite('cs', 'scared', body_name='medic4', acc='glasses')
+    image cs serious medic4 glasses = ds_define_sprite('cs', 'serious', body_name='medic4', acc='glasses')
+    image cs shy medic4 glasses = ds_define_sprite('cs', 'shy', body_name='medic4', acc='glasses')
+    image cs smile medic4 glasses = ds_define_sprite('cs', 'smile', body_name='medic4', acc='glasses')
+    image cs sorrow medic4 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic4', acc='glasses')
+    image cs tired medic4 glasses = ds_define_sprite('cs', 'tired', body_name='medic4', acc='glasses')
+    image cs upset medic4 glasses = ds_define_sprite('cs', 'upset', body_name='medic4', acc='glasses')
 
     image cs angry civil = ds_define_sprite('cs', 'angry', cloth='civil')
     image cs badgirl civil = ds_define_sprite('cs', 'badgirl', cloth='civil')

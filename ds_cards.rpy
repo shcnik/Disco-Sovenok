@@ -7067,7 +7067,7 @@ label ds_cards_final_choice:
                 "В общем, в поражении я не виноват. Вот."
         $ renpy.block_rollback()                                                                                # блокируем роллбак
         stop music fadeout 2
-        jump ds_cards_prepare_transition_to_supper
+        jump ds_cards_quit
 # ------------------------------------------------------------------------------------------------------------------------------
 
 label ds_cards_final_start:

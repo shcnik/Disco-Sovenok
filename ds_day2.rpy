@@ -6093,7 +6093,7 @@ label ds_day2_after_pass:
             me "Да так..."
             show us calml pioneer at center with dspr
             us "А впрочем понимаю... мне тоже скучно тут!"
-            if ds_lp['us'] >= 10:
+            if ds_lp['us'] >= 3:
                 show us grin pioneer at center with dspr
                 us "Cлушай, а может сбежим отсюда?"
                 play sound ds_sfx_mot
@@ -9103,7 +9103,7 @@ label ds_day2_house13:
             else:
                 show mi upset swim at center with dspr
                 mi "Я даже не знаю, что тебе предложить... Короче, приходи завтра в музклуб, придумаем, как тебя отблагодарить!"
-        "{check=instict:8}Начать домогаться":
+        "{check=instinct:8}Начать домогаться":
             if skillcheck('instinct', lvl_easy):
                 play sound ds_sfx_fys
                 ins "{result}Расплатиться она вполне может и натурой, как думаешь?"
