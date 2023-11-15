@@ -2,7 +2,6 @@
 # ОБЩИЙ РУТ. ДЕНЬ 3
 
 init:
-    $ mods["disco_sovenok"] = u'Disco Sovenok'
     $ ds_was_on_lineup = False
     $ ds_accept_mz = False
     $ ds_understood_mz_reason = False

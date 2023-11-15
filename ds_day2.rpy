@@ -1,8 +1,6 @@
 # DISCO SOVENOK
 # ОБЩИЙ РУТ. ДЕНЬ 2
 init:
-    $ mods["disco_sovenok"] = u"Disco Sovenok"
-
     $ ds_know_face = False
     $ ds_sl_workouts = False
     $ ds_passed_places = 0

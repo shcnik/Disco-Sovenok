@@ -268,8 +268,6 @@ init python:
             persistent.ds_achievements[ach] = True
 
 init:
-    $ mods["disco_sovenok"] = u"Disco Sovenok"
-
 
 # Переменные
 

@@ -1,8 +1,5 @@
 # DISCO SOVENOK
 # ПРОЛОГ
-init:
-    $ mods["disco_sovenok"] = u"Disco Sovenok"
-
 label ds_prologue:
     $ backdrop = "prologue"
     $ new_chapter(-1, "Пролог")

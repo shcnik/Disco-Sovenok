@@ -1,8 +1,6 @@
 # DISCO SOVENOK
 # ОБЩИЙ РУТ. ДЕНЬ 1
 init:
-    $ mods["disco_sovenok"] = u"Disco Sovenok"
-
     $ ds_ran = False
     $ ds_cry = False
     $ ds_beat_sl = False

@@ -753,8 +753,6 @@ init python:
     renpy.start_predict_screen('ds_gallery')
 
 init:
-    $ mods["disco_sovenok"] = u"Disco Sovenok"
-
     if not config_session:
         image widget small_map_ds = "mods/disco_sovenok/gui/map/small_map_bg.jpg" # Путь до фона карты
         image bg small_map_ds     = "mods/disco_sovenok/gui/map/small_map_available.jpg" # Путь до версии карты с idle-версией
