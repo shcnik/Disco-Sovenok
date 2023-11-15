@@ -28,6 +28,9 @@ init:
     $ ds_helped_sl_lib = False
     $ ds_day3_evening_who = None
     $ ds_un_dance_accept = False
+    $ ds_dumped_dv = False
+    $ ds_dumped_un = False
+    $ ds_day3_dv_conflict = False
 
     default ds_approved_pp = {
         'dv': False,
@@ -145,7 +148,7 @@ label ds_day3_morning:
                     sl "Врать нехорошо, Семён! Сказал бы, что просто не хочешь!"
                     sl "А так делать нехорошо... да и вообще, зачем тогда сам предлагал?!"
                     sl "Ладно, я пойду! Удачного дня!"
-                    $ ds_lp_sl -= 2
+                    $ ds_lp['sl'] -= 2
     else:
         window show
         play sound ds_sfx_mot
@@ -7472,16 +7475,12 @@ label ds_day3_music_mi_compose:
     mi "И это тоже."
     mi "Семён-кун, давай и ты поучаствуешь?"
     me "Да, конечно. Что такое?"
-    show mi normal pioneer at center
-    with dspr
-    mi "Смотри. Выбери некоторые слова. Я буду подгонять под них другие слова."
-    play sound ds_sfx_psy
-    vol "Похоже, ничего сложного."
-    mi "Итак, выбери первое слово. Зачин, начало, старт."
-    # TODO: игра на выбор слов
+
+    call ds_day3_compose
+
     show mi happy pioneer at center
     with dspr
-    mi "Отлично вышло у нас! Иди, Семён-кун, покоряй Алису-тян! Ей должно понравиться!"
+    mi "Иди, Семён-кун, покоряй Алису-тян! Ей должно понравиться!"
     window hide
     menu:
         "Поблагодарить":
@@ -9915,6 +9914,7 @@ label ds_day3_bus:
             th "Ладно, схожу на дискотеку..."
             if ds_dv_invite:
                 $ ds_lp['dv'] -= 3
+                $ ds_dumped_dv = True
         "Пойти к Алисе" if ds_dv_invite:
             window show
             play sound ds_sfx_psy
@@ -9926,6 +9926,7 @@ label ds_day3_bus:
                 $ ds_lp['un'] -= 3
             if ds_to_help_un:
                 $ ds_lp['un'] -= 2
+                $ ds_dumped_un = True
             if ds_promise_sl:
                 $ ds_lp['sl'] -= 2
                 $ day3_dv_evening = 1
@@ -9962,16 +9963,18 @@ label ds_day3_bus:
             play sound ds_sfx_int
             lgc "И кто же это может быть?"
             jump ds_day3_evening_dv
-        "Отсидеться дома":
+        "Уйти прочь":
             window show
             th "Да пошло оно всё к чёрту!"
             "С этими словами ты направляешься к своему домику."
             if ds_dv_invite or ds_dv_dance:
                 $ ds_lp['dv'] -= 3
+                $ ds_dumped_dv = True
             if ds_promise_un:
                 $ ds_lp['un'] -= 3
             if ds_to_help_un:
                 $ ds_lp['un'] -= 2
+                $ ds_dumped_un = True
             if ds_promise_sl:
                 $ ds_lp['sl'] -= 2
             $ ds_karma -= 5
@@ -11372,6 +11375,7 @@ label ds_day3_evening_dv_failure:
     stop ambience fadeout 2
 
     "Кричит Алиса и быстро шагает к бане."
+    $ ds_day3_dv_conflict = True
     window hide
 
     jump ds_day3_evening_dv_end

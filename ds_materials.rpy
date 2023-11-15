@@ -755,6 +755,12 @@ init:
 
     # С ОД
 
+    # C Виолой
+
+    image cg ds_day2_cs_sex1 = "mods/disco_sovenok/cg/uprtviolahentai.jpg"
+    image cg ds_day2_cs_sex2 = "mods/disco_sovenok/cg/uprtviolahentai2.jpg"
+    image cg ds_day2_cs_sex3 = "mods/disco_sovenok/cg/uprtviolahentai3.jpg"
+
 # Аудио
 
 ## Музыка
