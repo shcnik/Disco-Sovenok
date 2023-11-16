@@ -700,6 +700,8 @@ init:
 
     image cg ds_day3_dance_ya = "mods/disco_sovenok/cg/d3_dance_ya.png"
 
+    image cg ds_day4_us_dv_play = "mods/disco_sovenok/cg/ussrr_dv_p_d4.jpg"
+
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
     image cg ds_day2_cs_near = "mods/disco_sovenok/cg/d5_cs.jpg"

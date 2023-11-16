@@ -7022,7 +7022,7 @@ label ds_day2_prepare_tour:
     hide sl 
     with dissolve
     "Славя и Ольга Дмитриевна зашли внутрь."
-    if not ds_beat_dv and not ds_betray_dv:
+    if not ds_beat_dv and not ds_betray_dv and (ds_lp['dv'] >= 5):
         play sound ds_sfx_mot
         per_toc "Ты уже собирался последовать за ними, как вдруг тебя кто-то резко дёргает за руку."
         show dv normal pioneer at center   with dspr

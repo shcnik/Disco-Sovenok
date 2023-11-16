@@ -4,7 +4,11 @@
 
 init:
     $ ds_caught_in_lib = False
+    $ ds_have_guess_sh = False
     $ ds_dv_breakfast_absent = False
+    $ ds_triggered_dv = False
+    $ ds_d4_us_accept = True
+    $ ds_on_beach_pants = False
 
 label ds_day4_morning:
 
@@ -1524,6 +1528,7 @@ label ds_day4_sh_lost:
             with dspr
             mt "Точно? Может, он всё-таки просто погулять пошёл?"
             $ ds_karma += 20
+            $ ds_have_guess_sh = True
         "{check=logic:10}Выдвинуть «обоснованные» предположения":
             if skillcheck('logic', lvl_medium):
                 window show
@@ -1536,6 +1541,7 @@ label ds_day4_sh_lost:
                 mt "Ты о чём?"
                 sl "Ну, либо склад... либо ещё какое подсобное помещение."
                 mt "Значит, надо будет посмотреть все склады в лагере! Может быть, Шурик поранился или был придавлен!"
+                $ ds_have_guess_sh = True
             else:
                 window show
                 play sound ds_sfx_int
@@ -1555,6 +1561,7 @@ label ds_day4_sh_lost:
                 mt "С чего ты взял, Семён?!"
                 el "Cтоп, ведь Шурик что-то говорил про старый лагерь..."
                 $ ds_karma += 10
+                $ ds_have_guess_sh = True
             else:
                 window show
                 play sound ds_sfx_fys
@@ -1759,6 +1766,7 @@ label ds_day4_sh_lost:
                         "И Алиса, хлопнув дверью, выходит из столовой."
                         $ ds_lp['dv'] -= 5
                         $ ds_dv_breakfast_absent = True
+                        $ ds_triggered_dv = True
                         show us sad pioneer at cright
                         with dspr
                         us "Ну ты и кашу заварил, Семён..."
@@ -1841,6 +1849,7 @@ label ds_day4_sh_lost:
             show us dontlike pioneer at cright
             with dspr
             us "Да чего ты? Пойдём, отдохнёшь..."
+            $ ds_d4_us_accept = False
         "Ответить неопределённо":
             window show
             me "Можно мне подумать?"
@@ -1890,28 +1899,1290 @@ label ds_day4_sh_lost:
         jump ds_day4_after_breakfast_reject
     show dv normal pioneer at cleft   with dspr:
         linear 0.5 xalign 0.5
-    "Мы остались наедине с Алисой."
-    me "Знаешь, я всё же, наверное, с вами не пойду."
-    show dv normal pioneer at center   with dspr
-    dv "А что так?"
-    me "Ну, дела кое-какие…"
-    show dv surprise pioneer at center   with dspr
-    dv "И что же у тебя за дела?"
-    "Она заглянула мне в глаза так, что я не нашёлся, что соврать."
-    me "Ну, у меня и плавок даже нет…"
-    show dv normal pioneer at center   with dspr
-    dv "Надень мои."
-    me "Думаешь, они на меня налезут?"
-    show dv grin pioneer at center   with dspr
-    dv "А ты попробуй!"
-    me "Наверное, не стоит…"
-    show dv smile pioneer at center   with dspr
-    dv "Да ты не бойся!{w} Найдём мы тебе плавки!"
-    "От этой фразы страх мой только усилился."
+    "Вы остаётесь наедине с Алисой."
+    window hide
+    menu:
+        "Передумать идти" if ds_d4_us_accept:
+            window show
+            me "Знаешь, я всё же, наверное, с вами не пойду."
+            show dv normal pioneer at center   with dspr
+            dv "А что так?"
+            window hide
+            menu:
+                "Cказать, что есть дела":
+                    window show
+                    me "Ну, дела кое-какие…"
+                    show dv surprise pioneer at center   with dspr
+                    dv "И что же у тебя за дела?"
+                    if not skillcheck('composure', lvl_challenging, passive=True):
+                        play sound ds_sfx_mot
+                        com "{result}Она заглядывает тебе в глаза так, что ты даже не знаешь, что соврать."
+                    play sound ds_sfx_int
+                    rhe "Лучше зайди с той стороны, что нет плавок. Это и правдиво - и надёжно."
+                "Сказать, что нет плавок":
+                    window show
+                "Отказаться отвечать":
+                    window show
+                    me "Просто не хочу! Отстань."
+                    show dv normal pioneer at center
+                    with dspr
+                    dv "Ну, как скажешь - мне вообще без разницы, придёшь ты, не придёшь."
+                    dv "Бывай!"
+                    $ ds_lp['dv'] -= 1
+                    hide dv with dissolve
+                    stop ambience fadeout 2
+                    jump ds_day4_after_breakfast_reject
+            me "Ну, у меня и плавок даже нет…"
+            show dv normal pioneer at center   with dspr
+            dv "Надень мои."
+            if skillcheck('instinct', lvl_easy, passive=True):
+                play sound ds_sfx_fys
+                ins "{result}Это намёк! Очень прозрачный намёк!"
+                play sound ds_sfx_psy
+                aut "Ага, скорее уж попытка высмеять тебя - мужик в женских плавках!"
+                play sound ds_sfx_fys
+                pat "Ещё и сжимать твои причиндалы будет..."
+                th "А откуда такие сведения?!"
+                aut "Раз не знаешь - то оно и к лучшему. Меньше знаешь - крепче спишь!"
+            play sound ds_sfx_psy
+            vol "Идея плохая, в общем. Не поймут."
+            me "Думаешь, они на меня налезут?"
+            show dv grin pioneer at center   with dspr
+            dv "А ты попробуй!"
+            window hide
+            menu:
+                "Cогласиться":
+                    window show
+                    me "А давай!"
+                    show dv surprise pioneer at center
+                    with dspr
+                    "Cначала Алиса не поняла тебя..."
+                    show dv angry pioneer at center
+                    with dspr
+                    "...а потом как поняла!"
+                    dv "Ты там вообще что ли?! Всерьёз поверил, что будешь мои плавки носить?!"
+                    $ ds_lp['dv'] -= 1
+                    $ ds_damage_morale()
+                    play sound ds_sfx_psy
+                    sug "Неудобно вышло..."
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Но ты не расстраивайся - найдём мы тебе плавки!"
+                "Отвергнуть":
+                    me "Наверное, не стоит…"
+                    show dv smile pioneer at center   with dspr
+                    dv "Да ты не бойся!{w} Найдём мы тебе плавки!"
+        "Всё-таки пойти" if ds_d4_us_accept:
+            window show
+            me "Я всё-таки подумал и решил, что пойду с вами."
+            dv "Вот как?"
+            show dv grin pioneer at center
+            with dspr
+            dv "А можно нескромный вопрос - а в чём ты пойдёшь?"
+            play sound ds_sfx_int
+            rhe "Она к тому, что не в пионерской форме же на пляже сидеть."
+            play sound ds_sfx_psy
+            vol "Что правда - тебе явно нужна одежда более пригодная для плавания. То бишь плавки."
+            window hide
+            menu:
+                "Ответить, что пойдёшь так":
+                    window show
+                    me "Да прямо так и пойду, что такого?"
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Что такого? А плавать в этом ты как собираешься?"
+                "Сказать про отсутствие плавок":
+                    window show
+                    me "Ну... да, у меня нет плавок..."
+                    show dv normal pioneer at center   with dspr
+                    dv "Надень мои."
+                    if skillcheck('instinct', lvl_easy, passive=True):
+                        play sound ds_sfx_fys
+                        ins "{result}Это намёк! Очень прозрачный намёк!"
+                        play sound ds_sfx_psy
+                        aut "Ага, скорее уж попытка высмеять тебя - мужик в женских плавках!"
+                        play sound ds_sfx_fys
+                        pat "Ещё и сжимать твои причиндалы будет..."
+                        th "А откуда такие сведения?!"
+                        aut "Раз не знаешь - то оно и к лучшему. Меньше знаешь - крепче спишь!"
+                    play sound ds_sfx_psy
+                    vol "Идея плохая, в общем. Не поймут."
+                    me "Думаешь, они на меня налезут?"
+                    show dv grin pioneer at center   with dspr
+                    dv "А ты попробуй!"
+                    window hide
+                    menu:
+                        "Cогласиться":
+                            window show
+                            me "А давай!"
+                            show dv surprise pioneer at center
+                            with dspr
+                            "Cначала Алиса не поняла тебя..."
+                            show dv angry pioneer at center
+                            with dspr
+                            "...а потом как поняла!"
+                            dv "Ты там вообще что ли?! Всерьёз поверил, что будешь мои плавки носить?!"
+                            $ ds_lp['dv'] -= 1
+                            $ ds_damage_morale()
+                            play sound ds_sfx_psy
+                            sug "Неудобно вышло..."
+                            show dv laugh pioneer at center
+                            with dspr
+                        "Отвергнуть":
+                            me "Наверное, не стоит…"
+                            show dv smile pioneer at center   with dspr
+            show dv smile pioneer at center
+            with dspr
+            dv "Короче, горемычный ты наш сиротинушка. Сейчас найдём тебе плавки."
+        "Подтвердить планы" if ds_d4_us_accept:
+            window show
+            me "Да, я всё-таки пойду с вами."
+            show dv grin pioneer at center
+            with dspr
+            dv "А можно нескромный вопрос - а в чём ты пойдёшь?"
+            play sound ds_sfx_int
+            rhe "Она к тому, что не в пионерской форме же на пляже сидеть."
+            play sound ds_sfx_psy
+            vol "Что правда - тебе явно нужна одежда более пригодная для плавания. То бишь плавки."
+            window hide
+            menu:
+                "Ответить, что пойдёшь так":
+                    window show
+                    me "Да прямо так и пойду, что такого?"
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Что такого? А плавать в этом ты как собираешься?"
+                "Сказать про отсутствие плавок":
+                    window show
+                    me "Ну... да, у меня нет плавок..."
+                    show dv normal pioneer at center   with dspr
+                    dv "Надень мои."
+                    if skillcheck('instinct', lvl_easy, passive=True):
+                        play sound ds_sfx_fys
+                        ins "{result}Это намёк! Очень прозрачный намёк!"
+                        play sound ds_sfx_psy
+                        aut "Ага, скорее уж попытка высмеять тебя - мужик в женских плавках!"
+                        play sound ds_sfx_fys
+                        pat "Ещё и сжимать твои причиндалы будет..."
+                        th "А откуда такие сведения?!"
+                        aut "Раз не знаешь - то оно и к лучшему. Меньше знаешь - крепче спишь!"
+                    play sound ds_sfx_psy
+                    vol "Идея плохая, в общем. Не поймут."
+                    me "Думаешь, они на меня налезут?"
+                    show dv grin pioneer at center   with dspr
+                    dv "А ты попробуй!"
+                    window hide
+                    menu:
+                        "Cогласиться":
+                            window show
+                            me "А давай!"
+                            show dv surprise pioneer at center
+                            with dspr
+                            "Cначала Алиса не поняла тебя..."
+                            show dv angry pioneer at center
+                            with dspr
+                            "...а потом как поняла!"
+                            dv "Ты там вообще что ли?! Всерьёз поверил, что будешь мои плавки носить?!"
+                            $ ds_lp['dv'] -= 1
+                            $ ds_damage_morale()
+                            play sound ds_sfx_psy
+                            sug "Неудобно вышло..."
+                            show dv laugh pioneer at center
+                            with dspr
+                        "Отвергнуть":
+                            me "Наверное, не стоит…"
+                            show dv smile pioneer at center   with dspr
+            show dv smile pioneer at center
+            with dspr
+            dv "Короче, горемычный ты наш сиротинушка. Сейчас найдём тебе плавки."
+        "Подтвердить планы" if not ds_d4_us_accept:
+            window show
+            me "Знаешь, я всё же, наверное, с вами не пойду."
+            show dv normal pioneer at center   with dspr
+            dv "А что так?"
+            window hide
+            menu:
+                "Cказать, что есть дела":
+                    window show
+                    me "Ну, дела кое-какие…"
+                    show dv surprise pioneer at center   with dspr
+                    dv "И что же у тебя за дела?"
+                    if not skillcheck('composure', lvl_challenging, passive=True):
+                        play sound ds_sfx_mot
+                        com "{result}Она заглядывает тебе в глаза так, что ты даже не знаешь, что соврать."
+                    play sound ds_sfx_int
+                    rhe "Лучше зайди с той стороны, что нет плавок. Это и правдиво - и надёжно."
+                    play sound ds_sfx_int
+                    dra "Нет, куда лучше звучат секретные поручения вожатой!"
+                    window hide
+                    menu:
+                        "Cказать, что нет плавок":
+                            window show
+                        "Соврать про поручения":
+                            window show
+                            me "Поручения от вожатой. Очень секретные."
+                            dv "Да брось ты!"
+                            me "Нет, я никуда не пойду."
+                            show dv surprise pioneer at center  with dspr
+                            play sound ds_sfx_psy
+                            aut "Кажется, Алиса такого резкого ответа не ожидала."
+                            show dv smile pioneer at center  with dspr
+                            dv "Ты что, сдрейфил, пионер? Пляжей боишься?"
+                            show dv laugh pioneer at center  with dspr
+                            "Алисе так понравилась её собственная колкость, что она звонко смеётся."
+                            play sound ds_sfx_fys
+                            hfl "Наверняка, дальше будет только хуже."
+                            play sound ds_sfx_psy
+                            vol "Но не можешь же ты открыто послать её на три буквы?"
+                            aut "Или можешь?"
+                            window hide
+                            menu:
+                                "Остаться":
+                                    window show
+                                "Уйти":
+                                    window show
+                                    "Ты молча встаёшь из-за стола, уносишь поднос и, не оборачиваясь, покидаешь столовую."
+                                    hide dv with dissolve
+                                    window hide               
+
+                                    jump ds_day4_after_breakfast_reject
+                "Сказать, что нет плавок":
+                    window show
+                "Отказаться отвечать":
+                    window show
+                    me "Просто не хочу! Отстань."
+                    show dv normal pioneer at center
+                    with dspr
+                    dv "Ну, как скажешь - мне вообще без разницы, придёшь ты, не придёшь."
+                    dv "Бывай!"
+                    $ ds_lp['dv'] -= 1
+                    hide dv with dissolve
+                    stop ambience fadeout 2
+                    jump ds_day4_after_breakfast_reject
+            me "Ну, у меня и плавок даже нет…"
+            show dv normal pioneer at center   with dspr
+            dv "Надень мои."
+            if skillcheck('instinct', lvl_easy, passive=True):
+                play sound ds_sfx_fys
+                ins "{result}Это намёк! Очень прозрачный намёк!"
+                play sound ds_sfx_psy
+                aut "Ага, скорее уж попытка высмеять тебя - мужик в женских плавках!"
+                play sound ds_sfx_fys
+                pat "Ещё и сжимать твои причиндалы будет..."
+                th "А откуда такие сведения?!"
+                aut "Раз не знаешь - то оно и к лучшему. Меньше знаешь - крепче спишь!"
+            play sound ds_sfx_psy
+            vol "Идея плохая, в общем. Не поймут."
+            me "Думаешь, они на меня налезут?"
+            show dv grin pioneer at center   with dspr
+            dv "А ты попробуй!"
+            window hide
+            menu:
+                "Cогласиться":
+                    window show
+                    me "А давай!"
+                    show dv surprise pioneer at center
+                    with dspr
+                    "Cначала Алиса не поняла тебя..."
+                    show dv angry pioneer at center
+                    with dspr
+                    "...а потом как поняла!"
+                    dv "Ты там вообще что ли?! Всерьёз поверил, что будешь мои плавки носить?!"
+                    $ ds_lp['dv'] -= 1
+                    $ ds_damage_morale()
+                    play sound ds_sfx_psy
+                    sug "Неудобно вышло..."
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Но ты не расстраивайся - найдём мы тебе плавки!"
+                "Отвергнуть":
+                    me "Наверное, не стоит…"
+                    show dv smile pioneer at center   with dspr
+                    dv "Да ты не бойся!{w} Найдём мы тебе плавки!"
+        "Промолчать" if ds_d4_us_accept:
+            window show
+            "Ты хотел молча доесть завтрак, но Алиса, похоже, решила не дать тебе ни шанса на покой."
+            dv "Я же правильно поняла, что ты идёшь с нами?"
+            me "Ну..."
+            show dv grin pioneer at center
+            with dspr
+            dv "А можно нескромный вопрос - а в чём ты пойдёшь?"
+            play sound ds_sfx_int
+            rhe "Она к тому, что не в пионерской форме же на пляже сидеть."
+            play sound ds_sfx_psy
+            vol "Что правда - тебе явно нужна одежда более пригодная для плавания. То бишь плавки."
+            window hide
+            menu:
+                "Ответить, что пойдёшь так":
+                    window show
+                    me "Да прямо так и пойду, что такого?"
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Что такого? А плавать в этом ты как собираешься?"
+                "Сказать про отсутствие плавок":
+                    window show
+                    me "Ну... да, у меня нет плавок..."
+                    show dv normal pioneer at center   with dspr
+                    dv "Надень мои."
+                    if skillcheck('instinct', lvl_easy, passive=True):
+                        play sound ds_sfx_fys
+                        ins "{result}Это намёк! Очень прозрачный намёк!"
+                        play sound ds_sfx_psy
+                        aut "Ага, скорее уж попытка высмеять тебя - мужик в женских плавках!"
+                        play sound ds_sfx_fys
+                        pat "Ещё и сжимать твои причиндалы будет..."
+                        th "А откуда такие сведения?!"
+                        aut "Раз не знаешь - то оно и к лучшему. Меньше знаешь - крепче спишь!"
+                    play sound ds_sfx_psy
+                    vol "Идея плохая, в общем. Не поймут."
+                    me "Думаешь, они на меня налезут?"
+                    show dv grin pioneer at center   with dspr
+                    dv "А ты попробуй!"
+                    window hide
+                    menu:
+                        "Cогласиться":
+                            window show
+                            me "А давай!"
+                            show dv surprise pioneer at center
+                            with dspr
+                            "Cначала Алиса не поняла тебя..."
+                            show dv angry pioneer at center
+                            with dspr
+                            "...а потом как поняла!"
+                            dv "Ты там вообще что ли?! Всерьёз поверил, что будешь мои плавки носить?!"
+                            $ ds_lp['dv'] -= 1
+                            $ ds_damage_morale()
+                            play sound ds_sfx_psy
+                            sug "Неудобно вышло..."
+                            show dv laugh pioneer at center
+                            with dspr
+                        "Отвергнуть":
+                            me "Наверное, не стоит…"
+                            show dv smile pioneer at center   with dspr
+            show dv smile pioneer at center
+            with dspr
+            dv "Короче, горемычный ты наш сиротинушка. Сейчас найдём тебе плавки."
+        "Промолчать" if not ds_d4_us_accept:
+            window show
+            "Алиса вскоре тоже доедает завтрак и встаёт из-за стола."
+            show dv normal pioneer at center
+            with dspr
+            dv "Бывай!"
+            hide dv with dissolve
+            "Ты остаёшься один. Доев завтрак, ты тоже выходишь, прикидывая, куда пойдёшь."
+            jump ds_day4_after_breakfast_reject
+    play sound ds_sfx_fys
+    hfl "От этой фразы страх твой только усилился."
     dv "Подожди меня возле столовой, я вернусь через пару минут."
-    me "Ладно…"
+    vol "Вряд ли что-то такое случится от того, что ты её просто подождёшь."
+    window hide
+    menu:
+        "Смириться":
+            window show
+            me "Ладно…"
+
+        "Потребовать пойти вместе":
+            window show
+            me "А давай вместе сходим!"
+            show dv grin pioneer at center
+            with dspr
+            dv "Нет уж, не пущу я тебя в свой домик - не дорос ещё!"
+            play sound ds_sfx_psy
+            aut "Прозвучало обидно."
+            "И что хуже всего - Алиса уходит, даже не собираясь тебя ждать."
+        "Последовать за Алисой":
+            window show
+            "Ты невозмутимо идёшь за Алисой."
+            scene bg ds_int_dininghall_door_day
+            show dv angry pioneer at center
+            with dspr
+            dv "Куда собрался?!"
+            me "Так с тобой..."
+            dv "Тебе не ясно было сказано: подождать!"
+            dv "Вот и жди тут! Не пущу я тебя в свой домик, и не надейся!"
+    stop ambience fadeout 2
+    scene bg 
+    window hide
+    scene bg int_dining_hall_people_day 
+    with dissolve
+    menu:
+        "Подожать":
+            window show
+            $ persistent.sprite_time = "day"
+            scene bg ext_dining_hall_near_day 
+            with dissolve
+
+            play ambience ambience_camp_center_day fadein 3
+
+            window show
+            "Закончив завтрак, ты выходишь на улицу и садишься на ступеньки."
+            "Мимо тебя один за другим проходили пионеры, спешащие по своим делам."
+            "Никто не останавливается.{w} Никто даже не смотрит в мою сторону."
+            play sound ds_sfx_int
+            lgc "Кажется, они совсем не считают тебя чужаком, а напротив – обычным подростком их возраста, можно сказать, своим товарищем."
+            play sound ds_sfx_psy
+            ine "Ты тоже воспринимаешь этот лагерь и всех его обитателей уже не с такой обострённой насторожённостью, как в первый день."
+            window hide
+
+            with fade
+
+            window show
+            "Алиса возвращается через пару минут."
+            show dv normal pioneer at center   with dissolve
+        "Cвалить":
+            window show
+            th "Нафиг, нафиг! Наверняка эта парочка приготовила мне очередной {i}сюрприз{/i}!"
+            play sound ds_sfx_fys
+            hfl "Поддерживаю!"
+            $ ds_lp['dv'] -= 1
+            jump ds_day4_after_breakfast_reject
+        "{check=visual_calculus:10}Преследовать Алису":
+            if skillcheck('visual_calculus', lvl_medium):
+                play sound ds_sfx_int
+                vic "{result}Во-первых, пока ты думал, Алиса уже ушла далеко. Ты можешь идти без опаски."
+                vic "Дальше - ты мог заметить, что она побежала из столовой прямо - то есть к озеру. Иди туда."
+                window hide
+                scene bg ext_dining_hall_near_day 
+                with dissolve
+                play ambience ambience_camp_center_day fadein 3
+                $ renpy.pause(1.0)
+                scene bg ext_houses_day
+                with dissolve
+                window show
+                vic "Так, пока всё верно. Иди дальше."
+                scene bg ext_house_of_dv_day
+                with dissolve
+                vic "Ну, кажется, и так понятно, что этот домик, и никакой иной, является домиком Алисы!"
+                $ ds_skill_points['visual_calculus'] += 1
+                "Твои предположения подтверждаются - из домика выходит Алиса."
+                play sound sfx_open_door_1
+                show dv surprise pioneer at center
+                with dissolve
+                "Тебя она не ожидала увидеть тут."
+                show dv angry pioneer at center
+                with dspr
+                dv "Я тебе где сказала меня ждать?! Чего ты такой непонятливый?!"
+                me "Ну, я подумал..."
+                dv "Подумал он..."
+                show dv normal pioneer at center
+                with dspr
+                dv "Ладно, уже неважно!"
+            else:
+                play sound ds_sfx_int
+                vic "{result}Проследить путь Алисы дальше, чем из столовой, тебе не удаётся."
+                $ persistent.sprite_time = "day"
+                scene bg ext_dining_hall_near_day 
+                with dissolve
+
+                play ambience ambience_camp_center_day fadein 3
+
+                "Ты просто выходишь из столовой и садишься на ступеньку."
+                play sound ds_sfx_int
+                lgc "Если гора не идёт к Магомету, то Магомет идёт к горе. А здесь, похоже, сработает обратное."
+                window show
+                "Закончив завтрак, ты выходишь на улицу и садишься на ступеньки."
+                "Мимо тебя один за другим проходили пионеры, спешащие по своим делам."
+                "Никто не останавливается.{w} Никто даже не смотрит в мою сторону."
+                play sound ds_sfx_int
+                lgc "Кажется, они совсем не считают тебя чужаком, а напротив – обычным подростком их возраста, можно сказать, своим товарищем."
+                play sound ds_sfx_psy
+                ine "Ты тоже воспринимаешь этот лагерь и всех его обитателей уже не с такой обострённой насторожённостью, как в первый день."
+                window hide
+
+                with fade
+
+                window show
+                "Алиса возвращается через пару минут."
+                show dv normal pioneer at center   with dissolve
+    dv "Готов?"
+    me "К чему?"
+
+    play music music_list["i_want_to_play"] fadein 1
+
+    "Она протягивает тебе плавки…"
+    play sound ds_sfx_mot
+    per_eye "Хотя плавками это назвать сложно…"
+    per_eye "Больше они походят на розовые семейные трусы, украшенные бабочками и цветочками.{w} Точнее, ими и являются."
+    $ ds_d4_dv_diag_asked = False
+    $ ds_d4_dv_diag_offer = False
+    $ ds_d4_dv_diag_try_reject = False
+    jump ds_day4_after_breakfast_dv_dialogue
+
+label ds_day4_after_breakfast_dv_dialogue:
+    window hide
+    menu:
+        "Cпросить, откуда взяла" if not ds_d4_dv_diag_asked:
+            window show
+            $ ds_d4_dv_diag_asked = True
+            me "Страшно спросить, откуда ты {i}это{/i} взяла?"
+            show dv grin pioneer at center   with dspr
+            dv "А что, боишься их надеть?"
+            me "Да как-то, знаешь…{w} не имею никакого желания."
+            play sound ds_sfx_psy
+            aut "Её прикол ты оценил, но выставить себя на посмешище? Увольте!"
+            show dv angry pioneer at center   with dspr
+            dv "Надевай!"
+            jump ds_day4_after_breakfast_dv_dialogue
+        "Предложить примерить ей" if not ds_d4_dv_diag_offer:
+            window show
+            $ ds_d4_dv_diag_offer = True
+            me "Почему бы тебе их не примерить вместо меня?{w} Мне кажется, цвет этого бикини прекрасно оттеняет твои глаза!"
+            show dv smile pioneer at center   with dspr
+            dv "Давай на спор!"
+            window hide
+            menu:
+                "Согласиться":
+                    window show
+                    me "Ну давай!"
+                    play sound ds_sfx_int
+                    rhe "Только вот как она сформулирует условие спора?"
+                    show dv grin pioneer at center
+                    with dspr
+                "Отказаться":
+                    window show
+                    me "Нет, спасибо."
+                    show dv angry pioneer at center   with dspr
+            dv "Короче, либо ты идёшь на пляж в этом, либо плаваешь голым!"
+            play sound ds_sfx_fys
+            ins "Если всё тщательно взвесить, то второй вариант окажется даже лучше первого."
+            window hide
+            menu:
+                "Продолжить":
+                    window show
+                "Согласиться плавать голым":
+                    window show
+                    me "А меня второй вариант устраивает!"
+                    show dv laugh pioneer at center
+                    with dspr
+                    dv "Интересно, а Ольге Дмитриевне этот вариант тоже понравится?"
+                    dv "Я пошутила, придурок! Либо идёшь в этом - либо ищи плавки сам!"
+            jump ds_day4_after_breakfast_dv_dialogue
+        "Передумать идти" if not ds_d4_dv_diag_try_reject:
+            window show
+            $ ds_d4_dv_diag_try_reject = True
+            me "Я вообще уже не планирую никуда идти!"
+            show dv grin pioneer at center   with dspr
+            dv "Тогда я всем расскажу, что ты подбросил мне эти трусы!"
+            play sound ds_sfx_int
+            lgc "А зачем тебе это?"
+            me "И зачем мне это?"
+            show dv laugh pioneer at center   with dspr
+            dv "А мне откуда знать?"
+            "Она расхохоталась."
+            window hide
+            menu:
+                "Настоять на отказе":
+                    window show
+                    me "Не пытайся меня запугать! Никуда я не пойду - и точка!"
+                    show dv angry pioneer at center
+                    with dspr
+                    dv "Да как хочешь! Сдался ты мне!"
+                    hide dv with dissolve
+                    $ ds_lp['dv'] -= 1
+                    jump ds_day4_after_breakfast_reject
+                "Отступить":
+                    window show
+            jump ds_day4_after_breakfast_dv_dialogue
+        "Взять трусы":
+            window show
+            me "Ну ладно, возьму я у тебя эти трусы."
+            show dv laugh pioneer at center
+            with dspr
+            dv "Ну ладно... как скажешь... удачи..."
+            "Она заливается смехом, убегая"
+            play sound ds_sfx_fys
+            hfl "Что-то нехорошее в этом есть..."
+            $ ds_on_beach_pants = True
+            "Ты переодеваешься за столовой и выдвигаешься в сторону пляжа."
+        "Сходить за своими":
+            window show
+            th "Конечно, я пойду не в этих гламурных «плавках»."
+            me "Ладно, приду минут через десять."
+            show dv smile pioneer at center   with dspr
+            dv "И не опаздывай!"
+
+            stop music fadeout 3
+
+            "Сказав это, она убегает."
+            window hide
+            $ persistent.sprite_time = "day"
+            scene bg ext_house_of_mt_day 
+            with dissolve
+
+            stop ambience fadeout 2
+
+            window show
+            "Ты плетёшься к домику вожатой, чтобы взять полотенце и заодно попытаться из чего-нибудь соорудить плавки."
+            window hide
+
+            $ persistent.sprite_time = "day"
+            scene bg int_house_of_mt_day 
+            with dissolve
+
+            play ambience ambience_int_cabin_day fadein 3
+
+            show mt normal pioneer at center   with dissolve
+            window show
+            "В комнате тебя ждёт Ольга Дмитриевна."
+            mt "Семён, о Шурике ничего не слышно?"
+            me "Ровно столько же, сколько и полчаса назад…"
+            window hide
+            menu:
+                "Взять полотенце":
+                    window show
+                    "Ты подходишь к своей кровати и берёшь полотенце."
+                    mt "Куда-то собираешься?"
+                    me "Да, на пляж."
+                    mt "Подожди, а у тебя есть плавки?{w} А то ты же вроде без вещей приехал…"
+                    play sound ds_sfx_mot
+                    res "Странно, что этот факт не удивил её при первой встрече."
+                    me "Нет…"
+                    show mt surprise pioneer at center   with dspr
+                    mt "А в чём пойдёшь?"
+                    play sound ds_sfx_int
+                    lgc "Действительно, а в чём?"
+                    me "Не знаю…"
+                "Cпросить про плавки":
+                    window show
+                    me "Ольга Дмитриевна, а где можно плавки найти?"
+            show mt normal pioneer at center   with dspr
+            mt "Сейчас, подожди."
+
+            play sound sfx_key_drawer
+
+            "Она подходит к шкафу и открывает ключом запертый ящик."
+            "Через мгновение у вожатой в руках оказываются обычные мужские плавки чёрного цвета."
+            play sound ds_sfx_mot
+            res "И откуда они у неё взялись?{w} А главное, зачем?"
+            play sound ds_sfx_int
+            lgc "Хотя, может, кто-то из прошлой смены забыл, мало ли…"
+            play sound ds_sfx_psy
+            ine "Учитывая все странности этого лагеря, найти мужские плавки в комнате Ольги Дмитриевны – это ещё не самое удивительное."
+            window hide
+            menu:
+                "Поблагодарить":
+                    window show
+                    me "Спасибо."
+                "Cпросить, откуда":
+                    window show
+                    me "Cпасибо... а откуда они?"
+                    mt "Меня твои родители предупредили, что ты рассеянный и можешь приехать без вещей. Вот я и приготовила плавки."
+                    play sound ds_sfx_int
+                    lgc "Всё логично вроде бы."
+
+            stop ambience fadeout 2
+
+            "Плавки оказываются как раз твоего размера."
+            window hide
+
+            scene bg black 
+            with dissolve
+
+            window show
+            "Ты переодеваешься за домиком и идёшь на пляж."
+            window hide
+    $ persistent.sprite_time = "day"
+    scene bg ext_beach_day 
+    with dissolve
+
+    play ambience ambience_lake_shore_day fadein 3
+
+    window show
+    "Тут уже собралось много пионеров, но из знакомых – только Алиса и Ульяна."
+    show us laugh swim at cright   with dissolve
+    us "Иди к нам!"
+    "Ты подходишь и садишься рядом с ними на песок."
+    if not ds_on_beach_pants:
+        show dv smile swim at cleft   with dissolve
+        dv "Смотрю, ты нашёл получше…"
+        "Она смотрит на твои плавки и ехидно улыбается."
+        if skillcheck('instinct', lvl_easy, passive=True):
+            ins "{result}А может она и не на плавки смотрит?"
+        window hide
+        menu:
+            "Подтвердить":
+                window show
+                me "Как видишь."
+            "Проигнорировать":
+                window show
+            "Спошлить" if ds_last_skillcheck.result:
+                window show
+                me "Что, хочешь увидеть то, что под ними?"
+                show dv shy swim at cleft
+                with dspr
+                dv "Придурок!"
+                "И она отворачивается."
+    us "Пойдём плавать!"
+    window hide
+    menu:
+        "Согласиться":
+            window show
+            "Девочки убегают к воде, и ты следуешь за ними."
+
+            scene cg ds_day4_us_dv_play
+            with dissolve
+            "Ты только сейчас замечаешь, что Алиса и Ульяна взяли с собой мяч."
+            window hide
+            menu:
+                "Присоединиться":
+                    window show
+                    me "Я с вами!"
+                    us "Давай!"
+                    $ ds_lp['us'] += 1
+                    "И она перекидывает тебе мячик."
+                    th "И кому бы его кинуть теперь?"
+                    window hide
+                    menu:
+                        "Кинуть Ульяне":
+                            window show
+                            me "Лови!"
+                            "И ты бросаешь мяч в сторону Ульяны."
+                            us "Ловлю-ловлю-ловлю!"
+                            "И у неё получается поймать мяч."
+                            us "Поймала!"
+                            "Теперь она бросает Алисе, а та ловит."
+                        "Кинуть Алисе":
+                            window show
+                            me "Лови!"
+                            "И ты бросаешь мяч в сторону Алисы."
+                            "Впрочем, Алиса с лёгкостью его отбивает и перенаправляет в сторону Ульяны."
+                    scene black with fade
+                    $ renpy.pause(2.0)
+                    scene cg ds_day4_us_dv_play
+                    with dissolve
+                    play sound ds_sfx_fys
+                    edr "Ты чувствуешь себя уставшим."
+                    dv "Всё, достаточно!"
+                    "Алиса с тобой солидарна."
+                    us "Ну вот, мы только начали..."
+                    "На самом деле вы играли не больше пятнадцати минут. Лучше всех показала себя, собственно, Ульянка - отбила все мячи."
+                    "Но вы с Алисой также почти ни одного мяча не пропустили, впрочем."
+                "Остаться в стороне":
+                    window show
+                    "Ты решаешь, что подобные игры не для тебя, и просто плаваешь в сторонке."
+                    play sound ds_sfx_fys
+                    ins "Однако, далеко отплыть ты ну никак не можешь - твой глаз упорно притягивается к Алисе."
+                    ins "И немудрено - уж что-что, а фигура у неё прекрасная, и грудь, и попа!"
+                    play sound ds_sfx_psy
+                    emp "А что касается характера - ты не можешь отбросить мыслей, что с ним всё не так просто, как кажется на первый взгляд."
+                    if ds_whom_helped == 'dv':
+                        play sound ds_sfx_int
+                        con "А ещё ты не можешь выкинуть из головы её прекрасную игру на гитаре."
+                    play sound ds_sfx_psy
+                    ine "А ещё Алиса тебе явно напоминает кого-то знакомого... и близкого тебе..."
+                    play sound ds_sfx_psy
+                    vol "Интересно, каковы шансы, что у тебя что-то с ней получится?"
+                    th "Да я умоляю - примерно никаких! Мы с ней абсолютно разные!"
+                    emp "Ну, как знать, как знать..."
+                    dv "Всё, достаточно!"
+                    "Алиса с тобой солидарна."
+                    us "Ну вот, мы только начали..."
+            "Девочки выходят из воды."
+            us "Погоди, Алис!"
+            "И Ульяна ныряет. Ненадолго."
+            dv "Что такое?"
+            us "На берегу покажу!"
+            "Они оказываются более проворными и выходят на берег, когда ты ещё по пояс в воде."
+            if ds_on_beach_pants:
+                play sound ds_sfx_mot
+                per_toc "И тут ты чувствуешь, как с тебя слетают твои «плавки», заботливо врученные Алисой!"
+                th "Ой..."
+                "Попытки их найти оказываются безрезультатными."
+                play sound ds_sfx_psy
+                vol "Cидеть в воде? Идея плохая. Попытайся незаметно выйти на берег и взять полотенце."
+                scene bg ext_beach_day 
+                show us fear swim at left
+                show dv shocked swim at right
+                with dissolve
+                "Ты пытаешься прикрыть своё причинное место руками - но всё равно вынужден его открыть, чтобы взять полотенце."
+                "И надо же было такому случиться - как раз в этот момент и Ульяна, и Алиса оказались рядом."
+                us "Э-это что?.."
+                play sound ds_sfx_psy
+                emp "Ульяна шокирована, даже напугана."
+                play sound ds_sfx_int
+                enc "Немудрено - советское воспитание. Тема половых взимоотношений табуирована."
+                "Ты пытаешься спрятаться, но, похоже, уже поздно."
+                show us cry swim at left
+                show dv sad swim at cleft
+                with dspr
+                us "Это отвратительно... Что, я теперь испорчена?"
+                dv "Нет, Уль, всё будет нормально... никто даже не узнает об этом."
+                us "Всё, теперь Даня от меня отвернётся, и я буду никому не нужна..."
+                $ ds_lp['us'] -= 10
+                play sound ds_sfx_int
+                lgc "Похоже, и у Ульяны есть симпатия - этот самый Даня."
+                play sound ds_sfx_psy
+                sug "Ты нанёс ей травму. Серьёзную."
+                show dv rage swim close at center
+                with dspr
+                play sound ds_sfx_fys
+                hfl "И Алиса не собирается это оставлять безнаказанным."
+                $ ds_lp['dv'] -= 10
+                dv "Иди сюда, конченный урод! Ты чего это Ульянке ломаешь психику?"
+                me "Я... я ничего..."
+                dv "Как тебе вообще хватило ума залезть в воду в непригодной для этого одежде?!"
+                dv "Я тебе шею сверну сейчас!"
+                play sound sfx_lena_hits_alisa
+                with hpunch
+                $ ds_damage_health()
+                "Прежде чем ты успеваешь что-либо сделать, Алиса нокаутирует тебя."
+                "И дальше начинает тебя избивать."
+                dv "НИКТО НЕ СМЕЕТ ОБИЖАТЬ УЛЬЯНУ!"
+                with flash_red
+                $ ds_damage_health()
+                me "Остано... остановись..."
+                play sound ds_sfx_fys
+                edr "Ты чувствуешь, как теряешь сознание."
+                $ ds_damage_health()
+                show blink
+                scene black with fade
+                dv "Увижу тебя рядом с собой или Ульянкой - убью нахер! Лежи и думай, ублюдок!"
+                "Последнее, что ты слышишь - шаги. Думать у тебя уже ни о чём не выйдет - ты отключаешься."
+                jump ds_end_beaten_by_dv
+            scene bg ext_beach_day
+            show us laugh swim at cright 
+            show dv normal swim at cleft 
+            with dissolve
+            "Ты выходишь на берег, и Ульяна уже встречает тебя."
+        "Отказаться":
+            window show
+            me "Не хочется что-то.{w} Может, попозже…"
+            dv "Ну, как знаешь."
+            hide us 
+            hide dv 
+            with dissolve
+            "Девочки убегают к воде."
+            play sound ds_sfx_psy
+            vol "Зачем ты вообще сюда пришёл?{w} Почему не ищешь ответы, разгадки?.."
+            th "А волнует ли это меня сейчас?"
+            play sound ds_sfx_psy
+            ine "«Совёнок» кажется нормальным."
+            ine "Конечно, за эти три с половиной дня с тобой произошло много всяких странных событий, но ни одно из них само по себе, взятое отдельно, не кажется чем-то чересчур фантастичным."
+            play sound ds_sfx_int
+            lgc "Тем более ты совершенно не приблизился к разгадке."
+            lgc "Напротив, всё, что случалось, только больше запутывает ситуацию."
+            th "Да и какие у меня альтернативы?"
+            play sound ds_sfx_int
+            rhe "Можно всё же попробовать порасспрашивать подробнее про это место."
+            vol "Или решиться и сбежать."
+            play sound ds_sfx_fys
+            edr "Вот только сможешь ли ты дойти до какого-нибудь населённого пункта?"
+            vol "И ты даже не знаешь, где что тут находится."
+            show us laugh swim at cright 
+            show dv normal swim at cleft 
+            with dissolve
+            "Через некоторое время девочки возвращаются.{w} Ульяна что-то держит в руках."
+    us "Смотри!"
+    "Ты поднимаешь глаза и видишь рака."
+    play sound ds_sfx_int
+    enc "Обычного речного рака."
+    window hide
+
+    scene cg d4_us_cancer 
+    with dissolve
+
+    window show
+    "Ульянка ложится рядом и принимается его мучить."
+    window hide
+    menu:
+        "{check=authority:11}Потребовать прекратить":
+            if skillcheck('authority', lvl_up_medium):
+                window show
+                play sound ds_sfx_psy
+                aut "{result}Покажи, что с тобой шутки плохи."
+                me "А ну оставь рака в покое!"
+                "Ты показываешь такое злое лицо, что Ульяна не решается тебя ослушаться."
+                scene bg ext_beach_day
+                show us dontlike swim at center
+                with dissolve
+                us "Ладно, раз он тебе так дорог..."
+                $ ds_skill_points['authority'] += 1
+                show us laugh swim at center
+                with dspr
+                us "...тогда держи его!"
+                "C этими словами она кидает его тебе прямо в руки."
+                play sound ds_sfx_mot
+                cor "Тебе даже усилий прикладывать не приходится, чтобы его поймать."
+            else:
+                window show
+                aut "{result}Ну, удачи отнять игрушку у ребёнка..."
+                me "Оставь бедное животное в покое!"
+                us "Ты что!{w} Это же рак!"
+                $ ds_skill_points['authority'] += 1
+                me "Ну и что, что рак?{w} Он тоже имеет право на жизнь!"
+                us "Вот сейчас я ему клешни поотрываю, а потом попрошу повариху его сварить на ужин!"
+                me "Как будто больше есть нечего…"
+                "Ты смотришь на Алису."
+                play sound ds_sfx_psy
+                emp "Похоже, Ульянкины забавы с бедным членистоногим её совсем не интересуют."
+                window hide
+                menu:
+                    "Воззвать к Алисе":
+                        window show
+                        me "Хоть ты ей скажи!"
+                        dv "А что такого?{w} Он же рак – так ему и надо!"
+                        play sound ds_sfx_int
+                        lgc "Кажется, эти девочки прогуливали уроки природоведения в начальных классах, и бережное отношение к окружающей среде им чуждо…"
+                        window hide
+                        menu:
+                            "Выхватить рака":
+                                window show
+
+                                me "Отдай!"
+                                "Ты выхватываешь рака у Ульянки."
+                                window hide
+
+                                $ persistent.sprite_time = "day"
+                                scene bg ext_beach_day 
+                                with dissolve
+
+                                show us shy2 swim at center   with dissolve
+                                window show
+                                us "Да ради бога…"
+                                play sound ds_sfx_psy
+                                sug "Она не стала сопротивляться?"
+                            "Забить":
+                                window show
+                                th "А впрочем, ладно, какое дело мне до рака?"
+                                "Ульяна измывается над бедным членистоногим недолго, после чего кидает его... {w}в тебя!"
+                                scene bg ext_beach_day 
+                                with dissolve
+
+                                show us laugh swim at center   with dissolve
+                                window show
+                                us "Лови!"
+                                play sound ds_sfx_mot
+                                cor "Но тебе и ловить его не приходится - он сам прилетает прямо тебе в руки."
+                    "Выхватить рака":
+                        window show
+
+                        me "Отдай!"
+                        "Ты выхватываешь рака у Ульянки."
+                        window hide
+
+                        $ persistent.sprite_time = "day"
+                        scene bg ext_beach_day 
+                        with dissolve
+
+                        show us shy2 swim at center   with dissolve
+                        window show
+                        us "Да ради бога…"
+                        play sound ds_sfx_psy
+                        sug "Она не стала сопротивляться?"
+                    "Забить":
+                        window show
+                        th "А впрочем, ладно, какое дело мне до рака?"
+                        "Ульяна измывается над бедным членистоногим недолго, после чего кидает его... {w}в тебя!"
+                        scene bg ext_beach_day 
+                        with dissolve
+
+                        show us laugh swim at center   with dissolve
+                        window show
+                        us "Лови!"
+                        play sound ds_sfx_mot
+                        cor "Но тебе и ловить его не приходится - он сам прилетает прямо тебе в руки."
+        "{check=savoir_faire:10}Спасти рака":
+            if skillcheck('savoir_faire', lvl_medium):
+                window show
+                play sound ds_sfx_mot
+                svf "{result}Внимание! Не упади в процессе на Алису!"
+                "Тебе удаётся пробежать прямо над Алисой и снять с неё рака."
+                $ persistent.sprite_time = "day"
+                scene bg ext_beach_day 
+                with dissolve
+
+                show us dontlike swim at center   with dissolve
+                window show
+                us "Ой, не очень-то и хотелось…"
+                play sound ds_sfx_psy
+                sug "Она не стала сопротивляться?"
+            else:
+                window show
+                play sound ds_sfx_mot
+                svf "{result}Ты бросаешься за раком, совершенно не видя ничего вокруг. И это играет с тобой злую шутку."
+                window hide
+                play sound sfx_alisa_falls
+                with vpunch
+                window show
+                "Ты оказываешься, конечно, с раком в руках - но на Алисе."
+                scene ext_beach_day
+                show dv angry swim close at center
+                with dissolve
+                dv "Что это за дела?! А ну слезь с меня!"
+                play sound ds_sfx_fys
+                ins "Твоё тело моментально откликается на подобную близость к девушке."
+                show dv surprise swim close at center
+                with dspr
+                "Кажется, твою {i}реакцию{/i} заметила и Алиса."
+                show dv rage swim close at center
+                with dspr
+                dv "Извращенец! Слезай уже с меня!"
+                show us surp2 swim at right
+                with dissolve
+                us "А кто такой «извращенец»?"
+                dv "Тебе рано знать о подобных вещах! А вот кое-кому я сейчас задам!"
+                "Тут Алиса встаёт, не без труда скинув тебя с себя."
+                with vpunch
+                show dv angry swim at left
+                with dspr
+                "А ты всё держишь рака в руках."
+        "Забить":
+            window show
+            th "А впрочем, ладно, какое дело мне до рака?"
+            "Ульяна измывается над бедным членистоногим недолго, после чего кидает его... {w}в тебя!"
+            scene bg ext_beach_day 
+            with dissolve
+
+            show us laugh swim at center   with dissolve
+            window show
+            us "Лови!"
+            play sound ds_sfx_mot
+            cor "Но тебе и ловить его не приходится - он сам прилетает прямо тебе в руки."
+    window show
+    "Ты смотришь в глаза бедному животному."
+    play sound ds_sfx_psy
+    ine "Они совершенно ничего не выражают, но если бы он умел разговаривать, то обязательно возмутился бы, возможно, даже сослался бы на конвенцию ООН о правах человека."
+    ine "Правда, вряд ли это бы помогло..."
+    window hide
+    "Ты относишь рака к реке и отпускаешь на волю."
+    show us surp1 swim at center   with dspr
+    us "Ничего, ещё наловлю – тут их много."
+    th "Кто бы сомневался…"
+    hide us  with dissolve
+    window hide
+
+    with fade2
 
     stop ambience fadeout 2
 
-    th "В конце концов, ничего такого в том, чтобы просто её дождаться, нет?.."
+    window show
+    play sound ds_sfx_fys
+    "Время шло, и незаметно тебя разморило…"
     window hide
+
+    scene bg black 
+    with fade
+
+    window show
+    "Ты задремал."
+    "Ты не помнишь, что тебе снилось, если снилось вообще, но просыпаешься ты оттого, что кто-то тряс тебя за плечо."
+    window hide
+
+    $ persistent.sprite_time = "day"
+    scene bg ext_beach_day 
+    with fade
+
+    play ambience ambience_lake_shore_day fadein 3
+
+    show mt normal swim at center   with dissolve
+    window show
+    "Надо мной стояла Ольга Дмитриевна."
+    me "Тоже поплавать пришли?"
+    "Спросил я спросонья."
+    mt "Нет.{w} Уже обед скоро, а мы Шурика всё ещё не можем найти."
+    "Сказала вожатая, стоящая передо мной в мокром купальнике..."
+    me "И?"
+    mt "Хочу, чтобы ты поискал его."
+    me "А что, кроме меня, в лагере больше пионеров нет?"
+    "Я искренне возмутился."
+    "С каждым разом становилось всё понятнее, что Ольга Дмитриевна держит меня за посыльного с функциями раба.{w} Или наоборот..."
+    show mt angry swim at center   with dspr
+    mt "Раз я пришла к тебе, значит, хочу, чтобы ты мне помог."
+    "И почему же именно ко мне?"
+    "Однако, подумав, я решил согласиться."
+    "В конце концов, плечи и вся спина сильно обгорели на солнце во время сна, а поиски Шурика, возможно, позволят получше познакомиться с теми местами лагеря, где бывать мне ещё не доводилось."
+    me "Ладно…"
+    "В плавках идти не комильфо, поэтому сначала надо было переодеться."
+    window hide
+
+    stop ambience fadeout 2
+
+    scene black 
+    with dissolve
+
+    window show
+    "..."
+    window hide
+
+    $ persistent.sprite_time = "day"
+    scene bg ext_house_of_mt_day 
+    with dissolve
+
+    play ambience ambience_camp_center_day fadein 2
+
+    window show
+    "И вот спустя десять минут я стоял на пороге домика Ольги Дмитриевны и думал, куда пойти."
+    window hide
+    $ disable_all_zones_ds_small()
+    $ set_zone_ds_small("entrance","ds_day4_busstop")
+    $ set_zone_ds_small("boat_station","ds_day4_boathouse")
+    $ set_zone_ds_small("house_me_mt","ds_day4_house_of_mt")
+    $ set_zone_ds_small("forest","ds_day4_forest")
+    $ set_zone_ds_small("library","ds_day4_library")
+    if ds_have_guess_sh:
+        $ set_zone_ds_small("old_camp", "ds_day4_old_camp")
+
+    jump ds_day4_map
+
+label ds_day4_after_breakfast_reject:
+    $ persistent.sprite_time = 'day'
+    scene bg ext_dining_hall_away_day
+    with dissolve
+    play ambience ambience_camp_center_day fadein 3
+
+    window show
+    play sound ds_sfx_psy
+    vol "В общем-то, с двумя главными хулиганками лагеря тебе делать точно нечего. Да ещё и на пляж с ними идти? Нет уж."
+    play sound ds_sfx_mot
+    com "У тебя и так полно поводов, чтобы волноваться."
+    play sound ds_sfx_int
+    lgc "И, кстати, один из них - это исчезновение Шурика. Точнее, количество волнения вокруг его персоны."
+    lgc "Какой-то пионер, который проводит всё своё свободное время в кружке и столовой. Его нет, кажется, всего два часа после подъёма, а уже столько шума."
+    th "Хотя, действительно, почему тогда его оказалось так сложно найти, если он бывает всего в двух местах?"
+    "Я решил мельком заглянуть в кружки."
+    window hide
+
+    if ds_sl_beach_invite:
+        scene bg ext_square_day
+        show sl smile pioneer at center
+        with dissolve
+        "Однако, на площади тебя перехватывает Славя."
+        sl "Привет, Семён!"
+        me "Привет."
+        sl "Хорошая погода сегодня, не правда ли?"
+        th "Погода и правда хорошая..."
+        sl "А помнишь, мы с тобой договаривались на пляж сходить?"
+        play sound ds_sfx_psy
+        vol "Было дело, было..."
+        me "Ну да..."
+        sl "А пошли сейчас!"
+        me "А как же Шурик?"
+        show sl normal pioneer at center
+        with dspr
+        sl "Ну вот искупаемся, освежимся и поищем Шурика!"
+        window hide
+        menu:
+            "Пойти со Славей":
+                window show
+                me "А давай!"
+                show sl smile pioneer at center
+                with dspr
+                sl "Идём!"
+                $ ds_lp['sl'] += 1
+                jump ds_day4_beach_sl
+            "Отказаться":
+                window show
+                me "Извини, не сейчас. Я переживаю за Шурика!"
+                show sl sad pioneer at center
+                with dspr
+                sl "Ну ладно..."
+                $ ds_lp['sl'] -= 1
+                hide sl with dissolve
+                "И она уходит расстроенная."
+                play sound ds_sfx_int
+                dra "А ведь Шурик вас волнует примерно на том же уровне, что и проблемы миграции сов, мессир."
+                th "Сов..."
+                dra "Ну так ведь лагерь «Совёнок»!"
+                th "Ладно, идём к клубу!"
+
+    scene bg ext_clubs_day
+    show mt normal pioneer at center
+    with dissolve
+    "Однако, по всей видимости, Ольге Дмитриевне идея проверить клуб пришла раньше - она уже выходит из него."
+    mt "О, Семён, тоже Шурика ищешь?"
+    me "Ну... типа того..."
+    show mt grin pioneer at center  with dspr
+    mt "Вот, что значит - образцовый пионер! Беспокоится за товарищей и сам занимается поисками!"
+    play sound ds_sfx_psy
+    aut "Всегда готов..."
+    dra "Вы недалеки от правды, мессир."
+    mt "Ну, тогда не буду мешать."
+    hide mt with dissolve
+    "Она тотчас убегает."
+    play sound ds_sfx_int
+    lgc "Прохлаждаться, не иначе."
+    th "Придётся заниматься поисками дальше..."
+    window hide
+    $ disable_all_zones_ds_small()
+    $ set_zone_ds_small("entrance","ds_day4_busstop")
+    $ set_zone_ds_small("boat_station","ds_day4_boathouse")
+    $ set_zone_ds_small("house_me_mt","ds_day4_house_of_mt")
+    $ set_zone_ds_small("forest","ds_day4_forest")
+    $ set_zone_ds_small("library","ds_day4_library")
+    if ds_have_guess_sh:
+        $ set_zone_ds_small("old_camp", "ds_day4_old_camp")
+
+    jump ds_day4_map
+
+label ds_day4_sl_beach:
+    me "Подожди, Славь, а как же плавки?"
+    show sl shy pioneer at center
+    with dspr
+    sl "И плавки я предусмотрела..."
+    play sound ds_sfx_fys
+    ins "Ой, кажется, ты заинтересовал девушку..."
+    play sound ds_sfx_psy
+    vol "Да что ты всё об одном и том же? Просто Славя хочет всем помочь."
+    ins "Да говорю вам: ей понравился Семён!"
+
+    scene bg ext_beach_day
+    show sl smile pioneer at center
+    with dissolve
+    sl "Сейчас, Семён, я скину с себя форму!"
+    show sl normal swim at center
+    with dspr
+    "И нет, она не отходит никуда - она прямо при тебе скидывает юбку и рубашку."
+    "Впрочем, под ними уже был купальный костюм."
+    sl "А вот тебе было бы неплохо отойти в кусты и переодеться."
+    "Ты так и делаешь. Вскоре ты предстаёшь перед Славей в одних плавках."
+    if ds_triggered_dv:
+        show dv rage swim at right
+        with dissolve
+        dv "ДА ТЫ ИЗДЕВАЕШЬСЯ НАДО МНОЙ СЕГОДНЯ?!"
+        me "Алиса?"
+        dv "То Лена, то теперь Славя! Давай ещё к Мику пойди, лишь бы не со мной!"
+        $ ds_lp['dv'] -= 3
+        hide dv with dissolve
+        show sl surprise swim at center
+        with dspr
+        sl "А... это она о чём вообще?"
+        window hide
+        menu:
+            "Притвориться непонимающим":
+                window show
+                me "Да видимо на солнышке перегрелась... я вообще не понимаю, причём тут Лена и ты."
+                show sl serious swim at center
+                with dspr
+                sl "Мне что-то это не нравится..."
+            "Рассказать как есть":
+                window show
+                me "Да я за завтраком возьми и скажи, что с Леной вечер провёл..."
+                show sl normal swim at center
+                with dspr
+                sl "Ну... это ты зря, Семён, конечно. Запомни: не говори девушке, неравнодушной к тебе, про других девушек."
+                play sound ds_sfx_mot
+                res "Типа Алиса по её мнению неравнодушна к тебе?"
+                play sound ds_sfx_psy
+                emp "Да это очевидно же было!"
+                play sound ds_sfx_psy
+                sug "Как бы то ни было, Славя права. Говорить про Лену было лишним."
+                sl "Ладно, успокоится, наверное..."
+    show mt smile swim at left
+    with dissolve
+    mt "О, Славя, Семён! У меня есть для вас поручение!"
+    sl "Какое, Ольга Дмитриевна?"
+    mt "Шурика поищите!"
+    me "А как же..."
+    show sl serious swim at center
+    with dspr
+    sl "Идём, Семён. Нельзя бросать товарища в беде!"
+    mt "Вот, молодец, Славя!"
+    play sound ds_sfx_psy
+    vol "Кажется, тебе деваться некуда. Не оставаться же тебе рядом с отвергнутыми прежде Алисой и Ульяной!"
+    window show
+    me "Ладно, пойдём..."
+    show sl normal pioneer at center
+    with dspr
+    "Славя накидывает форму, а ты возвращаешь вместо плавок на место трусы и выходишь к ней - также в форме."
+    sl "Вперёд!"
+    jump ds_day4_find_with_sl
