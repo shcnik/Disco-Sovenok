@@ -90,6 +90,14 @@ init python:
         ds_show_check_result = 2
         return result
 
+    def ds_up_skill(skill, points):
+        global ds_xp
+        global ds_skill_points
+        ds_xp[skill] += points
+        while ds_xp[skill] >= 100:
+            ds_skill_points[skill] += 1
+            ds_xp[skill] -= 100
+
     def ds_damage_health(go_if_zero='ds_end_out_of_health'):
         global ds_health
         ds_health -= 1
@@ -194,12 +202,31 @@ init python:
 
     def ds_define_sprite(char, emo, dist='normal', body_num=1, cloth=None, acc=None, acc2=None, body_name='body'):
         if cloth and acc:
-            return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png") )
+            return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png") )
         if cloth:
-            return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png") )
+            return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png") )
         if acc:
             return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png") )
         return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png") )
+
+    def ds_define_chars():
+        global ds_char_table
+        for char in ds_char_table:
+            for dist in ds_char_table[char]:
+                for emo in ds_char_table[char][dist]['emo']:
+                    body_num = ds_char_table[char][dist]['emo'][emo]
+                    for cloth in ds_char_table[char][dist]['cloth']:
+                        cloth_file = ds_char_table[char][dist]['cloth'][cloth]
+                        if dist == 'normal':
+                            renpy.image('[char] [emo] [cloth]', ds_define_sprite(char, emo, body_num=body_num, cloth=cloth_file))
+                        else:
+                            renpy.image('[char] [emo] [cloth] [dist]', ds_define_sprite(char, emo, dist=dist, body_num=body_num, cloth=cloth_file))
+                        for acc in ds_char_table[char][dist]['acc']:
+                            acc_file = ds_char_table[char][dist]['acc'][acc]
+                            if dist == 'normal':
+                                renpy.image('[char] [emo] [acc] [cloth]', ds_define_sprite(char, emo, body_num=body_num, cloth=cloth_file, acc=acc_file))
+                            else:
+                                renpy.image('[char] [emo] [acc] [cloth] [dist]', ds_define_sprite(char, emo, dist=dist, body_num=body_num, cloth=cloth_file, acc=acc_file))
 
     # Класс, реализующий фонарик (для хождения по шахтам)
     class DSFlashlight(renpy.Displayable):
@@ -270,9 +297,37 @@ init python:
 init:
 
 # Переменные
+    default ds_menuset = set()
 
 ## Значения атрибутов
     default ds_skill_points = {
+        'logic': 0,
+        'encyclopedia': 0,
+        'rhetoric': 0,
+        'drama': 0,
+        'conceptualization': 0,
+        'visual_calculus': 0,
+        'volition': 0,
+        'inland_empire': 0,
+        'authority': 0,
+        'empathy': 0,
+        'esprit': 0,
+        'suggestion': 0,
+        'endurance': 0,
+        'pain_threshold': 0,
+        'physical_instrument': 0,
+        'instinct': 0,
+        'shivers': 0,
+        'half_light': 0,
+        'perception': 0,
+        'coordination': 0,
+        'reaction_speed': 0,
+        'savoir_faire': 0,
+        'interfacing': 0,
+        'composure': 0
+    }
+
+    default ds_xp = {
         'logic': 0,
         'encyclopedia': 0,
         'rhetoric': 0,
@@ -357,6 +412,7 @@ init:
     default ds_archetype = 0 # Избранный персонаж
     default ds_knowing = 0 # Знание
     default ds_semtype = 0 # Тип Семёна
+    default ds_homo_traits = 0
 
     $ ds_game_started = False
 
@@ -416,6 +472,342 @@ init:
         child with Fade(0.05, 0.1, 0.05, color="#fff")
         repeat
 
+    # Последующие анимации взяты из БКРР
+
+    # Анимации "встань" и "сядь" для спрайтов
+
+    transform ds_sit_down:
+        subpixel True
+        parallel:
+            ease 1.0 ypos 0.22
+        parallel:
+            ease 0.75 zoom 1.05
+            ease 0.5 zoom 1.0
+
+    transform ds_sit_down1:
+        subpixel True
+        parallel:
+            ease 1.0 ypos 0.15
+        parallel:
+            ease 0.75 zoom 1.05
+            ease 0.5 zoom 1.0
+
+    transform ds_sit_down1_close:
+        subpixel True
+        parallel:
+            ease 1.0 ypos 0.05
+        parallel:
+            ease 0.75 zoom 1.05
+            ease 0.5 zoom 1.0
+    
+    # вариант, где спрайт уже сидит (авторский)
+    transform ds_seated:
+        subpixel True
+        ypos 0.22
+    
+    transform ds_seated1:
+        subpixel True
+        ypos 0.15
+    
+    transform ds_seated1_close:
+        subpixel True
+        ypos 0.05
+
+    transform ds_get_up:
+        subpixel True
+        parallel:
+            ease 1.0 ypos 0.0
+        parallel:
+            ease 0.75 zoom 1.05
+            ease 0.5 zoom 1.0
+
+    transform ds_get_up_fast:
+        subpixel True
+        parallel:
+            ease 0.3 ypos 0.0
+        parallel:
+            ease 0.2 zoom 1.05
+            ease 0.07 zoom 1.0
+
+    # Анимация стула, когда персонаж встаёт или садится
+
+    transform ds_chair_move_sd:
+        yanchor 0.0
+        ypos 0.1
+        zoom 0.95
+        ease 0.75 ypos 0.0 zoom 1.0
+
+    transform ds_chair_move_gu:
+        yanchor 0.0
+        ease 0.75 ypos 0.1 zoom 0.95
+
+    # Анимация движения вперёд
+
+    transform ds_moving_forward_near(t, z=1.5):
+        subpixel True
+        truecenter
+        linear t zoom z ypos 0.25
+
+    transform ds_moving_forward_far(t, z=1.5):
+        subpixel True
+        truecenter
+        linear t zoom z ypos 0.40
+
+    # Анимация бега
+
+    transform ds_running_atl:
+        truecenter
+        zoom 1.25
+        parallel:
+            ease 0.25 zoom 1.30 rotate 0.75
+            ease 0.20 zoom 1.25 rotate -0.75
+            ease 0.25 zoom 1.30 rotate 0.75
+            ease 0.20 zoom 1.35 rotate -0.75
+            repeat
+        parallel:
+            ease 0.25 xpos 0.495
+            ease 0.20 xpos 0.505
+            repeat
+        parallel:
+            ease 0.25 ypos 0.495
+            ease 0.30 ypos 0.505
+            repeat
+
+    # Анимация воды
+
+    transform ds_water_atl:
+        truecenter
+        subpixel True
+        alpha 0.8
+        ease 0.5 zoom 1.2
+        parallel:
+            choice:
+                ease 1.5 zoom 1.19
+                ease 1.5 zoom 1.21
+            choice 2:
+                ease 2.0 zoom 1.195
+                ease 2.0 zoom 1.205
+            repeat
+        parallel:
+            choice:
+                ease 15.0 xpos 0.51
+            choice:
+                ease 15.0 xpos 0.49
+            choice:
+                ease 20.0 xpos 0.51
+            choice:
+                ease 20.0 xpos 0.49
+            repeat
+        parallel:
+            choice:
+                ease 1.5 rotate 0.0
+            choice:
+                ease 1.5 rotate 0.5
+                ease 1.5 rotate -0.5
+            choice:
+                ease 2.5 rotate 0.5
+                ease 2.5 rotate -0.5
+            choice:
+                ease 2.5 rotate 0.75
+                ease 2.5 rotate -0.75
+            repeat
+
+    # Эффект встряски
+
+    transform ds_shake_atl:
+        truecenter
+        zoom 1.2
+        parallel:
+            linear 0.15 rotate -1
+            linear 0.15 rotate 0.5
+            linear 0.15 rotate -0.5
+            linear 0.15 rotate 0
+        parallel:
+            ease 0.25 zoom 1.0
+
+    transform ds_bus_shaking:
+        subpixel True
+        truecenter
+        zoom 1.03
+        parallel:
+            linear 0.2 xoffset -2
+            linear 0.3 xoffset 3
+            linear 0.2 xoffset -1
+            linear 0.3 xoffset 2
+            repeat
+        parallel:
+            linear 0.2 yoffset -1
+            linear 0.25 yoffset 2
+            linear 0.2 yoffset -1
+            repeat
+
+    transform ds_shiver_atl:
+        truecenter
+        ease 0.25 zoom 1.1
+        parallel:
+            ease 0.25 zoom 1.11 rotate 0.75
+            ease 0.25 zoom 1.1 rotate -0.75
+            repeat
+        parallel:
+            ease 0.10 xpos 0.495
+            ease 0.10 xpos 0.505
+            repeat
+        parallel:
+            ease 0.15 ypos 0.495
+            ease 0.15 ypos 0.505
+            repeat
+
+    transform ds_shiver_lite:
+        truecenter
+        ease 0.25 zoom 1.005
+        parallel:
+            ease 0.35 zoom 1.006 rotate 0.01
+            ease 0.35 zoom 1.005 rotate -0.01
+            repeat
+        parallel:
+            ease 0.15 xpos 0.499
+            ease 0.15 xpos 0.501
+            repeat
+        parallel:
+            ease 0.25 ypos 0.499
+            ease 0.25 ypos 0.501
+            repeat
+
+    transform ds_shiver_guitar_fight:
+        subpixel True
+        truecenter
+        ease 0.25 zoom 1.005
+        pause 1.2
+        parallel:
+            ease 0.35 zoom 1.006
+            ease 0.35 zoom 1.005
+            repeat
+        # parallel:
+        #     ease 0.15 xpos 0.499
+        #     ease 0.15 xpos 0.501
+        #     repeat
+        parallel:
+            ease 0.25 ypos 0.499
+            ease 0.11 ypos 0.501
+            repeat
+
+    transform ds_dream_bg_throbbing:
+        subpixel True
+        truecenter
+        parallel:
+            ease 3.0 zoom 1.05
+            ease 3.0 zoom 1.0
+            repeat
+
+    transform ds_dream_sprite_rotate_clockwise:
+        subpixel True
+        alpha 0.6
+        truecenter
+        zoom 1.4
+        parallel:
+            ease 7.0 zoom 3.0
+        parallel:
+            ease 7.0 xalign 0.9
+        parallel:
+            ease 7.0 rotate 50
+        parallel:
+            linear 6.0 alpha 0.0
+
+    transform ds_dream_sprite_rotate_counterclockwise:
+        subpixel True
+        alpha 0.6
+        truecenter
+        zoom 1.4
+        parallel:
+            ease 5.0 zoom 3.0
+        parallel:
+            ease 5.0 xalign 0.1
+        parallel:
+            ease 5.0 rotate -40
+        parallel:
+            linear 4.0 alpha 0.0
+
+
+    # Отсвет от пламени
+
+    transform ds_glow_atl(imgf):
+        im.MatrixColor(imgf, im.matrix.brightness(0.17))
+        choice 2:
+            ease 0.4 alpha 0.5
+        choice 2:
+            ease 0.3 alpha 0.75
+        choice 2:
+            ease 0.3 alpha 0.6
+        choice:
+            ease 0.25 alpha 0.9
+        choice:
+            ease 0.2 alpha 1.0
+        repeat
+
+    # Эффект двоения в глазах
+
+    transform ds_appdouble_atl(imgn, z=1.1, zt=1.0, t=1.0):
+        contains:
+            ImageReference(imgn)
+            truecenter
+            linear zt zoom z
+        contains:
+            ImageReference(imgn)
+            truecenter
+            zoom z
+            alpha 0.0
+            pause zt
+            linear t xpos 0.48 alpha 0.3 zoom (z + 0.05)
+        contains:
+            ImageReference(imgn)
+            truecenter
+            zoom z
+            alpha 0.0
+            pause zt
+            linear t xpos 0.51 alpha 0.2 zoom (z + 0.05)
+
+    transform ds_vertigo_atl(imgn, z=1.1, zt=1.0, t=1.0, first=39, second=11):
+        contains:
+            ImageReference(imgn)
+            truecenter
+            linear zt zoom z
+        contains:
+            ImageReference(imgn)
+            truecenter
+            zoom z
+            alpha 0.0
+            pause zt
+            parallel:
+                linear t alpha 0.3 zoom (z + 0.05)
+            parallel:
+                linear 5.0 rotate -first
+                linear 10.0 rotate first
+                linear 5.0 rotate 0
+                repeat
+        contains:
+            ImageReference(imgn)
+            truecenter
+            zoom z
+            alpha 0.0
+            pause zt
+            linear t alpha 0.2 zoom (z + 0.05)
+            parallel:
+                linear 1.0 rotate second
+                linear 2.0 rotate -second
+                linear 1.0 rotate 0
+                repeat
+            parallel:
+                linear 1.5 zoom (z + 0.15)
+                linear 2.5 zoom (z + 0.05)
+    
+    transform ds_running:
+        zoom 1.05 anchor (48,27)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (25,25)
+        ease 0.20 pos (0, 0)
+        ease 0.20 pos (-25,25)
+        repeat
+
 # Персонажи
 
 ## Оригинальные обозначения
@@ -434,62 +826,63 @@ init:
 # me - Семён
 
 ## Атрибуты - внутренние голоса
-    $ lgc = Character (u'Логика', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ enc = Character (u'Энциклопедия', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ rhe = Character (u'Риторика', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ dra = Character (u'Драма', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ con = Character (u'Концептуализация', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ vic = Character (u'Визуальный анализ', color="00ffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ lgc = Character (u'Логика', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ enc = Character (u'Энциклопедия', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ rhe = Character (u'Риторика', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ dra = Character (u'Драма', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ con = Character (u'Концептуализация', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ vic = Character (u'Визуальный анализ', color="00ffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
-    $ vol = Character (u'Сила воли', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ ine = Character (u'Внутренняя империя', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ aut = Character (u'Авторитет', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ emp = Character (u'Эмпатия', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ esp = Character (u'Командная волна', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ sug = Character (u'Внушение', color="800080", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ vol = Character (u'Сила воли', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ine = Character (u'Внутренняя империя', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ aut = Character (u'Авторитет', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ emp = Character (u'Эмпатия', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ esp = Character (u'Командная волна', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ sug = Character (u'Внушение', color="800080", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
-    $ edr = Character (u'Стойкость', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ pat = Character (u'Болевой порог', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ phi = Character (u'Грубая сила', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ ins = Character (u'Инстинкт', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ shi = Character (u'Трепет', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ hfl = Character (u'Сумрак', color="e52b50", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ edr = Character (u'Стойкость', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ pat = Character (u'Болевой порог', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ phi = Character (u'Грубая сила', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ins = Character (u'Инстинкт', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ shi = Character (u'Трепет', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ hfl = Character (u'Сумрак', color="e52b50", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
-    $ per_eye = Character (u'Восприятие (зрение)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ per_hea = Character (u'Восприятие (слух)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ per_sme = Character (u'Восприятие (обоняние)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ per_tas = Character (u'Восприятие (вкус)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ per_toc = Character (u'Восприятие (осязание)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ cor = Character (u'Координация', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ res = Character (u'Скорость реакции', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ svf = Character (u'Эквилибристика', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ inf = Character (u'Техника', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ com = Character (u'Самообладание', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ per_eye = Character (u'Восприятие (зрение)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ per_hea = Character (u'Восприятие (слух)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ per_sme = Character (u'Восприятие (обоняние)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ per_tas = Character (u'Восприятие (вкус)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ per_toc = Character (u'Восприятие (осязание)', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ cor = Character (u'Координация', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ res = Character (u'Скорость реакции', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ svf = Character (u'Эквилибристика', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ inf = Character (u'Техника', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ com = Character (u'Самообладание', color="f8f32b", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
-    $ arb = Character (u'Рептильный мозг', color="ffffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ lim = Character (u'Лимбическая система', color="ffffff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ arb = Character (u'Рептильный мозг', color="ffffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ lim = Character (u'Лимбическая система', color="ffffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 ## Голоса девушек
-    $ dvv = Character (u'Девушка', color="ffaa00", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ mig = Character (u'Девушка', color="00deff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ mtg = Character (u'Девушка', color="00ea32", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ slv = Character (u'Девушка', color="ffd200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ unv = Character (u'Девушка', color="b956ff", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ usv = Character (u'Девушка', color="ff3200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ elg = Character (u'Парень', color="ffff00", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ dvv = Character (u'Девушка', color="ffaa00", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ mig = Character (u'Девушка', color="00deff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ mtg = Character (u'Девушка', color="00ea32", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ slv = Character (u'Девушка', color="ffd200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ unv = Character (u'Девушка', color="b956ff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ usv = Character (u'Девушка', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ elg = Character (u'Парень', color="ffff00", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 ## Иные персонажи
 
-    $ cr = Character (u'Повешенный труп', color="e1dd7d", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ gn = Character (u'Генда', color="7d7f7d", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ ck = Character (u'Повариха', color="1f75fe", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ yap = Character (u'Девушка', color="74b05f", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ ya = Character (u'Яна', color="74b05f", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ fzp = Character (u'Физрук', color="7b001c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ cr = Character (u'Повешенный труп', color="e1dd7d", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ gn = Character (u'Генда', color="7d7f7d", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ck = Character (u'Повариха', color="1f75fe", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ yap = Character (u'Девушка', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ya = Character (u'Яна', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ fzp = Character (u'Физрук', color="7b001c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ ag = Character (u'Мужчина', color="999999", ctc="ctc_animation", ctc_position="fixed", drop_shadow=[ (2, 2) ], drop_shadow_color="#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", what_color="ffdd7d", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ book = Character (u'Книга', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 # Изображения
 
@@ -505,6 +898,848 @@ init:
     image ds_arstotzka = "mods/disco_sovenok/gui/ach/gen/arztotzka.png"
     image ds_electrocution = "mods/disco_sovenok/gui/ach/gen/electrocution.png"
     # image ds_us_escape = "mods/disco_sovenok/gui/ach/us/us_escape.png"image ds_bus_crash = "mods/disco_sovenok/gui/ach/gen/bus_crash.png"
+
+# Таблица эмоций, одежд и аксессуаров персонажей
+# Эмоции (emo) -- словарь, определяющий номер тела, соответствующий эмоции
+# Одежда (cloth) и аксессуары (acc) -- словари, определяющие фактическое название файла (None соответствует необходимости проигнорировать соответствующий элемент)
+
+    define ds_char_table = {
+        'ar': {
+            'normal': {
+                'emo': {
+                    'dontlike': 2,
+                    'dontlike2': 1,
+                    'laugh': 1,
+                    'laugh2': 1,
+                    'normal': 1,
+                    'smile': 1,
+                    'sad': 2,
+                },
+                'cloth': {
+                    'pioneer': None,
+                },
+                'acc': {}
+            }
+        },
+        'dn': {
+            'normal': {
+                'emo': {
+                    'dontcare': 1,
+                    'grin': 1,
+                    'normal': 1,
+                    'smile': 1,
+                    'unsured': 1,
+                    'dontlike': 2,
+                    'upset': 2,
+                    'sad': 3,
+                    'scared': 3,
+                    'shocked': 3,
+                    'sick': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'pioneer': None,
+                },
+                'acc': {}
+            }
+        },
+        'dv': {
+            'normal': {
+                'emo': {
+                    'concent': 1,
+                    'cry': 1,
+                    'evil_smile': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'surprise': 1,
+                    'think': 1,
+                    'grin': 2,
+                    'think2': 2,
+                    'closed_eyes': 3,
+                    'cry_smile': 3,
+                    'guilty': 3,
+                    'sad': 3,
+                    'shy': 3,
+                    'dontlike': 4,
+                    'laugh': 4,
+                    'normal': 4,
+                    'sad2': 4,
+                    'shy2': 4,
+                    'smile': 4,
+                    'soft_smile': 4,
+                    'tired': 4,
+                    'angry': 5,
+                    'rage': 5,
+                },
+                'cloth': {
+                    'naked': None,
+                    'casual': 'casual',
+                    'dress': 'dress',
+                    'modern': 'modern',
+                    'pioneer': 'pioneer',
+                    'pioneer2': 'pioneer2',
+                    'sport': 'sport1',
+                    'sport2': 'sport2',
+                    'swim': 'swim',
+                    'underwear': 'underwear',
+                    'winter': 'winter',
+                },
+                'acc': {}
+            },
+            'close': {
+                'emo': {
+                    'cry': 1,
+                    'evil_smile': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'surprise': 1,
+                    'grin': 2,
+                    'closed_eyes': 3,
+                    'guilty': 3,
+                    'sad': 3,
+                    'shy': 3,
+                    'laugh': 4,
+                    'smile': 4,
+                    'soft_smile': 4,
+                    'angry': 5,
+                    'rage': 5,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'modern': 'modern',
+                    'pioneer': 'pioneer',
+                    'pioneer2': 'pioneer2',
+                    'sport': 'sport1',
+                    'swim': 'swim',
+                },
+                'acc': {}
+            },
+            'far': {
+                'emo': {
+                    'concent': 1,
+                    'cry': 1,
+                    'evil_smile': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'surprise': 1,
+                    'think': 1,
+                    'grin': 2,
+                    'guilty': 3,
+                    'sad': 3,
+                    'shy': 3,
+                    'laugh': 4,
+                    'normal': 4,
+                    'sad2': 4,
+                    'shy2': 4,
+                    'smile': 4,
+                    'soft_smile': 4,
+                    'tired': 4,
+                    'angry': 5,
+                    'rage': 5,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'modern': 'modern',
+                    'pioneer': 'pioneer',
+                    'pioneer2': 'pioneer2',
+                    'sport': 'sport1',
+                    'swim': 'swim',
+                },
+                'acc': {}
+            }
+        },
+        'el': {
+            'normal': {
+                'emo': {
+                    'grin': 1,
+                    'normal': 1,
+                    'smile': 1,
+                    'fingal': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'upset': 2,
+                    'angry': 3,
+                    'laugh': 3,
+                    'serious': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'modern': 'shirt_black',
+                    'pioneer': 'pioneer',
+                },
+                'acc': {}
+            },
+            'close': {
+                'emo': {
+                    'grin': 1,
+                    'normal': 1,
+                    'smile': 1,
+                    'fingal': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'upset': 2,
+                    'angry': 3,
+                    'laugh': 3,
+                    'serious': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'pioneer': 'pioneer',
+                },
+                'acc': {}
+            },
+            'far': {
+                'emo': {
+                    'grin': 1,
+                    'normal': 1,
+                    'smile': 1,
+                    'fingal': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'upset': 2,
+                    'angry': 3,
+                    'laugh': 3,
+                    'serious': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'pioneer': 'pioneer',
+                },
+                'acc': {}
+            }
+        },
+        'mi': {
+            'normal': {
+                'emo': {
+                    'cry': 1,
+                    'dontlike': 1,
+                    'guilty': 1,
+                    'laugh': 1,
+                    'pity': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'shy': 1,
+                    'surprise': 1,
+                    'unsure': 1,
+                    'cry_smile': 2,
+                    'grin': 2,
+                    'happy': 2,
+                    'pity_grin': 2,
+                    'pity_smile': 2,
+                    'sad_smile': 2,
+                    'sad': 2,
+                    'smile': 2,
+                    'angry': 3,
+                    'charmed': 3,
+                    'confusion': 3,
+                    'despair': 3,
+                    'joy': 3,
+                    'normal': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'tender': 3,
+                    'upset': 3,
+                    'yawn': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'casual': 'casual',
+                    'modern': 'civil',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'underwear': 'underwear',
+                },
+                'acc': {}
+            },
+            'close': {
+                'emo': {
+                    'cry': 1,
+                    'dontlike': 1,
+                    'guilty': 1,
+                    'laugh': 1,
+                    'pity': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'shy': 1,
+                    'surprise': 1,
+                    'unsure': 1,
+                    'cry_smile': 2,
+                    'grin': 2,
+                    'happy': 2,
+                    'pity_grin': 2,
+                    'pity_smile': 2,
+                    'sad_smile': 2,
+                    'sad': 2,
+                    'smile': 2,
+                    'angry': 3,
+                    'charmed': 3,
+                    'confusion': 3,
+                    'despair': 3,
+                    'joy': 3,
+                    'normal': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'tender': 3,
+                    'upset': 3,
+                    'yawn': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'modern': 'civil',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'underwear': 'underwear',
+                },
+                'acc': {}
+            },
+            'far': {
+                'emo': {
+                    'cry': 1,
+                    'dontlike': 1,
+                    'guilty': 1,
+                    'laugh': 1,
+                    'pity': 1,
+                    'scared': 1,
+                    'shocked': 1,
+                    'shy': 1,
+                    'surprise': 1,
+                    'unsure': 1,
+                    'cry_smile': 2,
+                    'grin': 2,
+                    'happy': 2,
+                    'pity_grin': 2,
+                    'pity_smile': 2,
+                    'sad_smile': 2,
+                    'sad': 2,
+                    'smile': 2,
+                    'angry': 3,
+                    'charmed': 3,
+                    'confusion': 3,
+                    'despair': 3,
+                    'joy': 3,
+                    'normal': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'tender': 3,
+                    'upset': 3,
+                    'yawn': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'casual': 'casual',
+                    'modern': 'civil',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'underwear': 'underwear',
+                },
+                'acc': {}
+            }
+        },
+        'mz': {
+            'normal': {
+                'emo': {
+                    'amazed': 1,
+                    'bukal': 1,
+                    'fun': 1,
+                    'hope': 1,
+                    'laugh': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'sceptic': 1,
+                    'angry': 2,
+                    'cry': 2,
+                    'rage': 2,
+                    'shyangry': 2,
+                    'smile': 2,
+                    'confused': 3,
+                    'excitement': 3,
+                    'shy': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'pioneer': 'pioneer',
+                    'pullover': 'pullover',
+                    'swim': 'swimsuit',
+                },
+                'acc': {
+                    'glasses': 'glasses',
+                }
+            },
+            'close': {
+                'emo': {
+                    'amazed': 1,
+                    'bukal': 1,
+                    'fun': 1,
+                    'hope': 1,
+                    'laugh': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'sceptic': 1,
+                    'angry': 2,
+                    'cry': 2,
+                    'rage': 2,
+                    'shyangry': 2,
+                    'smile': 2,
+                    'confused': 3,
+                    'excitement': 3,
+                    'shy': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'pioneer': 'pioneer',
+                    'pullover': 'pullover',
+                    'swim': 'swimsuit',
+                },
+                'acc': {
+                    'glasses': 'glasses',
+                }
+            },
+            'far': {
+                'emo': {
+                    'amazed': 1,
+                    'bukal': 1,
+                    'fun': 1,
+                    'hope': 1,
+                    'laugh': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'sceptic': 1,
+                    'angry': 2,
+                    'cry': 2,
+                    'rage': 2,
+                    'shyangry': 2,
+                    'smile': 2,
+                    'confused': 3,
+                    'excitement': 3,
+                    'shy': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'pioneer': 'pioneer',
+                    'pullover': 'pullover',
+                    'swim': 'swimsuit',
+                },
+                'acc': {
+                    'glasses': 'glasses',
+                }
+            }
+        },
+        'sh': {
+            'normal': {
+                'emo': {
+                    'laugh': 1,
+                    'scared': 1,
+                    'smile': 1,
+                    'upset': 1,
+                    'cry': 2,
+                    'rage': 2,
+                    'smile2': 2,
+                    'normal': 3,
+                    'serious': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'towel': None,
+                    'bathrobe': 'bathrobe',
+                    'pioneer': 'pioneer',
+                    'shirt': 'shirt',
+                },
+                'acc': {
+                    'red_nose': 'red_nose'
+                }
+            },
+            'close': {
+                'emo': {
+                    'laugh': 1,
+                    'scared': 1,
+                    'smile': 1,
+                    'upset': 1,
+                    'cry': 2,
+                    'rage': 2,
+                    'smile2': 2,
+                    'normal': 3,
+                    'serious': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'towel': None,
+                    'bathrobe': 'bathrobe',
+                    'pioneer': 'pioneer',
+                    'shirt': 'shirt',
+                },
+                'acc': {
+                    'red_nose': 'red_nose'
+                }
+            },
+            'far': {
+                'emo': {
+                    'laugh': 1,
+                    'scared': 1,
+                    'smile': 1,
+                    'upset': 1,
+                    'cry': 2,
+                    'rage': 2,
+                    'smile2': 2,
+                    'normal': 3,
+                    'serious': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'towel': None,
+                    'bathrobe': 'bathrobe',
+                    'pioneer': 'pioneer',
+                    'shirt': 'shirt',
+                },
+                'acc': {
+                    'red_nose': 'red_nose'
+                }
+            }
+        },
+        'sl': {
+            'normal': {
+                'emo': {
+                    'dontlike': 1,
+                    'involve': 1,
+                    'normal': 1,
+                    'serious': 1,
+                    'smile': 1,
+                    'happy': 2,
+                    'laugh': 2,
+                    'shy': 2,
+                    'shy2': 2,
+                    'shy3': 2,
+                    'smile2': 2,
+                    'tricky': 2,
+                    'tricky2': 2,
+                    'angry': 3,
+                    'cry_smile': 3,
+                    'happy2': 3,
+                    'obsessed': 3,
+                    'sad': 3,
+                    'shy4': 3,
+                    'smile3': 3,
+                    'surprise': 3,
+                    'scared': 4,
+                    'scared2': 4,
+                    'tender': 4,
+                    'tender2': 4,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'modern': 'casual',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                },
+                'acc': {}
+            },
+            'close': {
+                'emo': {
+                    'dontlike': 1,
+                    'involve': 1,
+                    'normal': 1,
+                    'serious': 1,
+                    'smile': 1,
+                    'happy': 2,
+                    'laugh': 2,
+                    'shy': 2,
+                    'shy2': 2,
+                    'shy3': 2,
+                    'smile2': 2,
+                    'tricky': 2,
+                    'tricky2': 2,
+                    'angry': 3,
+                    'cry_smile': 3,
+                    'happy2': 3,
+                    'obsessed': 3,
+                    'sad': 3,
+                    'shy4': 3,
+                    'smile3': 3,
+                    'surprise': 3,
+                    'scared': 4,
+                    'scared2': 4,
+                    'tender': 4,
+                    'tender2': 4,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                },
+                'acc': {}
+            },
+            'far': {
+                'emo': {
+                    'dontlike': 1,
+                    'involve': 1,
+                    'normal': 1,
+                    'serious': 1,
+                    'smile': 1,
+                    'happy': 2,
+                    'laugh': 2,
+                    'shy': 2,
+                    'shy2': 2,
+                    'shy3': 2,
+                    'smile2': 2,
+                    'tricky': 2,
+                    'tricky2': 2,
+                    'angry': 3,
+                    'cry_smile': 3,
+                    'happy2': 3,
+                    'obsessed': 3,
+                    'sad': 3,
+                    'shy4': 3,
+                    'smile3': 3,
+                    'surprise': 3,
+                    'scared': 4,
+                    'scared2': 4,
+                    'tender': 4,
+                    'tender2': 4,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                },
+                'acc': {}
+            }
+        },
+        'ul': {
+            'normal': {
+                'emo': {
+                    'angry': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'dontlike': 2,
+                    'grin': 2,
+                    'guilty': 2,
+                    'serious': 3,
+                    'smile': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'swim': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                },
+                'acc': {
+                    'bunny': 'bunny'
+                }
+            },
+            'close': {
+                'emo': {
+                    'angry': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'dontlike': 2,
+                    'grin': 2,
+                    'guilty': 2,
+                    'serious': 3,
+                    'smile': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'swim': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                },
+                'acc': {
+                    'bunny': 'bunny'
+                }
+            },
+            'far': {
+                'emo': {
+                    'angry': 1,
+                    'normal': 1,
+                    'sad': 1,
+                    'dontlike': 2,
+                    'grin': 2,
+                    'guilty': 2,
+                    'serious': 3,
+                    'smile': 3,
+                    'surprise': 3,
+                },
+                'cloth': {
+                    'swim': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                },
+                'acc': {
+                    'bunny': 'bunny'
+                }
+            }
+        },
+        'un': {
+            'normal': {
+                'emo': {
+                    'angry': 1,
+                    'evil_grin': 1,
+                    'evil_laugh': 1,
+                    'evil': 1,
+                    'evil_smile': 1,
+                    'evil_surprise': 1,
+                    'hysteric': 1,
+                    'normal': 1,
+                    'shy_smile': 1,
+                    'shy_smile': 1,
+                    'shy': 1,
+                    'shy2': 1,
+                    'smile': 1,
+                    'smile2': 1,
+                    'snide_smile': 1,
+                    'sorrow': 1,
+                    'cry_smile': 2,
+                    'cry': 2,
+                    'cry2': 2,
+                    'cry3': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'angry2': 3,
+                    'grin': 3,
+                    'laugh': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'smile3': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'modern': 'designer',
+                    'pioneer': 'pioneer',
+                    'night': 'sleep',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                    'underwear': 'underwear',
+                },
+                'acc': {
+                    'closed_eyes': 'close_eyes',
+                }
+            },
+            'close': {
+                'emo': {
+                    'angry': 1,
+                    'evil_grin': 1,
+                    'evil_laugh': 1,
+                    'evil': 1,
+                    'evil_smile': 1,
+                    'evil_surprise': 1,
+                    'hysteric': 1,
+                    'normal': 1,
+                    'shy_smile': 1,
+                    'shy_smile': 1,
+                    'shy': 1,
+                    'shy2': 1,
+                    'smile': 1,
+                    'smile2': 1,
+                    'snide_smile': 1,
+                    'sorrow': 1,
+                    'cry_smile': 2,
+                    'cry': 2,
+                    'cry2': 2,
+                    'cry3': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'angry2': 3,
+                    'grin': 3,
+                    'laugh': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'smile3': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                },
+                'acc': {
+                    'closed_eyes': 'close_eyes',
+                }
+            },
+            'far': {
+                'emo': {
+                    'angry': 1,
+                    'evil_grin': 1,
+                    'evil_laugh': 1,
+                    'evil': 1,
+                    'evil_smile': 1,
+                    'evil_surprise': 1,
+                    'hysteric': 1,
+                    'normal': 1,
+                    'shy_smile': 1,
+                    'shy_smile': 1,
+                    'shy': 1,
+                    'shy2': 1,
+                    'smile': 1,
+                    'smile2': 1,
+                    'snide_smile': 1,
+                    'sorrow': 1,
+                    'cry_smile': 2,
+                    'cry': 2,
+                    'cry2': 2,
+                    'cry3': 2,
+                    'sad': 2,
+                    'scared': 2,
+                    'shocked': 2,
+                    'surprise': 2,
+                    'angry2': 3,
+                    'grin': 3,
+                    'laugh': 3,
+                    'rage': 3,
+                    'serious': 3,
+                    'smile3': 3,
+                },
+                'cloth': {
+                    'naked': None,
+                    'dress': 'dress',
+                    'pioneer': 'pioneer',
+                    'sport': 'sport',
+                    'swim': 'swim',
+                },
+                'acc': {
+                    'closed_eyes': 'close_eyes',
+                }
+            }
+        },
+        'vt': {
+            'normal': {
+                'emo': {
+                    'angry': 1,
+                    'rage': 1,
+                    'shy': 1,
+                    'normal': 2,
+                    'sad': 2,
+                    'smile': 2,
+                    'laugh': 3,
+                    'scared': 3,
+                },
+                'cloth': {
+                    'swim': None,
+                    'pioneer': 'pioneer',
+                    'shirt': 'shirt',
+                },
+                'acc': {}
+            }
+        }
+    }
 
 ## BG
 
@@ -632,6 +1867,22 @@ init:
     image bg ds_spb_dream3 = "mods/disco_sovenok/bg/ext_gostinka_night_7dl.jpg"
 
     image bg ds_int_bus_sunset = "mods/disco_sovenok/bg/int_bus_sunset.jpg"
+
+    image bg ds_church_entrance = "mods/disco_sovenok/bg/int_d3_hideout_7dl.jpg"
+    image bg ds_church = "mods/disco_sovenok/bg/int_church_7dl.jpg"
+
+    image bg ds_ext_old_building_day = "mods/disco_sovenok/bg/dct_ext_old_building_day.jpg"
+    image bg ds_int_old_building_day = "mods/disco_sovenok/bg/int_old_building_day.jpg"
+    image bg ds_int_old_building_room_day = "mods/disco_sovenok/bg/int_old_building_room_day.png"
+    image bg ds_int_old_building_secondfloor = "mods/disco_sovenok/bg/secondfloor.jpg"
+    image bg ds_int_old_building_cabinet_day = "mods/disco_sovenok/bg/int_old_building_cab_day_7dl.jpg"
+    image bg ds_int_old_building_room2_day = "mods/disco_sovenok/bg/ss_datroom_day.jpg"
+
+    image bg ds_int_another_club_day = "mods/disco_sovenok/bg/int_editorial_day_7dl.jpg"
+
+    image bg ds_ext_stage_big_day = "mods/disco_sovenok/bg/ext_stage_big_day_7dl.jpg"
+    image bg ds_ext_stage_big_sunset = "mods/disco_sovenok/bg/ext_stage_big_sunset_7dl.jpg"
+    image bg ds_ext_stage_near_sunset = "mods/disco_sovenok/bg/ext_stage_near_sunset.jpg"
 
 ## Новые CG
 
@@ -781,6 +2032,7 @@ init:
     $ ds_goodend_dv = "mods/disco_sovenok/music/27-Off-We-Go-Into-The-Wild-Pale-Yonder.ogg"
     $ ds_goodend_mi_jp = "mods/disco_sovenok/music/goluboy_vagon.ogg"
     $ ds_goodend_un = "mods/disco_sovenok/music/yanderesong.ogg"
+    $ ds_church_theme = "mods/disco_sovenok/music/church_theme.mp3"
 
     $ ds_mi_piano_1 = "mods/disco_sovenok/music/mi_piano_1.mp3"
     $ ds_mi_piano_2 = "mods/disco_sovenok/music/mi_piano_2.mp3"
@@ -818,6 +2070,8 @@ init:
     $ ds_alert = "mods/disco_sovenok/sound/alert.mp3"
     $ ds_bombing = "mods/disco_sovenok/sound/bombing.mp3"
 
+    $ ds_things_fall = "mods/disco_sovenok/sound/things_fall.mp3"
+
 # Спрайты
 
 ## Кубики
@@ -835,342 +2089,6 @@ init:
     image second_dice dice4 = Transform(Image("mods/disco_sovenok/sprite/dices/4.png"), anchor=(0.0, 0.0), pos=(0.52, 0.5))
     image second_dice dice5 = Transform(Image("mods/disco_sovenok/sprite/dices/5.png"), anchor=(0.0, 0.0), pos=(0.52, 0.5))
     image second_dice dice6 = Transform(Image("mods/disco_sovenok/sprite/dices/6.png"), anchor=(0.0, 0.0), pos=(0.52, 0.5))
-
-## В steam-версии де-факто body == swim, поэтому определяем собственные голые спрайты
-
-    # Алиса
-    image dv angry naked = ds_define_sprite('dv', 'angry', body_num=5)
-    image dv angry naked close = ds_define_sprite('dv', 'angry', dist='close', body_num=5)
-    image dv angry naked far = ds_define_sprite('dv', 'angry', dist='far', body_num=5)
-
-    image dv cry naked = ds_define_sprite('dv', 'cry', body_num=1)
-    image dv cry naked close = ds_define_sprite('dv', 'cry', dist='close', body_num=1)
-    image dv cry naked far = ds_define_sprite('dv', 'cry', dist='far', body_num = 1)
-
-    image dv grin naked = ds_define_sprite('dv', 'grin', body_num=2)
-    image dv grin naked close = ds_define_sprite('dv', 'grin', dist='close', body_num=2)
-    image dv grin naked far = ds_define_sprite('dv', 'grin', dist='far', body_num=2)
-
-    image dv guilty naked = ds_define_sprite('dv', 'guilty', body_num=3)
-    image dv guilty naked close = ds_define_sprite('dv', 'guilty', dist='close', body_num=3)
-    image dv guilty naked far = ds_define_sprite('dv', 'guilty', dist='far', body_num=3)
-
-    image dv laugh naked = ds_define_sprite('dv', 'laugh', body_num=4)
-    image dv laugh naked close = ds_define_sprite('dv', 'laugh', dist='close', body_num=4)
-    image dv laugh naked far = ds_define_sprite('dv', 'laugh', dist='far', body_num=4)
-
-    image dv normal naked = ds_define_sprite('dv', 'normal', body_num=4)
-    image dv normal naked close = ds_define_sprite('dv', 'normal', dist='close', body_num=4)
-    image dv normal naked far = ds_define_sprite('dv', 'normal', dist='far', body_num=4)
-
-    image dv rage naked = ds_define_sprite('dv', 'rage', body_num=5)
-    image dv rage naked close = ds_define_sprite('dv', 'rage', dist='close', body_num=5)
-    image dv rage naked far = ds_define_sprite('dv', 'rage', dist='far', body_num=5)
-
-    image dv sad naked = ds_define_sprite('dv', 'sad', body_num=3)
-    image dv sad naked close = ds_define_sprite('dv', 'sad', dist='close', body_num=3)
-    image dv sad naked far = ds_define_sprite('dv', 'sad', dist='far', body_num=3)
-
-    image dv scared naked = ds_define_sprite('dv', 'scared', body_num=1)
-    image dv scared naked close = ds_define_sprite('dv', 'scared', dist='close', body_num=1)
-    image dv scared naked far = ds_define_sprite('dv', 'scared', dist='far', body_num=1)
-
-    image dv shocked naked = ds_define_sprite('dv', 'shocked', body_num=1)
-    image dv shocked naked close = ds_define_sprite('dv', 'shocked', dist='close', body_num=1)
-    image dv shocked naked far = ds_define_sprite('dv', 'shocked', dist='far', body_num=1)
-
-    image dv shy naked = ds_define_sprite('dv', 'shy', body_num=3)
-    image dv shy naked close = ds_define_sprite('dv', 'shy', dist='close', body_num=3)
-    image dv shy naked far = ds_define_sprite('dv', 'shy', dist='far', body_num=3)
-
-    image dv smile naked = ds_define_sprite('dv', 'smile', body_num=4)
-    image dv smile naked close = ds_define_sprite('dv', 'smile', dist='close', body_num=4)
-    image dv smile naked far = ds_define_sprite('dv', 'smile', dist='far', body_num=4)
-
-    image dv surprise naked = ds_define_sprite('dv', 'surprise', body_num=1)
-    image dv surprise naked close = ds_define_sprite('dv', 'surprise', dist='close', body_num=1)
-    image dv surprise naked far = ds_define_sprite('dv', 'surprise', dist='far', body_num=1)
-
-    # Электроник
-    image el angry naked = ds_define_sprite('el', 'angry', body_num=3)
-    image el angry naked close = ds_define_sprite('el', 'angry', dist='close', body_num=3)
-    image el angry naked far = ds_define_sprite('el', 'angry', dist='far', body_num=3)
-
-    image el fingal naked = ds_define_sprite('el', 'fingal', body_num=2)
-    image el fingal naked close = ds_define_sprite('el', 'fingal', dist='close', body_num=2)
-    image el fingal naked far = ds_define_sprite('el', 'fingal', dist='far', body_num=2)
-
-    image el grin naked = ds_define_sprite('el', 'grin', body_num=1)
-    image el grin naked close = ds_define_sprite('el', 'grin', dist='close', body_num=1)
-    image el grin naked far = ds_define_sprite('el', 'grin', dist='far', body_num=1)
-
-    image el laugh naked = ds_define_sprite('el', 'laugh', body_num=3)
-    image el laugh naked close = ds_define_sprite('el', 'laugh', dist='close', body_num=3)
-    image el laugh naked far = ds_define_sprite('el', 'laugh', dist='far', body_num=3)
-
-    image el normal naked = ds_define_sprite('el', 'normal', body_num=1)
-    image el normal naked close = ds_define_sprite('el', 'normal', dist='close', body_num=1)
-    image el normal naked far = ds_define_sprite('el', 'normal', dist='far', body_num=1)
-
-    image el sad naked = ds_define_sprite('el', 'sad', body_num=2)
-    image el sad naked close = ds_define_sprite('el', 'sad', dist='close', body_num=2)
-    image el sad naked far = ds_define_sprite('el', 'sad', dist='far', body_num=2)
-
-    image el scared naked = ds_define_sprite('el', 'scared', body_num=2)
-    image el scared naked close = ds_define_sprite('el', 'scared', dist='close', body_num=2)
-    image el scared naked far = ds_define_sprite('el', 'scared', dist='far', body_num=2)
-
-    image el serious naked = ds_define_sprite('el', 'serious', body_num=3)
-    image el serious naked close = ds_define_sprite('el', 'serious', dist='close', body_num=3)
-    image el serious naked far = ds_define_sprite('el', 'serious', dist='far', body_num=3)
-
-    image el shocked naked = ds_define_sprite('el', 'shocked', body_num=2)
-    image el shocked naked close = ds_define_sprite('el', 'shocked', dist='close', body_num=2)
-    image el shocked naked far = ds_define_sprite('el', 'shocked', dist='far', body_num=2)
-
-    image el smile naked = ds_define_sprite('el', 'smile', body_num=1)
-    image el smile naked close = ds_define_sprite('el', 'smile', dist='close', body_num=1)
-    image el smile naked far = ds_define_sprite('el', 'smile', dist='far', body_num=1)
-
-    image el surprise naked = ds_define_sprite('el', 'surprise', body_num=2)
-    image el surprise naked close = ds_define_sprite('el', 'surprise', dist='close', body_num=2)
-    image el surprise naked far = ds_define_sprite('el', 'surprise', dist='far', body_num=2)
-
-    image el upset naked = ds_define_sprite('el', 'upset', body_num=2)
-    image el upset naked close = ds_define_sprite('el', 'upset', dist='close', body_num=2)
-    image el upset naked far = ds_define_sprite('el', 'upset', dist='far', body_num=2)
-
-    # Мику
-    image mi angry naked = ds_define_sprite('mi', 'angry', body_num=3)
-    image mi angry naked close = ds_define_sprite('mi', 'angry', dist='close', body_num=3)
-    image mi angry naked far = ds_define_sprite('mi', 'angry', dist='far', body_num=3)
-
-    image mi cry naked = ds_define_sprite('mi', 'cry', body_num=1)
-    image mi cry naked close = ds_define_sprite('mi', 'cry', dist='close', body_num=1)
-    image mi cry naked far = ds_define_sprite('mi', 'cry', dist='far', body_num=1)
-
-    image mi cry_smile naked = ds_define_sprite('mi', 'cry_smile', body_num=2)
-    image mi cry_smile naked close = ds_define_sprite('mi', 'cry_smile', dist='close', body_num=2)
-    image mi cry_smile naked far = ds_define_sprite('mi', 'cry_smile', dist='far', body_num=2)
-
-    image mi dontlike naked = ds_define_sprite('mi', 'dontlike', body_num=1)
-    image mi dontlike naked close = ds_define_sprite('mi', 'dontlike', dist='close', body_num=1)
-    image mi dontlike naked far = ds_define_sprite('mi', 'dontlike', dist='far', body_num=1)
-
-    image mi grin naked = ds_define_sprite('mi', 'grin', body_num=2)
-    image mi grin naked close = ds_define_sprite('mi', 'grin', dist='close', body_num=2)
-    image mi grin naked far = ds_define_sprite('mi', 'grin', dist='far', body_num=2)
-
-    image mi happy naked = ds_define_sprite('mi', 'happy', body_num=2)
-    image mi happy naked close = ds_define_sprite('mi', 'happy', dist='close', body_num=2)
-    image mi happy naked far = ds_define_sprite('mi', 'happy', dist='far', body_num=2)
-
-    image mi laugh naked = ds_define_sprite('mi', 'laugh', body_num=1)
-    image mi laugh naked close = ds_define_sprite('mi', 'laugh', dist='close', body_num=1)
-    image mi laugh naked far = ds_define_sprite('mi', 'laugh', dist='far', body_num=1)
-
-    image mi normal naked = ds_define_sprite('mi', 'normal', body_num=3)
-    image mi normal naked close = ds_define_sprite('mi', 'normal', dist='close', body_num=3)
-    image mi normal naked far = ds_define_sprite('mi', 'normal', dist='far', body_num=3)
-
-    image mi rage naked = ds_define_sprite('mi', 'rage', body_num=3)
-    image mi rage naked close = ds_define_sprite('mi', 'rage', dist='close', body_num=3)
-    image mi rage naked far = ds_define_sprite('mi', 'rage', dist='far', body_num=3)
-
-    image mi sad naked = ds_define_sprite('mi', 'sad', body_num=2)
-    image mi sad naked close = ds_define_sprite('mi', 'sad', dist='close', body_num=2)
-    image mi sad naked far = ds_define_sprite('mi', 'sad', dist='far', body_num=2)
-
-    image mi scared naked = ds_define_sprite('mi', 'scared', body_num=1)
-    image mi scared naked close = ds_define_sprite('mi', 'scared', dist='close', body_num=1)
-    image mi scared naked far = ds_define_sprite('mi', 'scared', dist='far', body_num=1)
-
-    image mi serious naked = ds_define_sprite('mi', 'serious', body_num=3)
-    image mi serious naked close = ds_define_sprite('mi', 'serious', dist='close', body_num=3)
-    image mi serious naked far = ds_define_sprite('mi', 'serious', dist='far', body_num=3)
-
-    image mi shocked naked = ds_define_sprite('mi', 'shocked', body_num=1)
-    image mi shocked naked close = ds_define_sprite('mi', 'shocked', dist='close', body_num=1)
-    image mi shocked naked far = ds_define_sprite('mi', 'shocked', dist='far', body_num=1)
-
-    image mi shy naked = ds_define_sprite('mi', 'shy', body_num=1)
-    image mi shy naked close = ds_define_sprite('mi', 'shy', dist='close', body_num=1)
-    image mi shy naked far = ds_define_sprite('mi', 'shy', dist='far', body_num=1)
-
-    image mi smile naked = ds_define_sprite('mi', 'smile', body_num=2)
-    image mi smile naked close = ds_define_sprite('mi', 'smile', dist='close', body_num=2)
-    image mi smile naked far = ds_define_sprite('mi', 'smile', dist='far', body_num=2)
-
-    image mi surprise naked = ds_define_sprite('mi', 'surprise', body_num=1)
-    image mi surprise naked close = ds_define_sprite('mi', 'surprise', dist='close', body_num=1)
-    image mi surprise naked far = ds_define_sprite('mi', 'surprise', dist='far', body_num=1)
-
-    image mi upset naked = ds_define_sprite('mi', 'upset', body_num=3)
-    image mi upset naked close = ds_define_sprite('mi', 'upset', dist='close', body_num=3)
-    image mi upset naked far = ds_define_sprite('mi', 'upset', dist='far', body_num=3)
-
-    # ОД
-    image mt angry naked = ds_define_sprite('mt', 'angry', body_num=2)
-    image mt angry naked close = ds_define_sprite('mt', 'angry', dist='close', body_num=2)
-    image mt angry naked far = ds_define_sprite('mt', 'angry', dist='far', body_num=2)
-
-    image mt grin naked = ds_define_sprite('mt', 'grin', body_num=3)
-    image mt grin naked close = ds_define_sprite('mt', 'grin', dist='close', body_num=3)
-    image mt grin naked far = ds_define_sprite('mt', 'grin', dist='far', body_num=3)
-
-    image mt laugh naked = ds_define_sprite('mt', 'laugh', body_num=3)
-    image mt laugh naked close = ds_define_sprite('mt', 'laugh', dist='close', body_num=3)
-    image mt laugh naked far = ds_define_sprite('mt', 'laugh', dist='far', body_num=3)
-
-    image mt normal naked = ds_define_sprite('mt', 'normal', body_num=1)
-    image mt normal naked close = ds_define_sprite('mt', 'normal', dist='close', body_num=1)
-    image mt normal naked far = ds_define_sprite('mt', 'normal', dist='far', body_num=1)
-
-    image mt rage naked = ds_define_sprite('mt', 'rage', body_num=2)
-    image mt rage naked close = ds_define_sprite('mt', 'rage', dist='close', body_num=2)
-    image mt rage naked far = ds_define_sprite('mt', 'rage', dist='far', body_num=2)
-
-    image mt sad naked = ds_define_sprite('mt', 'sad', body_num=1)
-    image mt sad naked close = ds_define_sprite('mt', 'sad', dist='close', body_num=1)
-    image mt sad naked far = ds_define_sprite('mt', 'sad', dist='far', body_num=1)
-
-    image mt scared naked = ds_define_sprite('mt', 'scared', body_num=3)
-    image mt scared naked close = ds_define_sprite('mt', 'scared', dist='close', body_num=3)
-    image mt scared naked far = ds_define_sprite('mt', 'scared', dist='far', body_num=3)
-
-    image mt shocked naked = ds_define_sprite('mt', 'shocked', body_num=2)
-    image mt shocked naked close = ds_define_sprite('mt', 'shocked', dist='close', body_num=2)
-    image mt shocked naked far = ds_define_sprite('mt', 'shocked', dist='far', body_num=2)
-
-    image mt smile naked = ds_define_sprite('mt', 'smile', body_num=1)
-    image mt smile naked close = ds_define_sprite('mt', 'smile', dist='close', body_num=1)
-    image mt smile naked far = ds_define_sprite('mt', 'smile', dist='far', body_num=1)
-
-    image mt surprise naked = ds_define_sprite('mt', 'surprise', body_num=1)
-    image mt surprise naked close = ds_define_sprite('mt', 'surprise', dist='close', body_num=1)
-    image mt surprise naked far = ds_define_sprite('mt', 'surprise', dist='far', body_num=1)
-
-    # Славя
-    image sl angry naked = ds_define_sprite('sl', 'angry', body_num=3)
-    image sl angry naked close = ds_define_sprite('sl', 'angry', dist='close', body_num=3)
-    image sl angry naked far = ds_define_sprite('sl', 'angry', dist='far', body_num=3)
-
-    image sl happy naked = ds_define_sprite('sl', 'happy', body_num=2)
-    image sl happy naked close = ds_define_sprite('sl', 'happy', dist='close', body_num=2)
-    image sl happy naked far = ds_define_sprite('sl', 'happy', dist='far', body_num=2)
-    
-    image sl laugh naked = ds_define_sprite('sl', 'laugh', body_num=2)
-    image sl laugh naked close = ds_define_sprite('sl', 'laugh', dist='close', body_num=2)
-    image sl laugh naked far = ds_define_sprite('sl', 'laugh', dist='far', body_num=2)
-
-    image sl normal naked = ds_define_sprite('sl', 'normal', body_num=1)
-    image sl normal naked close = ds_define_sprite('sl', 'normal', dist='close', body_num=1)
-    image sl normal naked far = ds_define_sprite('sl', 'normal', dist='far', body_num=1)
-
-    image sl sad naked = ds_define_sprite('sl', 'sad', body_num=3)
-    image sl sad naked close = ds_define_sprite('sl', 'sad', dist='close', body_num=3)
-    image sl sad naked far = ds_define_sprite('sl', 'sad', dist='far', body_num=3)
-
-    image sl scared naked = ds_define_sprite('sl', 'scared', body_num=4)
-    image sl scared naked close = ds_define_sprite('sl', 'scared', dist='close', body_num=4)
-    image sl scared naked far = ds_define_sprite('sl', 'scared', dist='far', body_num=4)
-
-    image sl serious naked = ds_define_sprite('sl', 'serious', body_num=1)
-    image sl serious naked close = ds_define_sprite('sl', 'serious', dist='close', body_num=1)
-    image sl serious naked far = ds_define_sprite('sl', 'serious', dist='far', body_num=1)
-
-    image sl shy naked = ds_define_sprite('sl', 'shy', body_num=2)
-    image sl shy naked close = ds_define_sprite('sl', 'shy', dist='close', body_num=2)
-    image sl shy naked far = ds_define_sprite('sl', 'shy', dist='far', body_num=2)
-
-    image sl smile naked = ds_define_sprite('sl', 'smile', body_num=1)
-    image sl smile naked close = ds_define_sprite('sl', 'smile', dist='close', body_num=1)
-    image sl smile naked far = ds_define_sprite('sl', 'smile', dist='far', body_num=1)
-
-    image sl smile2 naked = ds_define_sprite('sl', 'smile2', body_num=2)
-    image sl smile2 naked close = ds_define_sprite('sl', 'smile2', dist='close', body_num=2)
-    image sl smile2 naked far = ds_define_sprite('sl', 'smile2', dist='far', body_num=2)
-
-    image sl surprise naked = ds_define_sprite('sl', 'surprise', body_num=3)
-    image sl surprise naked close = ds_define_sprite('sl', 'surprise', dist='close', body_num=3)
-    image sl surprise naked far = ds_define_sprite('sl', 'surprise', dist='far', body_num=3)
-
-    image sl tender naked = ds_define_sprite('sl', 'tender', body_num=4)
-    image sl tender naked close = ds_define_sprite('sl', 'tender', dist='close', body_num=4)
-    image sl tender naked far = ds_define_sprite('sl', 'tender', dist='far', body_num=4)
-
-    # Лена
-    image un angry naked = ds_define_sprite('un', 'angry', body_num=1)
-    image un angry naked close = ds_define_sprite('un', 'angry', dist='close', body_num=1)
-    image un angry naked far = ds_define_sprite('un', 'angry', dist='far', body_num=1)
-
-    image un angry2 naked = ds_define_sprite('un', 'angry2', body_num=3)
-    image un angry2 naked close = ds_define_sprite('un', 'angry2', dist='close', body_num=3)
-    image un angry2 naked far = ds_define_sprite('un', 'angry2', dist='far', body_num=3)
-
-    image un cry naked = ds_define_sprite('un', 'cry', body_num=2)
-    image un cry naked close = ds_define_sprite('un', 'cry', dist='close', body_num=2)
-    image un cry naked far = ds_define_sprite('un', 'cry', dist='far', body_num=2)
-
-    image un cry_smile naked = ds_define_sprite('un', 'cry_smile', body_num=2)
-    image un cry_smile naked close = ds_define_sprite('un', 'cry_smile', dist='close', body_num=2)
-    image un cry_smile naked far = ds_define_sprite('un', 'cry_smile', dist='far', body_num=2)
-
-    image un evil_smile naked = ds_define_sprite('un', 'evil_smile', body_num=1)
-    image un evil_smile naked close = ds_define_sprite('un', 'evil_smile', dist='close', body_num=1)
-    image un evil_smile naked far = ds_define_sprite('un', 'evil_smile', dist='far', body_num=1)
-
-    image un grin naked = ds_define_sprite('un', 'grin', body_num=3)
-    image un grin naked close = ds_define_sprite('un', 'grin', dist='close', body_num=3)
-    image un grin naked far = ds_define_sprite('un', 'grin', dist='far', body_num=3)
-
-    image un laugh naked = ds_define_sprite('un', 'laugh', body_num=3)
-    image un laugh naked close = ds_define_sprite('un', 'laugh', dist='close', body_num=3)
-    image un laugh naked far = ds_define_sprite('un', 'laugh', dist='far', body_num=3)
-
-    image un normal naked = ds_define_sprite('un', 'normal', body_num=1)
-    image un normal naked close = ds_define_sprite('un', 'normal', dist='close', body_num=1)
-    image un normal naked far = ds_define_sprite('un', 'normal', dist='far', body_num=1)
-
-    image un rage naked = ds_define_sprite('un', 'rage', body_num=3)
-    image un rage naked close = ds_define_sprite('un', 'rage', dist='close', body_num=3)
-    image un rage naked far = ds_define_sprite('un', 'rage', dist='far', body_num=3)
-
-    image un sad naked = ds_define_sprite('un', 'sad', body_num=2)
-    image un sad naked close = ds_define_sprite('un', 'sad', dist='close', body_num=2)
-    image un sad naked far = ds_define_sprite('un', 'sad', dist='far', body_num=2)
-
-    image un scared naked = ds_define_sprite('un', 'scared', body_num=2)
-    image un scared naked close = ds_define_sprite('un', 'scared', dist='close', body_num=2)
-    image un scared naked far = ds_define_sprite('un', 'scared', dist='far', body_num=2)
-
-    image un serious naked = ds_define_sprite('un', 'serious', body_num=3)
-    image un serious naked close = ds_define_sprite('un', 'serious', dist='close', body_num=3)
-    image un serious naked far = ds_define_sprite('un', 'serious', dist='far', body_num=3)
-
-    image un shocked naked = ds_define_sprite('un', 'shocked', body_num=2)
-    image un shocked naked close = ds_define_sprite('un', 'shocked', dist='close', body_num=2)
-    image un shocked naked far = ds_define_sprite('un', 'shocked', dist='far', body_num=2)
-
-    image un shy naked = ds_define_sprite('un', 'shy', body_num=1)
-    image un shy naked close = ds_define_sprite('un', 'shy', dist='close', body_num=1)
-    image un shy naked far = ds_define_sprite('un', 'shy', dist='far', body_num=1)
-
-    image un smile naked = ds_define_sprite('un', 'smile', body_num=1)
-    image un smile naked close = ds_define_sprite('un', 'smile', dist='close', body_num=1)
-    image un smile naked far = ds_define_sprite('un', 'smile', dist='far', body_num=1)
-
-    image un smile2 naked = ds_define_sprite('un', 'smile2', body_num=1)
-    image un smile2 naked close = ds_define_sprite('un', 'smile2', dist='close', body_num=1)
-    image un smile2 naked far = ds_define_sprite('un', 'smile2', dist='far', body_num=1)
-
-    image un smile3 naked = ds_define_sprite('un', 'smile3', body_num=3)
-    image un smile3 naked close = ds_define_sprite('un', 'smile3', dist='close', body_num=3)
-    image un smile3 naked far = ds_define_sprite('un', 'smile3', dist='far', body_num=3)
-
-    image un surprise naked = ds_define_sprite('un', 'surprise', body_num=2)
-    image un surprise naked close = ds_define_sprite('un', 'surprise', dist='close', body_num=2)
-    image un surprise naked far = ds_define_sprite('un', 'surprise', dist='far', body_num=2)
 
 ## Расширение персонажей
 
@@ -1442,1150 +2360,7 @@ init:
     image cs shy medic far = ds_define_sprite('cs', 'shy', body_name='medic', dist='far', acc='glasses')
     image cs smile medic far = ds_define_sprite('cs', 'smile', body_name='medic', dist='far', acc='glasses')
 
-    # Алиса
-    image dv angry casual = ds_define_sprite('dv', 'angry', body_num=5, cloth='casual')
-    image dv cry casual = ds_define_sprite('dv', 'cry', body_num=1, cloth='casual')
-    image dv grin casual = ds_define_sprite('dv', 'grin', body_num=2, cloth='casual')
-    image dv guilty casual = ds_define_sprite('dv', 'guilty', body_num=3, cloth='casual')
-    image dv laugh casual = ds_define_sprite('dv', 'laugh', body_num=4, cloth='casual')
-    image dv normal casual = ds_define_sprite('dv', 'normal', body_num=4, cloth='casual')
-    image dv rage casual = ds_define_sprite('dv', 'rage', body_num=5, cloth='casual')
-    image dv sad casual = ds_define_sprite('dv', 'sad', body_num=3, cloth='casual')
-    image dv scared casual = ds_define_sprite('dv', 'scared', body_num=1, cloth='casual')
-    image dv shocked casual = ds_define_sprite('dv', 'shocked', body_num=1, cloth='casual')
-    image dv shy casual = ds_define_sprite('dv', 'shy', body_num=3, cloth='casual')
-    image dv smile casual = ds_define_sprite('dv', 'smile', body_num=4, cloth='casual')
-    image dv surprise casual = ds_define_sprite('dv', 'surprise', body_num=1, cloth='casual')
-
-    image dv angry dress = ds_define_sprite('dv', 'angry', body_num=5, cloth='dress')
-    image dv cry dress = ds_define_sprite('dv', 'cry', body_num=1, cloth='dress')
-    image dv grin dress = ds_define_sprite('dv', 'grin', body_num=2, cloth='dress')
-    image dv guilty dress = ds_define_sprite('dv', 'guilty', body_num=3, cloth='dress')
-    image dv laugh dress = ds_define_sprite('dv', 'laugh', body_num=4, cloth='dress')
-    image dv normal dress = ds_define_sprite('dv', 'normal', body_num=4, cloth='dress')
-    image dv rage dress = ds_define_sprite('dv', 'rage', body_num=5, cloth='dress')
-    image dv sad dress = ds_define_sprite('dv', 'sad', body_num=3, cloth='dress')
-    image dv scared dress = ds_define_sprite('dv', 'scared', body_num=1, cloth='dress')
-    image dv shocked dress = ds_define_sprite('dv', 'shocked', body_num=1, cloth='dress')
-    image dv shy dress = ds_define_sprite('dv', 'shy', body_num=3, cloth='dress')
-    image dv smile dress = ds_define_sprite('dv', 'smile', body_num=4, cloth='dress')
-    image dv surprise dress = ds_define_sprite('dv', 'surprise', body_num=1, cloth='dress')
-
-    image dv angry modern = ds_define_sprite('dv', 'angry', body_num=5, cloth='modern')
-    image dv angry modern close = ds_define_sprite('dv', 'angry', dist='close', body_num=5, cloth='modern')
-    image dv angry modern far = ds_define_sprite('dv', 'angry', dist='far', body_num=5, cloth='modern')
-
-    image dv cry modern = ds_define_sprite('dv', 'cry', body_num=1, cloth='modern')
-    image dv cry modern close = ds_define_sprite('dv', 'cry', dist='close', body_num=1, cloth='modern')
-    image dv cry modern far = ds_define_sprite('dv', 'cry', dist='far', body_num = 1, cloth='modern')
-
-    image dv grin modern = ds_define_sprite('dv', 'grin', body_num=2, cloth='modern')
-    image dv grin modern close = ds_define_sprite('dv', 'grin', dist='close', body_num=2, cloth='modern')
-    image dv grin modern far = ds_define_sprite('dv', 'grin', dist='far', body_num=2, cloth='modern')
-
-    image dv guilty modern = ds_define_sprite('dv', 'guilty', body_num=3, cloth='modern')
-    image dv guilty modern close = ds_define_sprite('dv', 'guilty', dist='close', body_num=3, cloth='modern')
-    image dv guilty modern far = ds_define_sprite('dv', 'guilty', dist='far', body_num=3, cloth='modern')
-
-    image dv laugh modern = ds_define_sprite('dv', 'laugh', body_num=4, cloth='modern')
-    image dv laugh modern close = ds_define_sprite('dv', 'laugh', dist='close', body_num=4, cloth='modern')
-    image dv laugh modern far = ds_define_sprite('dv', 'laugh', dist='far', body_num=4, cloth='modern')
-
-    image dv normal modern = ds_define_sprite('dv', 'normal', body_num=4, cloth='modern')
-    image dv normal modern close = ds_define_sprite('dv', 'normal', dist='close', body_num=4, cloth='modern')
-    image dv normal modern far = ds_define_sprite('dv', 'normal', dist='far', body_num=4, cloth='modern')
-
-    image dv rage modern = ds_define_sprite('dv', 'rage', body_num=5, cloth='modern')
-    image dv rage modern close = ds_define_sprite('dv', 'rage', dist='close', body_num=5, cloth='modern')
-    image dv rage modern far = ds_define_sprite('dv', 'rage', dist='far', body_num=5, cloth='modern')
-
-    image dv sad modern = ds_define_sprite('dv', 'sad', body_num=3, cloth='modern')
-    image dv sad modern close = ds_define_sprite('dv', 'sad', dist='close', body_num=3, cloth='modern')
-    image dv sad modern far = ds_define_sprite('dv', 'sad', dist='far', body_num=3, cloth='modern')
-
-    image dv scared modern = ds_define_sprite('dv', 'scared', body_num=1, cloth='modern')
-    image dv scared modern close = ds_define_sprite('dv', 'scared', dist='close', body_num=1, cloth='modern')
-    image dv scared modern far = ds_define_sprite('dv', 'scared', dist='far', body_num=1, cloth='modern')
-
-    image dv shocked modern = ds_define_sprite('dv', 'shocked', body_num=1, cloth='modern')
-    image dv shocked modern close = ds_define_sprite('dv', 'shocked', dist='close', body_num=1, cloth='modern')
-    image dv shocked modern far = ds_define_sprite('dv', 'shocked', dist='far', body_num=1, cloth='modern')
-
-    image dv shy modern = ds_define_sprite('dv', 'shy', body_num=3, cloth='modern')
-    image dv shy modern close = ds_define_sprite('dv', 'shy', dist='close', body_num=3, cloth='modern')
-    image dv shy modern far = ds_define_sprite('dv', 'shy', dist='far', body_num=3, cloth='modern')
-
-    image dv smile modern = ds_define_sprite('dv', 'smile', body_num=4, cloth='modern')
-    image dv smile modern close = ds_define_sprite('dv', 'smile', dist='close', body_num=4, cloth='modern')
-    image dv smile modern far = ds_define_sprite('dv', 'smile', dist='far', body_num=4, cloth='modern')
-
-    image dv surprise modern = ds_define_sprite('dv', 'surprise', body_num=1, cloth='modern')
-    image dv surprise modern close = ds_define_sprite('dv', 'surprise', dist='close', body_num=1, cloth='modern')
-    image dv surprise modern far = ds_define_sprite('dv', 'surprise', dist='far', body_num=1, cloth='modern')
-
-    image dv angry modern = ds_define_sprite('dv', 'angry', body_num=5, cloth='modern')
-    image dv angry modern close = ds_define_sprite('dv', 'angry', dist='close', body_num=5, cloth='modern')
-    image dv angry modern far = ds_define_sprite('dv', 'angry', dist='far', body_num=5, cloth='modern')
-
-    image dv cry modern = ds_define_sprite('dv', 'cry', body_num=1, cloth='modern')
-    image dv cry modern close = ds_define_sprite('dv', 'cry', dist='close', body_num=1, cloth='modern')
-    image dv cry modern far = ds_define_sprite('dv', 'cry', dist='far', body_num = 1, cloth='modern')
-
-    image dv grin modern = ds_define_sprite('dv', 'grin', body_num=2, cloth='modern')
-    image dv grin modern close = ds_define_sprite('dv', 'grin', dist='close', body_num=2, cloth='modern')
-    image dv grin modern far = ds_define_sprite('dv', 'grin', dist='far', body_num=2, cloth='modern')
-
-    image dv guilty modern = ds_define_sprite('dv', 'guilty', body_num=3, cloth='modern')
-    image dv guilty modern close = ds_define_sprite('dv', 'guilty', dist='close', body_num=3, cloth='modern')
-    image dv guilty modern far = ds_define_sprite('dv', 'guilty', dist='far', body_num=3, cloth='modern')
-
-    image dv laugh modern = ds_define_sprite('dv', 'laugh', body_num=4, cloth='modern')
-    image dv laugh modern close = ds_define_sprite('dv', 'laugh', dist='close', body_num=4, cloth='modern')
-    image dv laugh modern far = ds_define_sprite('dv', 'laugh', dist='far', body_num=4, cloth='modern')
-
-    image dv normal modern = ds_define_sprite('dv', 'normal', body_num=4, cloth='modern')
-    image dv normal modern close = ds_define_sprite('dv', 'normal', dist='close', body_num=4, cloth='modern')
-    image dv normal modern far = ds_define_sprite('dv', 'normal', dist='far', body_num=4, cloth='modern')
-
-    image dv rage modern = ds_define_sprite('dv', 'rage', body_num=5, cloth='modern')
-    image dv rage modern close = ds_define_sprite('dv', 'rage', dist='close', body_num=5, cloth='modern')
-    image dv rage modern far = ds_define_sprite('dv', 'rage', dist='far', body_num=5, cloth='modern')
-
-    image dv sad modern = ds_define_sprite('dv', 'sad', body_num=3, cloth='modern')
-    image dv sad modern close = ds_define_sprite('dv', 'sad', dist='close', body_num=3, cloth='modern')
-    image dv sad modern far = ds_define_sprite('dv', 'sad', dist='far', body_num=3, cloth='modern')
-
-    image dv scared modern = ds_define_sprite('dv', 'scared', body_num=1, cloth='modern')
-    image dv scared modern close = ds_define_sprite('dv', 'scared', dist='close', body_num=1, cloth='modern')
-    image dv scared modern far = ds_define_sprite('dv', 'scared', dist='far', body_num=1, cloth='modern')
-
-    image dv shocked modern = ds_define_sprite('dv', 'shocked', body_num=1, cloth='modern')
-    image dv shocked modern close = ds_define_sprite('dv', 'shocked', dist='close', body_num=1, cloth='modern')
-    image dv shocked modern far = ds_define_sprite('dv', 'shocked', dist='far', body_num=1, cloth='modern')
-
-    image dv shy modern = ds_define_sprite('dv', 'shy', body_num=3, cloth='modern')
-    image dv shy modern close = ds_define_sprite('dv', 'shy', dist='close', body_num=3, cloth='modern')
-    image dv shy modern far = ds_define_sprite('dv', 'shy', dist='far', body_num=3, cloth='modern')
-
-    image dv smile modern = ds_define_sprite('dv', 'smile', body_num=4, cloth='modern')
-    image dv smile modern close = ds_define_sprite('dv', 'smile', dist='close', body_num=4, cloth='modern')
-    image dv smile modern far = ds_define_sprite('dv', 'smile', dist='far', body_num=4, cloth='modern')
-
-    image dv surprise modern = ds_define_sprite('dv', 'surprise', body_num=1, cloth='modern')
-    image dv surprise modern close = ds_define_sprite('dv', 'surprise', dist='close', body_num=1, cloth='modern')
-    image dv surprise modern far = ds_define_sprite('dv', 'surprise', dist='far', body_num=1, cloth='modern')
-
-    image dv angry sport = ds_define_sprite('dv', 'angry', body_num=5, cloth='sport')
-    image dv angry sport close = ds_define_sprite('dv', 'angry', dist='close', body_num=5, cloth='sport')
-    image dv angry sport far = ds_define_sprite('dv', 'angry', dist='far', body_num=5, cloth='sport')
-
-    image dv cry sport = ds_define_sprite('dv', 'cry', body_num=1, cloth='sport')
-    image dv cry sport close = ds_define_sprite('dv', 'cry', dist='close', body_num=1, cloth='sport')
-    image dv cry sport far = ds_define_sprite('dv', 'cry', dist='far', body_num = 1, cloth='sport')
-
-    image dv grin sport = ds_define_sprite('dv', 'grin', body_num=2, cloth='sport')
-    image dv grin sport close = ds_define_sprite('dv', 'grin', dist='close', body_num=2, cloth='sport')
-    image dv grin sport far = ds_define_sprite('dv', 'grin', dist='far', body_num=2, cloth='sport')
-
-    image dv guilty sport = ds_define_sprite('dv', 'guilty', body_num=3, cloth='sport')
-    image dv guilty sport close = ds_define_sprite('dv', 'guilty', dist='close', body_num=3, cloth='sport')
-    image dv guilty sport far = ds_define_sprite('dv', 'guilty', dist='far', body_num=3, cloth='sport')
-
-    image dv laugh sport = ds_define_sprite('dv', 'laugh', body_num=4, cloth='sport')
-    image dv laugh sport close = ds_define_sprite('dv', 'laugh', dist='close', body_num=4, cloth='sport')
-    image dv laugh sport far = ds_define_sprite('dv', 'laugh', dist='far', body_num=4, cloth='sport')
-
-    image dv normal sport = ds_define_sprite('dv', 'normal', body_num=4, cloth='sport')
-    image dv normal sport close = ds_define_sprite('dv', 'normal', dist='close', body_num=4, cloth='sport')
-    image dv normal sport far = ds_define_sprite('dv', 'normal', dist='far', body_num=4, cloth='sport')
-
-    image dv rage sport = ds_define_sprite('dv', 'rage', body_num=5, cloth='sport')
-    image dv rage sport close = ds_define_sprite('dv', 'rage', dist='close', body_num=5, cloth='sport')
-    image dv rage sport far = ds_define_sprite('dv', 'rage', dist='far', body_num=5, cloth='sport')
-
-    image dv sad sport = ds_define_sprite('dv', 'sad', body_num=3, cloth='sport')
-    image dv sad sport close = ds_define_sprite('dv', 'sad', dist='close', body_num=3, cloth='sport')
-    image dv sad sport far = ds_define_sprite('dv', 'sad', dist='far', body_num=3, cloth='sport')
-
-    image dv scared sport = ds_define_sprite('dv', 'scared', body_num=1, cloth='sport')
-    image dv scared sport close = ds_define_sprite('dv', 'scared', dist='close', body_num=1, cloth='sport')
-    image dv scared sport far = ds_define_sprite('dv', 'scared', dist='far', body_num=1, cloth='sport')
-
-    image dv shocked sport = ds_define_sprite('dv', 'shocked', body_num=1, cloth='sport')
-    image dv shocked sport close = ds_define_sprite('dv', 'shocked', dist='close', body_num=1, cloth='sport')
-    image dv shocked sport far = ds_define_sprite('dv', 'shocked', dist='far', body_num=1, cloth='sport')
-
-    image dv shy sport = ds_define_sprite('dv', 'shy', body_num=3, cloth='sport')
-    image dv shy sport close = ds_define_sprite('dv', 'shy', dist='close', body_num=3, cloth='sport')
-    image dv shy sport far = ds_define_sprite('dv', 'shy', dist='far', body_num=3, cloth='sport')
-
-    image dv smile sport = ds_define_sprite('dv', 'smile', body_num=4, cloth='sport')
-    image dv smile sport close = ds_define_sprite('dv', 'smile', dist='close', body_num=4, cloth='sport')
-    image dv smile sport far = ds_define_sprite('dv', 'smile', dist='far', body_num=4, cloth='sport')
-
-    image dv surprise sport = ds_define_sprite('dv', 'surprise', body_num=1, cloth='sport')
-    image dv surprise sport close = ds_define_sprite('dv', 'surprise', dist='close', body_num=1, cloth='sport')
-    image dv surprise sport far = ds_define_sprite('dv', 'surprise', dist='far', body_num=1, cloth='sport')
-
-    image dv evil_smile naked = ds_define_sprite('dv', 'evil_smile', body_num=1)
-    image dv evil_smile naked close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1)
-    image dv evil_smile naked far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1)
-    image dv evil_smile casual = ds_define_sprite('dv', 'evil_smile', body_num=1, cloth='casual')
-    image dv evil_smile casual close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1, cloth='casual')
-    image dv evil_smile casual far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1, cloth='casual')
-    image dv evil_smile modern = ds_define_sprite('dv', 'evil_smile', body_num=1, cloth='modern')
-    image dv evil_smile modern close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1, cloth='modern')
-    image dv evil_smile modern far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1, cloth='modern')
-    image dv evil_smile pioneer = ds_define_sprite('dv', 'evil_smile', body_num=1, cloth='pioneer')
-    image dv evil_smile pioneer close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1, cloth='pioneer')
-    image dv evil_smile pioneer far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1, cloth='pioneer')
-    image dv evil_smile pioneer2 = ds_define_sprite('dv', 'evil_smile', body_num=1, cloth='pioneer2')
-    image dv evil_smile pioneer2 close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1, cloth='pioneer2')
-    image dv evil_smile pioneer2 far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1, cloth='pioneer2')
-    image dv evil_smile swim = ds_define_sprite('dv', 'evil_smile', body_num=1, cloth='swim')
-    image dv evil_smile swim close = ds_define_sprite('dv', 'evil_smile', dist='close', body_num=1, cloth='swim')
-    image dv evil_smile swim far = ds_define_sprite('dv', 'evil_smile', dist='far', body_num=1, cloth='swim')
-
-    image dv think naked = ds_define_sprite('dv', 'think', body_num=1)
-    image dv think casual = ds_define_sprite('dv', 'think', body_num=1, cloth='casual')
-    image dv think modern = ds_define_sprite('dv', 'think', body_num=1, cloth='modern')
-    image dv think pioneer = ds_define_sprite('dv', 'think', body_num=1, cloth='pioneer')
-    image dv think pioneer2 = ds_define_sprite('dv', 'think', body_num=1, cloth='pioneer2')
-    image dv think swim = ds_define_sprite('dv', 'think', body_num=1, cloth='swim')
-
-    image dv think2 naked = ds_define_sprite('dv', 'think2', body_num=2)
-    image dv think2 casual = ds_define_sprite('dv', 'think2', body_num=2, cloth='casual')
-    image dv think2 modern = ds_define_sprite('dv', 'think2', body_num=2, cloth='modern')
-    image dv think2 pioneer = ds_define_sprite('dv', 'think2', body_num=2, cloth='pioneer')
-    image dv think2 pioneer2 = ds_define_sprite('dv', 'think2', body_num=2, cloth='pioneer2')
-    image dv think2 swim = ds_define_sprite('dv', 'think2', body_num=2, cloth='swim')
-
-    image dv cry_smile naked = ds_define_sprite('dv', 'cry_smile', body_num=3)
-    image dv cry_smile casual = ds_define_sprite('dv', 'cry_smile', body_num=3, cloth='casual')
-    image dv cry_smile modern = ds_define_sprite('dv', 'cry_smile', body_num=3, cloth='modern')
-    image dv cry_smile pioneer = ds_define_sprite('dv', 'cry_smile', body_num=3, cloth='pioneer')
-    image dv cry_smile pioneer2 = ds_define_sprite('dv', 'cry_smile', body_num=3, cloth='pioneer2')
-    image dv cry_smile swim = ds_define_sprite('dv', 'cry_smile', body_num=3, cloth='swim')
-
-    image dv closed_eyes naked = ds_define_sprite('dv', 'closed_eyes', body_num=3)
-    image dv closed_eyes naked close = ds_define_sprite('dv', 'closed_eyes', dist='close', body_num=3)
-    image dv closed_eyes casual = ds_define_sprite('dv', 'closed_eyes', body_num=3, cloth='casual')
-    image dv closed_eyes modern = ds_define_sprite('dv', 'closed_eyes', body_num=3, cloth='modern')
-    image dv closed_eyes modern close = ds_define_sprite('dv', 'closed_eyes', dist='close', body_num=3, cloth='modern')
-    image dv closed_eyes pioneer = ds_define_sprite('dv', 'closed_eyes', body_num=3, cloth='pioneer')
-    image dv closed_eyes pioneer close = ds_define_sprite('dv', 'closed_eyes', dist='close', body_num=3, cloth='pioneer')
-    image dv closed_eyes pioneer2 = ds_define_sprite('dv', 'closed_eyes', body_num=3, cloth='pioneer2')
-    image dv closed_eyes pioneer2 close = ds_define_sprite('dv', 'closed_eyes', dist='close', body_num=3, cloth='pioneer2')
-    image dv closed_eyes swim = ds_define_sprite('dv', 'closed_eyes', body_num=3, cloth='swim')
-    image dv closed_eyes swim close = ds_define_sprite('dv', 'closed_eyes', dist='close', body_num=3, cloth='swim')
-
-    image dv shy2 naked = ds_define_sprite('dv', 'shy2', body_num=3)
-    image dv shy2 naked far = ds_define_sprite('dv', 'shy2', dist='far', body_num=3)
-    image dv shy2 casual = ds_define_sprite('dv', 'shy2', body_num=3, cloth='casual')
-    image dv shy2 modern = ds_define_sprite('dv', 'shy2', body_num=3, cloth='modern')
-    image dv shy2 modern far = ds_define_sprite('dv', 'shy2', dist='far', body_num=3, cloth='modern')
-    image dv shy2 pioneer = ds_define_sprite('dv', 'shy2', body_num=3, cloth='pioneer')
-    image dv shy2 pioneer far = ds_define_sprite('dv', 'shy2', dist='far', body_num=3, cloth='pioneer')
-    image dv shy2 pioneer2 = ds_define_sprite('dv', 'shy2', body_num=3, cloth='pioneer2')
-    image dv shy2 pioneer2 far = ds_define_sprite('dv', 'shy2', dist='far', body_num=3, cloth='pioneer2')
-    image dv shy2 swim = ds_define_sprite('dv', 'shy2', body_num=3, cloth='swim')
-    image dv shy2 swim far = ds_define_sprite('dv', 'shy2', dist='far', body_num=3, cloth='swim')
-
-    image dv tired naked = ds_define_sprite('dv', 'tired', body_num=4)
-    image dv tired naked far = ds_define_sprite('dv', 'tired', dist='far', body_num=4)
-    image dv tired casual = ds_define_sprite('dv', 'tired', body_num=4, cloth='casual')
-    image dv tired modern = ds_define_sprite('dv', 'tired', body_num=4, cloth='modern')
-    image dv tired modern far = ds_define_sprite('dv', 'tired', dist='far', body_num=4, cloth='modern')
-    image dv tired pioneer = ds_define_sprite('dv', 'tired', body_num=4, cloth='pioneer')
-    image dv tired pioneer far = ds_define_sprite('dv', 'tired', dist='far', body_num=4, cloth='pioneer')
-    image dv tired pioneer2 = ds_define_sprite('dv', 'tired', body_num=4, cloth='pioneer2')
-    image dv tired pioneer2 far = ds_define_sprite('dv', 'tired', dist='far', body_num=4, cloth='pioneer2')
-    image dv tired swim = ds_define_sprite('dv', 'tired', body_num=4, cloth='swim')
-    image dv tired swim far = ds_define_sprite('dv', 'tired', dist='far', body_num=4, cloth='swim')
-
-    image dv soft_smile naked = ds_define_sprite('dv', 'soft_smile', body_num=4)
-    image dv soft_smile naked close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4)
-    image dv soft_smile naked far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4)
-    image dv soft_smile casual = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='casual')
-    image dv soft_smile dress = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='dress')
-    image dv soft_smile dress close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4, cloth='dress')
-    image dv soft_smile dress far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4, cloth='dress')
-    image dv soft_smile modern = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='modern')
-    image dv soft_smile modern close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4, cloth='modern')
-    image dv soft_smile modern far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4, cloth='modern')
-    image dv soft_smile pioneer = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='pioneer')
-    image dv soft_smile pioneer close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4, cloth='pioneer')
-    image dv soft_smile pioneer far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4, cloth='pioneer')
-    image dv soft_smile pioneer2 = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='pioneer2')
-    image dv soft_smile pioneer2 close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4, cloth='pioneer2')
-    image dv soft_smile pioneer2 far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4, cloth='pioneer2')
-    image dv soft_smile swim = ds_define_sprite('dv', 'soft_smile', body_num=4, cloth='swim')
-    image dv soft_smile swim close = ds_define_sprite('dv', 'soft_smile', dist='close', body_num=4, cloth='swim')
-    image dv soft_smile swim far = ds_define_sprite('dv', 'soft_smile', dist='far', body_num=4, cloth='swim')
-
-    image dv heart = ds_define_sprite('dv', 'grin', dist='far', body_num=2, body_name='heart')
-
-    # Электроник
-
-    image el angry modern = ds_define_sprite('el', 'angry', body_num=3, cloth='shirt_black')
-    image el angry modern close = ds_define_sprite('el', 'angry', dist='close', body_num=3, cloth='shirt_black')
-    image el angry modern far = ds_define_sprite('el', 'angry', dist='far', body_num=3, cloth='shirt_black')
-
-    image el fingal modern = ds_define_sprite('el', 'fingal', body_num=2, cloth='shirt_black')
-    image el fingal modern close = ds_define_sprite('el', 'fingal', dist='close', body_num=2, cloth='shirt_black')
-    image el fingal modern far = ds_define_sprite('el', 'fingal', dist='far', body_num=2, cloth='shirt_black')
-
-    image el grin modern = ds_define_sprite('el', 'grin', body_num=1, cloth='shirt_black')
-    image el grin modern close = ds_define_sprite('el', 'grin', dist='close', body_num=1, cloth='shirt_black')
-    image el grin modern far = ds_define_sprite('el', 'grin', dist='far', body_num=1, cloth='shirt_black')
-
-    image el laugh modern = ds_define_sprite('el', 'laugh', body_num=3, cloth='shirt_black')
-    image el laugh modern close = ds_define_sprite('el', 'laugh', dist='close', body_num=3, cloth='shirt_black')
-    image el laugh modern far = ds_define_sprite('el', 'laugh', dist='far', body_num=3, cloth='shirt_black')
-
-    image el normal modern = ds_define_sprite('el', 'normal', body_num=1, cloth='shirt_black')
-    image el normal modern close = ds_define_sprite('el', 'normal', dist='close', body_num=1, cloth='shirt_black')
-    image el normal modern far = ds_define_sprite('el', 'normal', dist='far', body_num=1, cloth='shirt_black')
-
-    image el sad modern = ds_define_sprite('el', 'sad', body_num=2, cloth='shirt_black')
-    image el sad modern close = ds_define_sprite('el', 'sad', dist='close', body_num=2, cloth='shirt_black')
-    image el sad modern far = ds_define_sprite('el', 'sad', dist='far', body_num=2, cloth='shirt_black')
-
-    image el scared modern = ds_define_sprite('el', 'scared', body_num=2, cloth='shirt_black')
-    image el scared modern close = ds_define_sprite('el', 'scared', dist='close', body_num=2, cloth='shirt_black')
-    image el scared modern far = ds_define_sprite('el', 'scared', dist='far', body_num=2, cloth='shirt_black')
-
-    image el serious modern = ds_define_sprite('el', 'serious', body_num=3, cloth='shirt_black')
-    image el serious modern close = ds_define_sprite('el', 'serious', dist='close', body_num=3, cloth='shirt_black')
-    image el serious modern far = ds_define_sprite('el', 'serious', dist='far', body_num=3, cloth='shirt_black')
-
-    image el shocked modern = ds_define_sprite('el', 'shocked', body_num=2, cloth='shirt_black')
-    image el shocked modern close = ds_define_sprite('el', 'shocked', dist='close', body_num=2, cloth='shirt_black')
-    image el shocked modern far = ds_define_sprite('el', 'shocked', dist='far', body_num=2, cloth='shirt_black')
-
-    image el smile modern = ds_define_sprite('el', 'smile', body_num=1, cloth='shirt_black')
-    image el smile modern close = ds_define_sprite('el', 'smile', dist='close', body_num=1, cloth='shirt_black')
-    image el smile modern far = ds_define_sprite('el', 'smile', dist='far', body_num=1, cloth='shirt_black')
-
-    image el surprise modern = ds_define_sprite('el', 'surprise', body_num=2, cloth='shirt_black')
-    image el surprise modern close = ds_define_sprite('el', 'surprise', dist='close', body_num=2, cloth='shirt_black')
-    image el surprise modern far = ds_define_sprite('el', 'surprise', dist='far', body_num=2, cloth='shirt_black')
-
-    image el upset modern = ds_define_sprite('el', 'upset', body_num=2, cloth='shirt_black')
-    image el upset modern close = ds_define_sprite('el', 'upset', dist='close', body_num=2, cloth='shirt_black')
-    image el upset modern far = ds_define_sprite('el', 'upset', dist='far', body_num=2, cloth='shirt_black')
-
-    # Мику
-
-    image mi angry modern = ds_define_sprite('mi', 'angry', body_num=3, cloth='civil')
-    image mi angry modern close = ds_define_sprite('mi', 'angry', dist='close', body_num=3, cloth='civil')
-    image mi angry modern far = ds_define_sprite('mi', 'angry', dist='far', body_num=3, cloth='civil')
-
-    image mi cry modern = ds_define_sprite('mi', 'cry', body_num=1, cloth='civil')
-    image mi cry modern close = ds_define_sprite('mi', 'cry', dist='close', body_num=1, cloth='civil')
-    image mi cry modern far = ds_define_sprite('mi', 'cry', dist='far', body_num=1, cloth='civil')
-
-    image mi cry_smile modern = ds_define_sprite('mi', 'cry_smile', body_num=2, cloth='civil')
-    image mi cry_smile modern close = ds_define_sprite('mi', 'cry_smile', dist='close', body_num=2, cloth='civil')
-    image mi cry_smile modern far = ds_define_sprite('mi', 'cry_smile', dist='far', body_num=2, cloth='civil')
-
-    image mi dontlike modern = ds_define_sprite('mi', 'dontlike', body_num=1, cloth='civil')
-    image mi dontlike modern close = ds_define_sprite('mi', 'dontlike', dist='close', body_num=1, cloth='civil')
-    image mi dontlike modern far = ds_define_sprite('mi', 'dontlike', dist='far', body_num=1, cloth='civil')
-
-    image mi grin modern = ds_define_sprite('mi', 'grin', body_num=2, cloth='civil')
-    image mi grin modern close = ds_define_sprite('mi', 'grin', dist='close', body_num=2, cloth='civil')
-    image mi grin modern far = ds_define_sprite('mi', 'grin', dist='far', body_num=2, cloth='civil')
-
-    image mi happy modern = ds_define_sprite('mi', 'happy', body_num=2, cloth='civil')
-    image mi happy modern close = ds_define_sprite('mi', 'happy', dist='close', body_num=2, cloth='civil')
-    image mi happy modern far = ds_define_sprite('mi', 'happy', dist='far', body_num=2, cloth='civil')
-
-    image mi laugh modern = ds_define_sprite('mi', 'laugh', body_num=1, cloth='civil')
-    image mi laugh modern close = ds_define_sprite('mi', 'laugh', dist='close', body_num=1, cloth='civil')
-    image mi laugh modern far = ds_define_sprite('mi', 'laugh', dist='far', body_num=1, cloth='civil')
-
-    image mi normal modern = ds_define_sprite('mi', 'normal', body_num=3, cloth='civil')
-    image mi normal modern close = ds_define_sprite('mi', 'normal', dist='close', body_num=3, cloth='civil')
-    image mi normal modern far = ds_define_sprite('mi', 'normal', dist='far', body_num=3, cloth='civil')
-
-    image mi rage modern = ds_define_sprite('mi', 'rage', body_num=3, cloth='civil')
-    image mi rage modern close = ds_define_sprite('mi', 'rage', dist='close', body_num=3, cloth='civil')
-    image mi rage modern far = ds_define_sprite('mi', 'rage', dist='far', body_num=3, cloth='civil')
-
-    image mi sad modern = ds_define_sprite('mi', 'sad', body_num=2, cloth='civil')
-    image mi sad modern close = ds_define_sprite('mi', 'sad', dist='close', body_num=2, cloth='civil')
-    image mi sad modern far = ds_define_sprite('mi', 'sad', dist='far', body_num=2, cloth='civil')
-
-    image mi scared modern = ds_define_sprite('mi', 'scared', body_num=1, cloth='civil')
-    image mi scared modern close = ds_define_sprite('mi', 'scared', dist='close', body_num=1, cloth='civil')
-    image mi scared modern far = ds_define_sprite('mi', 'scared', dist='far', body_num=1, cloth='civil')
-
-    image mi serious modern = ds_define_sprite('mi', 'serious', body_num=3, cloth='civil')
-    image mi serious modern close = ds_define_sprite('mi', 'serious', dist='close', body_num=3, cloth='civil')
-    image mi serious modern far = ds_define_sprite('mi', 'serious', dist='far', body_num=3, cloth='civil')
-
-    image mi shocked modern = ds_define_sprite('mi', 'shocked', body_num=1, cloth='civil')
-    image mi shocked modern close = ds_define_sprite('mi', 'shocked', dist='close', body_num=1, cloth='civil')
-    image mi shocked modern far = ds_define_sprite('mi', 'shocked', dist='far', body_num=1, cloth='civil')
-
-    image mi shy modern = ds_define_sprite('mi', 'shy', body_num=1, cloth='civil')
-    image mi shy modern close = ds_define_sprite('mi', 'shy', dist='close', body_num=1, cloth='civil')
-    image mi shy modern far = ds_define_sprite('mi', 'shy', dist='far', body_num=1, cloth='civil')
-
-    image mi smile modern = ds_define_sprite('mi', 'smile', body_num=2, cloth='civil')
-    image mi smile modern close = ds_define_sprite('mi', 'smile', dist='close', body_num=2, cloth='civil')
-    image mi smile modern far = ds_define_sprite('mi', 'smile', dist='far', body_num=2, cloth='civil')
-
-    image mi surprise modern = ds_define_sprite('mi', 'surprise', body_num=1, cloth='civil')
-    image mi surprise modern close = ds_define_sprite('mi', 'surprise', dist='close', body_num=1, cloth='civil')
-    image mi surprise modern far = ds_define_sprite('mi', 'surprise', dist='far', body_num=1, cloth='civil')
-
-    image mi upset modern = ds_define_sprite('mi', 'upset', body_num=3, cloth='civil')
-    image mi upset modern close = ds_define_sprite('mi', 'upset', dist='close', body_num=3, cloth='civil')
-    image mi upset modern far = ds_define_sprite('mi', 'upset', dist='far', body_num=3, cloth='civil')
-
-    # ОД
-    image mt angry night = ds_define_sprite('mt', 'angry', body_num=2, cloth='nightdress')
-    image mt angry night close = ds_define_sprite('mt', 'angry', dist='close', body_num=2, cloth='nightdress')
-    image mt angry night far = ds_define_sprite('mt', 'angry', dist='far', body_num=2, cloth='nightdress')
-
-    image mt grin night = ds_define_sprite('mt', 'grin', body_num=3, cloth='nightdress')
-    image mt grin night close = ds_define_sprite('mt', 'grin', dist='close', body_num=3, cloth='nightdress')
-    image mt grin night far = ds_define_sprite('mt', 'grin', dist='far', body_num=3, cloth='nightdress')
-
-    image mt laugh night = ds_define_sprite('mt', 'laugh', body_num=3, cloth='nightdress')
-    image mt laugh night close = ds_define_sprite('mt', 'laugh', dist='close', body_num=3, cloth='nightdress')
-    image mt laugh night far = ds_define_sprite('mt', 'laugh', dist='far', body_num=3, cloth='nightdress')
-
-    image mt normal night = ds_define_sprite('mt', 'normal', body_num=1, cloth='nightdress')
-    image mt normal night close = ds_define_sprite('mt', 'normal', dist='close', body_num=1, cloth='nightdress')
-    image mt normal night far = ds_define_sprite('mt', 'normal', dist='far', body_num=1, cloth='nightdress')
-
-    image mt rage night = ds_define_sprite('mt', 'rage', body_num=2, cloth='nightdress')
-    image mt rage night close = ds_define_sprite('mt', 'rage', dist='close', body_num=2, cloth='nightdress')
-    image mt rage night far = ds_define_sprite('mt', 'rage', dist='far', body_num=2, cloth='nightdress')
-
-    image mt sad night = ds_define_sprite('mt', 'sad', body_num=1, cloth='nightdress')
-    image mt sad night close = ds_define_sprite('mt', 'sad', dist='close', body_num=1, cloth='nightdress')
-    image mt sad night far = ds_define_sprite('mt', 'sad', dist='far', body_num=1, cloth='nightdress')
-
-    image mt scared night = ds_define_sprite('mt', 'scared', body_num=3, cloth='nightdress')
-    image mt scared night close = ds_define_sprite('mt', 'scared', dist='close', body_num=3, cloth='nightdress')
-    image mt scared night far = ds_define_sprite('mt', 'scared', dist='far', body_num=3, cloth='nightdress')
-
-    image mt shocked night = ds_define_sprite('mt', 'shocked', body_num=2, cloth='nightdress')
-    image mt shocked night close = ds_define_sprite('mt', 'shocked', dist='close', body_num=2, cloth='nightdress')
-    image mt shocked night far = ds_define_sprite('mt', 'shocked', dist='far', body_num=2, cloth='nightdress')
-
-    image mt smile night = ds_define_sprite('mt', 'smile', body_num=1, cloth='nightdress')
-    image mt smile night close = ds_define_sprite('mt', 'smile', dist='close', body_num=1, cloth='nightdress')
-    image mt smile night far = ds_define_sprite('mt', 'smile', dist='far', body_num=1, cloth='nightdress')
-
-    image mt surprise night = ds_define_sprite('mt', 'surprise', body_num=1, cloth='nightdress')
-    image mt surprise night close = ds_define_sprite('mt', 'surprise', dist='close', body_num=1, cloth='nightdress')
-    image mt surprise night far = ds_define_sprite('mt', 'surprise', dist='far', body_num=1, cloth='nightdress')
-
-    # Женя
-
-    image mz amazed naked = ds_define_sprite('mz', 'amazed', body_num=1)
-    image mz amazed glasses body = ds_define_sprite('mz', 'amazed', body_num=1, cloth='body', acc='glasses')
-    image mz amazed naked far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far')
-    image mz amazed glasses naked far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', acc='glasses')
-    image mz amazed naked close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close')
-    image mz amazed glasses naked close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', acc='glasses')
-    
-    image mz amazed pioneer  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pioneer')
-    image mz amazed glasses pioneer = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pioneer', acc='glasses')
-    image mz amazed pioneer far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pioneer')
-    image mz amazed glasses pioneer far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz amazed pioneer close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='pioneer')
-    image mz amazed glasses pioneer close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz amazed swimsuit = ds_define_sprite('mz', 'amazed', body_num=1, cloth='swimsuit')
-    image mz amazed glasses swimsuit = ds_define_sprite('mz', 'amazed', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz amazed swimsuit far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='swimsuit')
-    image mz amazed glasses swimsuit far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz amazed swimsuit close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='swimsuit')
-    image mz amazed glasses swimsuit close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz amazed pullover  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pullover')
-    image mz amazed glasses pullover = ds_define_sprite('mz', 'amazed', body_num=1, cloth='pullover', acc='glasses')
-    image mz amazed pullover far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pullover')
-    image mz amazed glasses pullover far = ds_define_sprite('mz', 'amazed', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz amazed pullover close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='pullover')
-    image mz amazed glasses pullover close = ds_define_sprite('mz', 'amazed', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz bukal naked = ds_define_sprite('mz', 'bukal', body_num=1)
-    image mz bukal glasses body = ds_define_sprite('mz', 'bukal', body_num=1, cloth='body', acc='glasses')
-    image mz bukal naked far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far')
-    image mz bukal glasses naked far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', acc='glasses')
-    image mz bukal naked close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close')
-    image mz bukal glasses naked close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', acc='glasses')
-    
-    image mz bukal pioneer  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pioneer')
-    image mz bukal glasses pioneer = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pioneer', acc='glasses')
-    image mz bukal pioneer far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pioneer')
-    image mz bukal glasses pioneer far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz bukal pioneer close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pioneer')
-    image mz bukal glasses pioneer close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz bukal swimsuit  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='swimsuit')
-    image mz bukal glasses swimsuit = ds_define_sprite('mz', 'bukal', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz bukal swimsuit far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='swimsuit')
-    image mz bukal glasses swimsuit far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz bukal swimsuit close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='swimsuit')
-    image mz bukal glasses swimsuit close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz bukal pullover  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pullover')
-    image mz bukal glasses pullover = ds_define_sprite('mz', 'bukal', body_num=1, cloth='pullover', acc='glasses')
-    image mz bukal pullover far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pullover')
-    image mz bukal glasses pullover far = ds_define_sprite('mz', 'bukal', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz bukal pullover close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pullover')
-    image mz bukal glasses pullover close = ds_define_sprite('mz', 'bukal', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz laugh naked = ds_define_sprite('mz', 'laugh', body_num=1)
-    image mz laugh glasses body = ds_define_sprite('mz', 'laugh', body_num=1, cloth='body', acc='glasses')
-    image mz laugh naked far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far')
-    image mz laugh glasses naked far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', acc='glasses')
-    image mz laugh naked close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close')
-    image mz laugh glasses naked close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', acc='glasses')
-    
-    image mz laugh pioneer  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pioneer')
-    image mz laugh glasses pioneer = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pioneer', acc='glasses')
-    image mz laugh pioneer far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pioneer')
-    image mz laugh glasses pioneer far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz laugh pioneer close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pioneer')
-    image mz laugh glasses pioneer close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz laugh swimsuit  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='swimsuit')
-    image mz laugh glasses swimsuit = ds_define_sprite('mz', 'laugh', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz laugh swimsuit far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='swimsuit')
-    image mz laugh glasses swimsuit far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz laugh swimsuit close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='swimsuit')
-    image mz laugh glasses swimsuit close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz laugh pullover  = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pullover')
-    image mz laugh glasses pullover = ds_define_sprite('mz', 'laugh', body_num=1, cloth='pullover', acc='glasses')
-    image mz laugh pullover far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pullover')
-    image mz laugh glasses pullover far = ds_define_sprite('mz', 'laugh', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz laugh pullover close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pullover')
-    image mz laugh glasses pullover close = ds_define_sprite('mz', 'laugh', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz normal naked = ds_define_sprite('mz', 'normal', body_num=1)
-    image mz normal glasses body = ds_define_sprite('mz', 'normal', body_num=1, cloth='body', acc='glasses')
-    image mz normal naked far = ds_define_sprite('mz', 'normal', body_num=1, dist='far')
-    image mz normal glasses naked far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', acc='glasses')
-    image mz normal naked close = ds_define_sprite('mz', 'normal', body_num=1, dist='close')
-    image mz normal glasses naked close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', acc='glasses')
-    
-    image mz normal pioneer  = ds_define_sprite('mz', 'normal', body_num=1, cloth='pioneer')
-    image mz normal glasses pioneer = ds_define_sprite('mz', 'normal', body_num=1, cloth='pioneer', acc='glasses')
-    image mz normal pioneer far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pioneer')
-    image mz normal glasses pioneer far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz normal pioneer close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pioneer')
-    image mz normal glasses pioneer close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz normal swimsuit  = ds_define_sprite('mz', 'normal', body_num=1, cloth='swimsuit')
-    image mz normal glasses swimsuit = ds_define_sprite('mz', 'normal', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz normal swimsuit far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='swimsuit')
-    image mz normal glasses swimsuit far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz normal swimsuit close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='swimsuit')
-    image mz normal glasses swimsuit close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz normal pullover  = ds_define_sprite('mz', 'normal', body_num=1, cloth='pullover')
-    image mz normal glasses pullover = ds_define_sprite('mz', 'normal', body_num=1, cloth='pullover', acc='glasses')
-    image mz normal pullover far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pullover')
-    image mz normal glasses pullover far = ds_define_sprite('mz', 'normal', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz normal pullover close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pullover')
-    image mz normal glasses pullover close = ds_define_sprite('mz', 'normal', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz fun naked = ds_define_sprite('mz', 'fun', body_num=1)
-    image mz fun glasses body = ds_define_sprite('mz', 'fun', body_num=1, cloth='body', acc='glasses')
-    image mz fun naked far = ds_define_sprite('mz', 'fun', body_num=1, dist='far')
-    image mz fun glasses naked far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', acc='glasses')
-    image mz fun naked close = ds_define_sprite('mz', 'fun', body_num=1, dist='close')
-    image mz fun glasses naked close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', acc='glasses')
-    
-    image mz fun pioneer  = ds_define_sprite('mz', 'fun', body_num=1, cloth='pioneer')
-    image mz fun glasses pioneer = ds_define_sprite('mz', 'fun', body_num=1, cloth='pioneer', acc='glasses')
-    image mz fun pioneer far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pioneer')
-    image mz fun glasses pioneer far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz fun pioneer close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pioneer')
-    image mz fun glasses pioneer close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz fun swimsuit  = ds_define_sprite('mz', 'fun', body_num=1, cloth='swimsuit')
-    image mz fun glasses swimsuit = ds_define_sprite('mz', 'fun', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz fun swimsuit far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='swimsuit')
-    image mz fun glasses swimsuit far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz fun swimsuit close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='swimsuit')
-    image mz fun glasses swimsuit close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz fun pullover  = ds_define_sprite('mz', 'fun', body_num=1, cloth='pullover')
-    image mz fun glasses pullover = ds_define_sprite('mz', 'fun', body_num=1, cloth='pullover', acc='glasses')
-    image mz fun pullover far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pullover')
-    image mz fun glasses pullover far = ds_define_sprite('mz', 'fun', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz fun pullover close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pullover')
-    image mz fun glasses pullover close = ds_define_sprite('mz', 'fun', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz sad naked = ds_define_sprite('mz', 'sad', body_num=1)
-    image mz sad glasses body = ds_define_sprite('mz', 'sad', body_num=1, cloth='body', acc='glasses')
-    image mz sad naked far = ds_define_sprite('mz', 'sad', body_num=1, dist='far')
-    image mz sad glasses naked far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', acc='glasses')
-    image mz sad naked close = ds_define_sprite('mz', 'sad', body_num=1, dist='close')
-    image mz sad glasses naked close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', acc='glasses')
-    
-    image mz sad pioneer  = ds_define_sprite('mz', 'sad', body_num=1, cloth='pioneer')
-    image mz sad glasses pioneer = ds_define_sprite('mz', 'sad', body_num=1, cloth='pioneer', acc='glasses')
-    image mz sad pioneer far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pioneer')
-    image mz sad glasses pioneer far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz sad pioneer close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pioneer')
-    image mz sad glasses pioneer close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz sad swimsuit  = ds_define_sprite('mz', 'sad', body_num=1, cloth='swimsuit')
-    image mz sad glasses swimsuit = ds_define_sprite('mz', 'sad', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz sad swimsuit far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='swimsuit')
-    image mz sad glasses swimsuit far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz sad swimsuit close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='swimsuit')
-    image mz sad glasses swimsuit close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz sad pullover  = ds_define_sprite('mz', 'sad', body_num=1, cloth='pullover')
-    image mz sad glasses pullover = ds_define_sprite('mz', 'sad', body_num=1, cloth='pullover', acc='glasses')
-    image mz sad pullover far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pullover')
-    image mz sad glasses pullover far = ds_define_sprite('mz', 'sad', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz sad pullover close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pullover')
-    image mz sad glasses pullover close = ds_define_sprite('mz', 'sad', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz hope naked = ds_define_sprite('mz', 'hope', body_num=1)
-    image mz hope glasses body = ds_define_sprite('mz', 'hope', body_num=1, cloth='body', acc='glasses')
-    image mz hope naked far = ds_define_sprite('mz', 'hope', body_num=1, dist='far')
-    image mz hope glasses naked far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', acc='glasses')
-    image mz hope naked close = ds_define_sprite('mz', 'hope', body_num=1, dist='close')
-    image mz hope glasses naked close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', acc='glasses')
-    
-    image mz hope pioneer  = ds_define_sprite('mz', 'hope', body_num=1, cloth='pioneer')
-    image mz hope glasses pioneer = ds_define_sprite('mz', 'hope', body_num=1, cloth='pioneer', acc='glasses')
-    image mz hope pioneer far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pioneer')
-    image mz hope glasses pioneer far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz hope pioneer close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pioneer')
-    image mz hope glasses pioneer close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz hope swimsuit  = ds_define_sprite('mz', 'hope', body_num=1, cloth='swimsuit')
-    image mz hope glasses swimsuit = ds_define_sprite('mz', 'hope', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz hope swimsuit far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='swimsuit')
-    image mz hope glasses swimsuit far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz hope swimsuit close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='swimsuit')
-    image mz hope glasses swimsuit close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz hope pullover  = ds_define_sprite('mz', 'hope', body_num=1, cloth='pullover')
-    image mz hope glasses pullover = ds_define_sprite('mz', 'hope', body_num=1, cloth='pullover', acc='glasses')
-    image mz hope pullover far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pullover')
-    image mz hope glasses pullover far = ds_define_sprite('mz', 'hope', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz hope pullover close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pullover')
-    image mz hope glasses pullover close = ds_define_sprite('mz', 'hope', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz sceptic naked = ds_define_sprite('mz', 'sceptic', body_num=1)
-    image mz sceptic glasses body = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='body', acc='glasses')
-    image mz sceptic naked far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far')
-    image mz sceptic glasses naked far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', acc='glasses')
-    image mz sceptic naked close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close')
-    image mz sceptic glasses naked close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', acc='glasses')
-    
-    image mz sceptic pioneer  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pioneer')
-    image mz sceptic glasses pioneer = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pioneer', acc='glasses')
-    image mz sceptic pioneer far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pioneer')
-    image mz sceptic glasses pioneer far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pioneer', acc='glasses')
-    image mz sceptic pioneer close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pioneer')
-    image mz sceptic glasses pioneer close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz sceptic swimsuit  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='swimsuit')
-    image mz sceptic glasses swimsuit = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='swimsuit', acc='glasses')
-    image mz sceptic swimsuit far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='swimsuit')
-    image mz sceptic glasses swimsuit far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='swimsuit', acc='glasses')
-    image mz sceptic swimsuit close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='swimsuit')
-    image mz sceptic glasses swimsuit close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz sceptic pullover  = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pullover')
-    image mz sceptic glasses pullover = ds_define_sprite('mz', 'sceptic', body_num=1, cloth='pullover', acc='glasses')
-    image mz sceptic pullover far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pullover')
-    image mz sceptic glasses pullover far = ds_define_sprite('mz', 'sceptic', body_num=1, dist='far', cloth='pullover', acc='glasses')
-    image mz sceptic pullover close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pullover')
-    image mz sceptic glasses pullover close = ds_define_sprite('mz', 'sceptic', body_num=1, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz angry naked = ds_define_sprite('mz', 'angry', body_num=2)
-    image mz angry glasses body = ds_define_sprite('mz', 'angry', body_num=2, cloth='body', acc='glasses')
-    image mz angry naked far = ds_define_sprite('mz', 'angry', body_num=2, dist='far')
-    image mz angry glasses naked far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', acc='glasses')
-    image mz angry naked close = ds_define_sprite('mz', 'angry', body_num=2, dist='close')
-    image mz angry glasses naked close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', acc='glasses')
-    
-    image mz angry pioneer  = ds_define_sprite('mz', 'angry', body_num=2, cloth='pioneer')
-    image mz angry glasses pioneer = ds_define_sprite('mz', 'angry', body_num=2, cloth='pioneer', acc='glasses')
-    image mz angry pioneer far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pioneer')
-    image mz angry glasses pioneer far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
-    image mz angry pioneer close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pioneer')
-    image mz angry glasses pioneer close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz angry swimsuit  = ds_define_sprite('mz', 'angry', body_num=2, cloth='swimsuit')
-    image mz angry glasses swimsuit = ds_define_sprite('mz', 'angry', body_num=2, cloth='swimsuit', acc='glasses')
-    image mz angry swimsuit far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='swimsuit')
-    image mz angry glasses swimsuit far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
-    image mz angry swimsuit close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='swimsuit')
-    image mz angry glasses swimsuit close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz angry pullover  = ds_define_sprite('mz', 'angry', body_num=2, cloth='pullover')
-    image mz angry glasses pullover = ds_define_sprite('mz', 'angry', body_num=2, cloth='pullover', acc='glasses')
-    image mz angry pullover far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pullover')
-    image mz angry glasses pullover far = ds_define_sprite('mz', 'angry', body_num=2, dist='far', cloth='pullover', acc='glasses')
-    image mz angry pullover close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pullover')
-    image mz angry glasses pullover close = ds_define_sprite('mz', 'angry', body_num=2, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz cry naked = ds_define_sprite('mz', 'cry', body_num=2)
-    image mz cry glasses body = ds_define_sprite('mz', 'cry', body_num=2, cloth='body', acc='glasses')
-    image mz cry naked far = ds_define_sprite('mz', 'cry', body_num=2, dist='far')
-    image mz cry glasses naked far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', acc='glasses')
-    image mz cry naked close = ds_define_sprite('mz', 'cry', body_num=2, dist='close')
-    image mz cry glasses naked close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', acc='glasses')
-    
-    image mz cry pioneer  = ds_define_sprite('mz', 'cry', body_num=2, cloth='pioneer')
-    image mz cry glasses pioneer = ds_define_sprite('mz', 'cry', body_num=2, cloth='pioneer', acc='glasses')
-    image mz cry pioneer far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pioneer')
-    image mz cry glasses pioneer far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
-    image mz cry pioneer close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pioneer')
-    image mz cry glasses pioneer close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz cry swimsuit  = ds_define_sprite('mz', 'cry', body_num=2, cloth='swimsuit')
-    image mz cry glasses swimsuit = ds_define_sprite('mz', 'cry', body_num=2, cloth='swimsuit', acc='glasses')
-    image mz cry swimsuit far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='swimsuit')
-    image mz cry glasses swimsuit far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
-    image mz cry swimsuit close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='swimsuit')
-    image mz cry glasses swimsuit close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz cry pullover  = ds_define_sprite('mz', 'cry', body_num=2, cloth='pullover')
-    image mz cry glasses pullover = ds_define_sprite('mz', 'cry', body_num=2, cloth='pullover', acc='glasses')
-    image mz cry pullover far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pullover')
-    image mz cry glasses pullover far = ds_define_sprite('mz', 'cry', body_num=2, dist='far', cloth='pullover', acc='glasses')
-    image mz cry pullover close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pullover')
-    image mz cry glasses pullover close = ds_define_sprite('mz', 'cry', body_num=2, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz shyangry naked = ds_define_sprite('mz', 'shyangry', body_num=2)
-    image mz shyangry glasses body = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='body', acc='glasses')
-    image mz shyangry naked far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far')
-    image mz shyangry glasses naked far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', acc='glasses')
-    image mz shyangry naked close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close')
-    image mz shyangry glasses naked close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', acc='glasses')
-    
-    image mz shyangry pioneer  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pioneer')
-    image mz shyangry glasses pioneer = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pioneer', acc='glasses')
-    image mz shyangry pioneer far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pioneer')
-    image mz shyangry glasses pioneer far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pioneer', acc='glasses')
-    image mz shyangry pioneer close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pioneer')
-    image mz shyangry glasses pioneer close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz shyangry swimsuit  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='swimsuit')
-    image mz shyangry glasses swimsuit = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='swimsuit', acc='glasses')
-    image mz shyangry swimsuit far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='swimsuit')
-    image mz shyangry glasses swimsuit far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
-    image mz shyangry swimsuit close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='swimsuit')
-    image mz shyangry glasses swimsuit close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz shyangry pullover  = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pullover')
-    image mz shyangry glasses pullover = ds_define_sprite('mz', 'shyangry', body_num=2, cloth='pullover', acc='glasses')
-    image mz shyangry pullover far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pullover')
-    image mz shyangry glasses pullover far = ds_define_sprite('mz', 'shyangry', body_num=2, dist='far', cloth='pullover', acc='glasses')
-    image mz shyangry pullover close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pullover')
-    image mz shyangry glasses pullover close = ds_define_sprite('mz', 'shyangry', body_num=2, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz rage naked = ds_define_sprite('mz', 'rage', body_num=2)
-    image mz rage glasses body = ds_define_sprite('mz', 'rage', body_num=2, cloth='body', acc='glasses')
-    image mz rage naked far = ds_define_sprite('mz', 'rage', body_num=2, dist='far')
-    image mz rage glasses naked far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', acc='glasses')
-    image mz rage naked close = ds_define_sprite('mz', 'rage', body_num=2, dist='close')
-    image mz rage glasses naked close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', acc='glasses')
-    
-    image mz rage pioneer  = ds_define_sprite('mz', 'rage', body_num=2, cloth='pioneer')
-    image mz rage glasses pioneer = ds_define_sprite('mz', 'rage', body_num=2, cloth='pioneer', acc='glasses')
-    image mz rage pioneer far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pioneer')
-    image mz rage glasses pioneer far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pioneer', acc='glasses')
-    image mz rage pioneer close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pioneer')
-    image mz rage glasses pioneer close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz rage swimsuit  = ds_define_sprite('mz', 'rage', body_num=2, cloth='swimsuit')
-    image mz rage glasses swimsuit = ds_define_sprite('mz', 'rage', body_num=2, cloth='swimsuit', acc='glasses')
-    image mz rage swimsuit far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='swimsuit')
-    image mz rage glasses swimsuit far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
-    image mz rage swimsuit close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='swimsuit')
-    image mz rage glasses swimsuit close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz rage pullover  = ds_define_sprite('mz', 'rage', body_num=2, cloth='pullover')
-    image mz rage glasses pullover = ds_define_sprite('mz', 'rage', body_num=2, cloth='pullover', acc='glasses')
-    image mz rage pullover far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pullover')
-    image mz rage glasses pullover far = ds_define_sprite('mz', 'rage', body_num=2, dist='far', cloth='pullover', acc='glasses')
-    image mz rage pullover close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pullover')
-    image mz rage glasses pullover close = ds_define_sprite('mz', 'rage', body_num=2, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz smile naked = ds_define_sprite('mz', 'smile', body_num=2)
-    image mz smile glasses body = ds_define_sprite('mz', 'smile', body_num=2, cloth='body', acc='glasses')
-    image mz smile naked far = ds_define_sprite('mz', 'smile', body_num=2, dist='far')
-    image mz smile glasses naked far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', acc='glasses')
-    image mz smile naked close = ds_define_sprite('mz', 'smile', body_num=2, dist='close')
-    image mz smile glasses naked close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', acc='glasses')
-    
-    image mz smile pioneer  = ds_define_sprite('mz', 'smile', body_num=2, cloth='pioneer')
-    image mz smile glasses pioneer = ds_define_sprite('mz', 'smile', body_num=2, cloth='pioneer', acc='glasses')
-    image mz smile pioneer far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pioneer')
-    image mz smile glasses pioneer far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pioneer', acc='glasses')
-    image mz smile pioneer close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pioneer')
-    image mz smile glasses pioneer close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz smile swimsuit  = ds_define_sprite('mz', 'smile', body_num=2, cloth='swimsuit')
-    image mz smile glasses swimsuit = ds_define_sprite('mz', 'smile', body_num=2, cloth='swimsuit', acc='glasses')
-    image mz smile swimsuit far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='swimsuit')
-    image mz smile glasses swimsuit far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='swimsuit', acc='glasses')
-    image mz smile swimsuit close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='swimsuit')
-    image mz smile glasses swimsuit close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz smile pullover  = ds_define_sprite('mz', 'smile', body_num=2, cloth='pullover')
-    image mz smile glasses pullover = ds_define_sprite('mz', 'smile', body_num=2, cloth='pullover', acc='glasses')
-    image mz smile pullover far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pullover')
-    image mz smile glasses pullover far = ds_define_sprite('mz', 'smile', body_num=2, dist='far', cloth='pullover', acc='glasses')
-    image mz smile pullover close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pullover')
-    image mz smile glasses pullover close = ds_define_sprite('mz', 'smile', body_num=2, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz confused naked = ds_define_sprite('mz', 'confused', body_num=3)
-    image mz confused glasses body = ds_define_sprite('mz', 'confused', body_num=3, cloth='body', acc='glasses')
-    image mz confused naked far = ds_define_sprite('mz', 'confused', body_num=3, dist='far')
-    image mz confused glasses naked far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', acc='glasses')
-    image mz confused naked close = ds_define_sprite('mz', 'confused', body_num=3, dist='close')
-    image mz confused glasses naked close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', acc='glasses')
-    
-    image mz confused pioneer  = ds_define_sprite('mz', 'confused', body_num=3, cloth='pioneer')
-    image mz confused glasses pioneer = ds_define_sprite('mz', 'confused', body_num=3, cloth='pioneer', acc='glasses')
-    image mz confused pioneer far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pioneer')
-    image mz confused glasses pioneer far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pioneer', acc='glasses')
-    image mz confused pioneer close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pioneer')
-    image mz confused glasses pioneer close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz confused swimsuit  = ds_define_sprite('mz', 'confused', body_num=3, cloth='swimsuit')
-    image mz confused glasses swimsuit = ds_define_sprite('mz', 'confused', body_num=3, cloth='swimsuit', acc='glasses')
-    image mz confused swimsuit far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='swimsuit')
-    image mz confused glasses swimsuit far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
-    image mz confused swimsuit close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='swimsuit')
-    image mz confused glasses swimsuit close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz confused pullover  = ds_define_sprite('mz', 'confused', body_num=3, cloth='pullover')
-    image mz confused glasses pullover = ds_define_sprite('mz', 'confused', body_num=3, cloth='pullover', acc='glasses')
-    image mz confused pullover far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pullover')
-    image mz confused glasses pullover far = ds_define_sprite('mz', 'confused', body_num=3, dist='far', cloth='pullover', acc='glasses')
-    image mz confused pullover close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pullover')
-    image mz confused glasses pullover close = ds_define_sprite('mz', 'confused', body_num=3, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz shy naked = ds_define_sprite('mz', 'shy', body_num=3)
-    image mz shy glasses body = ds_define_sprite('mz', 'shy', body_num=3, cloth='body', acc='glasses')
-    image mz shy naked far = ds_define_sprite('mz', 'shy', body_num=3, dist='far')
-    image mz shy glasses naked far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', acc='glasses')
-    image mz shy naked close = ds_define_sprite('mz', 'shy', body_num=3, dist='close')
-    image mz shy glasses naked close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', acc='glasses')
-    
-    image mz shy pioneer  = ds_define_sprite('mz', 'shy', body_num=3, cloth='pioneer')
-    image mz shy glasses pioneer = ds_define_sprite('mz', 'shy', body_num=3, cloth='pioneer', acc='glasses')
-    image mz shy pioneer far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pioneer')
-    image mz shy glasses pioneer far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pioneer', acc='glasses')
-    image mz shy pioneer close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pioneer')
-    image mz shy glasses pioneer close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz shy swimsuit  = ds_define_sprite('mz', 'shy', body_num=3, cloth='swimsuit')
-    image mz shy glasses swimsuit = ds_define_sprite('mz', 'shy', body_num=3, cloth='swimsuit', acc='glasses')
-    image mz shy swimsuit far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='swimsuit')
-    image mz shy glasses swimsuit far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
-    image mz shy swimsuit close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='swimsuit')
-    image mz shy glasses swimsuit close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz shy pullover  = ds_define_sprite('mz', 'shy', body_num=3, cloth='pullover')
-    image mz shy glasses pullover = ds_define_sprite('mz', 'shy', body_num=3, cloth='pullover', acc='glasses')
-    image mz shy pullover far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pullover')
-    image mz shy glasses pullover far = ds_define_sprite('mz', 'shy', body_num=3, dist='far', cloth='pullover', acc='glasses')
-    image mz shy pullover close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pullover')
-    image mz shy glasses pullover close = ds_define_sprite('mz', 'shy', body_num=3, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz excitement naked = ds_define_sprite('mz', 'excitement', body_num=3)
-    image mz excitement glasses body = ds_define_sprite('mz', 'excitement', body_num=3, cloth='body', acc='glasses')
-    image mz excitement naked far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far')
-    image mz excitement glasses naked far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', acc='glasses')
-    image mz excitement naked close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close')
-    image mz excitement glasses naked close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', acc='glasses')
-    
-    image mz excitement pioneer  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pioneer')
-    image mz excitement glasses pioneer = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pioneer', acc='glasses')
-    image mz excitement pioneer far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pioneer')
-    image mz excitement glasses pioneer far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pioneer', acc='glasses')
-    image mz excitement pioneer close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pioneer')
-    image mz excitement glasses pioneer close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pioneer', acc='glasses')
-    
-    image mz excitement swimsuit  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='swimsuit')
-    image mz excitement glasses swimsuit = ds_define_sprite('mz', 'excitement', body_num=3, cloth='swimsuit', acc='glasses')
-    image mz excitement swimsuit far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='swimsuit')
-    image mz excitement glasses swimsuit far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='swimsuit', acc='glasses')
-    image mz excitement swimsuit close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='swimsuit')
-    image mz excitement glasses swimsuit close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='swimsuit', acc='glasses')
-    
-    image mz excitement pullover  = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pullover')
-    image mz excitement glasses pullover = ds_define_sprite('mz', 'excitement', body_num=3, cloth='pullover', acc='glasses')
-    image mz excitement pullover far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pullover')
-    image mz excitement glasses pullover far = ds_define_sprite('mz', 'excitement', body_num=3, dist='far', cloth='pullover', acc='glasses')
-    image mz excitement pullover close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pullover')
-    image mz excitement glasses pullover close = ds_define_sprite('mz', 'excitement', body_num=3, dist='close', cloth='pullover', acc='glasses')
-    
-    image mz amazed casual  = ds_define_sprite('mz', 'amazed', body_num=1, cloth='casual')
-    image mz bukal casual  = ds_define_sprite('mz', 'bukal', body_num=1, cloth='casual')
-    image mz normal casual  = ds_define_sprite('mz', 'normal', body_num=1, cloth='casual')
-    image mz fun casual  = ds_define_sprite('mz', 'fun', body_num=1, cloth='casual')
-
-    # Шурик
-
-    image sh laugh towel = ds_define_sprite('sh', 'laugh', body_num=1)
-    image sh laugh towel far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far')
-    image sh laugh towel close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close')
-
-    image sh scared towel = ds_define_sprite('sh', 'scared', body_num=1)
-    image sh scared towel far = ds_define_sprite('sh', 'scared', body_num=1, dist='far')
-    image sh scared towel close = ds_define_sprite('sh', 'scared', body_num=1, dist='close')
-
-    image sh smile towel = ds_define_sprite('sh', 'smile', body_num=1)
-    image sh smile towel far = ds_define_sprite('sh', 'smile', body_num=1, dist='far')
-    image sh smile towel close = ds_define_sprite('sh', 'smile', body_num=1, dist='close')
-
-    image sh upset towel = ds_define_sprite('sh', 'upset', body_num=1)
-    image sh upset towel far = ds_define_sprite('sh', 'upset', body_num=1, dist='far')
-    image sh upset towel close = ds_define_sprite('sh', 'upset', body_num=1, dist='close')
-
-    image sh cry towel = ds_define_sprite('sh', 'cry', body_num=2)
-    image sh cry towel far = ds_define_sprite('sh', 'cry', body_num=2, dist='far')
-    image sh cry towel close = ds_define_sprite('sh', 'cry', body_num=2, dist='close')
-
-    image sh mad_smile towel = ds_define_sprite('sh', 'normal_smile', body_num=2)
-    image sh mad_smile towel far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far')
-    image sh mad_smile towel close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close')
-
-    image sh rage towel = ds_define_sprite('sh', 'rage', body_num=2)
-    image sh rage towel far = ds_define_sprite('sh', 'rage', body_num=2, dist='far')
-    image sh rage towel close = ds_define_sprite('sh', 'rage', body_num=2, dist='close')
-
-    image sh normal towel = ds_define_sprite('sh', 'normal', body_num=3)
-    image sh normal towel far = ds_define_sprite('sh', 'normal', body_num=3, dist='far')
-    image sh normal towel close = ds_define_sprite('sh', 'normal', body_num=3, dist='close')
-
-    image sh serious towel = ds_define_sprite('sh', 'serious', body_num=3)
-    image sh serious towel far = ds_define_sprite('sh', 'serious', body_num=3, dist='far')
-    image sh serious towel close = ds_define_sprite('sh', 'serious', body_num=3, dist='close')
-
-    image sh surprise towel = ds_define_sprite('sh', 'surprise', body_num=3)
-    image sh surprise towel far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far')
-    image sh surprise towel close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close')
-
-    image sh laugh bathrobe = ds_define_sprite('sh', 'laugh', body_num=1, cloth='bathrobe')
-    image sh laugh bathrobe far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far', cloth='bathrobe')
-    image sh laugh bathrobe close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close', cloth='bathrobe')
-
-    image sh scared bathrobe = ds_define_sprite('sh', 'scared', body_num=1, cloth='bathrobe')
-    image sh scared bathrobe far = ds_define_sprite('sh', 'scared', body_num=1, dist='far', cloth='bathrobe')
-    image sh scared bathrobe close = ds_define_sprite('sh', 'scared', body_num=1, dist='close', cloth='bathrobe')
-
-    image sh smile bathrobe = ds_define_sprite('sh', 'smile', body_num=1, cloth='bathrobe')
-    image sh smile bathrobe far = ds_define_sprite('sh', 'smile', body_num=1, dist='far', cloth='bathrobe')
-    image sh smile bathrobe close = ds_define_sprite('sh', 'smile', body_num=1, dist='close', cloth='bathrobe')
-
-    image sh upset bathrobe = ds_define_sprite('sh', 'upset', body_num=1, cloth='bathrobe')
-    image sh upset bathrobe far = ds_define_sprite('sh', 'upset', body_num=1, dist='far', cloth='bathrobe')
-    image sh upset bathrobe close = ds_define_sprite('sh', 'upset', body_num=1, dist='close', cloth='bathrobe')
-
-    image sh cry bathrobe = ds_define_sprite('sh', 'cry', body_num=2, cloth='bathrobe')
-    image sh cry bathrobe far = ds_define_sprite('sh', 'cry', body_num=2, dist='far', cloth='bathrobe')
-    image sh cry bathrobe close = ds_define_sprite('sh', 'cry', body_num=2, dist='close', cloth='bathrobe')
-
-    image sh mad_smile bathrobe = ds_define_sprite('sh', 'normal_smile', body_num=2, cloth='bathrobe')
-    image sh mad_smile bathrobe far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far', cloth='bathrobe')
-    image sh mad_smile bathrobe close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close', cloth='bathrobe')
-
-    image sh rage bathrobe = ds_define_sprite('sh', 'rage', body_num=2, cloth='bathrobe')
-    image sh rage bathrobe far = ds_define_sprite('sh', 'rage', body_num=2, dist='far', cloth='bathrobe')
-    image sh rage bathrobe close = ds_define_sprite('sh', 'rage', body_num=2, dist='close', cloth='bathrobe')
-
-    image sh normal bathrobe = ds_define_sprite('sh', 'normal', body_num=3, cloth='bathrobe')
-    image sh normal bathrobe far = ds_define_sprite('sh', 'normal', body_num=3, dist='far', cloth='bathrobe')
-    image sh normal bathrobe close = ds_define_sprite('sh', 'normal', body_num=3, dist='close', cloth='bathrobe')
-
-    image sh serious bathrobe = ds_define_sprite('sh', 'serious', body_num=3, cloth='bathrobe')
-    image sh serious bathrobe far = ds_define_sprite('sh', 'serious', body_num=3, dist='far', cloth='bathrobe')
-    image sh serious bathrobe close = ds_define_sprite('sh', 'serious', body_num=3, dist='close', cloth='bathrobe')
-
-    image sh surprise bathrobe = ds_define_sprite('sh', 'surprise', body_num=3, cloth='bathrobe')
-    image sh surprise bathrobe far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far', cloth='bathrobe')
-    image sh surprise bathrobe close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close', cloth='bathrobe')
-
-    image sh laugh sport = ds_define_sprite('sh', 'laugh', body_num=1, cloth='shirt')
-    image sh laugh sport far = ds_define_sprite('sh', 'laugh', body_num=1, dist='far', cloth='shirt')
-    image sh laugh sport close = ds_define_sprite('sh', 'laugh', body_num=1, dist='close', cloth='shirt')
-
-    image sh scared sport = ds_define_sprite('sh', 'scared', body_num=1, cloth='shirt')
-    image sh scared sport far = ds_define_sprite('sh', 'scared', body_num=1, dist='far', cloth='shirt')
-    image sh scared sport close = ds_define_sprite('sh', 'scared', body_num=1, dist='close', cloth='shirt')
-
-    image sh smile sport = ds_define_sprite('sh', 'smile', body_num=1, cloth='shirt')
-    image sh smile sport far = ds_define_sprite('sh', 'smile', body_num=1, dist='far', cloth='shirt')
-    image sh smile sport close = ds_define_sprite('sh', 'smile', body_num=1, dist='close', cloth='shirt')
-
-    image sh upset sport = ds_define_sprite('sh', 'upset', body_num=1, cloth='shirt')
-    image sh upset sport far = ds_define_sprite('sh', 'upset', body_num=1, dist='far', cloth='shirt')
-    image sh upset sport close = ds_define_sprite('sh', 'upset', body_num=1, dist='close', cloth='shirt')
-
-    image sh cry sport = ds_define_sprite('sh', 'cry', body_num=2, cloth='shirt')
-    image sh cry sport far = ds_define_sprite('sh', 'cry', body_num=2, dist='far', cloth='shirt')
-    image sh cry sport close = ds_define_sprite('sh', 'cry', body_num=2, dist='close', cloth='shirt')
-
-    image sh mad_smile sport = ds_define_sprite('sh', 'normal_smile', body_num=2, cloth='shirt')
-    image sh mad_smile sport far = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='far', cloth='shirt')
-    image sh mad_smile sport close = ds_define_sprite('sh', 'normal_smile', body_num=2, dist='close', cloth='shirt')
-
-    image sh rage sport = ds_define_sprite('sh', 'rage', body_num=2, cloth='shirt')
-    image sh rage sport far = ds_define_sprite('sh', 'rage', body_num=2, dist='far', cloth='shirt')
-    image sh rage sport close = ds_define_sprite('sh', 'rage', body_num=2, dist='close', cloth='shirt')
-
-    image sh normal sport = ds_define_sprite('sh', 'normal', body_num=3, cloth='shirt')
-    image sh normal sport far = ds_define_sprite('sh', 'normal', body_num=3, dist='far', cloth='shirt')
-    image sh normal sport close = ds_define_sprite('sh', 'normal', body_num=3, dist='close', cloth='shirt')
-
-    image sh serious sport = ds_define_sprite('sh', 'serious', body_num=3, cloth='shirt')
-    image sh serious sport far = ds_define_sprite('sh', 'serious', body_num=3, dist='far', cloth='shirt')
-    image sh serious sport close = ds_define_sprite('sh', 'serious', body_num=3, dist='close', cloth='shirt')
-
-    image sh surprise sport = ds_define_sprite('sh', 'surprise', body_num=3, cloth='shirt')
-    image sh surprise sport far = ds_define_sprite('sh', 'surprise', body_num=3, dist='far', cloth='shirt')
-    image sh surprise sport close = ds_define_sprite('sh', 'surprise', body_num=3, dist='close', cloth='shirt')
-
-    # Славя
-
-    image sl angry modern = ds_define_sprite('sl', 'angry', body_num=3, cloth='casual')
-    image sl angry modern close = ds_define_sprite('sl', 'angry', dist='close', body_num=3, cloth='casual')
-    image sl angry modern far = ds_define_sprite('sl', 'angry', dist='far', body_num=3, cloth='casual')
-
-    image sl happy modern = ds_define_sprite('sl', 'happy', body_num=2, cloth='casual')
-    image sl happy modern close = ds_define_sprite('sl', 'happy', dist='close', body_num=2, cloth='casual')
-    image sl happy modern far = ds_define_sprite('sl', 'happy', dist='far', body_num=2, cloth='casual')
-    
-    image sl laugh modern = ds_define_sprite('sl', 'laugh', body_num=2, cloth='casual')
-    image sl laugh modern close = ds_define_sprite('sl', 'laugh', dist='close', body_num=2, cloth='casual')
-    image sl laugh modern far = ds_define_sprite('sl', 'laugh', dist='far', body_num=2, cloth='casual')
-
-    image sl normal modern = ds_define_sprite('sl', 'normal', body_num=1, cloth='casual')
-    image sl normal modern close = ds_define_sprite('sl', 'normal', dist='close', body_num=1, cloth='casual')
-    image sl normal modern far = ds_define_sprite('sl', 'normal', dist='far', body_num=1, cloth='casual')
-
-    image sl sad modern = ds_define_sprite('sl', 'sad', body_num=3, cloth='casual')
-    image sl sad modern close = ds_define_sprite('sl', 'sad', dist='close', body_num=3, cloth='casual')
-    image sl sad modern far = ds_define_sprite('sl', 'sad', dist='far', body_num=3, cloth='casual')
-
-    image sl scared modern = ds_define_sprite('sl', 'scared', body_num=4, cloth='casual')
-    image sl scared modern close = ds_define_sprite('sl', 'scared', dist='close', body_num=4, cloth='casual')
-    image sl scared modern far = ds_define_sprite('sl', 'scared', dist='far', body_num=4, cloth='casual')
-
-    image sl serious modern = ds_define_sprite('sl', 'serious', body_num=1, cloth='casual')
-    image sl serious modern close = ds_define_sprite('sl', 'serious', dist='close', body_num=1, cloth='casual')
-    image sl serious modern far = ds_define_sprite('sl', 'serious', dist='far', body_num=1, cloth='casual')
-
-    image sl shy modern = ds_define_sprite('sl', 'shy', body_num=2, cloth='casual')
-    image sl shy modern close = ds_define_sprite('sl', 'shy', dist='close', body_num=2, cloth='casual')
-    image sl shy modern far = ds_define_sprite('sl', 'shy', dist='far', body_num=2, cloth='casual')
-
-    image sl smile modern = ds_define_sprite('sl', 'smile', body_num=1, cloth='casual')
-    image sl smile modern close = ds_define_sprite('sl', 'smile', dist='close', body_num=1, cloth='casual')
-    image sl smile modern far = ds_define_sprite('sl', 'smile', dist='far', body_num=1, cloth='casual')
-
-    image sl smile2 modern = ds_define_sprite('sl', 'smile2', body_num=2, cloth='casual')
-    image sl smile2 modern close = ds_define_sprite('sl', 'smile2', dist='close', body_num=2, cloth='casual')
-    image sl smile2 modern far = ds_define_sprite('sl', 'smile2', dist='far', body_num=2, cloth='casual')
-
-    image sl surprise modern = ds_define_sprite('sl', 'surprise', body_num=3, cloth='casual')
-    image sl surprise modern close = ds_define_sprite('sl', 'surprise', dist='close', body_num=3, cloth='casual')
-    image sl surprise modern far = ds_define_sprite('sl', 'surprise', dist='far', body_num=3, cloth='casual')
-
-    image sl tender modern = ds_define_sprite('sl', 'tender', body_num=4, cloth='casual')
-    image sl tender modern close = ds_define_sprite('sl', 'tender', dist='close', body_num=4, cloth='casual')
-    image sl tender modern far = ds_define_sprite('sl', 'tender', dist='far', body_num=4, cloth='casual')
-
-    # Лена
-
-    image un angry modern = ds_define_sprite('un', 'angry', body_num=1, cloth='designer')
-    image un angry modern close = ds_define_sprite('un', 'angry', dist='close', body_num=1, cloth='designer')
-    image un angry modern far = ds_define_sprite('un', 'angry', dist='far', body_num=1, cloth='designer')
-
-    image un angry2 modern = ds_define_sprite('un', 'angry2', body_num=3, cloth='designer')
-    image un angry2 modern close = ds_define_sprite('un', 'angry2', dist='close', body_num=3, cloth='designer')
-    image un angry2 modern far = ds_define_sprite('un', 'angry2', dist='far', body_num=3, cloth='designer')
-
-    image un cry modern = ds_define_sprite('un', 'cry', body_num=2, cloth='designer')
-    image un cry modern close = ds_define_sprite('un', 'cry', dist='close', body_num=2, cloth='designer')
-    image un cry modern far = ds_define_sprite('un', 'cry', dist='far', body_num=2, cloth='designer')
-
-    image un cry_smile modern = ds_define_sprite('un', 'cry_smile', body_num=2, cloth='designer')
-    image un cry_smile modern close = ds_define_sprite('un', 'cry_smile', dist='close', body_num=2, cloth='designer')
-    image un cry_smile modern far = ds_define_sprite('un', 'cry_smile', dist='far', body_num=2, cloth='designer')
-
-    image un evil_smile modern = ds_define_sprite('un', 'evil_smile', body_num=1, cloth='designer')
-    image un evil_smile modern close = ds_define_sprite('un', 'evil_smile', dist='close', body_num=1, cloth='designer')
-    image un evil_smile modern far = ds_define_sprite('un', 'evil_smile', dist='far', body_num=1, cloth='designer')
-
-    image un grin modern = ds_define_sprite('un', 'grin', body_num=3, cloth='designer')
-    image un grin modern close = ds_define_sprite('un', 'grin', dist='close', body_num=3, cloth='designer')
-    image un grin modern far = ds_define_sprite('un', 'grin', dist='far', body_num=3, cloth='designer')
-
-    image un laugh modern = ds_define_sprite('un', 'laugh', body_num=3, cloth='designer')
-    image un laugh modern close = ds_define_sprite('un', 'laugh', dist='close', body_num=3, cloth='designer')
-    image un laugh modern far = ds_define_sprite('un', 'laugh', dist='far', body_num=3, cloth='designer')
-
-    image un normal modern = ds_define_sprite('un', 'normal', body_num=1, cloth='designer')
-    image un normal modern close = ds_define_sprite('un', 'normal', dist='close', body_num=1, cloth='designer')
-    image un normal modern far = ds_define_sprite('un', 'normal', dist='far', body_num=1, cloth='designer')
-
-    image un rage modern = ds_define_sprite('un', 'rage', body_num=3, cloth='designer')
-    image un rage modern close = ds_define_sprite('un', 'rage', dist='close', body_num=3, cloth='designer')
-    image un rage modern far = ds_define_sprite('un', 'rage', dist='far', body_num=3, cloth='designer')
-
-    image un sad modern = ds_define_sprite('un', 'sad', body_num=2, cloth='designer')
-    image un sad modern close = ds_define_sprite('un', 'sad', dist='close', body_num=2, cloth='designer')
-    image un sad modern far = ds_define_sprite('un', 'sad', dist='far', body_num=2, cloth='designer')
-
-    image un scared modern = ds_define_sprite('un', 'scared', body_num=2, cloth='designer')
-    image un scared modern close = ds_define_sprite('un', 'scared', dist='close', body_num=2, cloth='designer')
-    image un scared modern far = ds_define_sprite('un', 'scared', dist='far', body_num=2, cloth='designer')
-
-    image un serious modern = ds_define_sprite('un', 'serious', body_num=3, cloth='designer')
-    image un serious modern close = ds_define_sprite('un', 'serious', dist='close', body_num=3, cloth='designer')
-    image un serious modern far = ds_define_sprite('un', 'serious', dist='far', body_num=3, cloth='designer')
-
-    image un shocked modern = ds_define_sprite('un', 'shocked', body_num=2, cloth='designer')
-    image un shocked modern close = ds_define_sprite('un', 'shocked', dist='close', body_num=2, cloth='designer')
-    image un shocked modern far = ds_define_sprite('un', 'shocked', dist='far', body_num=2, cloth='designer')
-
-    image un shy modern = ds_define_sprite('un', 'shy', body_num=1, cloth='designer')
-    image un shy modern close = ds_define_sprite('un', 'shy', dist='close', body_num=1, cloth='designer')
-    image un shy modern far = ds_define_sprite('un', 'shy', dist='far', body_num=1, cloth='designer')
-
-    image un smile modern = ds_define_sprite('un', 'smile', body_num=1, cloth='designer')
-    image un smile modern close = ds_define_sprite('un', 'smile', dist='close', body_num=1, cloth='designer')
-    image un smile modern far = ds_define_sprite('un', 'smile', dist='far', body_num=1, cloth='designer')
-
-    image un smile2 modern = ds_define_sprite('un', 'smile2', body_num=1, cloth='designer')
-    image un smile2 modern close = ds_define_sprite('un', 'smile2', dist='close', body_num=1, cloth='designer')
-    image un smile2 modern far = ds_define_sprite('un', 'smile2', dist='far', body_num=1, cloth='designer')
-
-    image un smile3 modern = ds_define_sprite('un', 'smile3', body_num=3, cloth='designer')
-    image un smile3 modern close = ds_define_sprite('un', 'smile3', dist='close', body_num=3, cloth='designer')
-    image un smile3 modern far = ds_define_sprite('un', 'smile3', dist='far', body_num=3, cloth='designer')
-
-    image un surprise modern = ds_define_sprite('un', 'surprise', body_num=2, cloth='designer')
-    image un surprise modern close = ds_define_sprite('un', 'surprise', dist='close', body_num=2, cloth='designer')
-    image un surprise modern far = ds_define_sprite('un', 'surprise', dist='far', body_num=2, cloth='designer')
+    $ ds_define_chars()
 
 ## Новые персонажи
 

@@ -30,6 +30,7 @@ init:
     $ ds_dumped_dv = False
     $ ds_dumped_un = False
     $ ds_day3_dv_conflict = False
+    $ ds_played_guitar = False
 
     default ds_approved_pp = {
         'dv': False,
@@ -4842,13 +4843,10 @@ label ds_day3_help_mz:
     "Протираешь её и кладёшь на место."
     play sound ds_sfx_int
     rhe "Может, пока поговоришь с Женей?"
-    jump ds_day3_mz_dialogue
-
-label ds_day3_mz_dialogue:
-    $ ds_said_compl = False
     window hide
-    menu:
-        "{check=rhetoric:10}Cказать комплимент" if not ds_said_compl:
+    menu ds_day3_mz_dialogue:
+        set ds_menuset
+        "{check=rhetoric:10}Cказать комплимент":
             if skillcheck('rhetoric', lvl_medium):
                 rhe "{result}Волосы - беспроигрышный вариант. Тем более, тут они цветные!"
                 me "Кстати, Жень, красивые волосы у тебя! Такие насыщенно-синие... обожаю синий цвет!"
@@ -4864,7 +4862,7 @@ label ds_day3_mz_dialogue:
                 mz "Книгами занимайся!"
             me "Ладно-ладно..."
             $ ds_skill_points['rhetoric'] += 1
-            $ ds_said_compl = True
+            window hide
             jump ds_day3_mz_dialogue
         "Спросить про её характер":
             window show
@@ -4919,14 +4917,14 @@ label ds_day3_mz_dialogue:
                     show mz normal glasses pioneer far at right
                     with dspr
                     mz "Cлушай - тебе правда очень повезло не пережить то, что довелось пережить мне и многим женщинам. Радуйся этому!"
-                    "Тут оказывается, что за разговором ты всё протёр."
                 "Отступить":
                     window show
                     me "Ладно, извини... но если что - я всегда готов поговорить."
                     show mz bukal glasses pioneer far at right
                     with dspr
                     mz "Ага, всенепременно воспользуюсь."
-                    "Ты продолжаешь протирать книги, пока они не заканчиваются."
+            window hide
+            jump ds_day3_mz_dialogue
         "Cпросить про послание" if ds_know_mz_el:
             window show
             me "Слушай... я вчера, когда уходил к себе, нашёл письмо..."
@@ -4965,10 +4963,6 @@ label ds_day3_mz_dialogue:
                     hide mz with dissolve
                     $ ds_lp['mz'] += 2
                     $ ds_lp['el'] += 1
-                    th "Ладно, и я пойду..."
-                    play sound sfx_dinner_horn_processed
-                    "Как раз и призыв на обед звучит."
-                    jump ds_day3_lunch
                 "Расспрашивать дальше":
                     window show
                     me "И всё-таки? Что там такое было?"
@@ -4989,17 +4983,17 @@ label ds_day3_mz_dialogue:
                     mz "А с чего я должна тебе поверить?"
                     mz "Слушай, если бы ты пережил то же, что и я - ты бы тоже никому не верил!"
                     mz "Так что не суй нос не в своё собачье дело!"
-                    "За разговором оказывается, что ты протёр все книги."
                 "Отступить":
                     window show
                     me "Ладно, извини... но если что - я всегда готов поговорить."
                     show mz bukal glasses pioneer far at right
                     with dspr
                     mz "Ага, всенепременно воспользуюсь."
-                    "Ты продолжаешь протирать книги, пока они не заканчиваются."
+            window hide
+            jump ds_day3_mz_dialogue
         "Молча протирать книги":
             window show
-            th "Ещё не хватало... она только злиться и умеет, наверное!"
+            th "Она только злиться и умеет, наверное!"
             "С этими словами ты берёшь вторую книгу. Протираешь. Кладёшь."
             "Затем третью. Четвёртую."
             "..."
@@ -5235,14 +5229,15 @@ label ds_day3_lunch:
             per_eye "А нет мест больше!"
             th "Чёрт, снова придётся сидеть с кем-то..."
     "Ты берёшь обед и подходишь к ним."
-    show sl normal pioneer at right
-    show us laugh sport at center
-    show un normal pioneer at left 
+    show sl normal pioneer at right, ds_seated
+    show us laugh sport at center, ds_seated
+    show un normal pioneer at left, ds_seated
     with dissolve
     me "Не возражаете, если я присяду?"
     play sound ds_sfx_int
     rhe "Так как садиться больше некуда, твои слова звучат наиграно."
-    show sl smile pioneer at right   with dspr
+    show sl smile pioneer at right
+    with dspr
     sl "Да, конечно!"
     us "Будь любезен."
     "Лена молчит."
@@ -5437,7 +5432,8 @@ label ds_day3_lunch:
 
     pause(1)
 
-    show us laugh2 sport at center   with dspr
+    show us laugh2 sport at center, ds_get_up_fast
+    with dspr
     window show
     "Вместо ответа Ульянка берёт свою тарелку борща и опрокидывает тебе на голову."
     "Эндшпиль заканчивается неожиданным финалом…"
@@ -7078,14 +7074,10 @@ label ds_day3_music:
     if ds_dv_invite and skillcheck('conceptualization', lvl_medium, passive=True):
         play sound ds_sfx_int
         con "Есть идея! Мику наверняка сможет помочь тебе с сочинением песни. А потом ты представишь её Алисе на сегодняшем вечере. Это покорит её!"
-    jump ds_day3_music_mi_dialogue
-
-label ds_day3_music_mi_dialogue:
-    $ ds_d3_mi_dial_opt1 = False
-    $ ds_d3_mi_dial_opt2 = False
     window hide
-    menu:
-        "Послушать игру Мику" if not ds_d3_mi_dial_opt1:
+    menu ds_day3_music_mi_dialogue:
+        set ds_menuset
+        "Послушать игру Мику":
             window show
             me "Да! Я очень хотел бы послушать, как ты играешь! Это должно быть чудесно!"
             show mi smile pioneer at center
@@ -7170,9 +7162,9 @@ label ds_day3_music_mi_dialogue:
                     $ disable_current_zone_ds_small()
                     jump ds_day3_after_lunch
             mi "Что-нибудь ещё, Семён-кун? Можешь и ты поиграть. Не умеешь - я покажу!"
-            $ ds_d3_mi_dial_opt1 = True
+            window hide
             jump ds_day3_music_mi_dialogue
-        "{check=interfacing:15}Сыграть самому" if not ds_d3_mi_dial_opt2:
+        "{check=interfacing:15}Сыграть самому":
             window show
             me "А давай лучше я сыграю? Для тебя!"
             show mi shy pioneer at center
@@ -7184,6 +7176,7 @@ label ds_day3_music_mi_dialogue:
             with dspr
             mi "Вот, держи!"
             "Мику передаёт тебе электрогитару, ты берёшь её в руки и начинаешь вспоминать, как же на ней играть."
+            $ ds_played_guitar = True
             window hide
             if skillcheck('interfacing', lvl_heroic):
                 window show
@@ -7260,12 +7253,12 @@ label ds_day3_music_mi_dialogue:
                         show mi smile pioneer at center
                         with dspr
                         mi "Вообще, тебе бы немного практики, всё-таки, похоже, ты давно не играл. Но я это могу исправить! Только скажи - и я займусь тобой!"
-                        $ ds_d3_mi_diag_opt2 = True
+                        window hide
                         jump ds_day3_music_mi_dialogue
                     "Предложить своё":
                         window show
                         me "Слушай, а может лучше..."
-                        $ ds_d3_mi_diag_opt2 = True
+                        window hide
                         jump ds_day3_music_mi_dialogue
             else:
                 play sound ds_sfx_mot
@@ -7292,7 +7285,7 @@ label ds_day3_music_mi_dialogue:
                     "Предложить своё":
                         window show
                         me "Слушай, а может лучше..."
-                        $ ds_d3_mi_diag_opt2 = True
+                        window hide
                         jump ds_day3_music_mi_dialogue
         "Попросить урок игры":
             window show
@@ -7312,6 +7305,7 @@ label ds_day3_music_mi_dialogue:
             show mi normal pioneer at center
             with dspr
             mi "Так чем ты хочешь заняться?"
+            window hide
             jump ds_day3_music_mi_dialogue
         "Отказаться и уйти":
             window show
@@ -7358,6 +7352,7 @@ label ds_day3_music_mi_teaching:
     show mi shy pioneer at center
     with dspr
     mi "Ты же поучаствуешь? Нам не хватает бас-гитариста! А ты подойдёшь туда идеально!"
+    $ ds_played_guitar = True
     window hide
     menu:
         "Согласиться":
@@ -9159,8 +9154,8 @@ label ds_day3_dinner:
     play sound ds_sfx_int
     vic "Похоже, тебе предстоит ужинать с Электроником и Шуриком."
     vic "Сесть всё равно больше негде."
-    show el normal pioneer at cleft 
-    show sh normal pioneer at cright 
+    show el normal pioneer at cleft, ds_seated 
+    show sh normal pioneer at cright, ds_seated 
     with dissolve
     if skillcheck('authority', lvl_trivial, passive=True):
         play sound ds_sfx_psy
@@ -10577,6 +10572,7 @@ label ds_day3_evening_dv:
 
     window show
     "Ты берёшь у Алисы гитару..."
+    $ ds_played_guitar = True
     window hide
     if skillcheck('interfacing', lvl_heroic, modifiers=[('ds_dv_repeat_play', 1, 'Повторение - мать учения')]):
         jump ds_day3_evening_dv_success
@@ -15876,7 +15872,7 @@ label ds_day3_evening_mz:
     if ds_lp['mz'] >= 10:
         show mz bukal glasses pioneer close at right with dspr
         mz "А, это ты. Ну заходи."
-    else :
+    else:
         show mz angry glasses pioneer close at right  with dspr
         mz "Ты чего тут делаешь?"
         window hide
@@ -15899,6 +15895,7 @@ label ds_day3_evening_mz:
                 me "Ой, извини, я ошибся..."
                 mz "Ну и иди своей дорогой тогда!"
                 hide mz with dissolve
+                play sound sfx_lock_click
                 "И она запирается в библиотеке."
                 $ ds_lp['mz'] -= 1
                 jump ds_day3_evening_none
@@ -15932,7 +15929,7 @@ label ds_day3_evening_mz:
                 "Выполнить":
                     window show
                     hide mz with dissolve
-                    "Я вернулся к двери, повесил листок на ручку и закрыл дверь."
+                    "Ты возвращаешься к двери, вешаешь листок на ручку и закрываешь дверь."
                     play sound sfx_close_door_campus_1
                     $ ds_lp['mz'] += 1
                 "Cпросить":
@@ -16598,7 +16595,7 @@ label ds_day3_evening_mz:
                     $ renpy.pause(1.5)
                     mz "А, Что? Со мной?"
                     me "Если ты против, я пойму."
-                    if ds_lp['mz'] >= 10:
+                    if ds_lp['mz'] >= 15:
                         $ ds_lp['mz'] += 1
                         mz "Нет-нет, можно, конечно! Я не против."
                         me "Тогда замётано."
@@ -17625,7 +17622,7 @@ label ds_day3_evening_mz:
     jump ds_day3_dream
 
 label ds_day3_dance_dv:
-    show dv normal dress far at center
+    show dv normal dress at center
     with dissolve
     "Ты подходишь к Алисе. Она занята настройкой гитары."
     play sound ds_sfx_int
@@ -17741,7 +17738,7 @@ label ds_day3_dance_dv:
         "Молча ждать":
             window show
     "Тут Алиса подходит к тебе."
-    show dv shy dress close at center
+    show dv shy dress at center
     with dspr
     "Очень близко к тебе."
     dv "Спасибо, что организовал это... На самом деле, если бы не ты..."
@@ -17752,14 +17749,14 @@ label ds_day3_dance_dv:
             window show
             me "Да ладно тебе... Главное-то, кто играл."
             me "А играла ты! И это было восхитительно!"
-            show dv grin dress close at center
+            show dv grin dress at center
             with dspr
             dv "Я знаю! Но спасибо за похвалу!"
             $ ds_lp['dv'] += 1
         "Покичиться":
             window show
             me "Вот то-то же! Если бы не я..."
-            show dv angry dress close at center
+            show dv angry dress at center
             with dspr
             dv "А ты не зазнавайся!"
         "{check=instinct:8}Потребовать оплаты натурой":
@@ -17767,15 +17764,15 @@ label ds_day3_dance_dv:
                 window show
                 ins "{result}Она должна расплатиться с тобой. А чем девушка может мужчине отплатить?"
                 me "Ну... поиграешь на моей кожаной флейте за это."
-                show dv surprise dress close at center
+                show dv surprise dress at center
                 with dspr
                 play sound ds_sfx_int
                 rhe "Она не поняла твоей метафоры."
-                show dv angry dress close at center
+                show dv angry dress at center
                 with dspr
                 dv "Что за чушь? Выражайся понятнее! Я не Лев Толстой!"
                 me "Отсосёшь мне, говорю!"
-                show dv rage dress close at center
+                show dv rage dress at center
                 with dspr
                 dv "ТЫ ТАМ СОВСЕМ ОХРЕНЕЛ?!"
                 $ ds_lp['dv'] -= 4
@@ -17799,7 +17796,7 @@ label ds_day3_dance_dv:
         "Промолчать":
             window show
             "Ты молчишь."
-            show dv angry dress close at center
+            show dv angry dress at center
             with dissolve
             dv "Алло! Я с тобой разговариваю, придурок!"
             me "А, да, я тут. Что такое?"
@@ -18140,6 +18137,7 @@ label ds_day3_dance_dv:
     "C этими словами Алиса бросает тебе листок бумаги."
     "Развернув его, ты видишь, что это табулатура. Несложная."
     th "Ну что ж, сыграем."
+    $ ds_played_guitar = True
     play sound ds_sfx_mot
     inf "Тебе удаётся совладать с гитарой и сыграть согласно табулатуре."
     inf "По сути твоя задача - аккмопанировать Алисе, исполняющей основную партию. И с этой задачей ты справляешься."
@@ -18549,6 +18547,7 @@ label ds_day3_evening_el:
                 window show
                 "Ты аккуратно берёшь его ягодицу в свою руку."
                 $ ds_skill_points['instinct'] += 1
+                $ ds_homo_traits += 1
                 show el surprise pioneer at center
                 with dspr
                 "Электроник не понимает, что происходит."

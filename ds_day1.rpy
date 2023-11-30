@@ -948,7 +948,7 @@ label ds_day1_inside_camp:
             $ ds_lp['dv'] += 1
     play sound ds_sfx_fys
     hfl "Лучше подожди, пока пионерка скроется за поворотом, ибо мало ли что она еще может выкинуть."
-    "Самое интересное, что даже эта враждебная девочка кажется мне совершенно нормальной"
+    hfl "Самое интересное, что даже эта враждебная девочка кажется тебе совершенно нормальной"
     hfl "В ней не ощущается какой-либо смертельной опасности."
     hfl "Разве что страх получить по носу..."
     play sound ds_sfx_psy
@@ -1517,7 +1517,7 @@ label ds_day1_inside_camp:
     play ambience ambience_camp_center_day fadein 5
 
     window show
-    "Проходя через местный «жилой квартал», ты видишь идущего навстречу мне пионера."
+    "Проходя через местный «жилой квартал», ты видишь идущего навстречу пионера."
     show el normal pioneer far at center    with dissolve
     play sound ds_sfx_mot
     res "Именно пионера, а не пионерку – и в этом царстве амазонок есть мужчины."
@@ -1657,6 +1657,7 @@ label ds_day1_inside_camp:
             window show
             "Ты решил, что не хочешь еще раз сталкиваться с этой агрессивной девочкой, Алисой, и бросился вслед за Электроником."
             $ ds_semtype -= 1
+            $ ds_lp['dv'] -= 1
             window hide
 
             $ persistent.sprite_time = "day"
@@ -1694,7 +1695,7 @@ label ds_day1_inside_camp:
             me "Правильно, так его! А то ещё смеет обзывать {i}тебя{/i}, такую девушку."
             dv "А ты не подлизывайся!"
             dv "Впрочем, ладно, позже с тобой разберёмся!"
-            $ ds_lp['dv'] += 2
+            $ ds_lp['dv'] += 1
             $ ds_lp['el'] -= 1
             $ ds_karma -= 5
             me "А я что? Я только за тебя!"
@@ -1711,7 +1712,7 @@ label ds_day1_inside_camp:
                 play sound ds_sfx_fys
                 phi "{result}Ты встаёшь перед ней и останавливаешь её."
                 show dv angry pioneer2 close at center with dissolve
-                $ ds_lp['dv'] -= 1
+                $ ds_lp['dv'] -= 2
                 $ ds_lp['el'] += 1
                 dv "Что ты творишь?!"
                 me "Успокойся, он просто предупредил меня, чтобы я тебя так не называл."
@@ -3661,11 +3662,9 @@ label ds_day1_meet_un:
     "Она краснеет и снова смотрит в книжку."
     me "Так что читаешь?"
     "Она показывает обложку – «Унесённые ветром»."
-    jump ds_day1_un_dialogue
-
-label ds_day1_un_dialogue:
     window hide
-    menu:
+    menu ds_day1_un_dialogue:
+        set ds_menuset
         "Похвалить книгу":
             window show
             $ ds_lp['un'] += 1
@@ -3678,8 +3677,9 @@ label ds_day1_un_dialogue:
             un "Да так, про любовь..."
             $ ds_skill_points['encyclopedia'] += 1
             $ ds_lp['un'] += 1
+            window hide
             jump ds_day1_un_dialogue
-        "{check=encyclopedia:14}Вспомнить эту книгу" if (not ds_know_novel_content) and (not ds_get_novel_content_failed):
+        "{check=encyclopedia:14}Вспомнить эту книгу" if not ds_know_novel_content:
             if skillcheck('encyclopedia', lvl_legendary):
                 play sound ds_sfx_int
                 enc "{result}«Унесённые ветром» - роман американской писательницы Маргарет Митчелл, события которого происходят в южных штатах США до, во время и сразу после Гражданской войны."
@@ -3690,8 +3690,8 @@ label ds_day1_un_dialogue:
             else:
                 play sound ds_sfx_int
                 enc "{result}Нет, эту книгу ты точно не читал."
-                $ ds_get_novel_content_failed = True
             $ ds_skill_points['encyclopedia'] += 1
+            window hide
             jump ds_day1_un_dialogue
         "Выразить неприятие":
             window show

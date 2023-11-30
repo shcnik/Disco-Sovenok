@@ -65,7 +65,7 @@ init python:
         # "preferences",
         "save",
         "load",
-        # "nvl",
+        "nvl",
         "choice",
         "text_history_screen",
         # "yesno_prompt",
@@ -1393,7 +1393,7 @@ screen ds_preferences():
                         xanchor 0.5
                         xpos 0.75
                         selected persistent.ds_settings['replace_interface']
-                        action SelectedIf(ToggleDict('persistent.ds_settings', 'replace_interface'))
+                        action SelectedIf(ToggleDict(persistent.ds_settings, 'replace_interface'))
                 fixed:
                     ymaximum 50
                     text "Показывать другие сохранения":
@@ -1407,7 +1407,7 @@ screen ds_preferences():
                         xanchor 0.5
                         xpos 0.75
                         selected persistent.ds_settings['show_other_saves']
-                        action SelectedIf(ToggleDict('persistent.ds_settings', 'show_other_saves'))
+                        action SelectedIf(ToggleDict(persistent.ds_settings, 'show_other_saves'))
                 null height 50
                 fixed:
                     ymaximum 50
@@ -1422,7 +1422,7 @@ screen ds_preferences():
                         xanchor 0.5
                         xpos 0.75
                         selected persistent.ds_settings['hentai']
-                        action SelectedIf(ToggleDict('persistent.ds_settings', 'hentai'))
+                        action SelectedIf(ToggleDict(persistent.ds_settings, 'hentai'))
                 fixed:
                     ymaximum 50
                     text "Нецензурная лексика":
@@ -1436,7 +1436,7 @@ screen ds_preferences():
                         xanchor 0.5
                         xpos 0.75
                         selected persistent.ds_settings['obscene']
-                        action SelectedIf(ToggleDict('persistent.ds_settings', 'obscene'))
+                        action SelectedIf(ToggleDict(persistent.ds_settings, 'obscene'))
 
 screen ds_load():
     default cur_slot = (0, 0)
@@ -2313,6 +2313,8 @@ screen ds_lp_points():
                         color "#000000"
 
 screen ds_say:
+    on "show" action Hide('ds_check_result')
+    on "hide" action Hide('ds_check_result') 
     window:
         background None
         id "window"           
@@ -2432,6 +2434,90 @@ screen ds_text_history_screen:
                                 else:
                                     text_style 'ds_history_style_noch'
                         null height 20
+                    null height 200
+
+screen ds_nvl:
+    window:
+        background None
+        at transform:
+            on show:
+                xoffset 1920
+                linear 0.2 xoffset -35
+                linear 0.1 xoffset 0
+            on hide:
+                xoffset -115
+                linear 0.1 xoffset 1920
+        yfill True
+        frame:
+            xalign 1.0
+            xoffset -115
+            background "mods/disco_sovenok/gui/history/text_history.png"
+            xmaximum 500
+            viewport:
+                child_size (500, None)
+                mousewheel True
+                yinitial 1.0
+                scrollbars 'vertical'
+                arrowkeys True
+                pagekeys True
+                vbox:
+                    xmaximum 450
+                    yalign 1.0
+                    xalign 0.0
+                    xoffset 10
+                    for who, what, who_id, what_id, window_id in dialogue:
+                        window:
+                            id window_id
+                            vbox:
+                                if who is not None:
+                                    hbox:
+                                        text who:
+                                            id who_id
+                                            if persistent.font_size == 'small':
+                                                size 24
+                                            else:
+                                                size 30
+                                            if persistent.timeofday == 'prologue':
+                                                style 'ds_history_style_ch_prolog'
+                                            else:
+                                                style 'ds_history_style_ch'
+                                        text " — ":
+                                            if persistent.font_size == 'small':
+                                                size 24
+                                            else:
+                                                size 30
+                                            if persistent.timeofday == 'prologue':
+                                                style 'ds_history_style_ch_prolog'
+                                            else:
+                                                style 'ds_history_style_ch'
+                                text what:
+                                    id what_id
+                                    if persistent.font_size == 'small':
+                                        size 24
+                                    else:
+                                        size 30
+                                    if persistent.timeofday == 'prologue':
+                                        style 'ds_history_style_noch_prolog'
+                                    else:
+                                        style 'ds_history_style_noch'
+                        null height 20
+                    if items:
+                        null height 50
+                        for i in range(0, len(items)):
+                            if items[i][1]:
+                                button:
+                                    background None
+                                    action items[i][1]
+                                    text str(i + 1) + ". " + items[i][0]:
+                                        idle_color "#ffffff"
+                                        hover_color "#86cd4d"
+                                        font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                                        if persistent.font_size == 'small':
+                                            size 24
+                                        else:
+                                            size 30
+                                    if i < 9:
+                                        keysym str(i + 1)
                     null height 200
 
 screen ds_choice:

@@ -31,22 +31,34 @@ init python:
         persistent.ds_settings['replace_interface'] = False
         persistent.ds_settings['show_other_saves'] = True
         persistent.ds_settings['cheat_codes'] = 0
+    
+    def ds_initialize():
+        ds_screens_save_act()
+        meet('me', u"Ты")
+        meet('uvp', u"Кошкодевочка")
+    
+    def ds_finalize():
+        ds_screens_diact()
+        meet('me', u"Семён")
+        meet('uvp', u"Cтранная девочка")
 
 init:
     $ mods["disco_sovenok"] = u"{font=mods/disco_sovenok/gui/fonts/VtcBadvision.otf}DISCO SOVENOK{/font}"
+    if persistent.ds_settings['replace_interface']:
+        $ config.start_callbacks.append(ds_initialize)
 
 label disco_sovenok:
     window hide
     scene black with fade
-    $ ds_screens_save_act()
-    $ meet('me', u"Ты")
+    if not persistent.ds_settings['replace_interface']:
+        $ ds_initialize()
     return
 
 label ds_quit:
     window hide
     stop music fadeout 3
     scene black with fade
-    $ ds_screens_diact()
+    $ ds_finalize()
     $ MainMenu(confirm=False)()
 
 label ds_start:

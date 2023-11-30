@@ -57,10 +57,10 @@ screen ds_poet(cur_text, options):
         ypos 200
         for i in range(0, len(options)):
             textbutton "[i]. " + options[i - 1]:
-                font "mods/disco_sovenok/gui/fonts/gogol_regular.otf"
+                text_font "mods/disco_sovenok/gui/fonts/gogol_regular.otf"
                 text_idle_color "#5481db"
                 text_hover_color "#86cd4d"
-                size 24
+                text_size 24
                 xpos 355
                 ypos 200
                 action AddToSet(ds_cur_text, i)
