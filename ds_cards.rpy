@@ -1728,7 +1728,7 @@ init python:
             'us':   False,
             'sh':   False,
             'mz':   False,
-            'ya':   False
+            'yn':   False
         }
 # ------------------------------------------------
     ds_cards_gamblers_summary = {                           # результат турнира — кто на каком этапе как сыграл.
@@ -1740,7 +1740,7 @@ init python:
         'us':   [0,0,0],
         'sh':   [0,0,0],
         'mz':   [0,0,0],
-        'ya':   [0,0,0]
+        'yn':   [0,0,0]
         }
 
     ds_cards_gamblers_result = {
@@ -1752,11 +1752,11 @@ init python:
         'us':   0,
         'sh':   0,
         'mz':   0,
-        'ya':   0
+        'yn':   0
         }
     
     def ds_get_winner():
-        for ch in ['me', 'un', 'sl', 'dv', 'mi', 'us', 'sh', 'mz', 'ya']:
+        for ch in ['me', 'un', 'sl', 'dv', 'mi', 'us', 'sh', 'mz', 'yn']:
             if ds_cards_gamblers_summary[ch][2] == 2:
                 return ch
         return None
@@ -1817,7 +1817,7 @@ init python:
     ds_sh_avatar = ds_avpath_base+"sh.png"
     ds_mt_avatar = ds_avpath_base+"mt.png"
     ds_mz_avatar = ds_avpath_base+"mz.png"
-    ds_ya_avatar = ds_avpath_base+"ya.png"
+    ds_yn_avatar = ds_avpath_base+"yn.png"
 
 # ------------------------------------------------
 
@@ -1851,35 +1851,35 @@ init 2 python:
         "dv+sl":    "Идеальное решение. Человек, который хочет выиграть во что бы то ни стало, против человека, которому все эти глупости не нужны.", # Алиса + Славя
         "dv+un":    "Алиса подмигнула, а Лена слабо улыбается и что-то говорит рыжей.", # Алиса + Лена
         "dv+us":    "Две бестии сцепились взглядами — ни та, ни другая явно не собираются уступать!", # Алиса + Ульяна
-        "dv+ya":    "Алиса всем своим видом показывает, что победит она, но Яна настроена совершенно безразлично.", # Алиса + Яна
+        "dv+yn":    "Алиса всем своим видом показывает, что победит она, но Яна настроена совершенно безразлично.", # Алиса + Яна
         "me+mi":    "Кажется, Мику понятия не имеет о том, что за игра грядёт, но всеми силами старается получать удовольствие.", # Ты + Мику
         "me+mz":    "Жужелица сидит с видом величайшего одолжения. Видимо, она очень хочет, чтобы всё это завершилось побыстрее.", # Ты + Женя
         "me+sh":    "Шурик поправляет очки на переносице, складывает руки крестом на груди, и задумчиво смотрит на крышку стола. Витает в своих мыслях, не иначе.", # Ты + Шурик
         "me+sl":    "Славя тепло улыбается тебе, видимо, подбадривая, а ты только и смог, что пожать плечами да криво улыбнуться.",    # Ты + Славя
         "me+un":    "Лена садится напротив, съёживается и старается глядеть куда угодно, лишь бы не на тебя и уж тем более не в глаза.",    # Ты + Лена
         "me+us":    "Мелкая, поглядев, не смотрит ли кто, украдкой показывает тебе язык.", # Ты + Ульяна
-        "me+ya":    "Яна, кажется, совершенно не обращает внимания на творящуюся вокруг суматоху.", # Ты + Яна
+        "me+yn":    "Яна, кажется, совершенно не обращает внимания на творящуюся вокруг суматоху.", # Ты + Яна
         "mi+mz":    "Женя смотрит на свою оппонентку, сокрушенно вздыхает, и садится напротив.",    # Мику + Женя
         "mi+sh":    "Стоило Шурику сесть за стол, Мику сразу прошибает его словесной «очередью». Кибернетик невозмутимо кивает и что-то отвечает.",    # Мику + Шурик
         "mi+sl":    "Славя занимает место напротив Мику. Девочки обмениваются парой фраз и желают друг другу удачи.",    # Мику + Славя
         "mi+un":    "Мику обрадовалась, когда напротив неё села Лена. Её чувства оказываются взаимными — зеленоглазка улыбается.",    # Мику + Лена
         "mi+us":    "Девочка-ракета, увидев, что ты смотришь в их сторону, показывает тебе язык, а Мику машет рукой.",    # Мику + Ульяна
-        "mi+ya":    "Мику начинает было говорить, но, заметив, что Яна совершенно отрешена, быстро умолкает.", # Мику + Яна
+        "mi+yn":    "Мику начинает было говорить, но, заметив, что Яна совершенно отрешена, быстро умолкает.", # Мику + Яна
         "mz+sh":    "И тот, и другая молчаливо взирают друг на друга поверх очков, дожидаясь начала игры.",    # Женя + Шурик
         "mz+sl":    "Интересная пара. Славя, которой все эти глупости не нужны, против Жени, которая предпочла бы занятие полезнее, чем игра в карты.",    # Женя + Славя
         "mz+un":    "Человеку, который старается избежать лишнего внимания, в оппоненты выпал человек, которому нет до тебя никакого дела.",    # Женя + Лена
         "mz+us":    "К счастью для Ульяны, взглядом испепелять нельзя. Егоза тоже не в восторге от того, что рандом послал ей в оппоненты Жужелицу.",    # Женя + Ульяна
-    #   "mz+ya":    Женя + Яна - невозможная по сюжету комбинация
+    #   "mz+yn":    Женя + Яна - невозможная по сюжету комбинация
         "sh+sl":    "Славя приветливо улыбается Шурику, на что тот отвечает кивком.",    # Шурик + Славя
         "sh+un":    "Шурик занимает место напротив Лены и о чём-то спрашивает пионерку. Что-то про «плакаты для стенда».",    # Шурик + Лена
         "sh+us":    "Ульянка тут же шепчет что-то Шурику на ухо, ты успеваешь расслышать что-то вроде «вступлю в клуб».", # Шурик + Ульяна
-        "sh+ya":    "Шурик и Яна - два, хоть и по-разному, но отрешённых от мира человека.", # Шурик + Яна
+        "sh+yn":    "Шурик и Яна - два, хоть и по-разному, но отрешённых от мира человека.", # Шурик + Яна
         "sl+un":    "Хоть Славя и приободрила Лену, но с таким настроем она вряд ли дойдёт до финала.",    # Славя + Лена
         "sl+us":    "Ульянка плюхается на стул напротив Слави и показывает той язык. Славя, поглядев, не смотрит ли кто, украдкой показывает язык в ответ, чем тебя удивляет.",    # Славя + Ульяна
-        "sl+ya":    "Славя поздоровалась с Яной, та тихо ответила. Дальше они сидят молча.", # Славя + Яна
+        "sl+yn":    "Славя поздоровалась с Яной, та тихо ответила. Дальше они сидят молча.", # Славя + Яна
         "un+us":    "Лена сильно вздрагивает, когда к ней подскакивает мелкая, а затем заливается краской, после того как Ульянка что-то шепчет ей на ухо. Рыжая бандитка хохочет на всю столовую, но после замечания Электроника всё же садится за стол.", # Лена + Ульяна
-        "un+ya":    "Лена и Яна - две тихони. Идеальное сочетание. Им явно комфортнее всего друг с другом.", # Лена + Яна
-        "us+ya":    "Ульяна пытается разными способами растормошить Яну: показывает ей язык, прыгает вокруг неё... Но Яне всё равно. Наконец, Славя окрикивает Ульяну, и та успокаивается." # Ульяна + Яна
+        "un+yn":    "Лена и Яна - две тихони. Идеальное сочетание. Им явно комфортнее всего друг с другом.", # Лена + Яна
+        "us+yn":    "Ульяна пытается разными способами растормошить Яну: показывает ей язык, прыгает вокруг неё... Но Яне всё равно. Наконец, Славя окрикивает Ульяну, и та успокаивается." # Ульяна + Яна
         }
 
 # -----------------------------------------------------------------------------------------------
@@ -1914,7 +1914,7 @@ init 2 python:
         "mz":   [           # Женя (картинки без очков)
                     "С противоположной стороны стола на тебя зыркает нелюдимая библиотекарша."
                 ],
-        "ya":   [           # Яна
+        "yn":   [           # Яна
                     "С той стороны стола на тебя апатичным взглядом смотрит Яна."
                 ]
         }
@@ -1961,7 +1961,7 @@ init 2 python:
                     "Видно, что Женя рада бы всё бросить и пойти в библиотеку.",
                     "Вот уж кто тут явно выглядит чужеродно, так это Женя."
                 ],
-        "ya":   [           # Яна
+        "yn":   [           # Яна
                     "Яне, кажется, совершенно всё равно на карты. Ей просто сказали поиграть - она и села играть."
                 ]
         }
@@ -2041,7 +2041,7 @@ init 2 python:
                         [us, "Смотрите на эту старую грымзу."],
                         [emp, "Ульянку задело поражение, и она не скрывает это."]
                     ],
-        "dv>ya":    [
+        "dv>yn":    [
                         [None, "Обыграв Яну, Алиса начала было торжествовать."],
                         [dv, "Вот так-то!"],
                         "*",
@@ -2098,10 +2098,10 @@ init 2 python:
                         [th, "Каламбур, однако."]
 
                     ],
-        "me>ya":    [
+        "me>yn":    [
                         [None, " "],
                         "*",
-                        [ya, "Спасибо за игру..."],
+                        [yn, "Спасибо за игру..."],
                         [None, "Тихо говорит Яна и уходит, словно испаряется."]
                     ],
 # ------------------------------------------- Мику
@@ -2141,7 +2141,7 @@ init 2 python:
                         "*",
                         [None, " "]
                     ],
-        "mi>ya":    [
+        "mi>yn":    [
                         [None, " "],
                         "*",
                         [None, " "]
@@ -2182,7 +2182,7 @@ init 2 python:
                         "*",
                         [None, " "]
                     ],
-    #   "mz>ya":    - невозможный расклад
+    #   "mz>yn":    - невозможный расклад
 # ------------------------------------------- Шурик
         "sh>dv":    [       # Шурик > Алиса
                         [None, " "],
@@ -2222,7 +2222,7 @@ init 2 python:
                         [us, "Бу-бу-бу, вредина, не дал ребёнку победить!"],
                         [None, "Ульяна надувается и отворачивается."]
                     ],
-        "sh>ya":    [
+        "sh>yn":    [
                         [None, " "],
                         "*",
                         [None, " "]
@@ -2263,7 +2263,7 @@ init 2 python:
                         "*",
                         [None, " "]
                     ],
-        "sl>ya":    [
+        "sl>yn":    [
                         [None, " "],
                         "*",
                         [None, " "]
@@ -2307,7 +2307,7 @@ init 2 python:
                         [us, "А-а-а, Ленка-пенка-колбаса, вредная сосиска!"],
                         [None, "Ульяна хотела было добавить ещё что-то, но подоспевшая вожатая оттаскивает её в сторону."]
                     ],
-        "un>ya":    [
+        "un>yn":    [
                         [None, " "],
                         "*",
                         [None, " "]
@@ -2350,44 +2350,44 @@ init 2 python:
                         "*",
                         [None, " "]
                     ],
-        "us>ya":    [
+        "us>yn":    [
                         [None, "Помня о прошлом неудачном опыте, Ульяна даже не пытается как-то задеть Яну."],
                         "*",
                         [dra, "И немудрено - скучно разыгрывать представления, когда зрителям всё равно."]
                     ],
 # ------------------------------------------- Яна
-        "ya>dv":    [
+        "yn>dv":    [
                         [th, "Кажется, что победит Яна, что проиграет - реакция у неё будет одинаково безразличная."],
                         "*",
                         [th, "Даже если она победила саму Алису!"]
                     ],
-        "ya>me":    [
+        "yn>me":    [
                         [None, " "],
                         "*",
                         [None, " "]
                     ],
-        "ya>mi":    [
+        "yn>mi":    [
                         [None, " "],
                         "*",
                         [None, " "]
                     ],
-    #   "ya>mz"     - невозможный расклад
-        "ya>sh":    [
+    #   "yn>mz"     - невозможный расклад
+        "yn>sh":    [
                         [None, " "],
                         "*",
                         [None, " "]
                     ],
-        "ya>sl":    [
+        "yn>sl":    [
                         [None, " "],
                         "*",
                         [None, " "]
                     ],
-        "ya>un":    [
+        "yn>un":    [
                         [None, " "],
                         "*",
                         [None, " "]
                     ],
-        "ya>us":    [
+        "yn>us":    [
                         [None, " "],
                         "*",
                         [None, " "]
@@ -2428,7 +2428,7 @@ init 2 python:
         "mz":   [           # Женя
                     [emp, "Она с неудовольствием скривилась — кажется, понимает, что победа значит ещё и дальнейшее участие в этой дурацкой игре."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "Яна покорно и молча пересаживается за стол полуфиналистов. Видно, она просто следует тому, что ей сказали."]
                 ]
     }
@@ -2468,7 +2468,7 @@ init 2 python:
                     [None, "Тебя откровенно забавляет то, что она-то как раз меньше всего хотела играть."],
                     [None, "А ушла так далеко."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "Кажется, даже если Яна победит в игре - даже малейшей улыбки на её лице ты не увидишь."]
                 ]
     }
@@ -2510,7 +2510,7 @@ init 2 python:
         "mz":   [           # Женя
                     [None, "Жужелица морщится, когда зал взрывается овациями и аплодисментами в её честь."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "В ответ на овации Яна лишь тихо благодарит и спешит ретироваться."]
                 ]
     }
@@ -2553,7 +2553,7 @@ init 2 python:
         "mz":   [           # Женя
                     [None, "С видом величайшего облегчения Женя бросает карты на стол и, встав, направляется на улицу."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "Яна никак не реагирует на проигрыш. Лишь встаёт и идёт к детям-болельщикам."]
                 ]
     }
@@ -2604,7 +2604,7 @@ init 2 python:
                     [mz, "Ну наконец-то!"],
                     [None, "Рявкает она и выходит вон из столовой."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "Кажется, Яну поражение не задело никак. Она просто встаёт и идёт к детям."]
                 ]
     }
@@ -2649,7 +2649,7 @@ init 2 python:
                     [mz, "Теперь то можно я пойду?"],
                     [mt, "Нет."]
                 ],
-        "ya":   [
+        "yn":   [
                     [None, "Яна молча встаёт и идёт к детям, пытающимся её приободрить."]
                 ]
     }
@@ -2848,8 +2848,8 @@ init 3 python:
 # создаём игроков
     def ds_set_gamblers(mz_part):
         gamblers = []                                       # Картежники: (ники) 0:Семён, 1:Лена, 2:Славя, 3:Алиса, 4:Мику, 5:Ульяна, 6:Шурик, 7:Женя, 8:Яна
-        nick_of_gamblers = [me,un,sl,dv,mi,us,sh,mz,ya]                                                            # ХАРАКТЕРЫ
-        take_of_gamblers = ['me','un','sl','dv','mi','us','sh','mz','ya']                                            # ники (текст)
+        nick_of_gamblers = [me,un,sl,dv,mi,us,sh,mz,yn]                                                            # ХАРАКТЕРЫ
+        take_of_gamblers = ['me','un','sl','dv','mi','us','sh','mz','yn']                                            # ники (текст)
     # Склоняем картежников (имена):
         #name_me = [u'я',u'меня',u'мне',u'меня',u'мной',u'мне']                                                  # имена Семёна (именительный..предложный)
         name_me = [u'ты','тебя','тебе','тебя','тобой','тебе']
@@ -2860,8 +2860,8 @@ init 3 python:
         name_us = [u'Ульяна',u'Ульяны',u'Ульяне',u'Ульяну',u'Ульяной',u'Ульяне']                                # имена Ульяны (именительный..предложный)
         name_sh = [u'Шурик',u'Шурика',u'Шурику',u'Шурика',u'Шуриком',u'Шурике']                                 # имена Шурика (именительный..предложный)
         name_mz = [u'Женя',u'Жени',u'Жене',u'Женю',u'Женей',u'Жене']                                            # имена Жени (именительный..предложный)
-        name_ya = [u'Яна',u'Яны',u'Яне',u'Яну',u'Яной',u'Яне']                                                  # именя Яны (именительный..предложный)
-        name_of_gamblers = [name_me,name_un,name_sl,name_dv,name_mi,name_us,name_sh,name_mz,name_ya]                    # список списков имен картежников
+        name_yn = [u'Яна',u'Яны',u'Яне',u'Яну',u'Яной',u'Яне']                                                  # именя Яны (именительный..предложный)
+        name_of_gamblers = [name_me,name_un,name_sl,name_dv,name_mi,name_us,name_sh,name_mz,name_yn]                    # список списков имен картежников
         cases = ['i','r','d','v','t','p']                                              # Список используемых падежей
     # Создаем картежников
         for i in range (0,9):                                                           # для 9 картежников (номер элемента списка = номер картежника)
@@ -4013,7 +4013,7 @@ label ds_cards_tournament:
 
     show sl normal pioneer far at right
     if ds_bring_mz_fail:
-        show ya normal pioneer far at left
+        show yn normal pioneer far at left
     else:
         show mz normal glasses pioneer far at left
     with dissolve
@@ -4037,7 +4037,7 @@ label ds_cards_tournament:
             window show
     hide sl
     hide mz
-    hide ya
+    hide yn
     with dissolve
 
     show dv smile pioneer2 far at left
@@ -4187,7 +4187,7 @@ label ds_cards_tournament:
     el "Их можно посмотреть на таблице."
     "И он показал на другую половину бумажного листа."
 # ----------------------------------------------------------------------------------- ADD Показываем правила игры
-    if skillcheck('encyclopedia', lvl_up_medium, passive=True):
+    if ds_skill_list['encyclopedia'].check(lvl_up_medium, passive=True).result():
         play sound ds_sfx_int
         enc "{result}Ты прекрасно знаешь комбинации и так."
         window hide
@@ -4634,8 +4634,8 @@ label ds_cards_tour_1:
         "Усмехается она, садясь на противоположное место."
         window hide
         menu:
-            "{check=authority:8}Съязвить":
-                if skillcheck('authority', lvl_easy):
+            "Съязвить" (skill='authority', level=lvl_easy):
+                if ds_last_skillcheck.result():
                     window show
                     play sound ds_sfx_psy
                     aut "{result}Не давай себя запугать!"
@@ -4646,7 +4646,7 @@ label ds_cards_tour_1:
                     play sound ds_sfx_psy
                     aut "{result}Она, похоже, настроена воинственно - не то, что ты."
                     me "Всенепременно..."
-                $ ds_skill_points['authority'] += 1
+                
             "Разжалобить":
                 window show
                 me "Алис, может, всё-таки не надо?.."
@@ -4761,9 +4761,9 @@ label ds_cards_tour_1:
             "Кивнуть молча":
                 window show
                 "Ты молча киваешь в ответ."
-    elif ds_my_rival_1_tour.take == 'ya':
-        show ya normal pioneer at cright with dissolve
-        ya "Привет..."
+    elif ds_my_rival_1_tour.take == 'yn':
+        show yn normal pioneer at cright with dissolve
+        yn "Привет..."
         me "Привет."
         play sound ds_sfx_psy
         emp "Она не склонна к разговорам. И вообще играет только потому, что её попросили."
@@ -4855,7 +4855,7 @@ label ds_cards_tournament_start:                                            # н
     elif ds_my_rival_1_tour.take == 'mz':                                                  # Женя играет рандомно, как в классике, ошибки = 5
         $ ds_cards_gambler_behavior = 'foolplay'
         $ ds_cards_gambler_skill = 5
-    elif ds_my_rival_1_tour.take == 'ya':
+    elif ds_my_rival_1_tour.take == 'yn':
         $ ds_cards_gambler_behavior = 'defense'
         $ ds_cards_gambler_skill = 5
 
@@ -4890,8 +4890,8 @@ label ds_cards_tournament_start:                                            # н
             rival = CardGameRivalWiseUsual(ds_sh_avatar, u"Шурик", ds_cards_gambler_behavior, ds_cards_gambler_skill)
         elif ds_my_rival_1_tour.take == 'mz':
             rival = CardGameRivalWiseUsual(ds_mz_avatar, u"Женя", ds_cards_gambler_behavior, ds_cards_gambler_skill)
-        elif ds_my_rival_1_tour.take == 'ya':
-            rival = CardGameRivalWiseUsual(ds_ya_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
+        elif ds_my_rival_1_tour.take == 'yn':
+            rival = CardGameRivalWiseUsual(ds_yn_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
 
 # ************************************************************************************
 
@@ -5047,7 +5047,7 @@ label ds_cards_1_tour_fail_end:
                 stop music fadeout 3
                 hide un with dissolve
                 "С этими словами ты выходишь из столовой, оставляя Лену беззвучно хватать ртом воздух."
-        if skillcheck('drama', lvl_medium, passive=True):
+        if ds_skill_list['drama'].check(lvl_medium, passive=True).result():
             play sound ds_sfx_int
             dra "{result}Вам не кажется, мессир, что с Леной было что-то не так?"
             th "И то верно... какая-то она слишком агрессивной оказалась."
@@ -5126,8 +5126,8 @@ label ds_cards_1_tour_fail_end:
                     me "И удачи в полуфинале."
                     "Разворачиваешься и уходишь к болельщикам."
                     th "Может быть, удастся затеряться в толпе?"
-                "{check=drama:12}Устроить скандал":
-                    if skillcheck('drama', lvl_challenging, passive=True, [('ds_karma >= 20', 1, 'Хорошая репутация')]):
+                "Устроить скандал" (skill='drama', level=lvl_challenging, modifiers=[('ds_karma >= 20', 1, 'Хорошая репутация')]):
+                    if ds_last_skillcheck.result():
                         window show
                         play sound ds_sfx_psy
                         dra "Начинай скандалить, напугай её."
@@ -5136,7 +5136,7 @@ label ds_cards_1_tour_fail_end:
                         dv "Что ты делаешь?.."
                         play sound ds_sfx_psy
                         aut "Она удивлена таким твоим ходом."
-                        $ ds_skill_points['drama'] += 1
+                        
                         me "Что же это тут делается? Честной народ обвиняют в домогательствах! Вы представьте только!"
                         dra "Ты это стараешься произносить максимально истошным голосом."
                         show mt angry pioneer at right with dissolve
@@ -5162,7 +5162,7 @@ label ds_cards_1_tour_fail_end:
                         window show
                         play sound ds_sfx_psy
                         dra "Нет, слишком опасно. Лучше не привлекай внимания."
-                        $ ds_skill_points['drama'] += 1
+                        
                         "Ты вежливо встаёшь, наклоняешь голову и говоришь."
                         me "Поздравляю тебя с победой."
                         me "И удачи в полуфинале."
@@ -5173,7 +5173,7 @@ label ds_cards_1_tour_fail_end:
                     me "Требую реванша! Наверняка ты жульничала!"
                     show dv laugh pioneer2 with dspr
                     dv "Что, испугался?"
-                    $ ds_damage_morale()
+                    $ ds_morale.damage()
                     $ ds_lp['dv'] -= 1
                     me "И ничего не испугался!"
                     show dv grin pioneer2 with dspr
@@ -5248,7 +5248,7 @@ label ds_cards_1_tour_fail_end:
         show us dontlike pioneer at fright with move
         "А потом резко вскакивает и идёт к столику, отведённому под следующую игру."
         us "Просто боишься проиграть ещё раз! Слабак!"
-        $ ds_damage_morale()
+        $ ds_morale.damage()
         me "Да, возьми меня ещё раз на «слабо», детка."
         me "Наслаждайся вечером."
         stop music fadeout 3
@@ -5278,14 +5278,14 @@ label ds_cards_1_tour_fail_end:
         show mz normal glasses pioneer with dissolve
         "Женя пожимает плечами и встаёт из-за стола."
         mz "Похоже, это будет ещё проще, чем мне казалось."
-    elif ds_my_rival_1_tour.take == 'ya':
-        $ ds_lp['ya'] += 1
+    elif ds_my_rival_1_tour.take == 'yn':
+        $ ds_lp['yn'] += 1
         if not ds_bet_dv:
             $ ds_lp['sl'] += 1
-        show ya normal pioneer with dissolve
-        ya "Спасибо за игру..."
+        show yn normal pioneer with dissolve
+        yn "Спасибо за игру..."
         "И больше ничего не говоря, она встаёт и идёт за следующий стол."
-        hide ya with dissolve
+        hide yn with dissolve
         me "Спасибо..."
 # ---------------------------------------------------- \\Диалоги
 
@@ -5338,7 +5338,7 @@ label ds_cards_1_tour_win_end:
                     me "Почему?"
                     show un shy pioneer with dspr
                     un "Ну…"
-                    if skillcheck('empathy', lvl_easy, passive=True):
+                    if ds_skill_list['empathy'].check(lvl_easy, passive=True).result():
                         emp "{result}Ей не очень хочется об этом говорить. Может, не стоит?"
                     pause(0.5)
                     window hide
@@ -5352,7 +5352,7 @@ label ds_cards_1_tour_win_end:
                             un "Удачи. Я буду болеть за тебя."
                             me "Угу…{w} Спасибо."
                             $ ds_lp['un'] += 1
-                            $ ds_skill_points['empathy'] += 1
+                            
                         "Выяснить до конца":
                             me "Да?…"
                             th "Прости, Лена, но я чуточку поработаю клещами."
@@ -5396,7 +5396,7 @@ label ds_cards_1_tour_win_end:
                     window show
                     th "Я сказал — заткнись."
                     th "У меня цель — не ободрить каждого сирого, а утереть нос одной рыжей зазнайке!"
-                    if skillcheck('inland_empire', lvl_trivial, passive=True):
+                    if ds_skill_list['inland_empire'].check(lvl_trivial, passive=True).result():
                         play sound ds_sfx_psy
                         ine "{result}Хотя, честно сказать, искушение слить партию просто для того, чтобы посмотреть, как она выполнит свои угрозы, достаточно велико. {w}Нет, ну серьезно!"
                         scene bg ext_square_sunset
@@ -5414,7 +5414,7 @@ label ds_cards_1_tour_win_end:
                     window show
                     th "Даже если девочки внезапно начнут строить мне глазки, я не собираюсь кому-либо из них сливать партию."
                     th "Представляю себе, как рыжая стерлядь воплотит свои угрозы..."
-                    if skillcheck('inland_empire', lvl_trivial, passive=True):
+                    if ds_skill_list['inland_empire'].check(lvl_trivial, passive=True).result():
                         scene bg ext_square_sunset
                         show prologue_dream
                         with fade
@@ -5429,12 +5429,12 @@ label ds_cards_1_tour_win_end:
                     else:
                         play sound ds_sfx_psy
                         ine "Нет, ты не хочешь себе это представлять."
-                    if skillcheck('authority', lvl_easy, passive=True):
+                    if ds_skill_list['authority'].check(lvl_easy, passive=True).result():
                         play sound ds_sfx_psy
                         aut "{result}А вот правильный перевод твоего словоблудия: «я трясусь за свою шкуру»."
                         aut "Волков бояться - в лес не ходить, в курсе?"
                         aut "И да - поддаваясь на шантаж, ты лишь поощряешь шантажистов применять подобные методы и дальше."
-                    if skillcheck('suggestion', lvl_medium, passive=True):
+                    if ds_skill_list['suggestion'].check(lvl_medium, passive=True).result():
                         play sound ds_sfx_psy
                         sug "{result}А ты думаешь, у Алисы тут такая безупречная репутация, что ей сразу поверят?"
                         sug "Сомнительно. Тем более, в Советском Союзе теме домогательств уделяли не столь пристальное внимание, нежели в нашем XXI веке."
@@ -5501,7 +5501,7 @@ label ds_cards_1_tour_win_end:
         if not ds_cards_detour_semifinal:
             th "Что ж, это была трудная схватка, но я победил."
             th "Идеальное же противостояние — игра, в которой вы оба ничего не понимаете."
-            if not skillcheck('volition', lvl_challenging, passive=True):
+            if not ds_skill_list['volition'].check(lvl_challenging, passive=True).result():
                 vol "{result}Ну да, ну да."
                 vol "Носкиллер рандомный."
                 th "Помолчи. Ты ничего не понимаешь."
@@ -5561,13 +5561,13 @@ label ds_cards_1_tour_win_end:
         if not ds_cards_detour_semifinal:
             window hide
             menu:
-                "{check=authority:8}Посмеяться":
-                    if skillcheck('authority', lvl_easy):
+                "Посмеяться" (skill='authority', level=lvl_easy):
+                    if ds_last_skillcheck.result():
                         play sound ds_sfx_psy
                         aut "{result}Начинай на неё давить!"
                         me "Ну что, как я тебя?"
                         $ ds_lp['dv'] += 1
-                        $ ds_skill_points['authority'] += 1
+                        
                         show dv rage pioneer2 with dspr
                         "Алиса надувается, набычивается…"
                         me "Разделал как Рандом черепаху!"
@@ -5581,7 +5581,7 @@ label ds_cards_1_tour_win_end:
                         "Расхохоталась она, ткнув тебя кулаком в плечо."
                         dv "Пожалуй, будем считать наше пари закрытым."
                         th "Уффф."
-                        if skillcheck('composure', lvl_medium, passive=True):
+                        if ds_skill_list['composure'].check(lvl_medium, passive=True).result():
                             play sound ds_sfx_mot
                             com "{result}Ты подавляешь желание облегчённо вытереть лоб."
                         else:
@@ -5591,7 +5591,7 @@ label ds_cards_1_tour_win_end:
                         com "Ты отшатываешься."
                         aut "Но можешь ответить солидно."
                         me "Нет. {w}Свою натюрель ты уже поставила на кон."
-                        if skillcheck('instinct', lvl_medium, passive=True):
+                        if ds_skill_list['instinct'].check(lvl_medium, passive=True).result():
                             play sound ds_sfx_fys
                             ins "{result}Дальше только честь девичья! {w}Ну-ка, скажешь это вслух?"
                             window hide
@@ -5602,7 +5602,7 @@ label ds_cards_1_tour_win_end:
                                     show dv angry pioneer2 with dspr
                                     dv "А ты не увлекайся!"
                                     $ ds_lp['dv'] -= 1
-                                    $ ds_skill_points['instinct'] += 1
+                                    
                                 "Не говорить":
                                     window show
                                     th "Ага, сейчас."
@@ -5615,7 +5615,7 @@ label ds_cards_1_tour_win_end:
                         play sound ds_sfx_psy
                         aut "{result}У тебя не хватает запала, так что ты не находишь, что сказать эффектного."
                         me "Кажется, я победил."
-                        $ ds_skill_points['authority'] += 1
+                        
                         dv "Угу."
                         me "И ты теперь…"
                         show dv sad pioneer2 with dspr
@@ -5684,7 +5684,7 @@ label ds_cards_1_tour_win_end:
                     show mi dontlike pioneer with dspr
                     mi "Да ну тебя, бака!"
                     $ ds_lp['mi'] -= 1
-                    if skillcheck('encyclopedia', lvl_trivial, passive=True):
+                    if ds_skill_list['encyclopedia'].check(lvl_trivial, passive=True).result():
                         play sound ds_sfx_int
                         enc "{result}«Бака» по-японски - что-то вроде «дурачок»."
                         play sound ds_sfx_psy
@@ -5709,7 +5709,7 @@ label ds_cards_1_tour_win_end:
             th "По мне, так это было чистое везение."
             th "Хотя, конечно, моя карма и везение — это слова-антонимы."
             th "Я — ходячее олицетворение закона Мэрфи."
-            if skillcheck('volition', lvl_easy, passive=True):
+            if ds_skill_list['volition'].check(lvl_easy, passive=True).result():
                 play sound ds_sfx_psy
                 vol "{result}Ну да, ну да. {w}А то, что ты вытянул билет даже не на миллион, а на новую жизнь, это мы в расчёт как бы не берём, да?"
                 th "Ты о попадании в лагерь?"
@@ -5726,7 +5726,7 @@ label ds_cards_1_tour_win_end:
                 ine "Или вообще это спецслужбы тестировали прототип телепортатора, и у них что-то сбилось в настройках."
                 vol "Да ну вас!"
                 if ds_bet_dv:
-                    if skillcheck('instinct', lvl_medium, passive=True):
+                    if ds_skill_list['instinct'].check(lvl_medium, passive=True).result():
                         ins "{result}К тому же у тебя тут эротическое пари, помнишь?"
                     else:
                         vol "Так-то у тебя ешё пари!"
@@ -5736,7 +5736,7 @@ label ds_cards_1_tour_win_end:
                         vol "Надежды вьюношей питают…"
                         th "Не науки разве?"
                         vol "В твоём случае именно надежды."
-                        if not skillcheck('authority', lvl_medium, passive=True):
+                        if not ds_skill_list['authority'].check(lvl_medium, passive=True).result():
                             play sound ds_sfx_psy
                             aut "{result}Будь уверен, она доберётся до тебя и порвёт на мелкие клочки, а потом исполнит свою угрозу."
                             th "О, спасибо тебе, мрачный зануда."
@@ -5779,22 +5779,22 @@ label ds_cards_1_tour_win_end:
             us "Ах так! Тогда я всем расскажу про тебя и Двачевскую!"
             window hide
             menu:
-                "{check=authority:8}Остановить" if ds_bet_dv:
-                    if skillcheck('authority', lvl_easy):
+                "Остановить" (skill='authority', level=lvl_easy) if ds_bet_dv:
+                    if ds_last_skillcheck.result():
                         window show
                         aut "{result}Это же ребёнок. Надавить на неё легче лёкого."
                         me "Мелкая нахалка, не смей! Это только наш с ней спор, ты только разрубала!"
                         show us grin pioneer with dspr
                         "Ульяна только улыбнулась."
                         aut "Как так?!"
-                        $ ds_skill_points['authority'] += 1
+                        
                     else:
                         window show
                         aut "{result}Увы, тебе не хватает твёрдости."
                         me "Ты всем расскажешь то, что она обещала рассказать? В случае моего проигрыша?"
                         "Она кивает."
-                "{check=suggestion:10}Отказать":
-                    if skillcheck('suggestion', lvl_medium):
+                "Отказать" (skill='suggestion', level=lvl_medium):
+                    if ds_last_skillcheck.result():
                         window show
                         play sound ds_sfx_psy
                         sug "{result}Многого хочет. И вообще, карточный долг - это святое!"
@@ -5907,10 +5907,10 @@ label ds_cards_1_tour_win_end:
         play sound ds_sfx_psy
         emp "Вот уж кому много не надо для счастья."
         $ ds_lp['mz'] += 1
-    elif ds_my_rival_1_tour.take == 'ya':
-        show ya normal pioneer with dissolve
-        ya "Cпасибо за игру..."
-        hide ya with dissolve
+    elif ds_my_rival_1_tour.take == 'yn':
+        show yn normal pioneer with dissolve
+        yn "Cпасибо за игру..."
+        hide yn with dissolve
         "И прежде, чем ты успел что-либо ответить, она будто испаряется."
         me "Cпасибо..."
 
@@ -6061,7 +6061,7 @@ label ds_cards_semifinal:
             lgc "Она заметила, что карты помечены. И никто кроме тебя их пометить не мог."
             play sound ds_sfx_psy
             vol "Отпираться бесполезно. Лучше просто признать."
-            $ ds_damage_morale()
+            $ ds_morale.damage()
             show mt angry pioneer at right
             show el upset pioneer at left
             with dissolve
@@ -6106,7 +6106,7 @@ label ds_cards_semifinal:
             mi "Скажи, Сенечка, а какой у тебя размер?"
             play sound ds_sfx_mot
             com "Ты аж поперхнулся воздухом."
-            if skillcheck('instinct', lvl_easy, passive=True):
+            if ds_skill_list['instinct'].check(lvl_easy, passive=True).result():
                 play sound ds_sfx_fys
                 ins "{result}Ну, не стесняйся ты так! Девочка {b}хочет{/b} знать!"
                 play sound ds_sfx_psy
@@ -6121,7 +6121,7 @@ label ds_cards_semifinal:
                         me "13 сантиметров!"
                         show mi surprise pioneer with dspr
                         mi "Эм... что-то ты напутал, наверное..."
-                        $ ds_skill_points['instinct'] += 1
+                        
                     "Отказаться отвечать":
                         me "Да я не…"
             else:
@@ -6133,7 +6133,7 @@ label ds_cards_semifinal:
             mi "Ты же умеешь играть, да?"
             show mi grin pioneer with dspr
             mi "Если нет, я тебя научу!"
-            if skillcheck('instinct', lvl_easy, passive=True):
+            if ds_skill_list['instinct'].check(lvl_easy, passive=True).result():
                 play sound ds_sfx_fys
                 ins "{result}Тебе однозначно понравится, соглашайся!"
                 ins "Она аккуратно возьмёт в одну руку твой гриф, в другую каподастр…"
@@ -6151,7 +6151,7 @@ label ds_cards_semifinal:
                     play sound ds_sfx_psy
                     aut "Замечательно. Испугал девушку и пустил петуха чуть-ли не на всю столовую."
                     ins "Лох — это судьба."
-                    $ ds_damage_morale()
+                    $ ds_morale.damage()
                     play sound ds_sfx_mot
                     com "Выдохнув, ты пробуешь ещё раз, уже спокойнее."
                     show mi surprise pioneer with dspr
@@ -6188,7 +6188,7 @@ label ds_cards_semifinal:
         play music music_list["i_want_to_play"] fadein 1
         "С улыбкой до ушей она уставилась на тебя."
         us "Я хочу всех победить!"
-        if skillcheck('authority', lvl_easy, passive=True, modifiers=[('ds_bet_dv', 2)]):
+        if ds_skill_list['authority'].check(lvl_easy, passive=True, modifiers=[('ds_bet_dv', 2, 'Спор с Алисой')]):
             play sound ds_sfx_psy
             aut "{result}А вот и не будешь!"
             me "Не буду."
@@ -6198,7 +6198,7 @@ label ds_cards_semifinal:
                 us "Спор — это да, но…"
             else:
                 us "Будешь!"
-            $ ds_skill_points['authority'] += 1
+            
         show us grin pioneer with dspr
         us "Играть будем по моим правилам!"
         me "Каким ещё правилам?!"
@@ -6222,12 +6222,12 @@ label ds_cards_semifinal:
         us "кансе…"
         show us angry pioneer with dspr
         us "кунсекасу…"
-        if skillcheck('rhetoric', lvl_trivial, passive=True):
+        if ds_skill_list['rhetoric'].check(lvl_trivial, passive=True).result():
             play sound ds_sfx_int
             rhe "{result}Ей с трудом даётся слово «консенсус»."
         window hide
         menu:
-            "{check=half_light:8}Посмеяться":
+            "Посмеяться" (skill='half_light', level=lvl_easy):
                 window show
                 us "Что ты ржёшь?!"
                 me "Тебе лучше не знать."
@@ -6236,7 +6236,7 @@ label ds_cards_semifinal:
                 show us smile pioneer with dspr
                 us "Или наутро проснёшься с муравьями под одеялом!"
                 window hide
-                if skillcheck('half_light', lvl_easy):
+                if ds_last_skillcheck.result():
                     window show
                     play sound ds_sfx_fys
                     hfl "{result}Внушительная угроза. Но мы можем ответить"
@@ -6251,7 +6251,7 @@ label ds_cards_semifinal:
                     us "Ай!"
                     show us angry pioneer with dspr
                     us "Ах ты!…"
-                    $ ds_skill_points['half_light'] += 1
+                    
                     play sound ds_sfx_mot
                     res "Мелкая оказалась не промах: не растерялась и ударила лбом в лоб." with vpunch
                     play sound ds_sfx_fys
@@ -6268,7 +6268,7 @@ label ds_cards_semifinal:
                     window show
                     play sound ds_sfx_fys
                     hfl "{result}Cерьёзная угроза. Лучше не лезь."
-                    $ ds_skill_points['half_light'] += 1
+                    
                     me "Давай играть уже!"
             "Поправить":
                 me "Консенсусу."
@@ -6304,11 +6304,11 @@ label ds_cards_semifinal:
         show mz angry glasses pioneer with dspr
         "Чертыхнувшись, Женя отказывается от своих планов."
 
-    elif ds_my_rival_semifinal.take == 'ya':
-        show ya normal pioneer with dissolve
-        ya "Привет..."
+    elif ds_my_rival_semifinal.take == 'yn':
+        show yn normal pioneer with dissolve
+        yn "Привет..."
         me "Привет. Ну что, к игре?"
-        ya "Да..."
+        yn "Да..."
 
 # ---------------------------------------------------- /ДИАЛОГИ
 
@@ -6354,7 +6354,7 @@ label ds_cards_semifinal_start:                                                 
     elif ds_my_rival_semifinal.take == 'mz':                                                  # Женя играет рандомно, как в классике, ошибки = 5
         $ ds_cards_gambler_behavior = 'foolplay'
         $ ds_cards_gambler_skill = 5
-    elif ds_my_rival_semifinal.take == 'ya':
+    elif ds_my_rival_semifinal.take == 'yn':
         $ ds_cards_gambler_behavior = 'defense'
         $ ds_cards_gambler_skill = 5
 
@@ -6389,8 +6389,8 @@ label ds_cards_semifinal_start:                                                 
             rival = CardGameRivalWiseUsual(ds_sh_avatar, u"Шурик", ds_cards_gambler_behavior, ds_cards_gambler_skill)
         elif ds_my_rival_semifinal.take == 'mz':
             rival = CardGameRivalWiseUsual(ds_mz_avatar, u"Женя", ds_cards_gambler_behavior, ds_cards_gambler_skill)
-        elif ds_my_rival_semifinal.take == 'ya':
-            rival = CardGameRivalWiseUsual(ds_ya_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
+        elif ds_my_rival_semifinal.take == 'yn':
+            rival = CardGameRivalWiseUsual(ds_yn_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
 
 # ************************************************************************************
 
@@ -6534,7 +6534,7 @@ label ds_cards_semifinal_fail_end:
         me "Не знаю."
         play sound ds_sfx_psy
         vol "Поражение тебя несколько подкосило."
-        $ ds_damage_morale()
+        $ ds_morale.damage()
         show mi happy pioneer with dspr
         mi "Ой, а я знаю, кажется! Да! Мне только что идея в голову пришла! Я…"
         show mi happy pioneer far with dissolve
@@ -6552,19 +6552,19 @@ label ds_cards_semifinal_fail_end:
         us "Ура-ура-ура, прекрасная игра! Красив я и умён, и ловок, и силён!"
         me "Ты ещё фляк сделай от радости."
         th "Почему ей так нравится факт, что теперь меня освистают на весь лагерь?"
-        if skillcheck('encyclopedia', lvl_trivial, passive=True):
+        if ds_skill_list['encyclopedia'].check(lvl_trivial, passive=True).result():
             play sound ds_sfx_int
             enc "Это была отсылка на Карлсона, который живёт на крыше."
             me "Не знал, что твоим кумиром является Карлсон."
             us "А как же!"
-            $ ds_skill_points['encyclopedia'] += 1
+            
         else:
             me "Не знал, что твоим кумиром является Винни Пух со своими кричалками."
             us "А как же!"
             us "У меня и медведь есть!"
             "Она показывает язык."
             us "Но не узнать лучшее в мире приведение… стыд и срам!"
-            $ ds_damage_morale()
+            $ ds_morale.damage()
         hide us with dissolve
         "Ты морщишься и встаёшь."
         us "Неудачникам привет."
@@ -6590,15 +6590,15 @@ label ds_cards_semifinal_fail_end:
         "Говоришь ты и встаёшь из-за стола."
         $ ds_lp['mz'] -= 1
     
-    elif ds_my_rival_semifinal.take == 'ya':
-        show ya normal pioneer with dissolve
+    elif ds_my_rival_semifinal.take == 'yn':
+        show yn normal pioneer with dissolve
         me "Ты выиграла."
-        show ya surprise pioneer with dissolve
-        ya "Да?.. Хорошо..."
+        show yn surprise pioneer with dissolve
+        yn "Да?.. Хорошо..."
         play sound ds_sfx_psy
         emp "Она реагирует довольно апатично. На всё."
         me "Cпасибо за игру."
-        ya "Cпасибо..."
+        yn "Cпасибо..."
         "И ты уходишь к болельщикам."
 # ---------------------------------------------------- \\ Диалоги
 
@@ -6685,7 +6685,7 @@ label ds_cards_semifinal_win_end:
         play sound ds_sfx_psy
         aut "А она азартная."
         aut "То есть, в случае чего, её можно взять на слаб{b}о{/b}?"
-        if skillcheck('inland_empire', lvl_medium, passive=True):
+        if ds_skill_list['inland_empire'].check(lvl_medium, passive=True).result():
             play sound ds_sfx_psy
             ine "{result}Кого-то она тебе напомнила этой своей импульсивностью."
             th "И кого же?"
@@ -6907,11 +6907,11 @@ label ds_cards_semifinal_win_end:
         "После чего она телепортируется из столовой."
         "А ты же решаешь узнать, как там дела у соседей."
     
-    elif ds_my_rival_semifinal.take == 'ya':
-        show ya normal pioneer with dissolve
+    elif ds_my_rival_semifinal.take == 'yn':
+        show yn normal pioneer with dissolve
         "Яна реагирует на свой проигрыш абсолютно безразлично."
-        ya "Я проиграла... Удачи в финале."
-        hide ya with dissolve
+        yn "Я проиграла... Удачи в финале."
+        hide yn with dissolve
         "И она исчезает среди болельщиков."
         me "Спасибо..."
 # ---------------------------------------------------- \\ Диалоги
@@ -6984,7 +6984,7 @@ label ds_cards_final_choice:
             play sound ds_sfx_int
             lgc "Может быть, и скрипит о том, что играть не хочет, но она же в финале!"
             lgc "Придётся потрудиться."
-        elif ds_my_rival_final.take == 'ya':
+        elif ds_my_rival_final.take == 'yn':
             th "Яна... Похоже, давит своей холодностью..."
             play sound ds_sfx_psy
             vol "Будь хладнокровен сам!"
@@ -7098,7 +7098,7 @@ label ds_cards_final_start:
     elif ds_my_rival_final.take == 'mz':                                                  # Женя играет рандомно, как в классике, вероятность ошибки 20%
         $ ds_cards_gambler_behavior = 'foolplay'
         $ ds_cards_gambler_skill = 4
-    elif ds_my_rival_final.take == 'ya':
+    elif ds_my_rival_final.take == 'yn':
         $ ds_cards_gambler_behavior = 'defense'
         $ ds_cards_gambler_skill = 4
 # ----------------------------------------------------------------------------
@@ -7209,8 +7209,8 @@ label ds_cards_final_start:
             rival = CardGameRivalWiseUsual(ds_sh_avatar, u"Шурик", ds_cards_gambler_behavior, ds_cards_gambler_skill)
         elif ds_my_rival_final.take == 'mz':
             rival = CardGameRivalWiseUsual(ds_mz_avatar, u"Женя", ds_cards_gambler_behavior, ds_cards_gambler_skill)           # Женя играет рандомно, как в классике
-        elif ds_my_rival_final.take == 'ya':
-            rival = CardGameRivalWiseUsual(ds_ya_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
+        elif ds_my_rival_final.take == 'yn':
+            rival = CardGameRivalWiseUsual(ds_yn_avatar, u"Яна", ds_cards_gambler_behavior, ds_cards_gambler_skill)
 # ************************************************************************************
 
     $ ds_hint_poker = ds_hint_poker_contractual                                           # подсказки комбинаций — по просмору правил
@@ -7249,7 +7249,7 @@ label ds_cards_final_fail_end:
         con "А произошло рождение легенды, +50 к опыту, новый уровень и разблокировка уверенности в себе!"
         show un cry_smile pioneer with dspr
         "Лена смотрит на тебя долго, неотрывно, и у неё трясутся руки."
-        if skillcheck('conceptualization', lvl_easy, passive=True):
+        if ds_skill_list['conceptualization'].check(lvl_easy, passive=True).result():
             con "{result}Ты молчишь, она молчит, а вокруг как будто выросла некая отталкивающая стенка, защищающая вас — но лишь пока вы вместе."
             con "Как будто два человека, каждый из которых неполон в одиночестве, вместе намного сильнее, чем если просто сложить их характеристики."
             con "Ты не можешь сказать сейчас, поддавался ли я или играл в полную силу, но просто прийти сюда уже было хорошей идеей, сторицей окупившейся этими мгновениями."
@@ -7343,7 +7343,7 @@ label ds_cards_final_fail_end:
     elif ds_my_rival_final.take == 'dv':
         $ ds_lp['dv'] -= 1
         stop music fadeout 2
-        if skillcheck('authority', lvl_legendary, passive=True):
+        if ds_skill_list['authority'].check(lvl_legendary, passive=True).result():
             play sound ds_sfx_psy
             aut "{result}Проиграть было забавно."
             play music music_list["you_lost_me"]
@@ -7390,7 +7390,7 @@ label ds_cards_final_fail_end:
         emp "Кажется, на её лице нет и следа радости…"
         if ds_bet_dv:
             "Алиса встаёт из-за стола и…"
-            if skillcheck('empathy', lvl_medium, passive=True):
+            if ds_skill_list['empathy'].check(lvl_medium, passive=True).result():
                 emp "{result}Ощущается, что она заставляет себя..."
             show mt normal pioneer at fright with dissolve
             th "Направилась к вожатой! Да! Момент истины!"
@@ -7451,8 +7451,8 @@ label ds_cards_final_fail_end:
                     window show
                     "Ты бросаешься вслед за ней…"
                     "Но было уже поздно…"
-                "{check=composure:14}Cидеть и ждать":
-                    if skillcheck('composure', lvl_legendary):
+                "Cидеть и ждать" (skill='composure', level=lvl_legendary):
+                    if ds_last_skillcheck.result():
                         window show
                         play sound ds_sfx_mot
                         com "{result}Не дрейфь. Вожатая вряд ли поверит... если только ты не начнёшь дёргаться."
@@ -7468,7 +7468,7 @@ label ds_cards_final_fail_end:
                         com "{result}В тебе всё словно перевернулось."
                         com "Ты не можешь удержаться от того, чтобы остановить Алису."
                         "И ты бросаешься вслед за ней, но оказывается уже поздно."
-                    $ ds_skill_points['composure'] += 1
+                    
             show dv smile pioneer2 at cright
             show mt normal pioneer at fright
             with dissolve
@@ -7494,7 +7494,7 @@ label ds_cards_final_fail_end:
                     show mt smile pioneer at right with dspr
                     mt "Ты совсем не умеешь играть в карты."
                     aut "Такого позора ты ещё никогда не испытывал."
-                    $ ds_damage_morale()
+                    $ ds_morale.damage()
                 "Показать безразличие":
                     window show
                     "Ты усмехаешься рыжей в ответ."
@@ -7543,7 +7543,7 @@ label ds_cards_final_fail_end:
         $ ds_lp['mi'] += 1
         mi "Да! Да! Вы понимаете это?! Это снова я, и я снова на коне!"
         mi "У меня не было никаких сомнений в том, что я приду и всех победю!"
-        if skillcheck('rhetoric', lvl_trivial, passive=True):
+        if ds_skill_list['rhetoric'].check(lvl_trivial, passive=True).result():
             play sound ds_sfx_int
             rhe "{result}«Одержу победу», а не «победю»... что за безграмотность..."
         mi "И я пришла и победила."
@@ -7584,11 +7584,11 @@ label ds_cards_final_fail_end:
         "Вопит она, бегая по столам, стульям и демонстрируя вам не только высокий уровень игры в карты, но и недюжинную подготовку по части паркура."
         window hide
         menu:
-            "{check=savoir_faire:15}Начать догонять Мику":
-                if skillcheck('savoir_faire', lvl_heroic):
+            "Начать догонять Мику" (skill='savoir_faire', level=lvl_heroic):
+                if ds_last_skillcheck.result():
                     window show
                     svf "{result}Ты подбегаешь к столу. Попробуй запрыгнуть на него - так будет проще."
-                    $ ds_skill_points['savoir_faire'] += 1
+                    
                     "Ты так и делаешь и хватаешь Мику."
                     show mi shocked pioneer at center with dspr
                     me "Успокойся! В другой раз споёшь."
@@ -7640,8 +7640,8 @@ label ds_cards_final_fail_end:
                     "Проигнорировать":
                         window show
                         "Мику с лёгкостью пушинки спрыгивает со стола."
-            "{check=suggestion:15}Успокоить преследовательниц":
-                if skillcheck('suggestion', lvl_heroic):
+            "Успокоить преследовательниц" (skill='suggestion', level=lvl_heroic):
+                if ds_last_skillcheck.result():
                     window show
                     play sound ds_sfx_psy
                     sug "{result}Да кому в самом деле это пение мешает? Напротив, красивое завершение программы!"
@@ -7654,7 +7654,7 @@ label ds_cards_final_fail_end:
                     hide dv with dissolve
                     $ ds_lp['dv'] -= 1
                     $ ds_lp['mi'] += 1
-                    $ ds_skill_points['suggestion'] += 1
+                    
                 else:
                     window show
                     play sound ds_sfx_psy
@@ -7910,7 +7910,7 @@ label ds_cards_final_win_end:
         if ds_bet_dv:
             show dv shy pioneer2 with dissolve
             "Поймав твой взгляд, она краснеет как маков цвет."
-            if skillcheck('drama', lvl_easy, passive=True):
+            if ds_skill_list['drama'].check(lvl_easy, passive=True).result():
                 play sound ds_sfx_int
                 dra "{result}А вы, склонив голову набок, изображаете пантомиму под названием «натягиваю резиновую перчатку»."
                 show dv shocked pioneer2 with dspr
@@ -8093,10 +8093,10 @@ label ds_cards_final_win_end:
                 "Она нетерпеливо шевелит плечиком."
                 scene cg d2_mi_polaroid_7dl
                 with dissolve
-                if skillcheck('suggestion', lvl_medium, passive=True):
+                if ds_skill_list['suggestion'].check(lvl_medium, passive=True).result():
                     play sound ds_sfx_psy
                     sug "{result}Не спеши. Девушку нужно обнимать за талию."
-                    $ ds_skill_points['suggestion'] += 1
+                    
                     window hide
                     menu:
                         "Обнять за талию":
@@ -8133,7 +8133,7 @@ label ds_cards_final_win_end:
                 show mi shy pioneer with dspr
                 mi "Какой ты забавный! Но пока что возмись вот тут."
                 "С этими словами она переносит твою руку на талию."
-                $ ds_skill_points['instinct'] += 1
+                
                 play sound ds_sfx_mot
                 res "Пока что! Она не исключает возможности отношений с тобой."
             "Отказать":
@@ -8195,7 +8195,7 @@ label ds_cards_final_win_end:
         "Медленно произносит он."
         "Он так странно стоит, что ты никак не можешь разглядеть его глаз из-за бликов на очках."
         show sh serious pioneer with dspr
-        if skillcheck('inland_empire', lvl_medium, passive=True):
+        if ds_skill_list['inland_empire'].check(lvl_medium, passive=True).result():
             play sound ds_sfx_psy
             ine "{result}Да и сама его поза…"
             ine "Почему-то вдруг вспомнинается тебе персонаж Элайджи Вуда из «Города Грехов»."
@@ -8236,7 +8236,7 @@ label ds_cards_final_win_end:
         call ds_show_tour_table
         "Электроник вносит твоё имя в список победителей."
 
-    elif (ds_my_rival_final.take == 'mz') or (ds_my_rival_final.take == 'ya'):
+    elif (ds_my_rival_final.take == 'mz') or (ds_my_rival_final.take == 'yn'):
         "Реакция твоей соперницы обескураживает."
         "Её не было."
         play sound ds_sfx_mot

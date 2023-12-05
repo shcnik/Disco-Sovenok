@@ -9,6 +9,16 @@ init python:
     from renpy.display.im import ImageBase, image, cache, Composite
     from abc import ABCMeta, abstractmethod
 
+    def ds_min(x, y):
+        if x < y:
+            return x
+        return y
+
+    def ds_max(x, y):
+        if x > y:
+            return x
+        return y
+
     ds_level_names = {
         '6': u'Элементарно',
         '8': u'Просто',
@@ -24,15 +34,16 @@ init python:
     }
 
     def ds_result_tag(tag, argument):
+        open_bracket = '['
         global ds_last_skillcheck
         global ds_level_names
-        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_level_names[str(ds_last_skillcheck.threshold)]),  (renpy.TEXT_TEXT, ': '), (renpy.TEXT_TEXT, 'Успех' if ds_last_skillcheck.result else 'Неудача'), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
-
+        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, open_bracket), (renpy.TEXT_TEXT, ds_level_names[str(ds_last_skillcheck.threshold)]),  (renpy.TEXT_TEXT, ': '), (renpy.TEXT_TEXT, 'Успех' if ds_last_skillcheck.result(invoke_callbacks=False) else 'Неудача'), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
+    
     def ds_check_tag(tag, argument):
+        open_bracket = '['
         global ds_level_names
-        global ds_skill_list
-        skill, threshold = argument.split(':')
-        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, '['), (renpy.TEXT_TEXT, ds_skill_list[skill]),  (renpy.TEXT_TEXT, ' — '), (renpy.TEXT_TEXT, ds_level_names[threshold]), (renpy.TEXT_TEXT, ' '),  (renpy.TEXT_TEXT, str(threshold)), (renpy.TEXT_TEXT, '] '),  (renpy.TEXT_TAG, '/color') ]
+        skill, level = argument.split(':')
+        return [ (renpy.TEXT_TAG, 'color=#b5b5b5'), (renpy.TEXT_TEXT, open_bracket), (renpy.TEXT_TEXT, ds_skill_list[skill].name), (renpy.TEXT_TEXT, ' – '), (renpy.TEXT_TEXT, ds_level_names[level]), (renpy.TEXT_TEXT, ' '), (renpy.TEXT_TEXT, str(level)), (renpy.TEXT_TEXT, '] '), (renpy.TEXT_TAG, '/color')]
 
     config.self_closing_custom_text_tags['result'] = ds_result_tag
     config.self_closing_custom_text_tags['check'] = ds_check_tag
@@ -41,11 +52,10 @@ init python:
         return ds_check_res_style
 
     def ds_init_custom():
-        ds_skill_points['logic'], ds_skill_points['encyclopedia'], ds_skill_points['rhetoric'], ds_skill_points['drama'], ds_skill_points['conceptualization'], ds_skill_points['visual_calculus'] = 3, 3, 3, 3, 3, 3
-        ds_skill_points['volition'], ds_skill_points['inland_empire'], ds_skill_points['authority'], ds_skill_points['empathy'], ds_skill_points['esprit'], ds_skill_points['suggestion'] = 3, 3, 3, 3, 3, 3
-        ds_skill_points['endurance'], ds_skill_points['pain_threshold'], ds_skill_points['physical_instrument'], ds_skill_points['instinct'], ds_skill_points['shivers'], ds_skill_points['half_light'] = 3, 3, 3, 3, 3, 3
-        ds_skill_points['perception'], ds_skill_points['coordination'], ds_skill_points['reaction_speed'], ds_skill_points['savoir_faire'], ds_skill_points['interfacing'], ds_skill_points['composure'] = 3, 3, 3, 3, 3, 3
-        ds_available_points = 8
+        global ds_skill_list
+        for skill in ds_skill_list:
+            ds_skill_list[skill].set_level(3)
+        ds_available_points = 1
         ds_semtype = 0
     
     def ds_abs(x):
@@ -1022,7 +1032,7 @@ screen ds_main_menu():
     python:
         from time import localtime, strftime
         t = strftime("%H:%M:%S", localtime())
-        hour, min, sec = t.split(":")
+        hour, minute, sec = t.split(":")
         hour = int(hour)
     tag menu
     modal True
@@ -1708,11 +1718,11 @@ screen ds_achievements():
             'mt': [],
             'el': [],
             'mz': [],
-            'ya': [],
+            'yn': [],
             'cs': [],
             'oth': []
         }
-        ACH_CLASSES = ['gen', 'dv', 'un', 'sl', 'us', 'mi', 'mt', 'el', 'mz', 'ya', 'cs', 'oth']
+        ACH_CLASSES = ['gen', 'dv', 'un', 'sl', 'us', 'mi', 'mt', 'el', 'mz', 'yn', 'cs', 'oth']
     default cur_class = None
     frame:
         background "mods/disco_sovenok/gui/gallery/gallery_base.png"
@@ -1759,7 +1769,7 @@ screen ds_choose_type():
     python:
         from time import localtime, strftime
         t = strftime("%H:%M:%S", localtime())
-        hour, min, sec = t.split(":")
+        hour, minute, sec = t.split(":")
         hour = int(hour)
     tag menu
     modal True
@@ -1816,10 +1826,10 @@ screen ds_choose_type():
             at transform:
                 ypos 0.0
                 linear 0.2 ypos 1.0
-            action [SetVariable("ds_archetype", 0), Function(ds_init_custom), Show('ds_skills', setup=True, change=True), Show("ds_skill_table"), Hide('ds_choose_type')]
+            action [SetVariable("ds_archetype", 0), Function(ds_init_custom), Show('ds_skills', setup=True), Hide('ds_choose_type')]
             activate_sound ds_selection
     
-screen ds_skills(setup, change):
+screen ds_skills(setup=False):
     python:
         SKILLS = [
             'logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus',
@@ -1827,7 +1837,7 @@ screen ds_skills(setup, change):
             'endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light',
             'perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure'
         ]
-
+    default chosen_skill = None
     modal True
     tag menu
     if setup:
@@ -1843,14 +1853,16 @@ screen ds_skills(setup, change):
             add "bg ext_road_day":
                 xalign 0.5
                 yalign 0.5
-
     imagebutton:
         xalign 0.0
         xoffset 20
         yalign 1.0
         yoffset -20
         auto "mods/disco_sovenok/gui/skills/back_%s.png"
-        action [If(setup, true=[Hide("ds_skill_table"), Hide("ds_skill_info"), Show("ds_choose_type")])]
+        if setup:
+            action [Show("ds_choose_type"), Hide("ds_skills")]
+        else:
+            action Return()
     if setup:
         imagebutton:
             xalign 1.0
@@ -1859,7 +1871,6 @@ screen ds_skills(setup, change):
             yoffset -20
             auto "mods/disco_sovenok/gui/skills/confirm_%s.png"
             action Start('ds_start')
-    if change:
         frame:
             background None
             add "mods/disco_sovenok/gui/skills/available.png"
@@ -1876,8 +1887,78 @@ screen ds_skills(setup, change):
                 yalign 0.5
                 xoffset -5
                 yoffset 10
+    use ds_skill_table
+    if chosen_skill != None:
+        use ds_skill_info:
+            fixed:
+                ymaximum 390
+                if setup:
+                    vbox:
+                        xalign 1.0
+                        yalign 0.0
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 1) or (ds_skill_list[chosen_skill].level == 1):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/terrible_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 1)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 1)), SensitiveIf(Function(ds_skill_list[skill].set_level, 1))]
+                                activate_sound ds_selection
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 2) or (ds_skill_list[chosen_skill].level == 2):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/bad_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 2)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 2)), SensitiveIf(Function(ds_skill_list[skill].set_level, 2))]
+                                activate_sound ds_selection
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 3) or (ds_skill_list[chosen_skill].level == 3):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/medium_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 3)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 3)), SensitiveIf(Function(ds_skill_list[skill].set_level, 3))]
+                                activate_sound ds_selection
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 4) or (ds_skill_list[chosen_skill].level == 4):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/good_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 4)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 4)), SensitiveIf(Function(ds_skill_list[skill].set_level, 4))]
+                                activate_sound ds_selection
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 5) or (ds_skill_list[chosen_skill].level == 5):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/excellent_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 5)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 5)), SensitiveIf(Function(ds_skill_list[skill].set_level, 5))]
+                                activate_sound ds_selection
+                        showif (ds_skill_list[chosen_skill].level + ds_available_points >= 6) or (ds_skill_list[chosen_skill].level == 6):
+                            imagebutton:
+                                auto "mods/disco_sovenok/gui/skills/genius_%s.png"
+                                selected If(ds_skill_list[chosen_skill].level == 6)
+                                action [SetVariable('ds_available_points', ds_available_points + (ds_skill_list[chosen_skill].level - 6)), SensitiveIf(Function(ds_skill_list[skill].set_level, 6))]
+                                activate_sound ds_selection
+                else:
+                    grid 2 5:
+                        xalign 1.0
+                        yalign 0.0
+                        xoffset 10
+                        yoffset 10
+                        text "Базовый уровень: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text str(ds_skill_list[chosen_skill].level) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text "Бонус от типа: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text str(ds_skill_list[chosen_skill].get_type_bonus()) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text "Бонус от кружка: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text str(ds_skill_list[chosen_skill].get_member_bonus()) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text "Урон: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text str(ds_skill_list[chosen_skill].get_damage_bonus()) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text "Всего:" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text str(ds_skill_list[chosen_skill].get_total()) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                    vbox:
+                        xalign 0.5
+                        yalign 1.0
+                        text "ДО СЛЕДУЮЩЕГО УРОВНЯ" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc":
+                            xalign 0.0
+                            xoffset 10
+                        text str(ds_skill_list[chosen_skill].xp) + "/100" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc":
+                            xalign 1.0
+                            xoffset -10
 
-screen ds_skill_table():
+screen ds_skill_table:
     python:
         SKILLS = [
             'logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus',
@@ -1885,6 +1966,7 @@ screen ds_skill_table():
             'endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light',
             'perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure'
         ]
+    default chosen_skill = None
     frame:
         background "mods/disco_sovenok/gui/skills/attr_lines.png"
         yalign 0.0
@@ -1907,21 +1989,28 @@ screen ds_skill_table():
                     fixed:
                         xmaximum 180
                         ymaximum 245
-                        add "mods/disco_sovenok/gui/skills/[skill].png":
+                        add "mods/disco_sovenok/gui/skills/[skill]_large.png":
                             xalign 0.5
                             yalign 0.0
-                        text str(ds_get_total_skill(skill)):
+                            xysize (173, 240)
+                        text str(ds_skill_list[skill].get_total()):
                             xalign 1.0
                             yalign 0.0
                             xoffset -10
                             yoffset 5
                             size 48
                             font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                        text ds_skill_list[skill].name.upper():
+                            xalign 0.5
+                            yalign 1.0
+                            yoffset -5
+                            size 18
+                            font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         imagebutton:
                             xoffset 2
                             auto "mods/disco_sovenok/gui/skills/skill_%s.png"
-                            selected If(ds_chosen_skill == skill)
-                            action [ Hide('ds_skill_info'), SetVariable('ds_chosen_skill', skill), Show('ds_skill_info')]
+                            selected If(chosen_skill == skill)
+                            action SetScreenVariable('chosen_skill', skill)
                             activate_sound ds_btn_click
 
 screen ds_call_hud():
@@ -1933,15 +2022,6 @@ screen ds_call_hud():
         area (0, 0, 21, 33)
         hovered [Show('ds_hud'), Hide('ds_call_hud')]
         unhovered [NullAction()]
-
-screen ds_hide_all():
-    modal False
-    imagebutton:
-        xalign 0.0
-        yalign 0.0
-        idle "mods/disco_sovenok/gui/hud/hide_all.png"
-        hover "mods/disco_sovenok/gui/hud/hide_all.png"
-        action [Hide('ds_skill_table'), Hide('ds_skill_info'), Hide('ds_lp_points'), Show('ds_call_hud'), Hide('ds_hide_all')]
 
 screen ds_hud():
     modal False
@@ -1956,15 +2036,15 @@ screen ds_hud():
         imagebutton:
             yalign 0.0
             auto "mods/disco_sovenok/gui/hud/menu_%s.png"
-            action [ NullAction() ]
+            action ShowMenu('ds_game_menu_selector')
         imagebutton:
             yalign 0.0
             auto "mods/disco_sovenok/gui/hud/skills_%s.png"
-            action [ Show('ds_skill_table'), Show('ds_hide_all'), Hide('ds_hud') ]
+            action ShowMenu('ds_skills')
         imagebutton:
             yalign 0.0
             auto "mods/disco_sovenok/gui/hud/lp_%s.png"
-            action [ Show('ds_lp_points'), Show('ds_hide_all'), Hide('ds_hud') ]
+            action ShowMenu('ds_lp_points')
         grid 2 4:
             transpose True
             yalign 0.0
@@ -1976,7 +2056,7 @@ screen ds_hud():
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     size 12
                     xalign 0.0
-                text str(max(ds_get_total_skill('endurance')+ds_health, 1))+"/"+str(max(ds_get_total_skill('endurance'), -ds_health+1)):
+                text str(ds_health.level())+"/"+str(ds_health.level() - ds_health.diff()):
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     size 12
                     xalign 1.0
@@ -1988,8 +2068,8 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value ds_get_total_skill('endurance')+ds_health
-                    range ds_get_total_skill('endurance')
+                    value ds_health.level()
+                    range ds_skill_list['endurance'].get_total()
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -1997,7 +2077,7 @@ screen ds_hud():
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     size 12
                     xalign 0.0
-                text str(max(ds_get_total_skill('volition')+ds_morale, 1))+"/"+str(max(ds_get_total_skill('volition'), -ds_morale+1)):
+                text str(ds_morale.level())+"/"+str(ds_morale.level() - ds_morale.diff()):
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     size 12
                     xalign 1.0
@@ -2009,8 +2089,8 @@ screen ds_hud():
                     right_bar "mods/disco_sovenok/gui/hud/bar_empty.png"
                     bar_resizing False
                     thumb None
-                    value ds_get_total_skill('volition')+ds_morale
-                    range ds_get_total_skill('volition')
+                    value ds_morale.level()
+                    range ds_skill_list['volition'].get_total()
             fixed:
                 xmaximum 120
                 ymaximum 15
@@ -2028,12 +2108,12 @@ screen ds_hud():
                 bar:
                     base_bar "mods/disco_sovenok/gui/hud/bar_karma.png"
                     thumb "mods/disco_sovenok/gui/hud/bar_thumb.png"
-                    value min(max(ds_karma+50, 0), 100)
+                    value max(ds_karma+50, 0)
                     range 100
             fixed:
                 xmaximum 120
                 ymaximum 15
-                text "ИНЦЕЛ/ЧЕД":
+                text "ОМЕГА/АЛЬФА":
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     size 12
                     xalign 0.0
@@ -2047,74 +2127,11 @@ screen ds_hud():
                 bar:
                     base_bar "mods/disco_sovenok/gui/hud/bar_type.png"
                     thumb "mods/disco_sovenok/gui/hud/bar_thumb.png"
-                    value min(max(ds_semtype+6, 0), 12)
+                    value max(ds_semtype+6, 0)
                     range 12
                 
-
-screen ds_skill_info():
-    python:
-        SKILLS = [
-            'logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus',
-            'volition', 'inland_empire', 'authority', 'empathy', 'esprit', 'suggestion',
-            'endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light',
-            'perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure'
-        ]
-
-        SKILL_NAMES = {
-            'logic': 'ЛОГИКА',
-            'encyclopedia': 'ЭНЦИКЛОПЕДИЯ',
-            'rhetoric': 'РИТОРИКА',
-            'drama': 'ДРАМА',
-            'conceptualization': 'КОНЦЕПТУАЛИЗАЦИЯ',
-            'visual_calculus': 'ВИЗУАЛЬНЫЙ АНАЛИЗ',
-            'volition': 'CИЛА ВОЛИ',
-            'inland_empire': 'ВНУТРЕННЯЯ ИМПЕРИЯ',
-            'authority': 'АВТОРИТЕТ',
-            'empathy': 'ЭМПАТИЯ',
-            'esprit': 'КОМАНДНАЯ ВОЛНА',
-            'suggestion': 'ВНУШЕНИЕ',
-            'endurance': 'CТОЙКОСТЬ',
-            'pain_threshold': 'БОЛЕВОЙ ПОРОГ',
-            'physical_instrument': 'ГРУБАЯ СИЛА',
-            'instinct': 'ИНСТИНКТ',
-            'shivers': 'ТРЕПЕТ',
-            'half_light': 'CУМРАК',
-            'perception': 'ВОСПРИЯТИЕ',
-            'coordination': 'КООРДИНАЦИЯ',
-            'reaction_speed': 'СКОРОСТЬ РЕАКЦИИ',
-            'savoir_faire': 'ЭКВИЛИБРИСТИКА',
-            'interfacing': 'ТЕХНИКА',
-            'composure': 'CАМООБЛАДАНИЕ'
-        }
-
-        SKILL_DESCR = {
-            'logic': 'Управляй интеллектуальной стихией. Разложи мир по полочкам.\n\nОтлично подойдёт аналитикам, чистым рационалистам и, конечно, тем, кто дружит с логикой.',
-            'encyclopedia': 'Задействуй все свои знания. Удивляй эрудицией.\n\nОтлично подойдёт любителям пораскинуть мозгами, историкам, помешанным на интересных фактах',
-            'rhetoric': 'Совершенствуй искусство убеждения. Наслаждайся ожесточёнными интеллектуальными баталиями.\n\nОтлично подойдёт идеологам, умелым собеседникам, диванным экспертам.',
-            'drama': 'Переиграй всех. Ври, но не дай обмануть себя.\n\nОтлично подойдёт тайным агентам, театральным актёрам, психопатам.',
-            'conceptualization': 'Стань ценителем творчества. Развей чуткость к искусству.\n\nОтлично подойдёт творческим натурам, любителям психоделики, критикам.',
-            'visual_calculus': 'Восстанавливай события. Заставь законы природы работать на тебя.\n\nОтлично подойдёт учёным, боевым тактикам, людям с математическим складом ума.',
-            'volition': 'Держи себя в руках. Сохраняй боевой дух.\n\nОтлично подойдёт тем, кто дружит с головой, уравновешенным, тем, кто не склонен к самоубийствам.',
-            'inland_empire': 'Интуиция и чутьё. Сны наяву.\n\nОтлично подойдёт мечтателям, охотникам за паранатуральными явлениями, воображенцам.',
-            'authority': 'Подавляй и властвуй. Заяви о себе.\n\nОтлично подойдёт лидерам, мастерам психологической войны, жаждующим уважения.',
-            'empathy': 'Чувствуй других. Задействуй зеркальные нейроны.\n\nОтлично подойдёт тонким психологам, интервьюверам, людям с широкой душой.',
-            'esprit': 'Работай в команде. Будь единым целым с другими.\n\nОтлично подходит любителям подвижных игр, общественным деятелям, экстравертам.',
-            'suggestion': 'Очаровывай мужчин и женщин. Ты — их кукловод.\n\nОтлично подойдёт дипломатам, обаяшкам, социопатам.',
-            'endurance': 'Держи удар. Не дай себя прикончить.\n\nОтлично подойдёт тем, кто способен держать удар, неусыпным наблюдателям, вечным двигателям.',
-            'pain_threshold': 'Разве это боль? Придумайте что-нибудь пожёстче.\n\nОтлично подойдёт непобедимым бойцам, тем, кто всё никак не сдохнет, мазохистам.',
-            'physical_instrument': 'Играй мышцами. Наслаждайся своим здоровьем.\n\nОтлично подойдёт мощным мужикам, любителям помахать кулаками, спортсменам.',
-            'instinct': 'Не бойся своих желаний. Демонстрируй своё либидо.\n\nОтлично подойдёт любителям секса, помешанным на сексе, пошлякам.',
-            'shivers': 'Почувствуй дрожь. Настройся на волну «Совёнка».\n\nОтлично подойдёт любителям лагерной жизни, народным мудрецам, по-настоящему сверхъестественным натурам.',
-            'half_light': 'Доверься своему телу. Запугивай людей.\n\nОтлично подойдёт нервным, тем, кто сначала нападают, а потом задают вопросы, тем, кто ненавидит сюрпризы.',
-            'perception': 'Смотри, слушай, нюхай, вкушай и осязай. Не упусти не единой детали.\n\nОтлично подойдёт въедливым, чувственным личностям, сборщикам хлама.',
-            'coordination': 'Целься! Огонь!\n\nОтлично подойдёт метателям мячей, снайперам, жонглёрам.',
-            'reaction_speed': 'Будь быстрым, а не мёртвым.\n\nОтлично подойдёт тем, в кого хрен попадёшь, импровизаторам, любителям пинбола.',
-            'savoir_faire': 'Скользи как тень. Поражай великолепием.\n\nОтлично подойдёт акробатам, ворам, невыносимым хвастунам.',
-            'interfacing': 'Управляй механизмами. Вскрывай замки и обчищай карманы.\n\nОтлично подойдёт швецам, жнецам, на дуде игрецам.',
-            'composure': 'Выпрями спину. Сохраняй покерфейс.\n\nОтлично подойдёт картёжникам, военным фетишистам, крутым перцам.'
-        }
+screen ds_skill_info:
     fixed:
-        add "mods/disco_sovenok/gui/skills/skill_info.png"
         xmaximum 690
         ymaximum 980
         xalign 1.0
@@ -2127,102 +2144,29 @@ screen ds_skill_info():
             on hide:
                 yoffset 0
                 linear 0.1 yoffset -1080
-        for skill in SKILLS:
-            vbox:
-                showif (ds_chosen_skill == None):
-                    text "Выберите умение."
-                showif (ds_chosen_skill == skill):
-                    hbox:
-                        xalign 0.0
-                        xoffset 10
-                        add "mods/disco_sovenok/gui/skills/[skill]_large.png" xalign 0.0 yalign 0.0 xoffset 5 yoffset 10
-                        if not ds_game_started:
-                            vbox:
-                                xalign 1.0
-                                yalign 0.0
-                                showif (ds_skill_points[skill] + ds_available_points >= 1) or (ds_skill_points[skill] == 1):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/terrible_%s.png"
-                                        selected If(ds_skill_points[skill] == 1)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 1)), SensitiveIf(SetDict(ds_skill_points, skill, 1))]
-                                        activate_sound ds_selection
-                                showif (ds_skill_points[skill] + ds_available_points >= 2) or (ds_skill_points[skill] == 2):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/bad_%s.png"
-                                        selected If(ds_skill_points[skill] == 2)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 2)), SensitiveIf(SetDict(ds_skill_points, skill, 2))]
-                                        activate_sound ds_selection
-                                showif (ds_skill_points[skill] + ds_available_points >= 3) or (ds_skill_points[skill] == 3):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/medium_%s.png"
-                                        selected If(ds_skill_points[skill] == 3)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 3)), SensitiveIf(SetDict(ds_skill_points, skill, 3))]
-                                        activate_sound ds_selection
-                                showif (ds_skill_points[skill] + ds_available_points >= 4) or (ds_skill_points[skill] == 4):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/good_%s.png"
-                                        selected If(ds_skill_points[skill] == 4)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 4)), SensitiveIf(SetDict(ds_skill_points, skill, 4))]
-                                        activate_sound ds_selection
-                                showif (ds_skill_points[skill] + ds_available_points >= 5) or (ds_skill_points[skill] == 5):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/excellent_%s.png"
-                                        selected If(ds_skill_points[skill] == 5)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 5)), SensitiveIf(SetDict(ds_skill_points, skill, 5))]
-                                        activate_sound ds_selection
-                                showif (ds_skill_points[skill] + ds_available_points >= 6) or (ds_skill_points[skill] == 6):
-                                    imagebutton:
-                                        auto "mods/disco_sovenok/gui/skills/genius_%s.png"
-                                        selected If(ds_skill_points[skill] == 6)
-                                        action [SetVariable('ds_available_points', ds_available_points + (ds_skill_points[skill] - 6)), SensitiveIf(SetDict(ds_skill_points, skill, 6))]
-                                        activate_sound ds_selection
-                        else:
-                            grid 2 4:
-                                xalign 1.0
-                                yalign 0.0
-                                xoffset 10
-                                yoffset 10
-                                text "Базовый уровень: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                text str(ds_skill_points[skill]) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                text "Бонус от типа: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
-                                    text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                else:
-                                    if ds_semtype >= 3:
-                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    elif ds_semtype <= -3:
-                                        text "-1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    else:
-                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                text "Бонус от кружка: " font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                if skill in ['logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus']:
-                                    if ds_member['library']:
-                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    else:
-                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                if skill in ['volition', 'inland_empire', 'authority', 'empathy', 'esprit', 'suggestion']:
-                                    if ds_member['music']:
-                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    else:
-                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                if skill in ['endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light']:
-                                    if ds_member['sport']:
-                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    else:
-                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                if skill in ['perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure']:
-                                    if ds_member['cyber']:
-                                        text "+1" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                    else:
-                                        text "0" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                text "Всего:" font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                                text str(ds_get_total_skill(skill)) font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
-                    text SKILL_NAMES[skill] xalign 0.5 xoffset 10 yoffset 10 size 48 font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-                    text SKILL_DESCR[skill] yalign 1.0 yoffset 10 xoffset 10 size 24 xfill True font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+        vbox:
+            hbox:
+                xalign 0.0
+                xoffset 10
+                add "mods/disco_sovenok/gui/skills/[chosen_skill]_large.png" xalign 0.0 yalign 0.0 xoffset 5 yoffset 10
+                transclude
+            text ds_skill_list[chosen_skill].name.upper():
+                xalign 0.5
+                xoffset 10
+                yoffset 10
+                size 48
+                font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+            text ds_skill_list[chosen_skill].descr:
+                yalign 1.0
+                yoffset 10
+                xoffset 10
+                size 24
+                xfill True
+                font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
     
 screen ds_lp_points():
     python:
-        CHARS = ['dv', 'un', 'sl', 'us', 'mi', 'ya', 'el', 'mt', 'mz', 'cs']
+        CHARS = ['dv', 'un', 'sl', 'us', 'mi', 'yn', 'el', 'mt', 'mz', 'cs']
 
         CHAR_COLORS = {
             'dv': "#ffaa00",
@@ -2230,7 +2174,7 @@ screen ds_lp_points():
             'sl': "#ffd200",
             'us': "#ff3200",
             'mi': "#00deff",
-            'ya': "#74b05f",
+            'yn': "#74b05f",
             'el': "#ffff00",
             'mt': "#00ea32",
             'mz': "#5481db",
@@ -2243,7 +2187,7 @@ screen ds_lp_points():
             'sl': "СЛАВЯ",
             'us': "УЛЬЯНА",
             'mi': "МИКУ",
-            'ya': "ЯНА",
+            'yn': "ЯНА",
             'el': "ЭЛЕКТРОНИК",
             'mt': "ОЛЬГА",
             'mz': "ЖЕНЯ",
@@ -2311,6 +2255,13 @@ screen ds_lp_points():
                         xoffset -15
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         color "#000000"
+    imagebutton:
+        xalign 0.0
+        xoffset 20
+        yalign 1.0
+        yoffset -20
+        auto "mods/disco_sovenok/gui/skills/back_%s.png"
+        action Return()
 
 screen ds_say:
     on "show" action Hide('ds_check_result')
@@ -2520,7 +2471,8 @@ screen ds_nvl:
                                         keysym str(i + 1)
                     null height 200
 
-screen ds_choice:
+screen ds_choice(items):
+    on 'hide' action Hide('ds_check_info')
     window:
         background None
         at transform:
@@ -2577,20 +2529,44 @@ screen ds_choice:
                         null height 20
                     null height 50
                     for i in range(0, len(items)):
-                        if items[i][1]:
+                        python:
+                            skill = None
+                            level = None
+                            if 'skill' in items[i].kwargs:
+                                skill = items[i].kwargs['skill']
+                                level = items[i].kwargs['level']
+                            modifiers = []
+                            if 'modifiers' in items[i].kwargs:
+                                modifiers = items[i].kwargs['modifiers']
+                        if items[i].action:
                             button:
                                 background None
-                                action items[i][1]
-                                text str(i + 1) + ". " + items[i][0]:
-                                    idle_color "#ffffff"
-                                    hover_color "#86cd4d"
-                                    font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
-                                    if persistent.font_size == 'small':
-                                        size 24
-                                    else:
-                                        size 30
-                                if i < 9:
-                                    keysym str(i + 1)
+                                if skill is None:
+                                    action items[i].action
+                                    text str(i + 1) + ". " + items[i][0]:
+                                        idle_color "#ffffff"
+                                        hover_color "#86cd4d"
+                                        font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                                        if persistent.font_size == 'small':
+                                            size 24
+                                        else:
+                                            size 30
+                                    if i < 9:
+                                        keysym str(i + 1)
+                                else:
+                                    action [Function(ds_skill_list[skill].check, threshold=level, modifiers=modifiers), items[i].action]
+                                    hovered Show('ds_check_info', skill=skill, threshold=level, modifiers=modifiers)
+                                    unhovered Hide('ds_check_info')
+                                    text str(i + 1) + ". " + "{check="+items[i].kwargs['skill']+":"+str(items[i].kwargs['level'])+"}"+items[i][0]:
+                                        idle_color "#ffffff"
+                                        hover_color "#86cd4d"
+                                        font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+                                        if persistent.font_size == 'small':
+                                            size 24
+                                        else:
+                                            size 30
+                                    if i < 9:
+                                        keysym str(i + 1)
                     null height 200
 
 
@@ -2755,10 +2731,10 @@ screen ds_check_result():
                         size 24
                         xalign 0.5
 
-screen ds_check_info(skill, threshold, level):
+screen ds_check_info(skill, threshold, modifiers):
     python:
         POSSIB = [97, 97, 97, 97, 92, 83, 72, 58, 42, 28, 17, 8, 3, 3]
-        chance = POSSIB[max(min(threshold - level, 13), 0)]
+        chance = POSSIB[ds_max(ds_min(threshold - ds_skill_list[skill].get_total(), 13), 0)]
     frame:
         background "mods/disco_sovenok/gui/check/check_base.png"
         xmaximum 600
@@ -2783,6 +2759,7 @@ screen ds_check_info(skill, threshold, level):
             add ("mods/disco_sovenok/gui/check/%s_caption.png" % skill)
             fixed:
                 xmaximum 310
+                ymaximum 50
                 if chance < 30:
                     text "НИЗКИЕ ШАНСЫ":
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
@@ -2803,7 +2780,8 @@ screen ds_check_info(skill, threshold, level):
                         xalign 0.5
             fixed:
                 xmaximum 320
-                text '{size=72}[chance]{/size}{color=#ffffff}%%{/color}':
+                ymaximum 150
+                text '{size=72}[chance]{/size}{color=#ffffff}%{/color}':
                     font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                     if chance < 30:
                         color "#ff0000"
@@ -2812,7 +2790,30 @@ screen ds_check_info(skill, threshold, level):
                     else:
                         color "#ffff00"
                     size 60
-                    xalign 0.0
+                    xalign 0.5
+            if modifiers != None:
+                for condition, bonus, descr in modifiers:
+                    if eval(condition):
+                        fixed:
+                            xmaximum 320
+                            ymaximum 30
+                            text descr:
+                                font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                color "#ffffff"
+                                size 24
+                                xalign 0.0
+                            if bonus > 0:
+                                text "+" + str(bonus):
+                                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    color "#008000"
+                                    size 24
+                                    xalign 1.0
+                            else:
+                                text str(bonus):
+                                    font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
+                                    color "#ff0000"
+                                    size 24
+                                    xalign 1.0
 
 screen ds_start_game:
     modal True
