@@ -3,10 +3,11 @@ on: push
 jobs:
   test-mod:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Run test
-        run: |
-          docker build -f .test/Dockerfile . -t shcnik/estool;
-          docker run shcnik/estool;
+    container:
+      image: shcnik/es_mod_testing:v1
+      env:
+        SDL_AUDIODEVICE: dummy
+        SDL_VIDEODEVICE: dummy
+        MODNAME: disco_sovenok
+      volumes:
+        - ${{ github.workspace }}:/opt
