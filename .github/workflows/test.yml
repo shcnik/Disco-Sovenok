@@ -3,11 +3,10 @@ on: push
 jobs:
   test-mod:
     runs-on: ubuntu-latest
-    container:
-      image: shcnik/es_mod_testing:v1
-      env:
-        SDL_AUDIODEVICE: dummy
-        SDL_VIDEODEVICE: dummy
-        MODNAME: disco_sovenok
-      volumes:
-        - ${{ github.workspace }}:/opt
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Load testing image
+        run: docker pull shcnik/es_mod_testing:v1
+      - name: Perform testing
+        run: docker run -e SDL_AUDIODEVICE=dummy -e SDL_VIDEODEVICE=dummy -e MODNAME=disco_sovenok --platform linux/amd64 -v ${{ github.workspace }}:/opt shcnik/es_mod_testing:v1
