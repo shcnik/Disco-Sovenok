@@ -3,151 +3,215 @@
 init python:
     from random import randint
 
+    class DSSkill:
+        def __init__(self, id, name, descr, type_bonus_fn=None, member_bonus=[('', 0)], damage_bonus=None):
+            self.id = id
+            self.name = name
+            self.descr = descr
+            self.xp = 0
+            self.level = 0
+            self.type_bonus_fn = type_bonus_fn
+            self.member_bonus = member_bonus
+            self.damage_bonus = damage_bonus
+            self.check_results = []
+        
+        def get_type_bonus(self):
+            global ds_semtype
+            if self.type_bonus_fn is None:
+                return 0
+            return self.type_bonus_fn(ds_semtype, self.id)
+
+        def get_member_bonus(self):
+            global ds_member
+            result = 0
+            for member, bonus in self.member_bonus:
+                if ds_member[member]:
+                    result += bonus
+            return result
+
+        def get_damage_bonus(self):
+            if self.damage_bonus is None:
+                return 0
+            return eval(self.damage_bonus).diff()
+
+        def get_total(self):
+            return self.level + self.get_type_bonus() + self.get_member_bonus() + self.get_damage_bonus()
+
+        def set_level(self, level):
+            self.level = level
+            self.xp = 0
+
+        def up(self, points):
+            global ds_callbacks
+            self.xp += points
+            while self.xp >= 100:
+                self.level += 1
+                self.xp -= 100
+                for callback in ds_callbacks:
+                    callback(self.name, self.level)
+        
+        def check(self, threshold, passive=False, modifiers=[]):
+            dices = [1, 2, 3, 4, 5, 6]
+            first_dice = renpy.random.choice(dices)
+            second_dice = renpy.random.choice(dices)
+            points = self.get_total()
+            applied_modifiers = []
+            for variable, bonus, label in modifiers:
+                if eval(variable):
+                    points += bonus
+                    applied_modifiers.append((variable, bonus, label))
+            result = DSSkillcheckRes(self.id, self.get_total(), int(threshold), not passive, dices, applied_modifiers)
+            self.check_results.append(result)
+            global ds_callbacks
+            for callback in ds_callbacks['check']:
+                callback(result)
+            return result
+
     class DSSkillcheckRes:
-        def __init__(self, skill, level, threshold, dices, modifiers, result):
+        def __init__(self, skill, level, threshold, check_type, dices, modifiers):
             self.skill = skill
             self.level = level
             self.threshold = threshold
+            self.is_active = check_type
             self.dices = dices
             self.applied_modifiers = modifiers
-            self.result = result
-            self.show = True
+        
+        def __bool__(self):
+            return self.result()
+
+        def __repr__(self):
+            return str(threshold) + ':' + ('success' if self.result() else 'failure')
         
         def total_points(self):
             points = self.level + self.dices[0] + self.dices[1]
             for modifier in self.applied_modifiers:
                 points += modifier[1]
             return points
-        
-        def hide(self):
-            self.show = False
-        
-        def need_show(self):
-            return self.show
 
-    ds_skill_list = {
-        'logic': u"Логика",
-        'encyclopedia': u"Энциклопедия",
-        'rhetoric': u"Риторика",
-        'drama': u"Драма",
-        'conceptualization': u"Концептуализация",
-        'visual_calculus': u"Визуальный анализ",
-        'volition': u"Cила воли",
-        'inland_empire': u"Внутренняя империя",
-        'authority': u"Авторитет",
-        'empathy': u"Эмпатия",
-        'esprit': u"Командная волна",
-        'suggestion': u"Внушение",
-        'endurance': u"Cтойкость",
-        'pain_threshold': u"Болевой порог",
-        'physical_instrument': u"Грубая сила",
-        'instinct': u"Инстинкт",
-        'shivers': u"Трепет",
-        'half_light': u"Сумрак",
-        'perception': u"Восприятие",
-        'coordination': u"Координация",
-        'reaction_speed': u"Скорость реакции",
-        'savoir_faire': u"Эквилибристика",
-        'interfacing': u"Техника",
-        'composure': u"Самообладание",
-    }
+        def result(self, invoke_callbacks=True):
+            is_success = (self.dices != (1, 1)) and ((self.dices == (6, 6)) or (self.total_points() >= self.threshold))
+            global ds_callbacks
+            if invoke_callbacks:
+                for callback in ds_callbacks['get_result']:
+                    callback(self, is_success)
+            return is_success
+    
+    def ds_type_bonus(semtype, skill):
+        if skill in ['authority', 'composure']:
+            if semtype >= 3:
+                return 1
+            elif semtype <= -3:
+                return -1
+            else:
+                return 0
+        elif skill in ['empathy']:
+            if semtype <= -3:
+                return 1
+            elif semtype >= 3:
+                return -1
+            else:
+                return 0
+        return 0
 
-    ds_show_check_result = 0
-
-    # Функция, организующая проверки
-    def skillcheck(skill, threshold, passive=False, modifiers=[]):
-        global ds_last_skillcheck
-        global ds_show_check_result
-        dices = [1, 2, 3, 4, 5, 6]
-        first_dice = renpy.random.choice(dices)
-        second_dice = renpy.random.choice(dices)
-        points = ds_get_total_skill(skill)
-        applied_modifiers = []
-        for variable, bonus, label in modifiers:
-            if eval(variable):
-                points += bonus
-                applied_modifiers.append((variable, bonus, label))
-        result = ((first_dice, second_dice) != (1, 1)) and (((first_dice, second_dice) == (6, 6)) or (points + first_dice + second_dice >= threshold))
-        if not passive:
+    def ds_show_check(result, is_success):
+        if result.is_active:
             # renpy.show('roll')
-            if result:
+            if is_success:
                 renpy.play(ds_check_success, channel='sound')
             else:
                 renpy.play(ds_check_failure, channel='sound')
             renpy.pause(delay=1.0, hard=True)
             # renpy.hide('roll')
-            if result:
+            if is_success:
                 renpy.show('check success')
             else:
                 renpy.show('check failure')
-            renpy.show("first_dice dice" + str(first_dice))
-            renpy.show("second_dice dice" + str(second_dice))
+            renpy.show("first_dice dice" + str(result.dices[0]))
+            renpy.show("second_dice dice" + str(result.dices[1]))
             renpy.pause(delay=1.0)
             renpy.hide('check')
             renpy.hide('first_dice')
             renpy.hide('second_dice')
-        ds_last_skillcheck = DSSkillcheckRes(skill, ds_get_total_skill(skill), threshold, (first_dice, second_dice), applied_modifiers, result)
-        ds_show_check_result = 2
-        return result
+    
+    def ds_up_skill(result):
+        global ds_skill_list
+        ds_skill_list[result.skill].up(ds_max(result.threshold - result.total_points(), 0))
+    
+    def ds_save_last(result):
+        global ds_last_skillcheck
+        ds_last_skillcheck = result
+    
+    class DSLifeParameter:
+        def __init__(self, skill, callbacks):
+            self.diff_level = 0
+            self.skill = skill
+            self.callbacks = callbacks
+        
+        def level(self):
+            global ds_skill_list
+            return ds_skill_list[skill].get_total()
+        
+        def diff(self):
+            return self.diff_level
+        
+        def damage(self):
+            self.diff_level -= 1
+            for callback in self.callbacks['damage']:
+                callback(self.level())
+        
+        def up(self):
+            self.diff_level += 1
+            for callback in self.callbacks['up']:
+                callback(self.level())
+        
+        def restore(self):
+            self.diff_level = 0
+            for callback in self.callbacks['restore']:
+                callback()
 
-    def ds_up_skill(skill, points):
-        global ds_xp
-        global ds_skill_points
-        ds_xp[skill] += points
-        while ds_xp[skill] >= 100:
-            ds_skill_points[skill] += 1
-            ds_xp[skill] -= 100
-
-    def ds_damage_health(go_if_zero='ds_end_out_of_health'):
-        global ds_health
-        ds_health -= 1
+        def reset(self):
+            self.diff_level = 0
+    
+    def ds_show_damage_health(*args, **kwargs):
         renpy.show('health damage', at_list=[show_damage])
         renpy.pause(1.5)
         renpy.hide('health')
-        if ds_health <= 0:
-            ui.jumps(go_if_zero)
     
-    def ds_damage_morale(go_if_zero='ds_end_out_of_morale'):
-        global ds_morale
-        ds_morale -= 1
+    def ds_show_damage_morale(*args, **kwargs):
         renpy.show('morale damage', at_list=[show_damage])
         renpy.pause(1.5)
         renpy.hide('morale')
-        if ds_morale <= 0:
-            ui.jumps(go_if_zero)
     
-    def ds_up_health():
-        global ds_health
-        if ds_health < 0:
-            ds_health += 1
+    def ds_die_zero_health(level, *args, **kwargs):
+        if level <= 0:
+            ui.jumps('ds_end_out_of_health')
+    
+    def ds_die_zero_morale(level, *args, **kwargs):
+        if level <= 0:
+            ui.jumps('ds_end_out_of_morale')
+    
+    def ds_show_up_health(*args, **kwargs):
         renpy.show('health up')
         renpy.with_statement(wiperight)
         renpy.pause(1.5)
         renpy.hide('health')
         renpy.with_statement(wiperight)
     
-    def ds_up_morale():
-        global ds_morale
-        if ds_morale < 0:
-            ds_morale += 1
+    def ds_show_up_morale(*args, **kwargs):
         renpy.show('morale up')
         renpy.with_statement(wiperight)
         renpy.pause(1.5)
         renpy.hide('morale')
         renpy.with_statement(wiperight)
     
-    def ds_restore_health():
-        global ds_health
-        ds_health = 0
+    def ds_show_restore_health(*args, **kwargs):
         renpy.show('health restore')
         renpy.with_statement(wiperight)
         renpy.pause(1.5)
         renpy.hide('health')
         renpy.with_statement(wiperight)
     
-    def ds_restore_morale():
-        global ds_morale
-        ds_morale = 0
+    def ds_show_restore_morale(*args, **kwargs):
         renpy.show('morale restore')
         renpy.with_statement(wiperight)
         renpy.pause(1.5)
@@ -174,32 +238,198 @@ init python:
             max_lp = ds_lp_mi
         return res
 
-    def ds_get_total_skill(skill):
-        result = ds_skill_points[skill]
-        if skill in ['logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus']:
-            if ds_member['library']:
-                result += 1
-        if skill in ['volition', 'inland_empire', 'authority', 'empathy', 'esprit', 'suggestion']:
-            if ds_member['music']:
-                result += 1
-        if skill in ['endurance', 'pain_threshold', 'physical_instrument', 'instinct', 'shivers', 'half_light']:
-            if ds_member['sport']:
-                result += 1
-        if skill in ['perception', 'coordination', 'reaction_speed', 'savoir_faire', 'interfacing', 'composure']:
-            if ds_member['cyber']:
-                result += 1
-        if skill == 'endurance':
-            result += ds_health
-        if skill == 'volition':
-            result += ds_morale
-        if not (skill in ['volition', 'authority', 'suggestion', 'composure']):
-            return result
-        if ds_semtype >= 3:
-            result += 1
-        elif ds_semtype <= -3:
-            result -= 1
-        return result
+    class DSSprite(python_object):
+        def __init__(self, id, emotions, outfits=[], acc=[], dist=[], naked=['naked'], overrides={}):
+            """
+            :param str id: ИД персонажа (должен соответствовать каталогу, где лежат спрайты)
+            :emotions list[list[str]]: Двумерный список с набором атрибутов. Из этого списка будет составлена карта для определения номера позы
+            :outfits list[str]: Список доступных нарядов (кортеж из названия позы и названия одежды, None означает пропуск соответстующего слоя при генерации одежды)
+            :acc list[str]: Cписок доступных аксессуаров
+            :dist list[str]: Список доступных расстояний
+            :overrides dict[tuple[str, str, str], tuple[str, str, str, str]]: Список особых названий файлов при определённой комбинации эмоции-одежды-аксессуара в виде «тело-эмоция-одежда-аксессуар» (None в индексе означает «любой», в значении - «сохранить»)
+            """
+            self.template = 'mods/disco_sovenok/sprite/{dist}/'+id+'/'+id+'_{body}_{image}.png'
+            self.emotion_to_body_index = {
+                emotion: i for i, emotion_layer in enumerate(emotions) for emotion in emotion_layer
+            }
+            self.outfits = set(outfits)
+            self.acc = set(acc)
+            self.dist = set(dist)
+            self.naked = set(naked)
+            self.overrides = overrides
+        
+        def _duplicate(self, args):
+            emotion, body_index = None, 0
+            body, outfit, dist = 'body', None, 'normal'
+            acc_tmp = []
+            acc = []
+            for attr in args.args:
+                # Если атрибут эмоция, то находим индекс позы и запоминаем эмоцию
+                if attr in self.emotion_to_body_index:
+                    emotion = attr
+                    body_index = self.emotion_to_body_index[emotion]
+                # Запоминаем наряд
+                elif attr in self.outfits and attr not in self.naked:
+                    outfit = attr
+                elif attr in self.acc:
+                    acc_tmp.append(attr)
+                elif attr in self.dist:
+                    dist = dist
+            
+            def get_override(body, emotion, outfit, acc):
+                new_body, new_emotion, new_outfit, new_acc = body, None, None, None
+                combinations = [
+                    (emotion, outfit, acc),
+                    (None, outfit, acc),
+                    (emotion, None, acc),
+                    (emotion, outfit, None),
+                    (None, None, acc),
+                    (None, outfit, None),
+                    (emotion, None, None),
+                    (None, None, None)
+                ]
+                for comb in combinations:
+                    if comb in self.overrides:
+                        new_body, new_emotion, new_outfit, new_acc = self.overrides[comb]
+                        break
+                if new_body is None:
+                    new_body = 'body'
+                if new_emotion is None:
+                    new_emotion = emotion
+                if new_outfit is None:
+                    new_outfit = outfit
+                if new_acc is None:
+                    new_acc = acc
+                return (new_body, new_emotion, new_outfit, new_acc)
 
+            images = []
+            
+            def format(image, dist):
+                return self.template.format(image=image, body=body_index + 1, dist=dist)
+            
+            def add(image, dist):
+                if image is None:
+                    return
+                images.append(format(image, dist))
+            
+            for a in acc_tmp:
+                body, emotion, outfit, a = get_override(body, emotion, outfit, a)
+                acc.append(a)
+
+            add(body, dist)
+            if outfit:
+                add(outfit, dist)
+            if not emotion:
+                raise Exception('No emotion provided for sprite.')
+            add(emotion, dist)
+            for a in acc:
+                add(a, dist)
+
+            return Fixed(*images, xfit=True, yfit=True)
+
+        def _choose_attributes(self, tag, required, optional):
+            optional = list(optional) if optional else []
+
+            outfit = None
+            emotion = None
+            acc = []
+            dist = 'normal'
+            conflicts = set()
+            for attr in required:
+                if attr in self.emotion_to_body_index:
+                    # Если эмоция уже определена, то значит у нас конфликт атрибутов
+                    if emotion:
+                        conflicts.add(emotion)
+                        conflicts.add(attr)
+                    emotion = attr
+                elif attr in self.outfits:
+                    # Если наряд уже определён, то значит у нас конфликт атрибутов
+                    if outfit:
+                        conflicts.add(outfit)
+                        conflicts.add(attr)
+                    outfit = attr
+                # аксессуары могут сочетаться
+                elif attr in self.acc:
+                    acc.append(attr)
+                elif attr in self.dist:
+                    # Если дистанция уже определена как не normal, то у нас конфликт атрибутов
+                    if dist != 'normal':
+                        conflicts.add(dist)
+                        conflicts.add(attr)
+
+            if conflicts:
+                raise Exception('Attribute conflict: %s' % conflicts)
+            
+            # Выкидываем уже существующие атрибуты, если они конфликтуют с новыми
+            if emotion:
+                optional = [attr for attr in optional if attr not in self.emotion_to_body_index]
+            if outfit:
+                optional = [attr for attr in optional if attr not in self.outfits]
+            if dist:
+                optional = [attr for attr in optional if attr not in self.dist]
+            
+            return tuple(required) + tuple(optional)
+    
+    class DSScene:
+        def __init__(self, name, filename, tag, hent=False):
+            self.name = name
+            self.filename = filename
+            self.tag = tag
+            self.hent = hent
+        
+        def is_seen():
+            return renpy.seen_image(tag + ' ' + name)
+
+    class DSSceneManager(python_object):
+        def __init__(self, tag):
+            self.tag = tag
+            self.imgs = []
+            self.cl = {}
+        
+        def register(self, name, filename, hent=False):
+            self.imgs.append({name: DSScene(name, filename, self.tag, hent)})
+            self.cl[name] = len(self.imgs) - 1
+        
+        def register(self, imglist, hent=False):
+            to_add = {}
+            for img in imglist:
+                to_add[img] = DSScene(img, imglist[img], self.tag, hent)
+                self.cl[img] = len(self.imgs)
+            self.imgs.append(to_add)
+        
+        def get_info(self, name):
+            return self.imgs[self.cl[name]][name]
+
+        def _duplicate(self, args):
+            img_to_show = None
+            for arg in args.args:
+                img_to_show = self.get_info(arg)
+            if img_to_show is None:
+                raise Exception('no scene defined')
+            return Fixed(img_to_show.filename, xfit=True, yfit=True)
+
+        def _choose_attributes(self, tag, required, optional):
+            return tuple(optional)
+
+        def __len__(self):
+            return len(self.cl)
+
+        def __getitem__(self, key):
+            return self.imgs[self.cl[key]][key]
+
+        def __iter__(self):
+            return iter(self.imgs)
+
+        def __contains__(self, item):
+            return item in self.cl
+
+        def __delitem__(self, key):
+            del self.imgs[self.cl[key]][key]
+            del self.cl[key]
+        
+        def __iadd__(self, item):
+            self.register(item[0], item[1], item[2])
+        
     def ds_define_sprite(char, emo, dist='normal', body_num=1, cloth=None, acc=None, acc2=None, body_name='body'):
         if cloth and acc:
             return ConditionSwitch("persistent.sprite_time=='sunset'", im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.94, 0.82, 1.0) ), "persistent.sprite_time=='night'",im.MatrixColor(im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png"), im.matrix.tint(0.63, 0.78, 0.82) ), True, im.Composite((900,1080), (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+body_name+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+emo+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+cloth+".png", (0,0), "mods/disco_sovenok/sprite/"+dist+"/"+char+"/"+char+"_"+str(body_num)+"_"+acc+".png") )
@@ -295,64 +525,179 @@ init python:
             persistent.ds_achievements[ach] = True
 
 init:
+    define SKILL_NAMES = {
+        'logic': u"Логика",
+        'encyclopedia': u"Энциклопедия",
+        'rhetoric': u"Риторика",
+        'drama': u"Драма",
+        'conceptualization': u"Концептуализация",
+        'visual_calculus': u"Визуальный анализ",
+        'volition': u"Cила воли",
+        'inland_empire': u"Внутренняя империя",
+        'authority': u"Авторитет",
+        'empathy': u"Эмпатия",
+        'esprit': u"Командная волна",
+        'suggestion': u"Внушение",
+        'endurance': u"Cтойкость",
+        'pain_threshold': u"Болевой порог",
+        'physical_instrument': u"Грубая сила",
+        'instinct': u"Инстинкт",
+        'shivers': u"Трепет",
+        'half_light': u"Сумрак",
+        'perception': u"Восприятие",
+        'coordination': u"Координация",
+        'reaction_speed': u"Скорость реакции",
+        'savoir_faire': u"Эквилибристика",
+        'interfacing': u"Техника",
+        'composure': u"Самообладание",
+    }
+
+    define SKILL_DESCR = {
+        'logic': 'Управляй интеллектуальной стихией. Разложи мир по полочкам.\n\nОтлично подойдёт аналитикам, чистым рационалистам и, конечно, тем, кто дружит с логикой.',
+        'encyclopedia': 'Задействуй все свои знания. Удивляй эрудицией.\n\nОтлично подойдёт любителям пораскинуть мозгами, историкам, помешанным на интересных фактах',
+        'rhetoric': 'Совершенствуй искусство убеждения. Наслаждайся ожесточёнными интеллектуальными баталиями.\n\nОтлично подойдёт идеологам, умелым собеседникам, диванным экспертам.',
+        'drama': 'Переиграй всех. Ври, но не дай обмануть себя.\n\nОтлично подойдёт тайным агентам, театральным актёрам, психопатам.',
+        'conceptualization': 'Стань ценителем творчества. Развей чуткость к искусству.\n\nОтлично подойдёт творческим натурам, любителям психоделики, критикам.',
+        'visual_calculus': 'Восстанавливай события. Заставь законы природы работать на тебя.\n\nОтлично подойдёт учёным, боевым тактикам, людям с математическим складом ума.',
+        'volition': 'Держи себя в руках. Сохраняй боевой дух.\n\nОтлично подойдёт тем, кто дружит с головой, уравновешенным, тем, кто не склонен к самоубийствам.',
+        'inland_empire': 'Интуиция и чутьё. Сны наяву.\n\nОтлично подойдёт мечтателям, охотникам за паранатуральными явлениями, воображенцам.',
+        'authority': 'Подавляй и властвуй. Заяви о себе.\n\nОтлично подойдёт лидерам, мастерам психологической войны, жаждующим уважения.',
+        'empathy': 'Чувствуй других. Задействуй зеркальные нейроны.\n\nОтлично подойдёт тонким психологам, интервьюверам, людям с широкой душой.',
+        'esprit': 'Работай в команде. Будь единым целым с другими.\n\nОтлично подходит любителям подвижных игр, общественным деятелям, экстравертам.',
+        'suggestion': 'Очаровывай мужчин и женщин. Ты — их кукловод.\n\nОтлично подойдёт дипломатам, обаяшкам, социопатам.',
+        'endurance': 'Держи удар. Не дай себя прикончить.\n\nОтлично подойдёт тем, кто способен держать удар, неусыпным наблюдателям, вечным двигателям.',
+        'pain_threshold': 'Разве это боль? Придумайте что-нибудь пожёстче.\n\nОтлично подойдёт непобедимым бойцам, тем, кто всё никак не сдохнет, мазохистам.',
+        'physical_instrument': 'Играй мышцами. Наслаждайся своим здоровьем.\n\nОтлично подойдёт мощным мужикам, любителям помахать кулаками, спортсменам.',
+        'instinct': 'Не бойся своих желаний. Демонстрируй своё либидо.\n\nОтлично подойдёт любителям секса, помешанным на сексе, пошлякам.',
+        'shivers': 'Почувствуй дрожь. Настройся на волну «Совёнка».\n\nОтлично подойдёт любителям лагерной жизни, народным мудрецам, по-настоящему сверхъестественным натурам.',
+        'half_light': 'Доверься своему телу. Запугивай людей.\n\nОтлично подойдёт нервным, тем, кто сначала нападают, а потом задают вопросы, тем, кто ненавидит сюрпризы.',
+        'perception': 'Смотри, слушай, нюхай, вкушай и осязай. Не упусти не единой детали.\n\nОтлично подойдёт въедливым, чувственным личностям, сборщикам хлама.',
+        'coordination': 'Целься! Огонь!\n\nОтлично подойдёт метателям мячей, снайперам, жонглёрам.',
+        'reaction_speed': 'Будь быстрым, а не мёртвым.\n\nОтлично подойдёт тем, в кого хрен попадёшь, импровизаторам, любителям пинбола.',
+        'savoir_faire': 'Скользи как тень. Поражай великолепием.\n\nОтлично подойдёт акробатам, ворам, невыносимым хвастунам.',
+        'interfacing': 'Управляй механизмами. Вскрывай замки и обчищай карманы.\n\nОтлично подойдёт швецам, жнецам, на дуде игрецам.',
+        'composure': 'Выпрями спину. Сохраняй покерфейс.\n\nОтлично подойдёт картёжникам, военным фетишистам, крутым перцам.'
+    }       
+
+    default ds_skill_list = {
+        'logic': DSSkill('logic', SKILL_NAMES['logic'], SKILL_DESCR['logic'], member_bonus=[('library', 1)]),
+        'encyclopedia': DSSkill('encyclopedia', SKILL_NAMES['encyclopedia'], SKILL_DESCR['encyclopedia'], member_bonus=[('library', 1)]),
+        'rhetoric': DSSkill('rhetoric', SKILL_NAMES['rhetoric'], SKILL_DESCR['rhetoric'], member_bonus=[('library', 1)]),
+        'drama': DSSkill('drama', SKILL_NAMES['drama'], SKILL_DESCR['drama'], member_bonus=[('library', 1)]),
+        'conceptualization': DSSkill('conceptualization', SKILL_NAMES['conceptualization'], SKILL_DESCR['conceptualization'], member_bonus=[('library', 1)]),
+        'visual_calculus': DSSkill('visual_calculus', SKILL_NAMES['visual_calculus'], SKILL_DESCR['visual_calculus'], member_bonus=[('library', 1)]),
+
+        'volition': DSSkill('volition', SKILL_NAMES['volition'], SKILL_DESCR['volition'], member_bonus=[('music', 1)], damage_bonus='ds_morale'),
+        'inland_empire': DSSkill('inland_empire', SKILL_NAMES['inland_empire'], SKILL_DESCR['inland_empire'], member_bonus=[('music', 1)]),
+        'authority': DSSkill('authority', SKILL_NAMES['authority'], SKILL_DESCR['authority'], member_bonus=[('music', 1)]),
+        'empathy': DSSkill('empathy', SKILL_NAMES['empathy'], SKILL_DESCR['empathy'], member_bonus=[('music', 1)]),
+        'esprit': DSSkill('esprit', SKILL_NAMES['esprit'], SKILL_DESCR['esprit'], member_bonus=[('music', 1)]),
+        'suggestion': DSSkill('suggestion', SKILL_NAMES['suggestion'], SKILL_DESCR['suggestion'], member_bonus=[('music', 1)]),
+
+        'endurance': DSSkill('endurance', SKILL_NAMES['endurance'], SKILL_DESCR['endurance'], member_bonus=[('sport', 1)], damage_bonus='ds_morale'),
+        'pain_threshold': DSSkill('pain_threshold', SKILL_NAMES['pain_threshold'], SKILL_DESCR['pain_threshold'], member_bonus=[('sport', 1)]),
+        'physical_instrument': DSSkill('physical_instrument', SKILL_NAMES['physical_instrument'], SKILL_DESCR['physical_instrument'], member_bonus=[('sport', 1)]),
+        'instinct': DSSkill('instinct', SKILL_NAMES['instinct'], SKILL_DESCR['instinct'], member_bonus=[('sport', 1)]),
+        'shivers': DSSkill('shivers', SKILL_NAMES['shivers'], SKILL_DESCR['shivers'], member_bonus=[('sport', 1)]),
+        'half_light': DSSkill('half_light', SKILL_NAMES['half_light'], SKILL_DESCR['half_light'], member_bonus=[('sport', 1)]),
+
+        'perception': DSSkill('perception', SKILL_NAMES['perception'], SKILL_DESCR['perception'], member_bonus=[('cyber', 1)]),
+        'coordination': DSSkill('coordination', SKILL_NAMES['coordination'], SKILL_DESCR['coordination'], member_bonus=[('cyber', 1)]),
+        'reaction_speed': DSSkill('reaction_speed', SKILL_NAMES['reaction_speed'], SKILL_DESCR['reaction_speed'], member_bonus=[('cyber', 1)]),
+        'savoir_faire': DSSkill('savoir_faire', SKILL_NAMES['savoir_faire'], SKILL_DESCR['savoir_faire'], member_bonus=[('cyber', 1)]),
+        'interfacing': DSSkill('interfacing', SKILL_NAMES['interfacing'], SKILL_DESCR['interfacing'], member_bonus=[('cyber', 1)]),
+        'composure': DSSkill('composure', SKILL_NAMES['composure'], SKILL_DESCR['composure'], member_bonus=[('cyber', 1)]),
+    }
+
+    define ds_callbacks = {
+        'check': [ds_up_skill, ds_save_last],
+        'level_up': [],
+        'get_result': [ds_show_check],
+    }
+
+    define ds_archetype_presets = {
+        1: {
+            'logic': 5,
+            'encyclopedia': 6,
+            'rhetoric': 5,
+            'drama': 5,
+            'conceptualization': 5,
+            'visual_calculus': 5,
+            'volition': 2,
+            'inland_empire': 2,
+            'authority': 2,
+            'empathy': 2,
+            'esprit': 2,
+            'suggestion': 2,
+            'endurance': 1,
+            'pain_threshold': 1,
+            'physical_instrument': 1,
+            'instinct': 1,
+            'shivers': 1,
+            'half_light': 1,
+            'perception': 4,
+            'coordination': 4,
+            'reaction_speed': 4,
+            'savoir_faire': 4,
+            'interfacing': 4,
+            'composure': 4,
+        },
+        2: {
+            'logic': 3,
+            'encyclopedia': 3,
+            'rhetoric': 3,
+            'drama': 3,
+            'conceptualization': 3,
+            'visual_calculus': 3,
+            'volition': 5,
+            'inland_empire': 6,
+            'authority': 5,
+            'empathy': 5,
+            'esprit': 5,
+            'suggestion': 5,
+            'endurance': 2,
+            'pain_threshold': 2,
+            'physical_instrument': 2,
+            'instinct': 2,
+            'shivers': 2,
+            'half_light': 2,
+            'perception': 2,
+            'coordination': 2,
+            'reaction_speed': 2,
+            'savoir_faire': 2,
+            'interfacing': 2,
+            'composure': 2,
+        },
+        3: {
+            'logic': 1,
+            'encyclopedia': 1,
+            'rhetoric': 1,
+            'drama': 1,
+            'conceptualization': 1,
+            'visual_calculus': 1,
+            'volition': 2,
+            'inland_empire': 2,
+            'authority': 2,
+            'empathy': 2,
+            'esprit': 2,
+            'suggestion': 2,
+            'endurance': 5,
+            'pain_threshold': 5,
+            'physical_instrument': 6,
+            'instinct': 5,
+            'shivers': 5,
+            'half_light': 5,
+            'perception': 4,
+            'coordination': 4,
+            'reaction_speed': 4,
+            'savoir_faire': 4,
+            'interfacing': 4,
+            'composure': 4,
+        },
+    }
 
 # Переменные
     default ds_menuset = set()
-
-## Значения атрибутов
-    default ds_skill_points = {
-        'logic': 0,
-        'encyclopedia': 0,
-        'rhetoric': 0,
-        'drama': 0,
-        'conceptualization': 0,
-        'visual_calculus': 0,
-        'volition': 0,
-        'inland_empire': 0,
-        'authority': 0,
-        'empathy': 0,
-        'esprit': 0,
-        'suggestion': 0,
-        'endurance': 0,
-        'pain_threshold': 0,
-        'physical_instrument': 0,
-        'instinct': 0,
-        'shivers': 0,
-        'half_light': 0,
-        'perception': 0,
-        'coordination': 0,
-        'reaction_speed': 0,
-        'savoir_faire': 0,
-        'interfacing': 0,
-        'composure': 0
-    }
-
-    default ds_xp = {
-        'logic': 0,
-        'encyclopedia': 0,
-        'rhetoric': 0,
-        'drama': 0,
-        'conceptualization': 0,
-        'visual_calculus': 0,
-        'volition': 0,
-        'inland_empire': 0,
-        'authority': 0,
-        'empathy': 0,
-        'esprit': 0,
-        'suggestion': 0,
-        'endurance': 0,
-        'pain_threshold': 0,
-        'physical_instrument': 0,
-        'instinct': 0,
-        'shivers': 0,
-        'half_light': 0,
-        'perception': 0,
-        'coordination': 0,
-        'reaction_speed': 0,
-        'savoir_faire': 0,
-        'interfacing': 0,
-        'composure': 0
-    }
 
 ## C кем знаком? (0 - не знает ничего, 1 - знает внешность, 2 - знает, как зовут)
 
@@ -366,7 +711,7 @@ init:
         'mt': 0,
         'mz': 0,
         'cs': 0,
-        'ya': 0
+        'yn': 0
     }
 
 ## Куда записан?
@@ -402,13 +747,13 @@ init:
         'mt': 0,
         'mz': 0,
         'cs': 0,
-        'ya': 0
+        'yn': 0
     }
 
 ## Общие параметры
     default ds_karma = 0 # Репутация - насколько хорошо себя ведёт ГГ
-    default ds_health = 0 # Здоровье
-    default ds_morale = 0 # Боевой дух
+    default ds_health = DSLifeParameter('endurance', {'damage': [ds_show_damage_health, ds_die_zero_health], 'up': [ds_show_up_health], 'restore': [ds_show_restore_health]}) # Здоровье
+    default ds_morale = DSLifeParameter('volition', {'damage': [ds_show_damage_morale, ds_die_zero_morale], 'up': [ds_show_up_morale], 'restore': [ds_show_restore_morale]}) # Боевой дух
     default ds_archetype = 0 # Избранный персонаж
     default ds_knowing = 0 # Знание
     default ds_semtype = 0 # Тип Семёна
@@ -416,7 +761,7 @@ init:
 
     $ ds_game_started = False
 
-    default ds_last_skillcheck = None # Результат последней проверки (позволяет сделать появление новых опций с проверками без ввода дополнительных переменных)
+    default ds_last_skillcheck = None # Результат последней проверки
 
 # Эффекты
 
@@ -875,8 +1220,8 @@ init:
     $ cr = Character (u'Повешенный труп', color="e1dd7d", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ gn = Character (u'Генда', color="7d7f7d", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ ck = Character (u'Повариха', color="1f75fe", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ yap = Character (u'Девушка', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ ya = Character (u'Яна', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ynp = Character (u'Девушка', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ yn = Character (u'Яна', color="74b05f", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fz = Character (u'Борис Саныч', color="7b001c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ fzp = Character (u'Физрук', color="7b001c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
@@ -902,7 +1247,7 @@ init:
 # Таблица эмоций, одежд и аксессуаров персонажей
 # Эмоции (emo) -- словарь, определяющий номер тела, соответствующий эмоции
 # Одежда (cloth) и аксессуары (acc) -- словари, определяющие фактическое название файла (None соответствует необходимости проигнорировать соответствующий элемент)
-
+    '''
     define ds_char_table = {
         'ar': {
             'normal': {
@@ -1740,6 +2085,7 @@ init:
             }
         }
     }
+    '''
 
 ## BG
 
@@ -1884,6 +2230,8 @@ init:
     image bg ds_ext_stage_big_sunset = "mods/disco_sovenok/bg/ext_stage_big_sunset_7dl.jpg"
     image bg ds_ext_stage_near_sunset = "mods/disco_sovenok/bg/ext_stage_near_sunset.jpg"
 
+    image bg ds_ext_camp_entrance_car = "mods/disco_sovenok/bg/ext_camp_car.png"
+
 ## Новые CG
 
     image cg ds_day1_bus_window = "mods/disco_sovenok/cg/d1_me_bus_window_ll.jpg"
@@ -1952,6 +2300,8 @@ init:
     image cg ds_day3_dance_ya = "mods/disco_sovenok/cg/d3_dance_ya.png"
 
     image cg ds_day4_us_dv_play = "mods/disco_sovenok/cg/ussrr_dv_p_d4.jpg"
+
+    image cg ds_day4_cs_car = "mods/disco_sovenok/cg/d4_cs_car_day_cs_7dl.jpg"
 
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
@@ -2072,6 +2422,8 @@ init:
 
     $ ds_things_fall = "mods/disco_sovenok/sound/things_fall.mp3"
 
+    $ ds_auto_ignite = "mods/disco_sovenok/sound/auto_roar_7dl.ogg"
+
 # Спрайты
 
 ## Кубики
@@ -2092,446 +2444,262 @@ init:
 
 ## Расширение персонажей
 
-    # Виола
-    image cs angry naked = ds_define_sprite('cs', 'angry')
-    image cs badgirl naked = ds_define_sprite('cs', 'badgirl')
-    image cs cry naked = ds_define_sprite('cs', 'cry')
-    image cs dontlike naked = ds_define_sprite('cs', 'dontlike')
-    image cs doubt naked = ds_define_sprite('cs', 'doubt')
-    image cs grin naked = ds_define_sprite('cs', 'grin')
-    image cs irritated naked = ds_define_sprite('cs', 'irritated')
-    image cs laugh naked = ds_define_sprite('cs', 'laugh')
-    image cs normal naked = ds_define_sprite('cs', 'normal')
-    image cs rage naked = ds_define_sprite('cs', 'rage')
-    image cs sad naked = ds_define_sprite('cs', 'sad')
-    image cs scared naked = ds_define_sprite('cs', 'scared')
-    image cs serious naked = ds_define_sprite('cs', 'serious')
-    image cs shy naked = ds_define_sprite('cs', 'shy')
-    image cs smile naked = ds_define_sprite('cs', 'smile')
-    image cs sorrow naked = ds_define_sprite('cs', 'sorrow')
-    image cs tired naked = ds_define_sprite('cs', 'tired')
-    image cs upset naked = ds_define_sprite('cs', 'upset')
+    image ag = DSSprite(
+        id='ag',
+        emotions=[
+            ['ok', 'grin', 'happy', 'normal', 'surprise'],
+            ['angry', 'rage', 'normal', 'shocked', 'tired']
+        ],
+        outfits=[ 'casual' ],
+        dist=[ 'far' ]
+    )
 
-    image cs angry panties = ds_define_sprite('cs', 'angry', body_name='panties')
-    image cs badgirl panties = ds_define_sprite('cs', 'badgirl', body_name='panties')
-    image cs cry panties = ds_define_sprite('cs', 'cry', body_name='panties')
-    image cs dontlike panties = ds_define_sprite('cs', 'dontlike', body_name='panties')
-    image cs doubt panties = ds_define_sprite('cs', 'doubt', body_name='panties')
-    image cs grin panties = ds_define_sprite('cs', 'grin', body_name='panties')
-    image cs irritated panties = ds_define_sprite('cs', 'irritated', body_name='panties')
-    image cs laugh panties = ds_define_sprite('cs', 'laugh', body_name='panties')
-    image cs normal panties = ds_define_sprite('cs', 'normal', body_name='panties')
-    image cs rage panties = ds_define_sprite('cs', 'rage', body_name='panties')
-    image cs sad panties = ds_define_sprite('cs', 'sad', body_name='panties')
-    image cs scared panties = ds_define_sprite('cs', 'scared', body_name='panties')
-    image cs serious panties = ds_define_sprite('cs', 'serious', body_name='panties')
-    image cs shy panties = ds_define_sprite('cs', 'shy', body_name='panties')
-    image cs smile panties = ds_define_sprite('cs', 'smile', body_name='panties')
-    image cs sorrow panties = ds_define_sprite('cs', 'sorrow', body_name='panties')
-    image cs tired panties = ds_define_sprite('cs', 'tired', body_name='panties')
-    image cs upset panties = ds_define_sprite('cs', 'upset', body_name='panties')
+    image ar = DSSprite(
+        id='ar',
+        emotions=[
+            ['dontlike2', 'laugh', 'laugh2', 'normal', 'smile'],
+            ['dontlike', 'sad']
+        ]
+    )
 
-    image cs angry medic1 = ds_define_sprite('cs', 'angry', body_name='medic1')
-    image cs badgirl medic1 = ds_define_sprite('cs', 'badgirl', body_name='medic1')
-    image cs cry medic1 = ds_define_sprite('cs', 'cry', body_name='medic1')
-    image cs dontlike medic1 = ds_define_sprite('cs', 'dontlike', body_name='medic1')
-    image cs doubt medic1 = ds_define_sprite('cs', 'doubt', body_name='medic1')
-    image cs grin medic1 = ds_define_sprite('cs', 'grin', body_name='medic1')
-    image cs irritated medic1 = ds_define_sprite('cs', 'irritated', body_name='medic1')
-    image cs laugh medic1 = ds_define_sprite('cs', 'laugh', body_name='medic1')
-    image cs normal medic1 = ds_define_sprite('cs', 'normal', body_name='medic1')
-    image cs rage medic1 = ds_define_sprite('cs', 'rage', body_name='medic1')
-    image cs sad medic1 = ds_define_sprite('cs', 'sad', body_name='medic1')
-    image cs scared medic1 = ds_define_sprite('cs', 'scared', body_name='medic1')
-    image cs serious medic1 = ds_define_sprite('cs', 'serious', body_name='medic1')
-    image cs shy medic1 = ds_define_sprite('cs', 'shy', body_name='medic1')
-    image cs smile medic1 = ds_define_sprite('cs', 'smile', body_name='medic1')
-    image cs sorrow medic1 = ds_define_sprite('cs', 'sorrow', body_name='medic1')
-    image cs tired medic1 = ds_define_sprite('cs', 'tired', body_name='medic1')
-    image cs upset medic1 = ds_define_sprite('cs', 'upset', body_name='medic1')
+    image cs = DSSprite(
+        id='cs',
+        emotions=[
+            ['angry', 'badgirl', 'cry', 'dontlike', 'doubt', 'grin', 'irritated', 'laugh', 'normal', 'rage', 'sad', 'scared', 'serious', 'shy', 'smile', 'sorrow', 'tired', 'upset']
+        ],
+        outfits=['civil', 'civil2', 'dress', 'medic1', 'medic2', 'medic3', 'medic4', 'naked', 'panties', 'swim', 'underwear'],
+        acc=['glasses', 'stethoscope', 'umbrella'],
+        overrides={
+            (None, 'medic1', 'glasses'): ('medic1', None, None, 'glasses2'),
+            (None, 'medic1', None): ('medic1', None, None, None),
+            (None, 'medic2', None): ('medic2', None, None, None),
+            (None, 'medic3', None): ('medic3', None, None, None),
+            (None, 'medic4', None): ('medic4', None, None, None),
+        }
+    )
 
-    image cs angry medic2 = ds_define_sprite('cs', 'angry', body_name='medic2')
-    image cs badgirl medic2 = ds_define_sprite('cs', 'badgirl', body_name='medic2')
-    image cs cry medic2 = ds_define_sprite('cs', 'cry', body_name='medic2')
-    image cs dontlike medic2 = ds_define_sprite('cs', 'dontlike', body_name='medic2')
-    image cs doubt medic2 = ds_define_sprite('cs', 'doubt', body_name='medic2')
-    image cs grin medic2 = ds_define_sprite('cs', 'grin', body_name='medic2')
-    image cs irritated medic2 = ds_define_sprite('cs', 'irritated', body_name='medic2')
-    image cs laugh medic2 = ds_define_sprite('cs', 'laugh', body_name='medic2')
-    image cs normal medic2 = ds_define_sprite('cs', 'normal', body_name='medic2')
-    image cs rage medic2 = ds_define_sprite('cs', 'rage', body_name='medic2')
-    image cs sad medic2 = ds_define_sprite('cs', 'sad', body_name='medic2')
-    image cs scared medic2 = ds_define_sprite('cs', 'scared', body_name='medic2')
-    image cs serious medic2 = ds_define_sprite('cs', 'serious', body_name='medic2')
-    image cs shy medic2 = ds_define_sprite('cs', 'shy', body_name='medic2')
-    image cs smile medic2 = ds_define_sprite('cs', 'smile', body_name='medic2')
-    image cs sorrow medic2 = ds_define_sprite('cs', 'sorrow', body_name='medic2')
-    image cs tired medic2 = ds_define_sprite('cs', 'tired', body_name='medic2')
-    image cs upset medic2 = ds_define_sprite('cs', 'upset', body_name='medic2')
+    image dn = DSSprite(
+        id='dn',
+        emotions=[
+            ['dontcare', 'grin', 'normal', 'smile', 'unsure'],
+            ['dontlike', 'upset'],
+            ['sad', 'scared', 'shocked', 'sick', 'surprise']
+        ],
+        outfits=['pioneer'],
+        naked=['pioneer']
+    )
 
-    image cs angry medic3 = ds_define_sprite('cs', 'angry', body_name='medic3')
-    image cs badgirl medic3 = ds_define_sprite('cs', 'badgirl', body_name='medic3')
-    image cs cry medic3 = ds_define_sprite('cs', 'cry', body_name='medic3')
-    image cs dontlike medic3 = ds_define_sprite('cs', 'dontlike', body_name='medic3')
-    image cs doubt medic3 = ds_define_sprite('cs', 'doubt', body_name='medic3')
-    image cs grin medic3 = ds_define_sprite('cs', 'grin', body_name='medic3')
-    image cs irritated medic3 = ds_define_sprite('cs', 'irritated', body_name='medic3')
-    image cs laugh medic3 = ds_define_sprite('cs', 'laugh', body_name='medic3')
-    image cs normal medic3 = ds_define_sprite('cs', 'normal', body_name='medic3')
-    image cs rage medic3 = ds_define_sprite('cs', 'rage', body_name='medic3')
-    image cs sad medic3 = ds_define_sprite('cs', 'sad', body_name='medic3')
-    image cs scared medic3 = ds_define_sprite('cs', 'scared', body_name='medic3')
-    image cs serious medic3 = ds_define_sprite('cs', 'serious', body_name='medic3')
-    image cs shy medic3 = ds_define_sprite('cs', 'shy', body_name='medic3')
-    image cs smile medic3 = ds_define_sprite('cs', 'smile', body_name='medic3')
-    image cs sorrow medic3 = ds_define_sprite('cs', 'sorrow', body_name='medic3')
-    image cs tired medic3 = ds_define_sprite('cs', 'tired', body_name='medic3')
-    image cs upset medic3 = ds_define_sprite('cs', 'upset', body_name='medic3')
+    image dv = DSSprite(
+        id='dv',
+        emotions=[
+            ['concent', 'cry', 'evil_smile', 'scared', 'shocked', 'surprise', 'think'],
+            ['grin', 'think2'],
+            ['closed_eyes', 'cry_smile', 'guilty', 'sad', 'shy'],
+            ['dontlike', 'laugh', 'normal', 'sad2', 'shy2', 'smile', 'soft_smile', 'tired'],
+            ['angry', 'rage']
+        ],
+        outfits=['casual', 'dress', 'modern', 'naked', 'pioneer', 'pioneer2', 'raincoat', 'sport1', 'sport2', 'swim', 'underwear', 'winter'],
+        dist=['close', 'far']
+    )
 
-    image cs angry medic4 = ds_define_sprite('cs', 'angry', body_name='medic4')
-    image cs badgirl medic4 = ds_define_sprite('cs', 'badgirl', body_name='medic4')
-    image cs cry medic4 = ds_define_sprite('cs', 'cry', body_name='medic4')
-    image cs dontlike medic4 = ds_define_sprite('cs', 'dontlike', body_name='medic4')
-    image cs doubt medic4 = ds_define_sprite('cs', 'doubt', body_name='medic4')
-    image cs grin medic4 = ds_define_sprite('cs', 'grin', body_name='medic4')
-    image cs irritated medic4 = ds_define_sprite('cs', 'irritated', body_name='medic4')
-    image cs laugh medic4 = ds_define_sprite('cs', 'laugh', body_name='medic4')
-    image cs normal medic4 = ds_define_sprite('cs', 'normal', body_name='medic4')
-    image cs rage medic4 = ds_define_sprite('cs', 'rage', body_name='medic4')
-    image cs sad medic4 = ds_define_sprite('cs', 'sad', body_name='medic4')
-    image cs scared medic4 = ds_define_sprite('cs', 'scared', body_name='medic4')
-    image cs serious medic4 = ds_define_sprite('cs', 'serious', body_name='medic4')
-    image cs shy medic4 = ds_define_sprite('cs', 'shy', body_name='medic4')
-    image cs smile medic4 = ds_define_sprite('cs', 'smile', body_name='medic4')
-    image cs sorrow medic4 = ds_define_sprite('cs', 'sorrow', body_name='medic4')
-    image cs tired medic4 = ds_define_sprite('cs', 'tired', body_name='medic4')
-    image cs upset medic4 = ds_define_sprite('cs', 'upset', body_name='medic4')
+    image dvk = DSSprite(
+        id='dvk',
+        emotions=[
+            ['dontlike', 'happy', 'normal', 'smile', 'surprise'],
+            ['angry'],
+            ['guilty', 'sad', 'sad2', 'shy']
+        ],
+        outfits=['casual', 'dress']
+    )
 
-    image cs angry medic1 glasses = ds_define_sprite('cs', 'angry', body_name='medic1', acc='glasses2')
-    image cs badgirl medic1 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic1', acc='glasses2')
-    image cs cry medic1 glasses = ds_define_sprite('cs', 'cry', body_name='medic1', acc='glasses2')
-    image cs dontlike medic1 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic1', acc='glasses2')
-    image cs doubt medic1 glasses = ds_define_sprite('cs', 'doubt', body_name='medic1', acc='glasses2')
-    image cs grin medic1 glasses = ds_define_sprite('cs', 'grin', body_name='medic1', acc='glasses2')
-    image cs irritated medic1 glasses = ds_define_sprite('cs', 'irritated', body_name='medic1', acc='glasses2')
-    image cs laugh medic1 glasses = ds_define_sprite('cs', 'laugh', body_name='medic1', acc='glasses2')
-    image cs normal medic1 glasses = ds_define_sprite('cs', 'normal', body_name='medic1', acc='glasses2')
-    image cs rage medic1 glasses = ds_define_sprite('cs', 'rage', body_name='medic1', acc='glasses2')
-    image cs sad medic1 glasses = ds_define_sprite('cs', 'sad', body_name='medic1', acc='glasses2')
-    image cs scared medic1 glasses = ds_define_sprite('cs', 'scared', body_name='medic1', acc='glasses2')
-    image cs serious medic1 glasses = ds_define_sprite('cs', 'serious', body_name='medic1', acc='glasses2')
-    image cs shy medic1 glasses = ds_define_sprite('cs', 'shy', body_name='medic1', acc='glasses2')
-    image cs smile medic1 glasses = ds_define_sprite('cs', 'smile', body_name='medic1', acc='glasses2')
-    image cs sorrow medic1 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic1', acc='glasses2')
-    image cs tired medic1 glasses = ds_define_sprite('cs', 'tired', body_name='medic1', acc='glasses2')
-    image cs upset medic1 glasses = ds_define_sprite('cs', 'upset', body_name='medic1', acc='glasses2')
+    image dvw = DSSprite(
+        id='dvw',
+        emotions=[
+            ['laugh', 'normal', 'rage', 'smile'],
+        ],
+        overrides={
+            ('rage', None, None): ('rage', None, None, None),
+            (None, None, None): ('normal', None, None, None)
+        }
+    )
 
-    image cs angry medic2 glasses = ds_define_sprite('cs', 'angry', body_name='medic2', acc='glasses')
-    image cs badgirl medic2 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic2', acc='glasses')
-    image cs cry medic2 glasses = ds_define_sprite('cs', 'cry', body_name='medic2', acc='glasses')
-    image cs dontlike medic2 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic2', acc='glasses')
-    image cs doubt medic2 glasses = ds_define_sprite('cs', 'doubt', body_name='medic2', acc='glasses')
-    image cs grin medic2 glasses = ds_define_sprite('cs', 'grin', body_name='medic2', acc='glasses')
-    image cs irritated medic2 glasses = ds_define_sprite('cs', 'irritated', body_name='medic2', acc='glasses')
-    image cs laugh medic2 glasses = ds_define_sprite('cs', 'laugh', body_name='medic2', acc='glasses')
-    image cs normal medic2 glasses = ds_define_sprite('cs', 'normal', body_name='medic2', acc='glasses')
-    image cs rage medic2 glasses = ds_define_sprite('cs', 'rage', body_name='medic2', acc='glasses')
-    image cs sad medic2 glasses = ds_define_sprite('cs', 'sad', body_name='medic2', acc='glasses')
-    image cs scared medic2 glasses = ds_define_sprite('cs', 'scared', body_name='medic2', acc='glasses')
-    image cs serious medic2 glasses = ds_define_sprite('cs', 'serious', body_name='medic2', acc='glasses')
-    image cs shy medic2 glasses = ds_define_sprite('cs', 'shy', body_name='medic2', acc='glasses')
-    image cs smile medic2 glasses = ds_define_sprite('cs', 'smile', body_name='medic2', acc='glasses')
-    image cs sorrow medic2 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic2', acc='glasses')
-    image cs tired medic2 glasses = ds_define_sprite('cs', 'tired', body_name='medic2', acc='glasses')
-    image cs upset medic2 glasses = ds_define_sprite('cs', 'upset', body_name='medic2', acc='glasses')
+    image el = DSSprite(
+        id='el',
+        emotions=[
+            ['grin', 'normal', 'smile'],
+            ['fingal', 'sad', 'scared', 'shocked', 'surprise', 'upset'],
+            ['angry', 'laugh', 'serious']
+        ],
+        outfits=['modern', 'naked', 'pioneer'],
+        dist=['close', 'far'],
+        overrides={
+            (None, 'modern', None): (None, None, 'shirt_black', None),
+        }
+    )
 
-    image cs angry medic3 glasses = ds_define_sprite('cs', 'angry', body_name='medic3', acc='glasses')
-    image cs badgirl medic3 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic3', acc='glasses')
-    image cs cry medic3 glasses = ds_define_sprite('cs', 'cry', body_name='medic3', acc='glasses')
-    image cs dontlike medic3 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic3', acc='glasses')
-    image cs doubt medic3 glasses = ds_define_sprite('cs', 'doubt', body_name='medic3', acc='glasses')
-    image cs grin medic3 glasses = ds_define_sprite('cs', 'grin', body_name='medic3', acc='glasses')
-    image cs irritated medic3 glasses = ds_define_sprite('cs', 'irritated', body_name='medic3', acc='glasses')
-    image cs laugh medic3 glasses = ds_define_sprite('cs', 'laugh', body_name='medic3', acc='glasses')
-    image cs normal medic3 glasses = ds_define_sprite('cs', 'normal', body_name='medic3', acc='glasses')
-    image cs rage medic3 glasses = ds_define_sprite('cs', 'rage', body_name='medic3', acc='glasses')
-    image cs sad medic3 glasses = ds_define_sprite('cs', 'sad', body_name='medic3', acc='glasses')
-    image cs scared medic3 glasses = ds_define_sprite('cs', 'scared', body_name='medic3', acc='glasses')
-    image cs serious medic3 glasses = ds_define_sprite('cs', 'serious', body_name='medic3', acc='glasses')
-    image cs shy medic3 glasses = ds_define_sprite('cs', 'shy', body_name='medic3', acc='glasses')
-    image cs smile medic3 glasses = ds_define_sprite('cs', 'smile', body_name='medic3', acc='glasses')
-    image cs sorrow medic3 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic3', acc='glasses')
-    image cs tired medic3 glasses = ds_define_sprite('cs', 'tired', body_name='medic3', acc='glasses')
-    image cs upset medic3 glasses = ds_define_sprite('cs', 'upset', body_name='medic3', acc='glasses')
+    image fz = DSSprite(
+        id='ba',
+        emotions=[
+            ['angry', 'normal', 'rage', 'serious', 'smile']
+        ],
+        outfits=['uniform']
+    )
 
-    image cs angry medic4 glasses = ds_define_sprite('cs', 'angry', body_name='medic4', acc='glasses')
-    image cs badgirl medic4 glasses = ds_define_sprite('cs', 'badgirl', body_name='medic4', acc='glasses')
-    image cs cry medic4 glasses = ds_define_sprite('cs', 'cry', body_name='medic4', acc='glasses')
-    image cs dontlike medic4 glasses = ds_define_sprite('cs', 'dontlike', body_name='medic4', acc='glasses')
-    image cs doubt medic4 glasses = ds_define_sprite('cs', 'doubt', body_name='medic4', acc='glasses')
-    image cs grin medic4 glasses = ds_define_sprite('cs', 'grin', body_name='medic4', acc='glasses')
-    image cs irritated medic4 glasses = ds_define_sprite('cs', 'irritated', body_name='medic4', acc='glasses')
-    image cs laugh medic4 glasses = ds_define_sprite('cs', 'laugh', body_name='medic4', acc='glasses')
-    image cs normal medic4 glasses = ds_define_sprite('cs', 'normal', body_name='medic4', acc='glasses')
-    image cs rage medic4 glasses = ds_define_sprite('cs', 'rage', body_name='medic4', acc='glasses')
-    image cs sad medic4 glasses = ds_define_sprite('cs', 'sad', body_name='medic4', acc='glasses')
-    image cs scared medic4 glasses = ds_define_sprite('cs', 'scared', body_name='medic4', acc='glasses')
-    image cs serious medic4 glasses = ds_define_sprite('cs', 'serious', body_name='medic4', acc='glasses')
-    image cs shy medic4 glasses = ds_define_sprite('cs', 'shy', body_name='medic4', acc='glasses')
-    image cs smile medic4 glasses = ds_define_sprite('cs', 'smile', body_name='medic4', acc='glasses')
-    image cs sorrow medic4 glasses = ds_define_sprite('cs', 'sorrow', body_name='medic4', acc='glasses')
-    image cs tired medic4 glasses = ds_define_sprite('cs', 'tired', body_name='medic4', acc='glasses')
-    image cs upset medic4 glasses = ds_define_sprite('cs', 'upset', body_name='medic4', acc='glasses')
+    image gb = DSSprite(
+        id='gb',
+        emotions=[
+            ['calm', 'normal', 'sorrow', 'unsure'],
+            ['dontlike', 'sigh', 'smile', 'treat'],
+            ['angry', 'pain', 'sad', 'scared'],
+        ],
+        dist=['close', 'far']
+    )
 
-    image cs angry civil = ds_define_sprite('cs', 'angry', cloth='civil')
-    image cs badgirl civil = ds_define_sprite('cs', 'badgirl', cloth='civil')
-    image cs cry civil = ds_define_sprite('cs', 'cry', cloth='civil')
-    image cs dontlike civil = ds_define_sprite('cs', 'dontlike', cloth='civil')
-    image cs doubt civil = ds_define_sprite('cs', 'doubt', cloth='civil')
-    image cs grin civil = ds_define_sprite('cs', 'grin', cloth='civil')
-    image cs irritated civil = ds_define_sprite('cs', 'irritated', cloth='civil')
-    image cs laugh civil = ds_define_sprite('cs', 'laugh', cloth='civil')
-    image cs normal civil = ds_define_sprite('cs', 'normal', cloth='civil')
-    image cs rage civil = ds_define_sprite('cs', 'rage', cloth='civil')
-    image cs sad civil = ds_define_sprite('cs', 'sad', cloth='civil')
-    image cs scared civil = ds_define_sprite('cs', 'scared', cloth='civil')
-    image cs serious civil = ds_define_sprite('cs', 'serious', cloth='civil')
-    image cs shy civil = ds_define_sprite('cs', 'shy', cloth='civil')
-    image cs smile civil = ds_define_sprite('cs', 'smile', cloth='civil')
-    image cs sorrow civil = ds_define_sprite('cs', 'sorrow', cloth='civil')
-    image cs tired civil = ds_define_sprite('cs', 'tired', cloth='civil')
-    image cs upset civil = ds_define_sprite('cs', 'upset', cloth='civil')
+    image ck = DSSprite(
+        id='ma',
+        emotions=[
+            ['laugh', 'normal', 'sad', 'serious', 'smile']
+        ],
+        outfits=['uniform'],
+        dist=['close', 'far']
+    )
 
-    image cs angry civil2 = ds_define_sprite('cs', 'angry', cloth='civil2')
-    image cs badgirl civil2 = ds_define_sprite('cs', 'badgirl', cloth='civil2')
-    image cs cry civil2 = ds_define_sprite('cs', 'cry', cloth='civil2')
-    image cs dontlike civil2 = ds_define_sprite('cs', 'dontlike', cloth='civil2')
-    image cs doubt civil2 = ds_define_sprite('cs', 'doubt', cloth='civil2')
-    image cs grin civil2 = ds_define_sprite('cs', 'grin', cloth='civil2')
-    image cs irritated civil2 = ds_define_sprite('cs', 'irritated', cloth='civil2')
-    image cs laugh civil2 = ds_define_sprite('cs', 'laugh', cloth='civil2')
-    image cs normal civil2 = ds_define_sprite('cs', 'normal', cloth='civil2')
-    image cs rage civil2 = ds_define_sprite('cs', 'rage', cloth='civil2')
-    image cs sad civil2 = ds_define_sprite('cs', 'sad', cloth='civil2')
-    image cs scared civil2 = ds_define_sprite('cs', 'scared', cloth='civil2')
-    image cs serious civil2 = ds_define_sprite('cs', 'serious', cloth='civil2')
-    image cs shy civil2 = ds_define_sprite('cs', 'shy', cloth='civil2')
-    image cs smile civil2 = ds_define_sprite('cs', 'smile', cloth='civil2')
-    image cs sorrow civil2 = ds_define_sprite('cs', 'sorrow', cloth='civil2')
-    image cs tired civil2 = ds_define_sprite('cs', 'tired', cloth='civil2')
-    image cs upset civil2 = ds_define_sprite('cs', 'upset', cloth='civil2')
+    image mi = DSSprite(
+        id='mi',
+        emotions=[
+            ['cry', 'dontlike', 'guilty', 'laugh', 'pity', 'scared', 'shocked', 'shy', 'surprise', 'unsure'],
+            ['cry_smile', 'grin', 'happy', 'pity_grin', 'pity_smile', 'sad_smile', 'sad', 'smile'],
+            ['angry', 'charmed', 'confused', 'despair', 'joy', 'normal', 'rage', 'serious', 'tender', 'upset', 'yawn']
+        ],
+        outfits=['casual', 'civil', 'naked', 'pioneer', 'sport', 'underwear'],
+        dist=['close', 'far']
+    )
 
-    image cs normal naked close = ds_define_sprite('cs', 'normal', dist='close')
-    image cs shy naked close = ds_define_sprite('cs', 'shy', dist='close')
-    image cs smile naked close = ds_define_sprite('cs', 'smile', dist='close')
+    image mt = DSSprite(
+        id='mt',
+        emotions=[
+            ['normal', 'sad', 'smile', 'surprise'],
+            ['angry', 'rage', 'shocked'],
+            ['grin', 'laugh', 'scared']
+        ],
+        outfits=['dress', 'naked', 'night', 'pioneer', 'swim'],
+        acc=['panama'],
+        dist=['close', 'far']
+    )
 
-    image cs normal panties close = ds_define_sprite('cs', 'normal', body_name='panties', dist='close')
-    image cs shy panties close = ds_define_sprite('cs', 'shy', body_name='panties', dist='close')
-    image cs smile panties close = ds_define_sprite('cs', 'smile', body_name='panties', dist='close')
+    image mz = DSSprite(
+        id='mz',
+        emotions=[
+            ['amazed', 'bukal', 'fun', 'hope', 'laugh', 'normal', 'sad', 'sceptic'],
+            ['angry', 'cry', 'rage', 'shyangry', 'smile'],
+            ['confused', 'excitement', 'shy']
+        ],
+        outfits=['naked', 'pioneer', 'pullover', 'swim'],
+        acc=['glasses'],
+        dist=['close', 'far']
+    )
 
-    image cs normal medic close = ds_define_sprite('cs', 'normal', body_name='medic', dist='close', acc='glasses')
-    image cs shy medic close = ds_define_sprite('cs', 'shy', body_name='medic', dist='close', acc='glasses')
-    image cs smile medic close = ds_define_sprite('cs', 'smile', body_name='medic', dist='close', acc='glasses')
+    image sh = DSSprite(
+        id='sh',
+        emotions=[
+            ['laugh', 'scared', 'smile', 'upset'],
+            ['cry', 'rage', 'smile2'],
+            ['normal', 'serious', 'surprise']
+        ],
+        outfits=['bathrobe', 'pioneer', 'shirt', 'towel'],
+        acc=['red_nose'],
+        dist=['close', 'far'],
+        naked=['towel']
+    )
 
-    image cs badgirl naked far = ds_define_sprite('cs', 'badgirl', dist='far')
-    image cs dontlike naked far = ds_define_sprite('cs', 'dontlike', dist='far')
-    image cs doubt naked far = ds_define_sprite('cs', 'doubt', dist='far')
-    image cs laugh naked far = ds_define_sprite('cs', 'laugh', dist='far')
-    image cs normal naked far = ds_define_sprite('cs', 'normal', dist='far')
-    image cs scared naked far = ds_define_sprite('cs', 'scared', dist='far')
-    image cs shy naked far = ds_define_sprite('cs', 'shy', dist='far')
-    image cs smile naked far = ds_define_sprite('cs', 'smile', dist='far')
+    image sl = DSSprite(
+        id='sl',
+        emotions=[
+            ['dontlike', 'involve', 'normal', 'serious', 'smile'],
+            ['happy', 'laugh', 'shy', 'shy2', 'shy3', 'smile2', 'tricky', 'tricky2'],
+            ['angry', 'cry_smile', 'happy2', 'obsessed', 'sad', 'shy4', 'smile3'],
+            ['scared', 'scared2', 'tender', 'tender2']
+        ],
+        outfits=['casual', 'dress', 'naked', 'pioneer', 'sport'],
+        dist=['close', 'far']
+    )
 
-    image cs badgirl panties far = ds_define_sprite('cs', 'badgirl', body_name='panties', dist='far')
-    image cs dontlike panties far = ds_define_sprite('cs', 'dontlike', body_name='panties', dist='far')
-    image cs doubt panties far = ds_define_sprite('cs', 'doubt', body_name='panties', dist='far')
-    image cs laugh panties far = ds_define_sprite('cs', 'laugh', body_name='panties', dist='far')
-    image cs normal panties far = ds_define_sprite('cs', 'normal', body_name='panties', dist='far')
-    image cs scared panties far = ds_define_sprite('cs', 'scared', body_name='panties', dist='far')
-    image cs shy panties far = ds_define_sprite('cs', 'shy', body_name='panties', dist='far')
-    image cs smile panties far = ds_define_sprite('cs', 'smile', body_name='panties', dist='far')
+    image ul = DSSprite(
+        id='ul',
+        emotions=[
+            ['angry', 'normal', 'sad'],
+            ['dontlike', 'grin', 'guilty'],
+            ['serious', 'smile', 'surprise']
+        ],
+        outfits=['bunny', 'dress', 'pioneer', 'swim'],
+        naked=['swim'],
+        dist=['close', 'far']
+    )
 
-    image cs badgirl medic far = ds_define_sprite('cs', 'badgirl', body_name='medic', dist='far', acc='glasses')
-    image cs dontlike medic far = ds_define_sprite('cs', 'dontlike', body_name='medic', dist='far', acc='glasses')
-    image cs doubt medic far = ds_define_sprite('cs', 'doubt', body_name='medic', dist='far', acc='glasses')
-    image cs laugh medic far = ds_define_sprite('cs', 'laugh', body_name='medic', dist='far', acc='glasses')
-    image cs normal medic far = ds_define_sprite('cs', 'normal', body_name='medic', dist='far', acc='glasses')
-    image cs scared medic far = ds_define_sprite('cs', 'scared', body_name='medic', dist='far', acc='glasses')
-    image cs shy medic far = ds_define_sprite('cs', 'shy', body_name='medic', dist='far', acc='glasses')
-    image cs smile medic far = ds_define_sprite('cs', 'smile', body_name='medic', dist='far', acc='glasses')
+    image un = DSSprite(
+        id='un',
+        emotions=[
+            ['angry', 'evil_grin', 'evil_laugh', 'evil_smile', 'evil_surprise', 'evil', 'hysteric', 'normal', 'shy_smile', 'shy_smile2', 'shy', 'shy2', 'smile', 'smile2', 'sorrow'],
+            ['cry_smile', 'cry', 'cry2', 'cry3', 'sad', 'scared', 'shocked', 'surprise'],
+            ['angry2', 'grin', 'laugh', 'rage', 'serious', 'smile3']
+        ],
+        outfits=['modern', 'dress', 'naked', 'pioneer', 'sleep', 'swim', 'underwear'],
+        acc=['closed_eyes'],
+        dist=['close', 'far'],
+        overrides={
+            (None, 'modern', None): (None, None, 'designer', None)
+        }
+    )
 
-    $ ds_define_chars()
+    image uv = DSSprite(
+        id='uv',
+        emotions=[
+            ['dontlike', 'rage', 'sad', 'shocked'],
+            ['normal', 'smile'],
+            ['grin', 'laugh', 'surprise2'],
+            ['guilty', 'surprise', 'upset']
+        ],
+        outfits=['dress', 'naked'],
+        dist=['close', 'far'],
+        overrides={
+            (None, 'dress', None): (None, None, 'pioneer', None)
+        }
+    )
 
-## Новые персонажи
+    image vt = DSSprite(
+        id='vt',
+        emotions=[
+            ['angry', 'rage', 'shy'],
+            ['normal', 'sad', 'smile'],
+            ['laugh', 'scared']
+        ],
+        outfits=['pioneer', 'shirt', 'swim'],
+        naked=['swim']
+    )
 
-    # Повариха
-    image ck laugh = ds_define_sprite('ma', 'laugh')
-    image ck normal = ds_define_sprite('ma', 'normal')
-    image ck sad = ds_define_sprite('ma', 'sad')
-    image ck serious = ds_define_sprite('ma', 'serious')
-    image ck smile = ds_define_sprite('ma', 'smile')
-
-    image ck laugh close = ds_define_sprite('ma', 'laugh', dist='close')
-    image ck normal close = ds_define_sprite('ma', 'normal', dist='close')
-    image ck sad close = ds_define_sprite('ma', 'sad', dist='close')
-    image ck serious close = ds_define_sprite('ma', 'serious', dist='close')
-    image ck smile close = ds_define_sprite('ma', 'smile', dist='close')
-
-    image ck laugh far = ds_define_sprite('ma', 'laugh', dist='far')
-    image ck normal far = ds_define_sprite('ma', 'normal', dist='far')
-    image ck sad far = ds_define_sprite('ma', 'sad', dist='far')
-    image ck serious far = ds_define_sprite('ma', 'serious', dist='far')
-    image ck smile far = ds_define_sprite('ma', 'smile', dist='far')
-
-    # Яна
-    image ya guilty naked = ds_define_sprite('ya', 'guilty', body_num=1)
-    image ya happy naked = ds_define_sprite('ya', 'happy', body_num=1)
-    image ya happy2 naked = ds_define_sprite('ya', 'happy2', body_num=2)
-    image ya laugh naked = ds_define_sprite('ya', 'laugh', body_num=2)
-    image ya normal naked = ds_define_sprite('ya', 'sad', body_num=1)
-    image ya sad naked = ds_define_sprite('ya', 'verysad', body_num=1)
-    image ya shy naked = ds_define_sprite('ya', 'shy', body_num=1)
-    image ya shy2 naked = ds_define_sprite('ya', 'veryshy', body_num=1)
-    image ya smile naked = ds_define_sprite('ya', 'smile', body_num=2)
-    image ya smile2 naked = ds_define_sprite('ya', 'normal', body_num=1)
-    image ya surprise naked = ds_define_sprite('ya', 'surprise', body_num=1)
-    image ya guilty pioneer = ds_define_sprite('ya', 'guilty', body_num=1, cloth='pioneer')
-    image ya happy pioneer = ds_define_sprite('ya', 'happy', body_num=1, cloth='pioneer')
-    image ya happy2 pioneer = ds_define_sprite('ya', 'happy2', body_num=2, cloth='pioneer')
-    image ya laugh pioneer = ds_define_sprite('ya', 'laugh', body_num=2, cloth='pioneer')
-    image ya normal pioneer = ds_define_sprite('ya', 'sad', body_num=1, cloth='pioneer')
-    image ya sad pioneer = ds_define_sprite('ya', 'verysad', body_num=1, cloth='pioneer')
-    image ya shy pioneer = ds_define_sprite('ya', 'shy', body_num=1, cloth='pioneer')
-    image ya shy2 pioneer = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='pioneer')
-    image ya smile pioneer = ds_define_sprite('ya', 'smile', body_num=2, cloth='pioneer')
-    image ya smile2 pioneer = ds_define_sprite('ya', 'normal', body_num=1, cloth='pioneer')
-    image ya surprise pioneer = ds_define_sprite('ya', 'surprise', body_num=1, cloth='pioneer')
-    image ya guilty dress = ds_define_sprite('ya', 'guilty', body_num=1, cloth='dress')
-    image ya happy dress = ds_define_sprite('ya', 'happy', body_num=1, cloth='dress')
-    image ya happy2 dress = ds_define_sprite('ya', 'happy2', body_num=2, cloth='dress')
-    image ya laugh dress = ds_define_sprite('ya', 'laugh', body_num=2, cloth='dress')
-    image ya normal dress = ds_define_sprite('ya', 'sad', body_num=1, cloth='dress')
-    image ya sad dress = ds_define_sprite('ya', 'verysad', body_num=1, cloth='dress')
-    image ya shy dress = ds_define_sprite('ya', 'shy', body_num=1, cloth='dress')
-    image ya shy2 dress = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='dress')
-    image ya smile dress = ds_define_sprite('ya', 'smile', body_num=2, cloth='dress')
-    image ya smile2 dress = ds_define_sprite('ya', 'normal', body_num=1, cloth='dress')
-    image ya surprise dress = ds_define_sprite('ya', 'surprise', body_num=1, cloth='dress')
-
-    image ya guilty naked close = ds_define_sprite('ya', 'guilty', body_num=1, dist='close')
-    image ya happy naked close = ds_define_sprite('ya', 'happy', body_num=1, dist='close')
-    image ya happy2 naked close = ds_define_sprite('ya', 'happy2', body_num=2, dist='close')
-    image ya laugh naked close = ds_define_sprite('ya', 'laugh', body_num=2, dist='close')
-    image ya normal naked close = ds_define_sprite('ya', 'sad', body_num=1, dist='close')
-    image ya sad naked close = ds_define_sprite('ya', 'verysad', body_num=1, dist='close')
-    image ya shy naked close = ds_define_sprite('ya', 'shy', body_num=1, dist='close')
-    image ya shy2 naked close = ds_define_sprite('ya', 'veryshy', body_num=1, dist='close')
-    image ya smile naked close = ds_define_sprite('ya', 'smile', body_num=2, dist='close')
-    image ya smile2 naked close = ds_define_sprite('ya', 'normal', body_num=1, dist='close')
-    image ya surprise naked close = ds_define_sprite('ya', 'surprise', body_num=1, dist='close')
-    image ya guilty pioneer close = ds_define_sprite('ya', 'guilty', body_num=1, cloth='pioneer', dist='close')
-    image ya happy pioneer close = ds_define_sprite('ya', 'happy', body_num=1, cloth='pioneer', dist='close')
-    image ya happy2 pioneer close = ds_define_sprite('ya', 'happy2', body_num=2, cloth='pioneer', dist='close')
-    image ya laugh pioneer close = ds_define_sprite('ya', 'laugh', body_num=2, cloth='pioneer', dist='close')
-    image ya normal pioneer close = ds_define_sprite('ya', 'sad', body_num=1, cloth='pioneer', dist='close')
-    image ya sad pioneer close = ds_define_sprite('ya', 'verysad', body_num=1, cloth='pioneer', dist='close')
-    image ya shy pioneer close = ds_define_sprite('ya', 'shy', body_num=1, cloth='pioneer', dist='close')
-    image ya shy2 pioneer close = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='pioneer', dist='close')
-    image ya smile pioneer close = ds_define_sprite('ya', 'smile', body_num=2, cloth='pioneer', dist='close')
-    image ya smile2 pioneer close = ds_define_sprite('ya', 'normal', body_num=1, cloth='pioneer', dist='close')
-    image ya surprise pioneer close = ds_define_sprite('ya', 'surprise', body_num=1, cloth='pioneer', dist='close')
-    image ya guilty dress close = ds_define_sprite('ya', 'guilty', body_num=1, cloth='dress', dist='close')
-    image ya happy dress close = ds_define_sprite('ya', 'happy', body_num=1, cloth='dress', dist='close')
-    image ya happy2 dress close = ds_define_sprite('ya', 'happy2', body_num=2, cloth='dress', dist='close')
-    image ya laugh dress close = ds_define_sprite('ya', 'laugh', body_num=2, cloth='dress', dist='close')
-    image ya normal dress close = ds_define_sprite('ya', 'sad', body_num=1, cloth='dress', dist='close')
-    image ya sad dress close = ds_define_sprite('ya', 'verysad', body_num=1, cloth='dress', dist='close')
-    image ya shy dress close = ds_define_sprite('ya', 'shy', body_num=1, cloth='dress', dist='close')
-    image ya shy2 dress close = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='dress', dist='close')
-    image ya smile dress close = ds_define_sprite('ya', 'smile', body_num=2, cloth='dress', dist='close')
-    image ya smile2 dress close = ds_define_sprite('ya', 'normal', body_num=1, cloth='dress', dist='close')
-    image ya surprise dress close = ds_define_sprite('ya', 'surprise', body_num=1, cloth='dress', dist='close')
-
-    image ya guilty naked far = ds_define_sprite('ya', 'guilty', body_num=1, dist='far')
-    image ya happy naked far = ds_define_sprite('ya', 'happy', body_num=1, dist='far')
-    image ya happy2 naked far = ds_define_sprite('ya', 'happy2', body_num=2, dist='far')
-    image ya laugh naked far = ds_define_sprite('ya', 'laugh', body_num=2, dist='far')
-    image ya normal naked far = ds_define_sprite('ya', 'sad', body_num=1, dist='far')
-    image ya sad naked far = ds_define_sprite('ya', 'verysad', body_num=1, dist='far')
-    image ya shy naked far = ds_define_sprite('ya', 'shy', body_num=1, dist='far')
-    image ya shy2 naked far = ds_define_sprite('ya', 'veryshy', body_num=1, dist='far')
-    image ya smile naked far = ds_define_sprite('ya', 'smile', body_num=2, dist='far')
-    image ya smile2 naked far = ds_define_sprite('ya', 'normal', body_num=1, dist='far')
-    image ya surprise naked far = ds_define_sprite('ya', 'surprise', body_num=1, dist='far')
-    image ya guilty pioneer far = ds_define_sprite('ya', 'guilty', body_num=1, cloth='pioneer', dist='far')
-    image ya happy pioneer far = ds_define_sprite('ya', 'happy', body_num=1, cloth='pioneer', dist='far')
-    image ya happy2 pioneer far = ds_define_sprite('ya', 'happy2', body_num=2, cloth='pioneer', dist='far')
-    image ya laugh pioneer far = ds_define_sprite('ya', 'laugh', body_num=2, cloth='pioneer', dist='far')
-    image ya normal pioneer far = ds_define_sprite('ya', 'sad', body_num=1, cloth='pioneer', dist='far')
-    image ya sad pioneer far = ds_define_sprite('ya', 'verysad', body_num=1, cloth='pioneer', dist='far')
-    image ya shy pioneer far = ds_define_sprite('ya', 'shy', body_num=1, cloth='pioneer', dist='far')
-    image ya shy2 pioneer far = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='pioneer', dist='far')
-    image ya smile pioneer far = ds_define_sprite('ya', 'smile', body_num=2, cloth='pioneer', dist='far')
-    image ya smile2 pioneer far = ds_define_sprite('ya', 'normal', body_num=1, cloth='pioneer', dist='far')
-    image ya surprise pioneer far = ds_define_sprite('ya', 'surprise', body_num=1, cloth='pioneer', dist='far')
-    image ya guilty dress far = ds_define_sprite('ya', 'guilty', body_num=1, cloth='dress', dist='far')
-    image ya happy dress far = ds_define_sprite('ya', 'happy', body_num=1, cloth='dress', dist='far')
-    image ya happy2 dress far = ds_define_sprite('ya', 'happy2', body_num=2, cloth='dress', dist='far')
-    image ya laugh dress far = ds_define_sprite('ya', 'laugh', body_num=2, cloth='dress', dist='far')
-    image ya normal dress far = ds_define_sprite('ya', 'sad', body_num=1, cloth='dress', dist='far')
-    image ya sad dress far = ds_define_sprite('ya', 'verysad', body_num=1, cloth='dress', dist='far')
-    image ya shy dress far = ds_define_sprite('ya', 'shy', body_num=1, cloth='dress', dist='far')
-    image ya shy2 dress far = ds_define_sprite('ya', 'veryshy', body_num=1, cloth='dress', dist='far')
-    image ya smile dress far = ds_define_sprite('ya', 'smile', body_num=2, cloth='dress', dist='far')
-    image ya smile2 dress far = ds_define_sprite('ya', 'normal', body_num=1, cloth='dress', dist='far')
-    image ya surprise dress far = ds_define_sprite('ya', 'surprise', body_num=1, cloth='dress', dist='far')
-
-    # Физрук
-    image fz angry uniform = ds_define_sprite('ba', 'evil', cloth='uniform')
-    image fz normal uniform = ds_define_sprite('ba', 'normal', cloth='uniform')
-    image fz rage uniform = ds_define_sprite('ba', 'rage', cloth='uniform')
-    image fz serious uniform = ds_define_sprite('ba', 'em1', cloth='uniform')
-    image fz smile uniform = ds_define_sprite('ba', 'smile', cloth='uniform')
-
-    image fz angry naked = ds_define_sprite('ba', 'evil')
-    image fz normal naked = ds_define_sprite('ba', 'normal')
-    image fz rage naked = ds_define_sprite('ba', 'rage')
-    image fz serious naked = ds_define_sprite('ba', 'em1')
-    image fz smile naked = ds_define_sprite('ba', 'smile')
+    image yn = DSSprite(
+        id='ya',
+        emotions=[
+            ['guilty', 'happy', 'normal', 'sad', 'shy', 'shy2', 'smile2', 'surprise'],
+            ['happy2', 'laugh', 'smile']
+        ],
+        outfits=['dress', 'naked', 'pioneer'],
+        dist=['close', 'far'],
+        overrides={
+            ('normal', None, None): (None, 'sad', None, None),
+            ('sad', None, None): (None, 'verysad', None, None),
+            ('shy2', None, None): (None, 'veryshy', None, None),
+            ('smile2', None, None): (None, 'normal', None, None)
+        }
+    )
 
 ## Сны Семёна
-
-    image dvw normal = "mods/disco_sovenok/sprite/normal/dvw/dv_normal.png"
-    image dvw laugh = "mods/disco_sovenok/sprite/normal/dvw/dv_laugh.png"
-    image dvw smile  = "mods/disco_sovenok/sprite/normal/dvw/dv_smile.png"
-    image dvw rage = "mods/disco_sovenok/sprite/normal/dvw/dv_rage.png"
 
     image piw normal = "mods/disco_sovenok/sprite/normal/piw/qq.png"
 
     image sub arb = ds_define_sprite('undv', '', body_num=5)
     image sub lim = ds_define_sprite('undv', '', body_num=1)
     image sub trs = ds_define_sprite('undv', '', body_num=4)
-
-    image ag grin = ds_define_sprite('ag', 'grin', body_num=1, cloth='casual')
-    image ag happy = ds_define_sprite('ag', 'happy', body_num=1, cloth='casual')
-    image ag normal = ds_define_sprite('ag', 'norm', body_num=1, cloth='casual')
-    image ag ok = ds_define_sprite('ag', 'allisok', body_num=1, cloth='casual')
-    image ag surprise = ds_define_sprite('ag', 'surprise', body_num=1, cloth='casual')
-    image ag angry = ds_define_sprite('ag', 'angry', body_num=2, cloth='casual')
-    image ag rage = ds_define_sprite('ag', 'furious', body_num=2, cloth='casual')
-    image ag shocked = ds_define_sprite('ag', 'shock', body_num=2, cloth='casual')
-    image ag tired = ds_define_sprite('ag', 'tired', body_num=2, cloth='casual')
-    image ag confused = ds_define_sprite('ag', 'normal_hand', body_num=3, cloth='casual')
-    image ag grin far = ds_define_sprite('ag', 'grin', body_num=1, cloth='casual', dist='far')
-    image ag happy far = ds_define_sprite('ag', 'happy', body_num=1, cloth='casual', dist='far')
-    image ag normal far = ds_define_sprite('ag', 'norm', body_num=1, cloth='casual', dist='far')
-    image ag ok far = ds_define_sprite('ag', 'allisok', body_num=1, cloth='casual', dist='far')
-    image ag surprise far = ds_define_sprite('ag', 'surprise', body_num=1, cloth='casual', dist='far')
-    image ag angry far = ds_define_sprite('ag', 'angry', body_num=2, cloth='casual', dist='far')
-    image ag rage far = ds_define_sprite('ag', 'furious', body_num=2, cloth='casual', dist='far')
-    image ag shocked far = ds_define_sprite('ag', 'shock', body_num=2, cloth='casual', dist='far')
-    image ag tired far = ds_define_sprite('ag', 'tired', body_num=2, cloth='casual', dist='far')
-    image ag confused far = ds_define_sprite('ag', 'normal_hand', body_num=3, cloth='casual', dist='far')
 
 # Эффекты
 

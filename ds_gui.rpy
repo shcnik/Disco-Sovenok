@@ -2718,7 +2718,7 @@ screen ds_check_result():
                         color "#ff0000"
                         size 24
                         xalign 0.5
-                elif ds_last_skillcheck.result:
+                elif ds_last_skillcheck.result():
                     text "УСПЕХ":
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         color "#008000"
