@@ -3,9 +3,11 @@ FROM python:3
 RUN pip install --upgrade pip
 RUN pip install --upgrade Pillow
 
-COPY ./config.py /opt
-COPY ./estool-1.001.py /opt
-COPY ./sprites_lol.rpy /opt
+COPY .test/config.py /opt
+COPY .test/estool-1.001.py /opt
+COPY .test/sprites_lol.rpy /opt
+COPY . /home/src
 
-CMD ["python3", "./estool-1.001.py"]
+CMD ["ls", "-l", "/home/src"]
+CMD ["python3", "/opt/estool-1.001.py"]
 
