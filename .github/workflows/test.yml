@@ -8,7 +8,5 @@ jobs:
         uses: actions/checkout@v3
       - name: Run test
         run: |
-          docker build ./.test -t shcnik/estool;
-          docker run -d shcnik/estool --mount source=. target=/home;
-      - name: Print test output
-        run: cat ./estool.log
+          docker build -f .test/Dockerfile . -t shcnik/estool;
+          docker run shcnik/estool;
