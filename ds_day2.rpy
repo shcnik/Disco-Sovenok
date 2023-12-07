@@ -1176,7 +1176,7 @@ label ds_day2_pass_alone_music:
             show mi normal pioneer at center   with dspr
             mi "Да ладно тебе, я тебя научу играть! Хочешь на трубе, например? Или на скрипке? Я на всем умею, честно-честно."
             play sound ds_sfx_mot
-            сom "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
+            com "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
             me "Я подумаю, а пока не могла бы ты подписать?"
             show mi happy pioneer at center   with dspr
             mi "Да-да-да, конечно, давай! Ты заходи, не стесняйся! Я еще и пою хорошо! Послушаешь, как я пою японские народные песни. Ну, или, если не нравится, может, что-нибудь из современных шлягеров?"
@@ -2160,7 +2160,7 @@ label ds_day2_pass_dv_music:
             mi "Да ладно тебе, я тебя научу играть! Хочешь на трубе, например? Или на скрипке? Я на всем умею, честно-честно."
             dv "Подпиши уже ему обходной, и мы пойдём!"
             play sound ds_sfx_mot
-            сom "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
+            com "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
             me "Я подумаю, а пока не могла бы ты подписать?"
             show mi happy pioneer at center   with dspr
             mi "Да-да-да, конечно, давай! Ты заходи, не стесняйся! Я еще и пою хорошо! Послушаешь, как я пою японские народные песни. Ну, или, если не нравится, может, что-нибудь из современных шлягеров?"
@@ -3412,7 +3412,7 @@ label ds_day2_pass_sl_music:
             show mi normal pioneer at center   with dspr
             mi "Да ладно тебе, я тебя научу играть! Хочешь на трубе, например? Или на скрипке? Я на всем умею, честно-честно."
             play sound ds_sfx_mot
-            сom "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
+            com "Ты решаешь не спорить с девочкой-мультиинструменталистом, так как в ответ наверняка бы получил очередную пулеметную очередь из слов."
             me "Я подумаю, а пока не могла бы ты подписать?"
             show mi happy pioneer at center   with dspr
             mi "Да-да-да, конечно, давай! Ты заходи, не стесняйся! Я еще и пою хорошо! Послушаешь, как я пою японские народные песни. Ну, или, если не нравится, может, что-нибудь из современных шлягеров?"
@@ -4864,7 +4864,7 @@ label ds_day2_pass_un_clubs:
                     un "Нет, я пойду."
                     hide un with dissolve
                     $ ds_lp['un'] -= 1
-                    jump ds_da2_pass_alone_clubs
+                    jump ds_day2_pass_alone_clubs
 
     show un normal pioneer at center with dissolve
     window show
@@ -5039,7 +5039,7 @@ label ds_day2_pass_un_medic:
                     un "Нет, я пойду."
                     hide un with dissolve
                     $ ds_lp['un'] -= 1
-                    jump ds_da2_pass_alone_medic
+                    jump ds_day2_pass_alone_medic
 
     show un normal pioneer at center with dissolve
     play ambience ambience_camp_center_day fadein 3
@@ -5271,7 +5271,7 @@ label ds_day2_pass_un_library:
                     un "Нет, я пойду."
                     hide un with dissolve
                     $ ds_lp['un'] -= 1
-                    jump ds_da2_pass_alone_library
+                    jump ds_day2_pass_alone_library
 
     show un normal pioneer at center with dissolve
 
@@ -5622,7 +5622,7 @@ label ds_day2_pass_un_sport:
                     un "Нет, я пойду."
                     hide un with dissolve
                     $ ds_lp['un'] -= 1
-                    jump ds_da2_pass_alone_sport
+                    jump ds_day2_pass_alone_sport
 
     show un normal pioneer at center with dissolve
     window show
@@ -8413,7 +8413,7 @@ label ds_day2_house12:
                     vol "Лучше не лезть дальше."
                     "И ты уходишь."
                     $ disable_current_zone_ds_small()
-                    jump ds_day2_find_mi
+                    jump ds_day2_find_mi_house
         "Постучать":
             window show
             play sound sfx_knocking_door_2
@@ -8688,7 +8688,7 @@ label ds_day2_house17:
                         "Ты выходишь из домика."
                         
                         $ disable_current_zone_ds_small()
-                        jump ds_day2_find_mi
+                        jump ds_day2_find_mi_house
                     else:
                         window show
                         play sound ds_sfx_psy
@@ -8700,7 +8700,7 @@ label ds_day2_house17:
                             scene bg ext_house_of_mt_night
                             with dissolve
                             "Ты выходишь из домика."
-                            jump ds_day2_find_mi
+                            jump ds_day2_find_mi_house
                         mt "Завтра, всё завтра..."
                         "Ты вынужден отложить заколку Мику на завтра."
                         jump ds_day2_sleep
@@ -8761,7 +8761,7 @@ label ds_day2_house23:
             th "И то верно."
             
             $ disable_current_zone_ds_small()
-            jump ds_day2_find_mi
+            jump ds_day2_find_mi_house
     dv "Кого тут посреди ночи привалило?!"
     hfl "Ой-ёй, это Алиса..."
     hfl "Сразу побежишь или дождёшься расправы?"
@@ -9710,7 +9710,7 @@ label ds_day2_entrance:
     play sound ds_sfx_psy
     vol "Подглядывать стыдно, но ты не можешь отвести взгляд."
     con "Яркий лунный свет отражается от её мокрой кожи, делая Славю похожей на древнегреческую статую.{w} Может быть, Венеру Милосскую?"
-    сon "Это зрелище настолько прекрасно, что в нём как будто не остаётся места ни для чего мирского, плотского – только возвышенное восхищение истинной красотой."
+    con "Это зрелище настолько прекрасно, что в нём как будто не остаётся места ни для чего мирского, плотского – только возвышенное восхищение истинной красотой."
     con "Ты любуешься Славей и в тот миг забываешь обо всём прочем."
     th "Возможно, это совсем не ад, а рай?.."
     $ persistent.sprite_time = "night"
@@ -10814,7 +10814,7 @@ label ds_day2_library:
                         window show
             me "Ладно... Ну пока тогда!"
             "Женя ничего не ответила."
-            hide zh with dissolve
+            hide mz with dissolve
             stop music fadeout 2
             "Я тоже не спеша отправился к себе в домик."
         "Уйти":

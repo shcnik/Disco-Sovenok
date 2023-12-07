@@ -1210,9 +1210,9 @@ init:
     $ dvv = Character (u'Девушка', color="ffaa00", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ mig = Character (u'Девушка', color="00deff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ mtg = Character (u'Девушка', color="00ea32", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ slv = Character (u'Девушка', color="ffd200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ unv = Character (u'Девушка', color="b956ff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
-    $ usv = Character (u'Девушка', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ slg = Character (u'Девушка', color="ffd200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ ung = Character (u'Девушка', color="b956ff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ usg = Character (u'Девушка', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ elg = Character (u'Парень', color="ffff00", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 ## Иные персонажи
@@ -1228,6 +1228,12 @@ init:
     $ ag = Character (u'Мужчина', color="999999", ctc="ctc_animation", ctc_position="fixed", drop_shadow=[ (2, 2) ], drop_shadow_color="#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ book = Character (u'Книга', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+
+    $ dnp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ vtp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ arp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+
+
 
 # Изображения
 
@@ -1282,8 +1288,8 @@ init:
     image bg ds_int_el_house_sunset = "mods/disco_sovenok/bg/ext_house_of_el_sunset.jpg"
     image bg ds_int_el_house_night = "mods/disco_sovenok/bg/ext_house_of_el_night.jpg"
 
-    image bg ds_int_sl_night = "mods/disco_sovenok/bg/int_house_of_sl_night.jpg"
-    image bg ds_int_sl_night_light = "mods/disco_sovenok/bg/int_house_of_sl_night_light.jpg"
+    image bg ds_int_sl_house_night = "mods/disco_sovenok/bg/int_house_of_sl_night.jpg"
+    image bg ds_int_sl_house_night_light = "mods/disco_sovenok/bg/int_house_of_sl_night_light.jpg"
 
     image bg ds_ext_un_night = "mods/disco_sovenok/bg/ext_house_of_un_night_7dl.jpg"
     image bg ds_ext_un_sunset = "mods/disco_sovenok/bg/ext_house_of_un_sunset1.jpg"
@@ -1391,7 +1397,15 @@ init:
     image bg ds_ext_stage_big_sunset = "mods/disco_sovenok/bg/ext_stage_big_sunset_7dl.jpg"
     image bg ds_ext_stage_near_sunset = "mods/disco_sovenok/bg/ext_stage_near_sunset.jpg"
 
+    image bg ds_ext_backstage_day = "mods/disco_sovenok/bg/ext_backstage_alt_day_7dl.jpg"
+    image bg ds_ext_backstage_night = "mods/disco_sovenok/bg/ext_backstage_alt_night_7dl.jpg"
+
     image bg ds_ext_camp_entrance_car = "mods/disco_sovenok/bg/ext_camp_car.png"
+
+    image bg ds_int_clubs_male_night = "mods/disco_sovenok/bg/int_clubs_male_night.jpg"
+
+    image bg ds_ext_old_camp_storage_day = "mods/disco_sovenok/bg/ext_sklad.jpg"
+    image bg ds_int_old_camp_storage = "mods/disco_sovenok/bg/int_warehouse_day.jpg"
 
 ## Новые CG
 
@@ -1421,6 +1435,8 @@ init:
 
     image cg ds_day3_disco_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"
     image cg ds_day3_dv_dance = "mods/disco_sovenok/cg/d6_dv_dance_pioneer_7dl.jpg"
+
+    image cg ds_day3_sl_clean = "mods/disco_sovenok/cg/d6_sl_clean_7dl.jpg"
 
     image cg ds_dayx_volleyball = "mods/disco_sovenok/cg/volleyball.jpg"
 
@@ -1463,6 +1479,8 @@ init:
     image cg ds_day4_us_dv_play = "mods/disco_sovenok/cg/ussrr_dv_p_d4.jpg"
 
     image cg ds_day4_cs_car = "mods/disco_sovenok/cg/d4_cs_car_day_cs_7dl.jpg"
+
+    image cg ds_day4_work_mt = "mods/disco_sovenok/cg/d2_mt_work_ll.jpg"
 
 ## Фансервисные CG (добавляются из-за цензуры в steam)
 
@@ -1544,6 +1562,7 @@ init:
     $ ds_goodend_mi_jp = "mods/disco_sovenok/music/goluboy_vagon.ogg"
     $ ds_goodend_un = "mods/disco_sovenok/music/yanderesong.ogg"
     $ ds_church_theme = "mods/disco_sovenok/music/church_theme.mp3"
+    $ ds_work = "mods/disco_sovenok/music/bureaucracy.mp3"
 
     $ ds_mi_piano_1 = "mods/disco_sovenok/music/mi_piano_1.mp3"
     $ ds_mi_piano_2 = "mods/disco_sovenok/music/mi_piano_2.mp3"

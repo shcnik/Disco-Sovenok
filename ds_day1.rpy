@@ -3099,7 +3099,7 @@ label ds_day1_dining_dv:
                     play sound ds_sfx_mot
                     res "Cлавя. Поймала тебя."
                     dv "Ещё и Славя тут..."
-                    jump ds_day2_caught_dv
+                    jump ds_day1_caught_dv
     else:
         me "Алиса, а как тебе тут?"
         dv "В смысле? В лагере что ли?"

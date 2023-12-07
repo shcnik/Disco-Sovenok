@@ -4208,11 +4208,11 @@ label ds_cards_rules:
     "{size=35}{u}Возможные комбинации карт в порядке увеличения достоинства:{/u}{/size}{nw}"
     ""
 
-    "- {b}Старшая карта{/b} (англ. {i}high card{i}): ни одна из вышеописанных комбинаций,{nw}"
+    "- {b}Старшая карта{/b} (англ. {i}high card{/i}): ни одна из вышеописанных комбинаций,{nw}"
     if persistent.font_size == 'small':
-        "например: {b}{color=#FF6600}Т{image=suit_2ch_S} 10{image=suit_2ch_S}{color=#009833} 9{image=suit_utan_S} 5{image=suit_uvao_S} 4{image=suit_uvao_S}{/color}{color=#FF6600} 2{image=suit_ussr_S}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}Т{image=suit_2ch_S} 10{image=suit_2ch_S}{/color}{color=#009833} 9{image=suit_utan_S} 5{image=suit_uvao_S} 4{image=suit_uvao_S}{/color}{color=#FF6600} 2{image=suit_ussr_S}{/color}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "например: {b}{color=#FF6600}Т{image=suit_2ch_L} 10{image=suit_2ch_L}{color=#009833} 9{image=suit_utan_L} 5{image=suit_uvao_L} 4{image=suit_uvao_L}{/color}{color=#FF6600} 2{image=suit_ussr_L}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}Т{image=suit_2ch_L} 10{image=suit_2ch_L}{/color}{color=#009833} 9{image=suit_utan_L} 5{image=suit_uvao_L} 4{image=suit_uvao_L}{/color}{color=#FF6600} 2{image=suit_ussr_L}{/color}{/color}{/b}."
     "Вышеприведённая комбинация называется «старший туз»."
     "Если у соперников на руках оказывается по старшей карте,{nw}"
     "победитель определяется по старшей из имеющихся на руках карт."
@@ -4220,9 +4220,9 @@ label ds_cards_rules:
     ""
 
     if persistent.font_size == 'small':
-        "- {b}Пара{/b}/Двойка (англ. {i}one pair{/i}): две карты одного достоинства, например: {b}{color=#FF6600}9{image=suit_ussr_S}{color=#009833} 9{image=suit_utan_S}{/color}{/b}."
+        "- {b}Пара{/b}/Двойка (англ. {i}one pair{/i}): две карты одного достоинства, например: {b}{color=#FF6600}9{image=suit_ussr_S}{/color}{color=#009833} 9{image=suit_utan_S}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "- {b}Пара{/b}/Двойка (англ. {i}one pair{/i}): две карты одного достоинства, например: {b}{color=#FF6600}9{image=suit_ussr_L}{color=#009833} 9{image=suit_utan_L}{/color}{/b}."
+        "- {b}Пара{/b}/Двойка (англ. {i}one pair{/i}): две карты одного достоинства, например: {b}{color=#FF6600}9{image=suit_ussr_L}{/color}{color=#009833} 9{image=suit_utan_L}{/color}{/b}."
     "При наличии этой комбинации у двух игроков, преимущество у того, у кого выше{nw}"
     "достоинство карт, составляющих пару. Если пары идентичны, объявляется ничья.{nw}"
     ""
@@ -4231,9 +4231,9 @@ label ds_cards_rules:
     nvl clear
 
     if persistent.font_size == 'small':
-        "- {b}Две пары{/b}/Две двойки/Два плюс два (англ. {i}two pairs{/i}): две пары карт, например: {b}{color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S} {color=#FF6600}4{image=suit_ussr_S} 4{image=suit_2ch_S}{/color}{/b}."
+        "- {b}Две пары{/b}/Две двойки/Два плюс два (англ. {i}two pairs{/i}): две пары карт, например: {b}{color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S}{/color} {color=#FF6600}4{image=suit_ussr_S} 4{image=suit_2ch_S}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "- {b}Две пары{/b}/Две двойки/Два плюс два (англ. {i}two pairs{/i}): две пары карт, например: {b}{color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L} {color=#FF6600}4{image=suit_ussr_L} 4{image=suit_2ch_L}{/color}{/b}."
+        "- {b}Две пары{/b}/Две двойки/Два плюс два (англ. {i}two pairs{/i}): две пары карт, например: {b}{color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L}{/color} {color=#FF6600}4{image=suit_ussr_L} 4{image=suit_2ch_L}{/color}{/b}."
     "Если на руках {b}три{/b} пары, пара карт самого младшего достоинства не учитывается,{nw}"
     "{i}комбинации «Три пары» в игре нет{/i}."
     "Когда у двух игроков на руках окажутся по две пары, старшей является та,{nw}"
@@ -4246,9 +4246,9 @@ label ds_cards_rules:
 
     "- {b}Тройка{/b}/Сет/Триплет/Трипс (англ. {i}three of a kind, set{/i} — «три одинаковых», «набор»):{nw}"
     if persistent.font_size == 'small':
-        "три карты одного достоинства, например: {b}{color=#009833}7{image=suit_uvao_S} 7{image=suit_utan_S} {color=#FF6600}7{image=suit_2ch_S}{/color}{/b}."
+        "три карты одного достоинства, например: {b}{color=#009833}7{image=suit_uvao_S} 7{image=suit_utan_S}{/color} {color=#FF6600}7{image=suit_2ch_S}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "три карты одного достоинства, например: {b}{color=#009833}7{image=suit_uvao_L} 7{image=suit_utan_L} {color=#FF6600}7{image=suit_2ch_L}{/color}{/b}."
+        "три карты одного достоинства, например: {b}{color=#009833}7{image=suit_uvao_L} 7{image=suit_utan_L}{/color} {color=#FF6600}7{image=suit_2ch_L}{/color}{/b}."
     "Когда у двух соперников на руках одновременно окажутся тройки, победителем объявляется{nw}"
     "тот игрок, у которого тройку составляют карты более высокого достоинства."
     "Идентичных троек, как и покеров, и фулл-хаусов, в игре быть не может.{nw}"
@@ -4259,29 +4259,29 @@ label ds_cards_rules:
 
     "- {b}Стрит{/b} (англ. {i}straight{/i} — «порядок»): пять карт по порядку любых мастей,{nw}"
     if persistent.font_size == 'small':
-        "например: {b}{color=#FF6600}5{image=suit_2ch_S} 4{image=suit_ussr_S} {color=#009833}3{image=suit_utan_S} {color=#FF6600}2{image=suit_2ch_S} Т{image=suit_2ch_S}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}5{image=suit_2ch_S} 4{image=suit_ussr_S} {color=#009833}3{image=suit_utan_S}{/color} {color=#FF6600}2{image=suit_2ch_S} Т{image=suit_2ch_S}{/color}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "например: {b}{color=#FF6600}5{image=suit_2ch_L} 4{image=suit_ussr_L} {color=#009833}3{image=suit_utan_L} {color=#FF6600}2{image=suit_2ch_L} Т{image=suit_2ch_L}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}5{image=suit_2ch_L} 4{image=suit_ussr_L} {color=#009833}3{image=suit_utan_L}{/color} {color=#FF6600}2{image=suit_2ch_L} Т{image=suit_2ch_L}{/color}{/color}{/b}."
     "Если на руках оказывается {b}шесть{/b} карт по порядку, младшая карта в комбинации не участвует.{nw}"
     "Туз может как начинать порядок, так и заканчивать его."
     if persistent.font_size == 'small':
         "В приведённом выше примере {b}{color=#FF6600}Т{image=suit_2ch_S}{/color}{/b} заканчивает комбинацию и его достоинство{nw}"
         "оценивается в единицу, а {b}{color=#FF6600}5{image=suit_2ch_S}{/color}{/b} считается старшей картой."
         "Вышеприведённая комбинация является самым младшим стритом; самый старший стрит —{nw}"
-        "это стрит от туза: {b}{color=#FF6600}Т{image=suit_ussr_S} {color=#009833}К{image=suit_uvao_S} {color=#FF6600}Д{image=suit_2ch_S} В{image=suit_2ch_S} 10{image=suit_ussr_S}{/color}{/color}{/b}."
+        "это стрит от туза: {b}{color=#FF6600}Т{image=suit_ussr_S}{/color} {color=#009833}К{image=suit_uvao_S} {color=#FF6600}Д{image=suit_2ch_S} В{image=suit_2ch_S} 10{image=suit_ussr_S}{/color}{/color}{/b}."
     elif persistent.font_size == 'large':
         "В приведённом выше примере {b}{color=#FF6600}Т{image=suit_2ch_L}{/color}{/b} заканчивает комбинацию и его достоинство{nw}"
         "оценивается в единицу, а {b}{color=#FF6600}5{image=suit_2ch_L}{/color}{/b} считается старшей картой."
         "Вышеприведённая комбинация является самым младшим стритом; самый старший стрит —{nw}"
-        "это стрит от туза: {b}{color=#FF6600}Т{image=suit_ussr_L} {color=#009833}К{image=suit_uvao_L} {color=#FF6600}Д{image=suit_2ch_L} В{image=suit_2ch_L} 10{image=suit_ussr_L}{/color}{/color}{/b}."
+        "это стрит от туза: {b}{color=#FF6600}Т{image=suit_ussr_L}{/color} {color=#009833}К{image=suit_uvao_L} {color=#FF6600}Д{image=suit_2ch_L} В{image=suit_2ch_L} 10{image=suit_ussr_L}{/color}{/color}{/b}."
     "При одновременном наличии стритов у двух игроков победитель определяется по старшей{nw}"
     "карте комбинации; если и старшие карты окажутся одинаковыми — объявляется ничья.{nw}"
     ""
 
     if persistent.font_size == 'small':
-        "- {b}Флеш{/b} (англ. {i}flush{/i} — «масть»): пять карт одной масти, например: {b}{color=#009833}К{image=suit_utan_S} В{image=suit_utan_S} 8{image=suit_utan_S} 4{image=suit_utan_S} 3{image=suit_utan_S}{/b}.{nw}"
+        "- {b}Флеш{/b} (англ. {i}flush{/i} — «масть»): пять карт одной масти, например: {b}{color=#009833}К{image=suit_utan_S} В{image=suit_utan_S} 8{image=suit_utan_S} 4{image=suit_utan_S} 3{image=suit_utan_S}{/color}{/b}.{nw}"
     elif persistent.font_size == 'large':
-        "- {b}Флеш{/b} (англ. {i}flush{/i} — «масть»): пять карт одной масти, например: {b}{color=#009833}К{image=suit_utan_L} В{image=suit_utan_L} 8{image=suit_utan_L} 4{image=suit_utan_L} 3{image=suit_utan_L}{/b}.{nw}"
+        "- {b}Флеш{/b} (англ. {i}flush{/i} — «масть»): пять карт одной масти, например: {b}{color=#009833}К{image=suit_utan_L} В{image=suit_utan_L} 8{image=suit_utan_L} 4{image=suit_utan_L} 3{image=suit_utan_L}{/color}{/b}.{nw}"
     "Такую комбинацию для оценки называют «флеш от короля» — старшей карты комбинации."
     "Самая старшая комбинация — с тузом.{nw}"
     "Если на руках оказывается {b}шесть{/b} карт одной масти, младшая карта комбинации игнорируется."
@@ -4295,25 +4295,25 @@ label ds_cards_rules:
 
     "- {b}Фулл-хаус{/b}/Полный дом/Три плюс два (англ. {i}full house, full boat{/i} — «полный дом», «полная лодка»):{nw}"
     if persistent.font_size == 'small':
-        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_S} 10{image=suit_2ch_S} {color=#009833}10{image=suit_utan_S} 8{image=suit_uvao_S} {color=#FF6600}8{image=suit_ussr_S}{/color}{/color}{/b}{/b}."
+        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_S} 10{image=suit_2ch_S}{/color} {color=#009833}10{image=suit_utan_S} 8{image=suit_uvao_S} {color=#FF6600}8{image=suit_ussr_S}{/color}{/color}{/b}{/b}."
     elif persistent.font_size == 'large':
-        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_L} 10{image=suit_2ch_L} {color=#009833}10{image=suit_utan_L} 8{image=suit_uvao_L} {color=#FF6600}8{image=suit_ussr_L}{/color}{/color}{/b}{/b}."
+        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_L} 10{image=suit_2ch_L}{/color} {color=#009833}10{image=suit_utan_L} 8{image=suit_uvao_L} {color=#FF6600}8{image=suit_ussr_L}{/color}{/color}{/b}{/b}."
     "Если на руках две тройки, тройка карт младшего достоинства считается, как пара карт;{nw}"
     "{i}комбинации «Две тройки» в игре нет{/i}."
     "Если у соперников одновременно оказались на руках такие комбинации,{nw}"
     "старшей считается та, в которой тройку составляют более высокие по достоинству карты,"
     if persistent.font_size == 'small':
-        "например: {b}{color=#009833}В{image=suit_uvao_S} {color=#FF6600}В{image=suit_2ch_S} В{image=suit_ussr_S} {color=#009833}9{image=suit_uvao_S} 9{image=suit_utan_S}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_S} 7{image=suit_ussr_S} {color=#009833}7{image=suit_utan_S} Т{image=suit_uvao_S} {color=#FF6600}Т{image=suit_2ch_S}{/color}{/color}{/b}."
+        "например: {b}{color=#009833}В{image=suit_uvao_S} {color=#FF6600}В{image=suit_2ch_S} В{image=suit_ussr_S}{/color} {color=#009833}9{image=suit_uvao_S} 9{image=suit_utan_S}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_S} 7{image=suit_ussr_S} {color=#009833}7{image=suit_utan_S} Т{image=suit_uvao_S} {color=#FF6600}Т{image=suit_2ch_S}{/color}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "например: {b}{color=#009833}В{image=suit_uvao_L} {color=#FF6600}В{image=suit_2ch_L} В{image=suit_ussr_L} {color=#009833}9{image=suit_uvao_L} 9{image=suit_utan_L}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_L} 7{image=suit_ussr_L} {color=#009833}7{image=suit_utan_L} Т{image=suit_uvao_L} {color=#FF6600}Т{image=suit_2ch_L}{/color}{/color}{/b}."
+        "например: {b}{color=#009833}В{image=suit_uvao_L} {color=#FF6600}В{image=suit_2ch_L} В{image=suit_ussr_L}{/color} {color=#009833}9{image=suit_uvao_L} 9{image=suit_utan_L}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_L} 7{image=suit_ussr_L} {color=#009833}7{image=suit_utan_L} Т{image=suit_uvao_L} {color=#FF6600}Т{image=suit_2ch_L}{/color}{/color}{/b}."
     "Два фулл-хауса, как и два покера, одинаковыми быть не могут (джокеров в колоде нет).{nw}"
     ""
 
     "- {b}Покер{/b}/Каре/Четвёрка (англ. {i}four of a kind, quads{/i} — «четыре одинаковых»): четыре карты{nw}"
     if persistent.font_size == 'small':
-        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_S} 8{image=suit_2ch_S} {color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S}{/color}{/b}{/b}, остальные карты не важны."
+        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_S} 8{image=suit_2ch_S}{/color} {color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S}{/color}{/b}{/b}, остальные карты не важны."
     elif persistent.font_size == 'large':
-        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_L} 8{image=suit_2ch_L} {color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L}{/color}{/b}{/b}, остальные карты не важны."
+        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_L} 8{image=suit_2ch_L}{/color} {color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L}{/color}{/b}{/b}, остальные карты не важны."
     "Если в дополнение к покеру на руках у игрока имеется ещё и пара, она не считается;{nw}"
     "{i}комбинации «Четыре + два» в игре нет{/i}."
     "Два покера принципиально не могут быть одинаковыми, так что когда у двух игроков в наличии{nw}"
@@ -5265,7 +5265,7 @@ label ds_cards_1_tour_fail_end:
                 window show
                 me "Взаимно."
                 "Он протягивает тебе руку, которую ты с достоинством пожал."
-                per_tor "Всё же крепкая у него хватка для того, кто тяжелее паяльника ничего не поднимает."
+                per_toc "Всё же крепкая у него хватка для того, кто тяжелее паяльника ничего не поднимает."
             "Не пожимать руку":
                 window show
                 me "Ага, спасибо."
@@ -5403,7 +5403,7 @@ label ds_cards_1_tour_win_end:
                         show prologue_dream
                         with fade
                         ine "Завтра мы встаём, идём на линейку, а там уже на трибуне, между Ольгой Дмитриевной и Славей, стоит она."
-                        show dv grin pioneer2 behind prologue_dream with diam
+                        show dv grin pioneer2 behind prologue_dream with fade
                         ine "И своим ехидным голосом говорит — так, мол, и так, некий Семён, приехать в лагерь ещё не успел, как пошёл подглядывать за мной и даже полапал немного."
                         play sound ds_sfx_fys
                         ins "Да это же реклама такая, что ты за неё ещё и приплачивать должен!"
@@ -5766,7 +5766,7 @@ label ds_cards_1_tour_win_end:
         show us sad pioneer with dspr
         us "Так нельзя, я только разыгрываться начала!"
         me "Я тоже. {w}Ты проиграла, я победил. Всё честно."
-        play music music_7dl["genki"] fadein 3
+        play music music_list['i_want_to_play'] fadein 3
         us "Переиграем! Только ты теперь поддавайся, слышишь?"
         us "Я должна победить и забрать главный приз!"
         show us angry pioneer with dspr
@@ -6000,7 +6000,7 @@ label ds_cards_semifinal:
         $ ds_cards_gamblers_semifinal[3].winner = True                                              # а он сам выигрывает в полуфинале
 
     if ds_cards_result_tour == 1:                                                               # если продули в 1 туре
-        scene bg int_dining_hall_sunset with joff_r
+        scene bg int_dining_hall_sunset with dissolve
         $ ds_tournament_state = "semifinal_end"                                                # устанавливаем конец полуфинала
         $ ds_drawing_of_detour_semifinal()
         $ renpy.fix_rollback()                                                                  # фиксируем выбор — "откатом" поменять будет нельзя
@@ -6513,7 +6513,7 @@ label ds_cards_semifinal_fail_end:
         if ds_cards_labeled:
             dv "В общем, вали отсюда, шулер!"
             "Ты уходишь из столовой под осуждающие взгляды решительно всех."
-            jump ds_cards_after_tour
+            jump ds_cards_quit
         "Алиса весело расхохоталась, а ты поднимаешься."
         th "Господи, почему все стервы такие рыжие?"
         th "Неужели у меня где-то написано «издеваться сюда»?"
@@ -7051,7 +7051,7 @@ label ds_cards_final_choice:
             "Что ещё можно про сказать про оппонентку Ульянки?"
             "Во. Жужелица."
 # ---------------------------------------------------- /ДИАЛОГИ
-        scene bg int_dining_hall_sunset with joff_r
+        scene bg int_dining_hall_sunset with dissolve
         $ ds_cards_gamblers_final[renpy.random.choice([0,1])].winner = True                                    #  один из игроков (рандомно) — победитель в финале
         $ ds_tournament_state = "final_end"
         call ds_cards_final_analizer
@@ -7571,7 +7571,7 @@ label ds_cards_final_fail_end:
         "Неизвестно откуда взявшиеся Ольга и Алиса, взревев в унисон, ринулись было стаскивать её на пол."
         play sound ds_sfx_mot
         svf "Но где там!"
-        show mi laugh pioneer far at fleft with diam
+        show mi laugh pioneer far at fleft with dissolve
         svf "Стол для игры финалистов большой, не чета узеньким, за которым вы квалифицировались."
         svf "Поэтому маленькая, юркая японочка успешно прыгает между руками загребущими и голосит во всю силу своих развитых лёгких."
         play sound ds_sfx_int
@@ -7879,7 +7879,7 @@ label ds_cards_final_win_end:
     if ds_my_rival_final.take == 'un':
         show un shy pioneer with dissolve
         un "К-кажется, в-всё."
-        play music music_7dl["take_my_hand"] fadein 3
+        play music music_list['lets_be_friends'] fadein 3
         me "Что?"
         show un sad pioneer with dspr
         un "Н-ну… Ты выиграл. П-поздравляю."
@@ -8205,7 +8205,7 @@ label ds_cards_final_win_end:
         sh "То есть думаешь, что можно просто так прийти и выиграть мой турнир?"
         scene black
         show sh rage pioneer close
-        with diam
+        with dissolve
         sh "Да кто ты такой вообще?"
         sh "Ведёшь себя, будто тебе уже давно не семнадцать лет."
         play sound ds_sfx_mot
@@ -8223,7 +8223,7 @@ label ds_cards_final_win_end:
         play ambience ambience_dining_hall_full fadein 5
         show blinking
         scene bg int_dining_hall_sunset with dissolve
-        with diam
+        with dissolve
         show sh upset pioneer with dissolve
         play sound ds_sfx_psy
         ine "Наваждение момента исчезает, Шурик из зловещей фигуры превращается обратно в обычного, чуть рассеянного, парня."
@@ -8296,11 +8296,11 @@ label ds_cards_draw:
     $ renpy.transition(dissolve)
     el "Ничья! Играйте ещё раз."
     if ds_tournament_state == "1_round_start":                             # если первый тур
-        jump ds_cards_1_tour_re_game                                        # играем первый тур
+        jump ds_cards_tournament_start                                     # играем первый тур
     elif ds_tournament_state == "semifinal_start":                         # если полуфинал
-        jump ds_cards_semifinal_re_game                                  # играем полуфинал
+        jump ds_cards_semifinal_start                                  # играем полуфинал
     elif ds_tournament_state == "final_start":                             # если финал
-        jump ds_cards_final_re_game                                      # играем финал
+        jump ds_cards_final_start                                      # играем финал
 
 #-----------------------------------------------------------------------------------
 # Анилизируем счёт по играм в этапе
@@ -8405,12 +8405,12 @@ label ds_cards_checking_scores:
 #-----------------------------------------------------------------------------------
 # Возвращаемся к обратно к игре на соответствующий этап
 label ds_cards_transition_to_game:                                                    # переход к игре
-    if ds_tournament_state == "final_start":                                         # если финал
-        jump ds_cards_final_re_game                                                   # играем финал
-    elif ds_tournament_state == "semifinal_start":                                   # если полуфинал
-        jump ds_cards_semifinal_re_game                                               # играем полуфинал
-    elif (ds_tournament_state == "1_round_start"):                                   # если первый тур
-        jump ds_cards_1_tour_re_game                                                  # играем 1 тур
+    if ds_tournament_state == "1_round_start":                             # если первый тур
+        jump ds_cards_tournament_start                                     # играем первый тур
+    elif ds_tournament_state == "semifinal_start":                         # если полуфинал
+        jump ds_cards_semifinal_start                                  # играем полуфинал
+    elif ds_tournament_state == "final_start":                             # если финал
+        jump ds_cards_final_start                                      # играем финал
 
 #-----------------------------------------------------------------------------------
 # Результат ИГРЫ (сравниваем и оцениваем комбинации)
@@ -8436,10 +8436,6 @@ label ds_cards_current_game_end_compare_hands:                                  
     "%(ds_cards_summary_poker_1)s"
     "%(ds_cards_summary_poker_2)s"
 
-    if ds_cards_current_rout_status in [1,2,3,4]:                                   # если игра не закончена
-        call ds_cards_current_game_ending_dialogs                                   # вызов диалога по текущей ситуации
-    else:
-        pass
     return
 
 #-----------------------------------------------------------------------------------

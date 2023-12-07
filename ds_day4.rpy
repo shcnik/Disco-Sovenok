@@ -2319,7 +2319,6 @@ label ds_day4_sh_lost:
             dv "Тебе не ясно было сказано: подождать!"
             dv "Вот и жди тут! Не пущу я тебя в свой домик, и не надейся!"
     stop ambience fadeout 2
-    scene bg 
     window hide
     scene bg int_dining_hall_people_day 
     with dissolve
@@ -3086,7 +3085,7 @@ label ds_day4_after_breakfast_reject:
                 with dspr
                 sl "Идём!"
                 $ ds_lp['sl'] += 1
-                jump ds_day4_beach_sl
+                jump ds_day4_sl_beach
             "Отказаться":
                 window show
                 me "Извини, не сейчас. Я переживаю за Шурика!"
@@ -4362,7 +4361,7 @@ label ds_day4_busstop:
                         play sound ds_sfx_fys
                         phi "{result}Дёрни резко рукой - что может быть проще?"
                         "Ты так и делаешь. Тебе удаётся вырвать руку у Мику."
-                        play sound sfx_body_fall
+                        play sound sfx_bodyfall_1
                         "Но ценой того, что Мику падает на землю."
                         
                         show mi dontlike pioneer at center
@@ -6608,7 +6607,7 @@ label ds_day4_old_camp:
             with dissolve
             "В коридоре второго этажа кромешная тьма. Даже несмотря на то, что на улице уже почти полдень."
             "Ты заходишь в первую комнату."
-            scene bg ds_int_old_building_cabinet
+            scene bg ds_int_old_building_cabinet_day
             with flash
             play sound ds_sfx_fys
             pat "После тьмы коридора тебя ослепляет солнечный свет."
@@ -6636,7 +6635,7 @@ label ds_day4_old_camp:
             scene bg ds_int_old_building_secondfloor
             with dissolve
             "Ты вновь ныряешь в тьму и направляешься в следующую комнату."
-            scene bg ds_int_old_building_room
+            scene bg ds_int_old_building_room_day
             with dissolve
             "Эта комната чиста и опрятна."
             play sound ds_sfx_fys
@@ -7229,7 +7228,7 @@ label ds_day4_scene:
     lgc "Но, с другой стороны, зачем он мог сюда полезть?"
     play sound ds_sfx_mot
     inf "Ну так ведь радиодетали ему нужны. Он вполне мог надеяться найти что-то тут. Или утащить усилитель какой."
-    scene bg ext_stage_normal_day
+    scene bg ext_stage_near_day
     with dissolve
     "Ты приближаешься к ней."
     if not ds_skill_list['perception'].check(lvl_medium, passive=True).result():
@@ -8413,7 +8412,7 @@ label ds_day4_after_lunch_cs:
                 "Ты подчиняешься ей."
                 scene cg ds_day4_cs_car
                 with dissolve
-                play sound ds_car_ignite
+                play sound ds_auto_ignite
                 "Виола заводит машину."
                 stop sound fadeout 3
                 play sound_loop sfx_bus_interior_moving fadein 3
@@ -8616,7 +8615,7 @@ label ds_day4_after_lunch_cs:
                 svf "{result}Ты взбираешься по лестнице и тянешь на себя коробку."
                 svf "Но тебе не удаётся удержать равновесие, и, выпустив коробку, ты падаешь."
                 window hide
-                play sound sfx_body_fall
+                play sound sfx_bodyfall_1
                 with vpunch
                 $ ds_health.damage()
                 window show
@@ -9141,7 +9140,7 @@ label ds_day4_storage:
             window show
             me "Ладно, я пойду."
             dv "Иди уже!"
-    scene bg ext_storage_day
+    scene bg ds_ext_storage_day
     with dissolve
     th "Итак, и что дальше?"
     $ disable_current_zone_ds_small()

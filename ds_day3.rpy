@@ -84,7 +84,7 @@ label ds_day3_morning:
                 "Спросить":
                     window show
                     me "Ты чего так рано?"
-                    show sl suprise sport at center with dspr
+                    show sl surprise sport at center with dspr
                     sl "Так ведь вчера договаривались позаниматься спортом."
                 "Прогнать":
                     window show
@@ -102,7 +102,7 @@ label ds_day3_morning:
                 "Спросить":
                     window show
                     me "Ты чего так рано?"
-                    show sl suprise sport at center with dspr
+                    show sl surprise sport at center with dspr
                     sl "Так ведь вчера договаривались позаниматься спортом."
                 "Прогнать":
                     window show
@@ -298,7 +298,7 @@ label ds_day3_sl_workout:
             show sl normal sport at center
             with dissolve
             $ renpy.pause(1.0)
-            scene bg ds_ext_house_of_mt_day
+            scene bg ext_house_of_mt_day
             show sl normal sport at center
             with dissolve
             window show
@@ -2315,7 +2315,7 @@ label ds_day3_escape:
 
                 $ renpy.pause(0.5)
 
-                scene bd ext_square_day
+                scene bg ext_square_day
                 with dissolve
 
                 show mt angry pioneer at center
@@ -3578,7 +3578,7 @@ label ds_day3_help_sport:
             play sound ds_sfx_mot
             svf "Ульяна со своей командой вшестером тебя (не без труда, конечно) всё-таки обыгрывают."
             "И, хотя ты и сумел забить голов 7-8 - они забили ещё пять голов."
-            play sound sfx_dinner_jingle_processed
+            play sound sfx_dinner_horn_processed
             show us laugh sport at center with dissolve
             us "Победа! Победа! Победа!"
             "Сигнал к обеду автоматически означает конец матча."
@@ -5067,7 +5067,7 @@ label ds_day3_help_yn:
                     $ ds_lp['yn'] += 1
                 else:
                     svf "{result}Мальчики оказываются проворными, а их кулаки летают хаотично - тебе сложно их поймать."
-                    with red_flash
+                    with flash_red
                     play sound ds_sfx_fys
                     pat "В итоге тебе прилетает удар."
                     $ ds_health.damage()
@@ -7344,7 +7344,7 @@ label ds_day3_music_mi_teaching:
     mi "Так, теперь смотри..."
     window hide
     $ renpy.pause(3.0)
-    scene bg int musclub_day
+    scene bg int_musclub_day
     show mi smile pioneer at center
     with dissolve
     window show
@@ -7528,7 +7528,7 @@ label ds_day3_forest:
             el "Тогда иди, а я позже подойду!"
             hide el with dissolve
             me "Ладно..."
-            jump ds_day3_clubs
+            jump ds_day3_cyber
         "Продолжить путь":
             window show
     if ds_skill_list['conceptualization'].check(lvl_medium, passive=True).result():
@@ -9403,7 +9403,7 @@ label ds_day3_dinner:
                         con "{result}А чего бы им друг с другом не танцевать. Лето в пионерском галстуке, так сказать."
                         me "А давайте вы друг с другом!"
                         show el serious pioneer at cleft
-                        show sh seerious pioneer at cright
+                        show sh serious pioneer at cright
                         with dspr
                         el "Чего?"
                         sh "Так, нет, там допустимы лишь пара М плюс Ж."
@@ -9820,7 +9820,7 @@ label ds_day3_bus:
     th "Что вам надо от меня?"
     sb "Обернись."
 
-    scene bg ds_camp_entrance_sunset
+    scene bg ds_ext_camp_entrance_sunset
     show sub lim at center
     with dissolve
 
@@ -12123,7 +12123,7 @@ label ds_day3_dance_sl:
             stop music fadeout 3
 
             window hide
-            scene bg ext_houses_night
+            scene bg ds_ext_houses_night
             show sl normal dress at center
             with dspr
             window show
@@ -12974,7 +12974,7 @@ label ds_day3_dance_sl:
             stop music fadeout 3
 
             "Я развернулся и быстрыми шагами направился в сторону своего домика."
-            scene bg ext_houses_night
+            scene bg ds_ext_houses_night
             with dissolve
             window hide
             menu:
@@ -13142,7 +13142,7 @@ label ds_day3_dance_un:
             play sound ds_sfx_psy
             emp "Зачем так грубо было-то?"
             jump ds_day3_evening_none
-    scene cg ds_day3_dance_un
+    scene cg d3_un_dance
     with dissolve
     "Ты начинаешь тщательно показывать Лене каждое движение. Стараешься её подбодрить. Делаешь всё, чтобы у неё получилось."
     "К концу третьего трека тебе удаётся частично преодолеть зажатость Лены и более-менее уверенно станцевать вальс."
@@ -14951,7 +14951,7 @@ label ds_day3_us_library:
             play sound ds_sfx_psy
             ine "Уснуть не удаётся долго – у тебя перед глазами проигрывается рассказ Ульяны."
             th "А точно стоило её так отвергать?"
-            play soudn ds_sfx_psy
+            play sound ds_sfx_psy
             emp "Сомнительно. Но сделанного не воротишь."
             window hide
 
@@ -15094,7 +15094,7 @@ label ds_day3_us_library:
                         play sound ds_sfx_psy
                         ine "Уснуть не удаётся долго – у тебя перед глазами проигрывается рассказ Ульяны."
                         th "А точно стоило её так отвергать?"
-                        play soudn ds_sfx_psy
+                        play sound ds_sfx_psy
                         emp "Сомнительно. Но сделанного не воротишь."
                         window hide
 
@@ -15144,7 +15144,7 @@ label ds_day3_dance_mt:
     "Она начинает объяснять движения, которые напоминают вальс."
     mt "А теперь давай вместе."
     window hide
-    scene cg ds_day3_mt_dance
+    scene cg ds_day3_dance_mt
     with dissolve
     window show
     play sound ds_sfx_mot
@@ -17092,7 +17092,7 @@ label ds_day3_evening_mz:
                         window show
                         play sound ds_sfx_mot
                         svf "{result}Но ты спотыкаешься о землю и падаешь."
-                        play sound sfx_body_fall
+                        play sound sfx_bodyfall_1
                         with vpunch
                         $ ds_health.damage()
                         
@@ -17140,7 +17140,7 @@ label ds_day3_evening_mz:
                         window show
                         play sound ds_sfx_mot
                         svf "{result}Но ты спотыкаешься о землю и падаешь."
-                        play sound sfx_body_fall
+                        play sound sfx_bodyfall_1
                         with vpunch
                         $ ds_health.damage()
                         
@@ -17540,10 +17540,10 @@ label ds_day3_evening_mz:
     
     stop music fadeout 4
     window hide
-    scene _ext_houses_night with dissolve2
+    scene ds_ext_houses_night with dissolve2
 
     window show
-    "По какой-то неизвестной мне тропинке вы выходите к домикам."
+    "По какой-то неизвестной тебе тропинке вы выходите к домикам."
     play sound ds_sfx_int
     vic "Кажется, здесь живёт Лена."
     $ renpy.pause(2)
@@ -17981,7 +17981,7 @@ label ds_day3_dance_dv:
             dv "Ну и позорься тогда дальше один!"
             hide dv with dissolve
             jump ds_day3_evening_none
-    scene bg ext_scene_normal_night
+    scene bg ext_stage_normal_night
     with dissolve
     "Ты прибегаешь на сцену и приступаешь к поиску гитары."
     play sound ds_sfx_mot
@@ -18011,7 +18011,7 @@ label ds_day3_dance_dv:
                 con "Да, получается. И получается очень недурная песня."
                 play sound ds_sfx_mot
                 per_eye "Похоже, твою игру услышали. Так как краем глаза ты замечаешь, что кто-то идёт к сцене."
-                scene bg ext_scene_normal_night
+                scene bg ext_stage_normal_night
                 show dv angry dress at center
                 with dissolve
                 dv "Значит, мы все там тебя ждём, а ты играешь тут?! Один?!"
@@ -18049,7 +18049,7 @@ label ds_day3_dance_dv:
                 
                 play sound ds_sfx_mot
                 per_eye "Кто-то идёт сюда."
-                scene bg ext_scene_normal_night
+                scene bg ext_stage_normal_night
                 show dv angry dress at center
                 with dissolve
                 dv "Значит, мы все там тебя ждём, а ты играешь тут?! Один?!"
@@ -18094,7 +18094,7 @@ label ds_day3_dance_dv:
                             play sound ds_sfx_psy
                             aut "{result}Не давай ей собой помыкать. Будешь ли ты играть или нет - зависит не от неё."
                             "Ты идёшь на площадь, не обращая внимания на Алису."
-                            scene bg ext_scene_big_night
+                            scene bg ext_stage_big_night
                             show dv angry dress at center
                             with dissolve
                             dv "Куда пошёл?! Не слышал, что я сказала?!"
@@ -18122,7 +18122,7 @@ label ds_day3_dance_dv:
             window show
             th "Да пошла вся эта музыка куда подальше!"
             "И ты уходишь."
-            scene bg ext_scene_big_night
+            scene bg ext_stage_big_night
             with dissolve
             jump ds_day3_evening_none
     scene bg ext_square_night_party
@@ -18430,7 +18430,7 @@ label ds_day3_evening_el:
             el "Но..."
             me "Удачи!"
             "И ты уходишь."
-            scene bg ext_houses_night
+            scene bg ds_ext_houses_night
             with dissolve
             jump ds_day3_evening_none
     play sound ds_sfx_psy
@@ -18514,7 +18514,7 @@ label ds_day3_evening_el:
     show el normal pioneer at left
     with dissolve
     sh "Заходите."
-    scene bg int_clubs_male_night
+    scene bg ds_int_clubs_male_night
     show el normal pioneer at left
     show sh normal pioneer at right
     with dissolve

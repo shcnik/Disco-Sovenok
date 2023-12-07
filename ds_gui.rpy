@@ -778,9 +778,6 @@ label _show_small_map_ds:
     $ ui.interact()
     jump _show_small_map_ds
 
-label start:
-        show screen dropdown_menu(selectedOption="Foo", btnTexts=["foo", "bar", "baz"])
-
 style ds_check_res_style:
     color "#b5b5b5"
 
