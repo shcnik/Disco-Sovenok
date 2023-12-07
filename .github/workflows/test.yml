@@ -1,0 +1,14 @@
+name: Test Disco Sovenok
+on: push
+jobs:
+  test-mod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Run test
+        run: |
+          docker build ./.test -t shcnik/estool;
+          docker run -d shcnik/estool --mount source=. target=/home;
+      - name: Print test output
+        run: cat ./estool.log
