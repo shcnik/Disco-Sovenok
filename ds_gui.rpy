@@ -2822,8 +2822,6 @@ screen ds_start_game():
 
 screen ds_fail_game(day, what):
     modal True
-    xfill True
-    yfill True
     fixed:
         xmaximum 1579
         add "mods/disco_sovenok/gui/endings/fail_end_day[day].jpg" xalign 0.5
