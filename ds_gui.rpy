@@ -2820,6 +2820,36 @@ screen ds_start_game():
         yalign 0.8
         action [Return(True), Hide('ds_start_screen')]
 
+screen ds_fail_game(day, what):
+    modal True
+    xfill True
+    yfill True
+    fixed:
+        xmaximum 1579
+        add "mods/disco_sovenok/gui/endings/fail_end_day[day].jpg" xalign 0.5
+        text what:
+            font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
+            color "#000000"
+            if persistent.font_size == 'small':
+                size 24
+            else:
+                size 30
+            xalign 0.5
+            yalign 0.0
+            yoffset 410
+        grid 2 1:
+            xalign 0.5
+            yalign 1.0
+            yoffset 25
+            xspacing 50
+            imagebutton:
+                auto "mods/disco_sovenok/gui/endings/rollback_%s.png"
+                action ShowMenu("text_history")
+            imagebutton:
+                auto "mods/disco_sovenok/gui/endings/finish_%s.png"
+                action MainMenu(confirm=False, save=False)
+
+
 label ds_achievement(ach):
     play sound sfx_achievement
     python:
