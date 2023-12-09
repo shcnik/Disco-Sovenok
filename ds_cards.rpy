@@ -8093,7 +8093,7 @@ label ds_cards_final_win_end:
                 show mi normal pioneer with dspr
                 mi "Смелее же, ну!"
                 "Она нетерпеливо шевелит плечиком."
-                scene cg d2_mi_polaroid_7dl
+                scene cg ds_day2_mi_polaroid
                 with dissolve
                 if ds_skill_list['suggestion'].check(lvl_medium, passive=True).result():
                     play sound ds_sfx_psy

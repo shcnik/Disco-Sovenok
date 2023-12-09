@@ -17540,7 +17540,7 @@ label ds_day3_evening_mz:
     
     stop music fadeout 4
     window hide
-    scene ds_ext_houses_night with dissolve2
+    scene bg ds_ext_houses_night with dissolve2
 
     window show
     "По какой-то неизвестной тебе тропинке вы выходите к домикам."
