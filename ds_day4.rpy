@@ -2932,7 +2932,7 @@ label ds_day4_after_breakfast_dv_dialogue:
                 show dv rage swim close at center
                 with dspr
                 dv "Извращенец! Слезай уже с меня!"
-                show us surp2 swim at right
+                show us surp2 swim behind dv at right
                 with dissolve
                 us "А кто такой «извращенец»?"
                 dv "Тебе рано знать о подобных вещах! А вот кое-кому я сейчас задам!"
@@ -8671,7 +8671,7 @@ label ds_day4_after_lunch_cs:
             "Выйдя со склада, ты опускаешь коробку прямо перед Виолой."
             cs "Ну как, пионер. Вижу, ты принёс нужную коробку."
             if ds_tampered_box:
-                show cs rage at center
+                show cs rage medic2 at center
                 with dspr
                 "А вот тут я не поняла... Почему коробка вскрыта?!"
                 window hide
@@ -8679,7 +8679,7 @@ label ds_day4_after_lunch_cs:
                     "Убедить, что это не ты":
                         window show
                         me "Видимо, кто-то проник на склад. Вы когда его в последний раз смотрели?"
-                        show cs doubt at center
+                        show cs doubt medic2 at center
                         with dspr
                         cs "Вчера я тут была, и тут никого не было."
                         cs "Правда, сами коробки я не проверяла... так что может быть, пионер."
@@ -8690,7 +8690,7 @@ label ds_day4_after_lunch_cs:
                         me "Ну, мне было интересно, что там, вот я и открыл..."
                         cs "А если бы ты сломал что-нибудь? Испортил?! Тебе разрешали открывать?!"
                         $ ds_lp['cs'] -= 1
-                        show cs tired at center
+                        show cs tired medic2 at center
                         with dspr
                         "Виола открывает коробку и осматривает содержимое."
                         cs "Ладно, вроде всё целое. Но больше я на тебя полагаться не буду."

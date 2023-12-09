@@ -1955,7 +1955,7 @@ screen ds_skills(setup=False):
                             xalign 1.0
                             xoffset -10
 
-screen ds_skill_table:
+screen ds_skill_table():
     python:
         SKILLS = [
             'logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual_calculus',
@@ -2127,7 +2127,7 @@ screen ds_hud():
                     value max(ds_semtype+6, 0)
                     range 12
                 
-screen ds_skill_info:
+screen ds_skill_info():
     fixed:
         xmaximum 690
         ymaximum 980
@@ -2260,7 +2260,7 @@ screen ds_lp_points():
         auto "mods/disco_sovenok/gui/skills/back_%s.png"
         action Return()
 
-screen ds_say:
+screen ds_say():
     on "show" action Hide('ds_check_result')
     on "hide" action Hide('ds_check_result') 
     window:
@@ -2327,7 +2327,7 @@ screen ds_say:
                 font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
                 line_spacing 2
 
-screen ds_text_history_screen:
+screen ds_text_history_screen():
     window:
         background None
         at transform:
@@ -2384,7 +2384,7 @@ screen ds_text_history_screen:
                         null height 20
                     null height 200
 
-screen ds_nvl:
+screen ds_nvl():
     window:
         background None
         at transform:
@@ -2812,7 +2812,7 @@ screen ds_check_info(skill, threshold, modifiers):
                                     size 24
                                     xalign 1.0
 
-screen ds_start_game:
+screen ds_start_game():
     modal True
     imagebutton:
         auto "mods/disco_sovenok/gui/start_game_%s.png"

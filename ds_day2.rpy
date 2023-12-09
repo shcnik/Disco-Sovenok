@@ -10628,7 +10628,7 @@ label ds_day2_forest:
         play sound ds_sfx_psy
         sug "Что-то идёт не так."
         $ ds_lp['yn'] -= 1
-        show yn sad2 pioneer at center with dspr
+        show yn sad pioneer at center with dspr
     yn "Я пойду спать, пожалуй... спокойной ночи..."
     hide yn with dissolve
     "И она словно испаряется прежде, чем ты успеваешь как-то отреагировать."

@@ -36,6 +36,7 @@ init python:
         ds_screens_save_act()
         meet('me', u"Ты")
         meet('uvp', u"Кошкодевочка")
+        config.developer = True
     
     def ds_finalize():
         ds_screens_diact()

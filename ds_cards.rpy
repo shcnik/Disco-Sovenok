@@ -4210,9 +4210,9 @@ label ds_cards_rules:
 
     "- {b}Старшая карта{/b} (англ. {i}high card{/i}): ни одна из вышеописанных комбинаций,{nw}"
     if persistent.font_size == 'small':
-        "например: {b}{color=#FF6600}Т{image=suit_2ch_S} 10{image=suit_2ch_S}{/color}{color=#009833} 9{image=suit_utan_S} 5{image=suit_uvao_S} 4{image=suit_uvao_S}{/color}{color=#FF6600} 2{image=suit_ussr_S}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}Т{image=suit_2ch_S} 10{image=suit_2ch_S}{/color}{color=#009833} 9{image=suit_utan_S} 5{image=suit_uvao_S} 4{image=suit_uvao_S}{/color}{color=#FF6600} 2{image=suit_ussr_S}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "например: {b}{color=#FF6600}Т{image=suit_2ch_L} 10{image=suit_2ch_L}{/color}{color=#009833} 9{image=suit_utan_L} 5{image=suit_uvao_L} 4{image=suit_uvao_L}{/color}{color=#FF6600} 2{image=suit_ussr_L}{/color}{/color}{/b}."
+        "например: {b}{color=#FF6600}Т{image=suit_2ch_L} 10{image=suit_2ch_L}{/color}{color=#009833} 9{image=suit_utan_L} 5{image=suit_uvao_L} 4{image=suit_uvao_L}{/color}{color=#FF6600} 2{image=suit_ussr_L}{/color}{/b}."
     "Вышеприведённая комбинация называется «старший туз»."
     "Если у соперников на руках оказывается по старшей карте,{nw}"
     "победитель определяется по старшей из имеющихся на руках карт."
@@ -4295,25 +4295,25 @@ label ds_cards_rules:
 
     "- {b}Фулл-хаус{/b}/Полный дом/Три плюс два (англ. {i}full house, full boat{/i} — «полный дом», «полная лодка»):{nw}"
     if persistent.font_size == 'small':
-        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_S} 10{image=suit_2ch_S}{/color} {color=#009833}10{image=suit_utan_S} 8{image=suit_uvao_S} {color=#FF6600}8{image=suit_ussr_S}{/color}{/color}{/b}{/b}."
+        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_S} 10{image=suit_2ch_S}{/color} {color=#009833}10{image=suit_utan_S} 8{image=suit_uvao_S} {color=#FF6600}8{image=suit_ussr_S}{/color}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_L} 10{image=suit_2ch_L}{/color} {color=#009833}10{image=suit_utan_L} 8{image=suit_uvao_L} {color=#FF6600}8{image=suit_ussr_L}{/color}{/color}{/b}{/b}."
+        "одна тройка и одна пара, например: {b}{color=#FF6600}10{image=suit_ussr_L} 10{image=suit_2ch_L}{/color} {color=#009833}10{image=suit_utan_L} 8{image=suit_uvao_L} {color=#FF6600}8{image=suit_ussr_L}{/color}{/color}{/b}."
     "Если на руках две тройки, тройка карт младшего достоинства считается, как пара карт;{nw}"
     "{i}комбинации «Две тройки» в игре нет{/i}."
     "Если у соперников одновременно оказались на руках такие комбинации,{nw}"
     "старшей считается та, в которой тройку составляют более высокие по достоинству карты,"
     if persistent.font_size == 'small':
-        "например: {b}{color=#009833}В{image=suit_uvao_S} {color=#FF6600}В{image=suit_2ch_S} В{image=suit_ussr_S}{/color} {color=#009833}9{image=suit_uvao_S} 9{image=suit_utan_S}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_S} 7{image=suit_ussr_S} {color=#009833}7{image=suit_utan_S} Т{image=suit_uvao_S} {color=#FF6600}Т{image=suit_2ch_S}{/color}{/color}{/b}."
+        "например: {b}{color=#009833}В{image=suit_uvao_S}{/color} {color=#FF6600}В{image=suit_2ch_S} В{image=suit_ussr_S}{/color} {color=#009833}9{image=suit_uvao_S} 9{image=suit_utan_S}{/color}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_S} 7{image=suit_ussr_S}{/color} {color=#009833}7{image=suit_utan_S} Т{image=suit_uvao_S}{/color} {color=#FF6600}Т{image=suit_2ch_S}{/color}{/b}."
     elif persistent.font_size == 'large':
-        "например: {b}{color=#009833}В{image=suit_uvao_L} {color=#FF6600}В{image=suit_2ch_L} В{image=suit_ussr_L}{/color} {color=#009833}9{image=suit_uvao_L} 9{image=suit_utan_L}{/color}{/color}{/b}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_L} 7{image=suit_ussr_L} {color=#009833}7{image=suit_utan_L} Т{image=suit_uvao_L} {color=#FF6600}Т{image=suit_2ch_L}{/color}{/color}{/b}."
+        "например: {b}{color=#009833}В{image=suit_uvao_L}{/color} {color=#FF6600}В{image=suit_2ch_L} В{image=suit_ussr_L}{/color} {color=#009833}9{image=suit_uvao_L} 9{image=suit_utan_L}{/color}{/b} старше, чем {b}{color=#FF6600}7{image=suit_2ch_L} 7{image=suit_ussr_L}{/color} {color=#009833}7{image=suit_utan_L} Т{image=suit_uvao_L}{/color} {color=#FF6600}Т{image=suit_2ch_L}{/color}{/b}."
     "Два фулл-хауса, как и два покера, одинаковыми быть не могут (джокеров в колоде нет).{nw}"
     ""
 
     "- {b}Покер{/b}/Каре/Четвёрка (англ. {i}four of a kind, quads{/i} — «четыре одинаковых»): четыре карты{nw}"
     if persistent.font_size == 'small':
-        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_S} 8{image=suit_2ch_S}{/color} {color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S}{/color}{/b}{/b}, остальные карты не важны."
+        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_S} 8{image=suit_2ch_S}{/color} {color=#009833}8{image=suit_uvao_S} 8{image=suit_utan_S}{/color}{/b}, остальные карты не важны."
     elif persistent.font_size == 'large':
-        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_L} 8{image=suit_2ch_L}{/color} {color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L}{/color}{/b}{/b}, остальные карты не важны."
+        "одинакового достоинства, например: {b}{color=#FF6600}8{image=suit_ussr_L} 8{image=suit_2ch_L}{/color} {color=#009833}8{image=suit_uvao_L} 8{image=suit_utan_L}{/color}{/b}, остальные карты не важны."
     "Если в дополнение к покеру на руках у игрока имеется ещё и пара, она не считается;{nw}"
     "{i}комбинации «Четыре + два» в игре нет{/i}."
     "Два покера принципиально не могут быть одинаковыми, так что когда у двух игроков в наличии{nw}"

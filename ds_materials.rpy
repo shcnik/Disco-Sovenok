@@ -1246,7 +1246,7 @@ init:
     # image ds_had_sex = "mods/disco_sovenok/gui/ach/gen/had_sex.png"
     image ds_us_gone = "mods/disco_sovenok/gui/ach/gen/us_gone.png"
     # image ds_mi_rape = "mods/disco_sovenok/gui/ach/gen/mi_rape.png"
-    image ds_arstotzka = "mods/disco_sovenok/gui/ach/gen/arztotzka.png"
+    image ds_arstotzka = "mods/disco_sovenok/gui/ach/gen/arstotzka.png"
     image ds_electrocution = "mods/disco_sovenok/gui/ach/gen/electrocution.png"
     # image ds_us_escape = "mods/disco_sovenok/gui/ach/us/us_escape.png"image ds_bus_crash = "mods/disco_sovenok/gui/ach/gen/bus_crash.png"
 
@@ -1289,7 +1289,7 @@ init:
     image bg ds_int_el_house_night = "mods/disco_sovenok/bg/ext_house_of_el_night.jpg"
 
     image bg ds_int_sl_house_night = "mods/disco_sovenok/bg/int_house_of_sl_night.jpg"
-    image bg ds_int_sl_house_night_light = "mods/disco_sovenok/bg/int_house_of_sl_night_light.jpg"
+    image bg ds_int_sl_house_night_light = "mods/disco_sovenok/bg/int_house_of_sl_light_night.jpg"
 
     image bg ds_ext_un_night = "mods/disco_sovenok/bg/ext_house_of_un_night_7dl.jpg"
     image bg ds_ext_un_sunset = "mods/disco_sovenok/bg/ext_house_of_un_sunset1.jpg"
@@ -1397,6 +1397,9 @@ init:
     image bg ds_ext_stage_big_sunset = "mods/disco_sovenok/bg/ext_stage_big_sunset_7dl.jpg"
     image bg ds_ext_stage_near_sunset = "mods/disco_sovenok/bg/ext_stage_near_sunset.jpg"
 
+    image bg ds_int_stage_basement_day = "mods/disco_sovenok/bg/int_attic2_day_7dl.jpg"
+    image bg ds_int_stage_basement_night = "mods/disco_sovenok/bg/int_attic2_night_7dl.jpg"
+
     image bg ds_ext_backstage_day = "mods/disco_sovenok/bg/ext_backstage_alt_day_7dl.jpg"
     image bg ds_ext_backstage_night = "mods/disco_sovenok/bg/ext_backstage_alt_night_7dl.jpg"
 
@@ -1406,6 +1409,8 @@ init:
 
     image bg ds_ext_old_camp_storage_day = "mods/disco_sovenok/bg/ext_sklad.jpg"
     image bg ds_int_old_camp_storage = "mods/disco_sovenok/bg/int_warehouse_day.jpg"
+
+    image bg ds_ext_path2_sunset = "mods/disco_sovenok/bg/ext_path2_sunset_l.png"
 
 ## Новые CG
 
@@ -1449,8 +1454,8 @@ init:
     image cg ds_day3_us_potato_1 = "mods/disco_sovenok/cg/d5_potato_1.jpg"
     image cg ds_day3_us_potato_2 = "mods/disco_sovenok/cg/d5_potato_2.jpg"
 
-    image cg ds_day3_mi_piano_1 = "mods/disco_sovenok/cg/cg_mi_piano1_ll.jpg"
-    image cg ds_day3_mi_piano_2 = "mods/disco_sovenok/cg/cg_mi_piano2_ll.jpg"
+    image cg ds_day3_mi_piano_1 = "mods/disco_sovenok/cg/cg_mi_piano1_ll.png"
+    image cg ds_day3_mi_piano_2 = "mods/disco_sovenok/cg/cg_mi_piano2_ll.png"
     image cg ds_day3_mi_guitar = "mods/disco_sovenok/cg/d4_mi_guitar_club_7dl.jpg"
     image cg ds_day3_mi_teaching = "mods/disco_sovenok/cg/d7_mi_embrace.png"
 
@@ -1562,7 +1567,7 @@ init:
     $ ds_goodend_mi_jp = "mods/disco_sovenok/music/goluboy_vagon.ogg"
     $ ds_goodend_un = "mods/disco_sovenok/music/yanderesong.ogg"
     $ ds_church_theme = "mods/disco_sovenok/music/church_theme.mp3"
-    $ ds_work = "mods/disco_sovenok/music/bureaucracy.mp3"
+    $ ds_work = "mods/disco_sovenok/music/bureaucracy.ogg"
 
     $ ds_mi_piano_1 = "mods/disco_sovenok/music/mi_piano_1.mp3"
     $ ds_mi_piano_2 = "mods/disco_sovenok/music/mi_piano_2.mp3"
@@ -1770,9 +1775,9 @@ init:
     image mz = DSSprite(
         id='mz',
         emotions=[
-            ['amazed', 'bukal', 'fun', 'hope', 'laugh', 'normal', 'sad', 'sceptic'],
+            ['amazed', 'bukal', 'fun', 'hope', 'laugh', 'normal', 'sad', 'sceptic', 'surprise'],
             ['angry', 'cry', 'rage', 'shyangry', 'smile'],
-            ['confused', 'excitement', 'shy']
+            ['confused', 'excitement', 'shy', 'scared']
         ],
         outfits=['naked', 'pioneer', 'pullover', 'swim'],
         acc=['glasses'],
@@ -1789,19 +1794,25 @@ init:
         outfits=['bathrobe', 'pioneer', 'shirt', 'towel'],
         acc=['red_nose'],
         dist=['close', 'far'],
-        naked=['towel']
+        naked=['towel'],
+        overrides={
+            (None, 'angry', None): (None, None, 'rage', None)
+        }
     )
 
     image sl = DSSprite(
         id='sl',
         emotions=[
-            ['dontlike', 'involve', 'normal', 'serious', 'smile'],
+            ['dontlike', 'involve', 'normal', 'serious', 'smile', 'upset'],
             ['happy', 'laugh', 'shy', 'shy2', 'shy3', 'smile2', 'tricky', 'tricky2'],
-            ['angry', 'cry_smile', 'happy2', 'obsessed', 'sad', 'shy4', 'smile3'],
+            ['angry', 'cry_smile', 'happy2', 'obsessed', 'sad', 'shy4', 'smile3', 'surprise'],
             ['scared', 'scared2', 'tender', 'tender2']
         ],
         outfits=['casual', 'dress', 'naked', 'pioneer', 'sport'],
-        dist=['close', 'far']
+        dist=['close', 'far'],
+        overrides={
+            (None, 'modern', None): (None, None, 'casual', None)
+        }
     )
 
     image ul = DSSprite(
