@@ -8859,7 +8859,7 @@ label ds_day3_home:
                     show un scared modern at center
                     with dspr
                     ung "Что вы делаете?"
-                    voice "Пройдёмте!"
+                    br "Пройдёмте!"
                     hide un with dissolve
         "Разрешить":
             window show
@@ -15393,7 +15393,7 @@ label ds_day3_dance_mt:
     scene bg black
     with fade
     $ renpy.pause(1)
-    scene cg d3_mt_walk
+    scene cg ds_day3_mt_walk
     with dissolve
     window show
     play music music_list["reminiscences"] fadein 2

@@ -7228,7 +7228,7 @@ label ds_day4_scene:
     lgc "Но, с другой стороны, зачем он мог сюда полезть?"
     play sound ds_sfx_mot
     inf "Ну так ведь радиодетали ему нужны. Он вполне мог надеяться найти что-то тут. Или утащить усилитель какой."
-    scene bg ext_stage_near_day
+    scene bg ext_stage_normal_day
     with dissolve
     "Ты приближаешься к ней."
     if not ds_skill_list['perception'].check(lvl_medium, passive=True).result():
@@ -7272,7 +7272,7 @@ label ds_day4_scene:
                     per_eye "Впрочем, одно можно сказать точно - Шурика тут нет."
                     play sound ds_sfx_fys
                     edr "А ещё тебе становится дурно от запаха гнили."
-                scene bg ext_stage_near_day
+                scene bg ext_stage_normal_day
                 with dissolve
                 "Ты выходишь на поверхность и вдыхаешь воздуха."
                 me "Фууух!"

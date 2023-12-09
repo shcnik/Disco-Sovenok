@@ -1227,11 +1227,15 @@ init:
     $ sb = Character (u'Девушка', color="ff335c", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ ag = Character (u'Мужчина', color="999999", ctc="ctc_animation", ctc_position="fixed", drop_shadow=[ (2, 2) ], drop_shadow_color="#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ moa = Character (u'Министерство въезда', color="ff3200", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ br = Character(u'Пограничник', color="#669933", what_color="E2C778", drop_shadow = [ (-1, -1), (1, -1), (-1, 1), (1, 1) ], drop_shadow_color = "#000")
     $ book = Character (u'Книга', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
     $ dnp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ vtp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
     $ arp = Character(u'Мальчик', color='ffffff', ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+
+    $ vx = Character (u'Голос', color="ffffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
+    $ voices = Character (u'Все', color="ffffff", ctc="ctc_animation", ctc_position="fixed", drop_shadow = [ (2, 2) ], drop_shadow_color = "#000", what_drop_shadow = [ (2, 2) ], what_drop_shadow_color = "#000")
 
 
 
@@ -1436,6 +1440,8 @@ init:
 
     image cg ds_day2_swim_dv = "mods/disco_sovenok/cg/d2_water_dan.jpg"
 
+    image cg ds_day2_mi_polaroid = "mods/disco_sovenok/cg/d2_mi_polaroid_7dl.jpg"
+
     image cg ds_day3_train = "mods/disco_sovenok/cg/d2_us_trainhop_7dl.jpg"
 
     image cg ds_day3_disco_dv = "mods/disco_sovenok/cg/d6_disco2_7dl.jpg"
@@ -1476,6 +1482,8 @@ init:
 
     image cg ds_day3_dance_mi = "mods/disco_sovenok/cg/d3_mi_dance_afar_7dl.jpg"
     image cg ds_day3_dance_mi_costume = "mods/disco_sovenok/cg/d3_mi_dance_afar_bordo_7dl.jpg"
+
+    image cg ds_day3_mt_walk = "mods/disco_sovenok/cg/d3_mt_walk.jpg"
 
     image cg ds_day3_dance_mt = "mods/disco_sovenok/cg/d3_mt_dance.jpg"
 
@@ -1788,7 +1796,7 @@ init:
         id='sh',
         emotions=[
             ['laugh', 'scared', 'smile', 'upset'],
-            ['cry', 'rage', 'smile2'],
+            ['angry', 'cry', 'rage', 'smile2'],
             ['normal', 'serious', 'surprise']
         ],
         outfits=['bathrobe', 'pioneer', 'shirt', 'towel'],
@@ -1895,7 +1903,6 @@ init:
 # Эффекты
 
     ## Бросок кубиков
-    image roll = SnowBlossom("mods/disco_sovenok/sprite/strip.png", count=100, xspeed=-150, fast=True)
     image check success = Transform(Image("mods/disco_sovenok/bg/success.png"), alpha=0.3)
     image check failure = Transform(Image("mods/disco_sovenok/bg/failure.png"), alpha=0.3)
     image health damage = "mods/disco_sovenok/bg/health_damage.png"
