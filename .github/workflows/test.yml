@@ -9,4 +9,4 @@ jobs:
       - name: Load testing image
         run: docker pull shcnik/es_mod_testing:v1
       - name: Perform testing
-        run: docker run -e SDL_AUDIODEVICE=dummy -e SDL_VIDEODEVICE=dummy -e MODNAME=disco_sovenok --platform linux/amd64 -v ${{ github.workspace }}:/opt shcnik/es_mod_testing:v1
+        run: docker run -e MODNAME=disco_sovenok --platform linux/amd64 -v ${{ github.workspace }}:/opt shcnik/es_mod_testing:v1
