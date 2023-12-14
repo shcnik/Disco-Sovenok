@@ -2260,7 +2260,7 @@ screen ds_lp_points():
         auto "mods/disco_sovenok/gui/skills/back_%s.png"
         action Return()
 
-screen ds_say():
+screen ds_say(who, what, **kwargs):
     on "show" action Hide('ds_check_result')
     on "hide" action Hide('ds_check_result') 
     window:
@@ -2715,7 +2715,7 @@ screen ds_check_result():
                         color "#ff0000"
                         size 24
                         xalign 0.5
-                elif ds_last_skillcheck.result():
+                elif ds_last_skillcheck.result(invoke_callbacks=False):
                     text "УСПЕХ":
                         font "0@mods/disco_sovenok/gui/fonts/PTSans.ttc"
                         color "#008000"
@@ -2824,6 +2824,7 @@ screen ds_fail_game(day, what):
     modal True
     fixed:
         xmaximum 1579
+        xalign 0.5
         add "mods/disco_sovenok/gui/endings/fail_end_day[day].jpg" xalign 0.5
         text what:
             font "0@mods/disco_sovenok/gui/fonts/Baskerville.ttc"
@@ -2832,13 +2833,14 @@ screen ds_fail_game(day, what):
                 size 24
             else:
                 size 30
-            xalign 0.5
+            xalign 0.0
+            xoffset 50
             yalign 0.0
             yoffset 410
         grid 2 1:
             xalign 0.5
             yalign 1.0
-            yoffset 25
+            yoffset -25
             xspacing 50
             imagebutton:
                 auto "mods/disco_sovenok/gui/endings/rollback_%s.png"

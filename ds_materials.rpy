@@ -60,12 +60,15 @@ init python:
                 if eval(variable):
                     points += bonus
                     applied_modifiers.append((variable, bonus, label))
-            result = DSSkillcheckRes(self.id, self.get_total(), int(threshold), not passive, dices, applied_modifiers)
+            result = DSSkillcheckRes(self.id, self.get_total(), int(threshold), not passive, (first_dice, second_dice), applied_modifiers)
             self.check_results.append(result)
             global ds_callbacks
             for callback in ds_callbacks['check']:
                 callback(result)
             return result
+
+        def __call__(self, threshold, passive=False, modifiers=[]):
+            return self.check(threshold, passive, modifiers)
 
     class DSSkillcheckRes:
         def __init__(self, skill, level, threshold, check_type, dices, modifiers):
@@ -758,6 +761,13 @@ init:
     default ds_knowing = 0 # Знание
     default ds_semtype = 0 # Тип Семёна
     default ds_homo_traits = 0
+
+    default ds_special_traits = {
+        'marx': 0,
+        'teach': 0,
+        'science': 0,
+        'music': 0,
+    }
 
     $ ds_game_started = False
 

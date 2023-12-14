@@ -17,6 +17,7 @@ init:
     $ ds_no_sl_dinner = False
     $ ds_dinner_dv = False
     $ ds_sl_distracted = False
+    $ ds_know_un_book = False
     $ ds_know_novel_content = False
     $ ds_get_novel_content_failed = False
     $ ds_rude_mt = False
@@ -3661,6 +3662,7 @@ label ds_day1_meet_un:
     "Она краснеет и снова смотрит в книжку."
     me "Так что читаешь?"
     "Она показывает обложку – «Унесённые ветром»."
+    $ ds_know_un_book = True
     window hide
     menu ds_day1_un_dialogue:
         set ds_menuset
