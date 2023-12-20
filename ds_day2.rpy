@@ -1,48 +1,5 @@
 # DISCO SOVENOK
 # ОБЩИЙ РУТ. ДЕНЬ 2
-init:
-    $ ds_know_face = False
-    $ ds_sl_workouts = False
-    $ ds_passed_places = 0
-    $ ds_visited_music = False
-    $ ds_visited_clubs = False
-    $ ds_visited_sport = False
-    $ ds_visited_medic = False
-    $ ds_visited_library = False
-    $ ds_find_hairpin = False
-    $ ds_read_book = False
-    $ ds_had_lunch = False
-    $ ds_sl_interrogate = False
-    $ ds_witnessed_el_hit = False
-    $ ds_sl_gone = False
-    $ ds_un_upset = False
-    $ ds_un_invite = False
-    $ ds_yield_un = False
-    $ ds_cs_invite = False
-    $ ds_eldv_side_taken = 0
-    $ ds_us_escape = False
-    $ ds_cards_sl = False
-    $ ds_cards_labeled = False
-    $ ds_cards_damaged = False
-    $ ds_know_parents = False
-    $ ds_bet_dv = False
-    $ ds_mz_brought_el = False
-    $ ds_bring_mz_fail = False
-    $ ds_attack_mz = False
-    $ ds_tour_result = 0 # 0 - не прошёл 1/4-финал, 1 - дошёл до полуфинала, 2 - дошёл до финала, 3 - выиграл в турнире, -1 - отказался от участия, -2 - дисквалифицирован.
-    $ ds_mi_hairpin = False
-    $ ds_gave_hairpin_dv = False
-    $ ds_gave_hairpin_sl = False
-    $ ds_gave_hairpin_un = False
-    $ ds_sl_door_broken = False
-    $ ds_dv_rescued = False
-    $ ds_dv_steal_got = False
-    $ ds_know_mz_el = False
-    $ ds_us_betray = False
-    $ ds_support_dv = 0
-    $ ds_after_tour_who = None
-    $ ds_houses_visited = []
- 
 label ds_day2_morning:
     $ ds_health.restore()
     $ ds_morale.restore()

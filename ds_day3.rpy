@@ -1,47 +1,5 @@
 # DISCO SOVENOK
 # ОБЩИЙ РУТ. ДЕНЬ 3
-
-init:
-    $ ds_was_on_lineup = False
-    $ ds_accept_mz = False
-    $ ds_understood_mz_reason = False
-    $ ds_promise_un = False
-    $ ds_to_help_un = False
-    $ ds_whom_helped = None
-    $ ds_dance_dv = False
-    $ ds_dv_invite = False
-    $ ds_el_mz_relation = False
-    $ ds_seen_catgirl_photo = False
-    $ ds_un_club = False
-    $ ds_sugar = 0
-    $ ds_morning_exercise = False
-    $ ds_mi_costume = False
-    $ ds_promise_sl = False
-    $ ds_framed_dv = False
-    $ ds_punished = False
-    $ ds_after_lunch_who = None
-    $ ds_mi_accept_dv = False
-    $ ds_concert_part = False
-    $ ds_composition_type = 0
-    $ ds_forest_accept_sl = 0
-    $ ds_helped_sl_lib = False
-    $ ds_day3_evening_who = None
-    $ ds_un_dance_accept = False
-    $ ds_dumped_dv = False
-    $ ds_dumped_un = False
-    $ ds_day3_dv_conflict = False
-    $ ds_played_guitar = False
-
-    default ds_approved_pp = {
-        'dv': False,
-        'un': False,
-        'sl': False,
-        'us': False,
-        'mi': False,
-        'el': False,
-        'mt': False
-    }
-
 label ds_day3_morning:
     $ ds_health.restore()
     $ ds_morale.restore()

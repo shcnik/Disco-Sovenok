@@ -754,6 +754,7 @@ init:
     }
 
 ## Общие параметры
+    default ds_route = 'me'
     default ds_karma = 0 # Репутация - насколько хорошо себя ведёт ГГ
     default ds_health = DSLifeParameter('endurance', {'damage': [ds_show_damage_health, ds_die_zero_health], 'up': [ds_show_up_health], 'restore': [ds_show_restore_health]}) # Здоровье
     default ds_morale = DSLifeParameter('volition', {'damage': [ds_show_damage_morale, ds_die_zero_morale], 'up': [ds_show_up_morale], 'restore': [ds_show_restore_morale]}) # Боевой дух
@@ -1401,6 +1402,7 @@ init:
     image bg ds_ext_old_building_day = "mods/disco_sovenok/bg/dct_ext_old_building_day.jpg"
     image bg ds_int_old_building_day = "mods/disco_sovenok/bg/int_old_building_day.jpg"
     image bg ds_int_old_building_room_day = "mods/disco_sovenok/bg/int_old_building_room_day.png"
+    image bg ds_int_old_building_room_night = "mods/disco_sovenok/bg/int_old_building_room_night.png"
     image bg ds_int_old_building_secondfloor = "mods/disco_sovenok/bg/secondfloor.jpg"
     image bg ds_int_old_building_cabinet_day = "mods/disco_sovenok/bg/int_old_building_cab_day_7dl.jpg"
     image bg ds_int_old_building_room2_day = "mods/disco_sovenok/bg/ss_datroom_day.jpg"
@@ -1425,6 +1427,17 @@ init:
     image bg ds_int_old_camp_storage = "mods/disco_sovenok/bg/int_warehouse_day.jpg"
 
     image bg ds_ext_path2_sunset = "mods/disco_sovenok/bg/ext_path2_sunset_l.png"
+
+    image bg ds_tunnel1 = "mods/disco_sovenok/bg/darktunnel_light.jpg"
+    image bg ds_tunnel2 = "mods/disco_sovenok/bg/darktunnel_med.jpg"
+    image bg ds_tunnel3 = "mods/disco_sovenok/bg/darktunnel_hard.jpg"
+
+    image bg ds_int_cs_lab = "mods/disco_sovenok/bg/diana_mod_int_laboratory.jpg"
+    image bg ds_int_cs_lab_entry = "mods/disco_sovenok/bg/diana_mod_int_end_of_tunnel.jpg"
+    image bg ds_int_cs_lab_exit = "mods/disco_sovenok/bg/diana_mod_int_tunnel_with_door.jpg"
+
+    image bg ds_elevator_up = "mods/disco_sovenok/bg/mine_elevator_down.jpg"
+    image bg ds_elevator_down = "mods/disco_sovenok/bg/mine_elevator_up.jpg"
 
 ## Новые CG
 
@@ -1592,6 +1605,9 @@ init:
     $ ds_mi_piano_3 = "mods/disco_sovenok/music/mi_piano_3.mp3"
     $ ds_mi_piano_4 = "mods/disco_sovenok/music/mi_piano_4.mp3"
     $ ds_mi_piano_5 = "mods/disco_sovenok/music/mi_piano_5.mp3"
+
+    $ ds_up_and_out = "mods/disco_sovenok/music/16. Leaving Spire.mp3"
+    $ ds_deliverance = "mods/disco_sovenok/music/15. Nearest Island.mp3"
 
 ## SFX
 

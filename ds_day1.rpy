@@ -1,28 +1,5 @@
 # DISCO SOVENOK
 # ОБЩИЙ РУТ. ДЕНЬ 1
-init:
-    $ ds_ran = False
-    $ ds_cry = False
-    $ ds_beat_sl = False
-    $ ds_ran_from_un = False
-    $ ds_beat_dv = False
-    $ ds_fake_name = False
-    $ ds_accept_el = False
-    $ ds_play_football = False
-    $ ds_caught_us = False
-    $ ds_betray_dv = False
-    $ ds_sl_beach_invite = False
-    $ ds_sl_keys = False
-    $ ds_some_key = False
-    $ ds_no_sl_dinner = False
-    $ ds_dinner_dv = False
-    $ ds_sl_distracted = False
-    $ ds_know_un_book = False
-    $ ds_know_novel_content = False
-    $ ds_get_novel_content_failed = False
-    $ ds_rude_mt = False
-    $ ds_keys_return = False
-
 label ds_day1:
     $ backdrop = "days"
     $ new_chapter(1, u"Disco Sovenok. День 1.")
